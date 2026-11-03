@@ -6,7 +6,6 @@
     <title>⚽ JackAI v3.7 - Global Expansion Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body { background-color: #f1f5f9; padding: 40px 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
@@ -50,7 +49,7 @@
     <div class="container">
         <div class="text-center mb-4">
             <h1 class="fw-extrabold text-dark mb-2">⚽ JackAI</h1>
-            <p class="text-secondary fs-5 mb-0">Global Expansion Edition v3.7 (49+ ลีกทั่วโลก)</p>
+            <p class="text-secondary fs-5 mb-0">Global Expansion Edition v3.7.1</p>
         </div>
 
         <div class="row g-4">
@@ -232,8 +231,7 @@
                         <h6 class="fw-bold text-secondary mb-0">🕒 ประวัติล่าสุด</h6>
                         <div class="d-flex gap-1">
                             <button class="btn btn-xs btn-outline-success rounded-pill" id="btnExport"><i class="bi bi-file-earmark-code"></i> HTML</button>
-                            <button class="btn btn-xs btn-outline-danger rounded-pill" id="btnExportPDF"><i class="bi bi-file-earmark-pdf"></i> PDF</button>
-                            <button class="btn btn-xs btn-outline-dark rounded-pill" id="btnClearAll"><i class="bi bi-trash3"></i></button>
+                            <button class="btn btn-xs btn-outline-dark rounded-pill" id="btnClearAll"><i class="bi bi-trash3"></i> ล้าง</button>
                         </div>
                     </div>
                     <div id="historyList" class="list-group list-group-flush text-sm" style="max-height: 300px; overflow-y: auto;">
@@ -259,7 +257,7 @@
                         <h4 class="mb-0 fs-5 fw-bold">📊 ผลวิเคราะห์ Pro Bettor</h4>
                         <div class="d-flex gap-2">
                             <button class="btn btn-sm btn-outline-light rounded-pill px-3" id="btnCopy">📋 Copy</button>
-                            <span class="badge bg-success px-2 py-1 rounded-pill fw-semibold small">v3.7</span>
+                            <span class="badge bg-success px-2 py-1 rounded-pill fw-semibold small">v3.7.1</span>
                         </div>
                     </div>
 
@@ -853,7 +851,7 @@
         function saveHistoryToStorage(h) { localStorage.setItem('jackai_history', JSON.stringify(h)); }
         function saveToHistory(input, result) {
             let history = getHistory();
-            history.unshift({ id: 'item_' + Date.now(), date: new Date().toLocaleString('th-TH'), timestamp: Date.now(), home: input.homeName, away: input.awayName, input, result, actualScore: null });
+            history.unshift({ id: 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5), date: new Date().toLocaleString('th-TH'), timestamp: Date.now(), home: input.homeName, away: input.awayName, input, result, actualScore: null });
             history = history.slice(0, MAX_HISTORY);
             saveHistoryToStorage(history);
             renderHistory();
@@ -880,7 +878,7 @@
                     const ic = status === 'exact' ? '🎯' : status === 'correct' ? '✅' : '❌';
                     badge = `<span class="actual-score-badge ${cls}">${ic} ${item.actualScore}</span>`;
                 }
-                return `<div class="list-group-item history-item px-2 py-2" data-id="${item.id}"><div class="d-flex justify-content-between align-items-start"><div class="flex-grow-1" style="cursor: pointer;" onclick="loadHistory('${item.id}')"><div class="d-flex justify-content-between mb-1"><span class="fw-bold text-truncate" style="max-width: 65%;">${item.home} vs ${item.away}</span><span class="badge bg-secondary rounded-pill">${item.result.homeWinPct}</span></div><div class="text-xs text-muted mb-1">xG: ${item.result.xgHome} - ${item.result.xgAway}</div><div class="d-flex gap-1 flex-wrap">${badge}<button class="btn btn-xs btn-outline-secondary rounded-pill" onclick="event.stopPropagation(); promptActualScore('${item.id}')"><i class="bi bi-pencil-square"></i></button></div></div><button class="icon-btn icon-btn-danger btn-delete ms-2" onclick="event.stopPropagation(); deleteHistoryItem('${item.id}')"><i class="bi bi-trash3 text-danger"></i></button></div></div>`;
+                return `<div class="list-group-item history-item px-2 py-2" data-id="${item.id}"><div class="d-flex justify-content-between align-items-start"><div class="flex-grow-1" style="cursor: pointer;" onclick="loadHistory('${item.id}')"><div class="d-flex justify-content-between mb-1"><span class="fw-bold text-truncate" style="max-width: 65%;">${item.home} vs ${item.away}</span><span class="badge bg-secondary rounded-pill">${item.result.homeWinPct}</span></div><div class="text-xs text-muted mb-1">${item.result.leagueName} | xG: ${item.result.xgHome} - ${item.result.xgAway}</div><div class="d-flex gap-1 flex-wrap">${badge}<button class="btn btn-xs btn-outline-secondary rounded-pill" onclick="event.stopPropagation(); promptActualScore('${item.id}')"><i class="bi bi-pencil-square"></i></button></div></div><button class="icon-btn icon-btn-danger btn-delete ms-2" onclick="event.stopPropagation(); deleteHistoryItem('${item.id}')"><i class="bi bi-trash3 text-danger"></i></button></div></div>`;
             }).join('');
         }
         window.loadHistory = function(id) {
@@ -910,8 +908,14 @@
         };
         window.deleteHistoryItem = function(id) {
             if (!confirm('ลบรายการนี้?')) return;
-            saveHistoryToStorage(getHistory().filter(h => h.id !== id));
-            renderHistory();
+            try {
+                let history = getHistory();
+                const idx = history.findIndex(h => h.id === id);
+                if (idx === -1) { alert('ไม่พบรายการนี้'); renderHistory(); return; }
+                history.splice(idx, 1);
+                saveHistoryToStorage(history);
+                renderHistory();
+            } catch(e) { alert('เกิดข้อผิดพลาด: ' + e.message); }
         };
         window.promptActualScore = function(id) {
             const history = getHistory();
@@ -949,26 +953,6 @@
             a.href = URL.createObjectURL(blob);
             a.download = `JackAI_${new Date().toISOString().slice(0,10)}.html`;
             a.click();
-        });
-        document.getElementById('btnExportPDF').addEventListener('click', function() {
-            const history = getHistory();
-            if (history.length === 0) { alert('ไม่มีประวัติ'); return; }
-            if (typeof html2pdf === 'undefined') { alert('โหลด PDF ไม่ได้'); return; }
-            const rows = history.map((h, i) => {
-                const status = classifyResult(h);
-                const st = status === 'exact' ? '🎯' : status === 'correct' ? '✅' : status === 'wrong' ? '❌' : '⏳';
-                return `<tr><td>${i+1}</td><td>${h.home} vs ${h.away}</td><td>${h.result.xgHome}-${h.result.xgAway}</td><td>${h.result.homeWinPct}</td><td>${h.result.top3FT[0].score}</td><td>${h.actualScore || '-'}</td><td>${st}</td></tr>`;
-            }).join('');
-            const temp = document.createElement('div');
-            temp.innerHTML = `<div style="padding:20px;font-family:sans-serif;"><h1>⚽ JackAI History</h1><p>${new Date().toLocaleString('th-TH')} | ${history.length} รายการ</p><table style="width:100%;border-collapse:collapse;font-size:11px;"><thead style="background:#1e293b;color:white;"><tr><th style="padding:6px;">#</th><th>แมตช์</th><th>xG</th><th>Home%</th><th>Top Score</th><th>ผลจริง</th><th>สถานะ</th></tr></thead><tbody>${rows.split('</tr>').map(r => r.replace('<tr>', '<tr style="border-bottom:1px solid #ddd;">')).join('')}</tbody></table></div>`;
-            document.body.appendChild(temp);
-            const btn = this;
-            btn.disabled = true; btn.innerHTML = '⏳...';
-            html2pdf().set({ margin: 10, filename: `JackAI_${new Date().toISOString().slice(0,10)}.pdf`, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } }).from(temp.firstElementChild).save().then(() => {
-                document.body.removeChild(temp);
-                btn.disabled = false;
-                btn.innerHTML = '<i class="bi bi-file-earmark-pdf"></i> PDF';
-            });
         });
 
         document.getElementById('btnCopy').addEventListener('click', function() {
