@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI v3.6 - Pro Bettor Edition</title>
+    <title>⚽ JackAI v3.7 - Global Expansion Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <!-- ✅ เพิ่ม Bootstrap JavaScript Bundle (แก้ไขปัญหาแท็บกดไม่ได้) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body { background-color: #f1f5f9; padding: 40px 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
@@ -21,14 +20,10 @@
         .market-box { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #86efac; transition: transform 0.2s; }
         .market-box:hover { transform: translateY(-2px); }
         .market-box-secondary { background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #93c5fd; }
-        
-        /* Value Bet Styles */
         .value-card { padding: 12px; border-radius: 10px; border: 2px solid; transition: all 0.2s; }
         .value-positive { background: #f0fdf4; border-color: #16a34a; }
         .value-neutral { background: #fefce8; border-color: #eab308; }
         .value-negative { background: #fef2f2; border-color: #dc2626; }
-        
-        /* History */
         .text-sm { font-size: 0.85rem; }
         .text-xs { font-size: 0.75rem; }
         .history-item { transition: all 0.2s; border-left: 3px solid transparent; }
@@ -44,27 +39,21 @@
         .icon-btn:hover { background-color: #e2e8f0; }
         .icon-btn-danger:hover { background-color: #fee2e2; color: #dc2626 !important; }
         .btn-xs { font-size: 0.75rem; padding: 2px 8px; }
-        
         .filter-bar { background: #f8fafc; border-radius: 10px; padding: 10px; border: 1px solid #e2e8f0; }
         .filter-bar input, .filter-bar select { font-size: 0.8rem; }
-
         .odds-input { font-size: 0.85rem; padding: 4px 8px; text-align: center; }
-        
-        /* Custom nav pills */
         .custom-tabs .nav-link { color: #475569; border-radius: 20px; padding: 4px 14px; font-size: 0.85rem; font-weight: 600; }
         .custom-tabs .nav-link.active { background: #1e293b; color: white; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="text-center mb-4">
             <h1 class="fw-extrabold text-dark mb-2">⚽ JackAI</h1>
-            <p class="text-secondary fs-5 mb-0">Pro Bettor Edition v3.6 (Value Bet + Full Handicap)</p>
+            <p class="text-secondary fs-5 mb-0">Global Expansion Edition v3.7 (49+ ลีกทั่วโลก)</p>
         </div>
 
         <div class="row g-4">
-            <!-- ฝั่งซ้าย: ฟอร์ม -->
             <div class="col-lg-5">
                 <form id="footballForm" novalidate>
                     <div class="card p-3 shadow-sm mb-3 border-start border-4 border-dark">
@@ -73,24 +62,69 @@
                             <optgroup label="🏴 อังกฤษ">
                                 <option value="EPL" selected>พรีเมียร์ลีก</option>
                                 <option value="CHAMPIONSHIP">แชมเปี้ยนชิพ</option>
+                                <option value="LEAGUE_ONE">ลีกวัน</option>
+                                <option value="LEAGUE_TWO">ลีกทู</option>
                             </optgroup>
                             <optgroup label="🇪🇸 สเปน">
                                 <option value="LA_LIGA">ลาลีกา</option>
+                                <option value="LA_LIGA_2">ลาลีกา 2</option>
                             </optgroup>
                             <optgroup label="🇩🇪 เยอรมนี">
                                 <option value="BUNDESLIGA">บุนเดสลีกา</option>
+                                <option value="BUNDESLIGA_2">บุนเดสลีกา 2</option>
                             </optgroup>
                             <optgroup label="🇮🇹 อิตาลี">
                                 <option value="SERIE_A">เซเรีย อา</option>
+                                <option value="SERIE_B">เซเรีย บี</option>
                             </optgroup>
                             <optgroup label="🇫🇷 ฝรั่งเศส">
                                 <option value="LIGUE_1">ลีกเอิง</option>
+                                <option value="LIGUE_2">ลีกเดอ</option>
+                            </optgroup>
+                            <optgroup label="🇪🇺 ยุโรปอื่นๆ">
+                                <option value="EREDIVISIE">เอเรอดีวีซี</option>
+                                <option value="LIGA_PORTUGAL">ลีกา โปรตุเกส</option>
+                                <option value="BELGIAN_PRO">เบลเยียม โปร ลีก</option>
+                                <option value="SUPER_LIG">ซูเปอร์ลีก (ตุรกี)</option>
                             </optgroup>
                             <optgroup label="🌏 เอเชีย">
                                 <option value="J1_LEAGUE">เจลีก 1</option>
                                 <option value="J2_LEAGUE">เจลีก 2</option>
                                 <option value="J3_LEAGUE">เจลีก 3</option>
                                 <option value="K_LEAGUE_1">เค ลีก 1</option>
+                                <option value="CSL">ไชนีส ซูเปอร์ลีก</option>
+                                <option value="KARNATAKA_SUPER">อินเดีย คาร์นาตากา ซูเปอร์</option>
+                            </optgroup>
+                            <optgroup label="🌏 เอเชีย / ตะวันออกกลาง">
+                                <option value="SAUDI_PRO">ซาอุดี โปร ลีก</option>
+                                <option value="UAE_PRO">ยูเออี โปร ลีก</option>
+                                <option value="QATAR_STARS">กาตาร์ สตาร์ส ลีก</option>
+                                <option value="KUWAIT_PREMIER">คูเวต พรีเมียร์ลีก</option>
+                                <option value="BAHRAIN_PREMIER">บาห์เรน พรีเมียร์ลีก</option>
+                                <option value="OMAN_PRO">โอมาน โปร ลีก</option>
+                                <option value="JORDAN_PRO">จอร์แดน โปร ลีก</option>
+                                <option value="IRAQ_STARS">อิรัก สตาร์ส ลีก</option>
+                                <option value="IRAN_PRO">อิหร่าน โปร ลีก</option>
+                            </optgroup>
+                            <optgroup label="🌏 โอเชียเนีย / อเมริกา">
+                                <option value="A_LEAGUE">เอลีก</option>
+                                <option value="MLS">เมเจอร์ลีกซอกเกอร์</option>
+                                <option value="BRASIL_SERIE_A">บราซิล เซเรีย อา</option>
+                                <option value="ARGENTINA">ลีกา โปรเฟสชันนัล</option>
+                            </optgroup>
+                            <optgroup label="🌍 แอฟริกาเหนือ">
+                                <option value="EGYPT_PREMIER">อียิปต์ พรีเมียร์ลีก</option>
+                                <option value="MOROCCO_BOTOLA">โมร็อกโก โบโตลา โปร</option>
+                                <option value="ALGERIA_LIGUE1">แอลจีเรีย ลีก 1</option>
+                                <option value="TUNISIA_LIGUE1">ตูนิเซีย ลีก 1</option>
+                                <option value="LIBYA_PREMIER">ลิเบีย พรีเมียร์ลีก</option>
+                            </optgroup>
+                            <optgroup label="🌍 แอฟริกาใต้ / แองโกลา">
+                                <option value="SA_PREMIERSHIP">แอฟริกาใต้ พรีเมียร์ชิพ</option>
+                                <option value="ANGOLA_GIRABOLA">แองโกลา จิราโบลา</option>
+                                <option value="ZAMBIA_SUPER">แซมเบีย ซูเปอร์ลีก</option>
+                                <option value="ZIMBABWE_PREMIER">ซิมบับเว พรีเมียร์ลีก</option>
+                                <option value="MOZAMBIQUE_MOC">โมซัมบิก โมซัมโบลา</option>
                             </optgroup>
                             <optgroup label="🇹🇭 ไทย">
                                 <option value="THAI_LEAGUE">ไทยลีก 1</option>
@@ -166,7 +200,6 @@
                             </div>
                         </div>
 
-                        <!-- Value Bet Odds Input -->
                         <div class="col-12">
                             <div class="card p-3 shadow-sm border-start border-4 border-info">
                                 <h5 class="fw-bold text-info mb-3">💰 อัตราต่อรอง (Odds) - ทางเลือก</h5>
@@ -194,7 +227,6 @@
                     </div>
                 </form>
 
-                <!-- History -->
                 <div class="card p-3 shadow-sm mt-3 bg-white">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h6 class="fw-bold text-secondary mb-0">🕒 ประวัติล่าสุด</h6>
@@ -210,10 +242,8 @@
                 </div>
             </div>
 
-            <!-- ฝั่งขวา: แดชบอร์ด -->
             <div class="col-lg-7">
                 <div class="card border-0 shadow-sm overflow-hidden bg-white">
-                    
                     <div class="p-3 bg-light border-bottom">
                         <div class="slider-box p-3 shadow-sm bg-white">
                             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -229,7 +259,7 @@
                         <h4 class="mb-0 fs-5 fw-bold">📊 ผลวิเคราะห์ Pro Bettor</h4>
                         <div class="d-flex gap-2">
                             <button class="btn btn-sm btn-outline-light rounded-pill px-3" id="btnCopy">📋 Copy</button>
-                            <span class="badge bg-success px-2 py-1 rounded-pill fw-semibold small">v3.6</span>
+                            <span class="badge bg-success px-2 py-1 rounded-pill fw-semibold small">v3.7</span>
                         </div>
                     </div>
 
@@ -238,7 +268,6 @@
                             <strong>⚠️</strong> <span id="warningText"></span>
                         </div>
 
-                        <!-- 1X2 -->
                         <div class="mb-3">
                             <h6 class="fw-bold mb-2 text-secondary text-uppercase small">🔮 ความน่าจะเป็น (เต็มเวลา)</h6>
                             <div class="progress-stacked shadow-sm">
@@ -254,7 +283,6 @@
                             </div>
                         </div>
 
-                        <!-- xG -->
                         <div class="row g-2 text-center mb-3">
                             <div class="col-4">
                                 <div class="p-2 border rounded-3 stat-box shadow-sm">
@@ -276,7 +304,6 @@
                             </div>
                         </div>
 
-                        <!-- Tabs -->
                         <ul class="nav nav-pills custom-tabs mb-3 gap-1" id="marketTabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="tab-value" data-bs-toggle="pill" data-bs-target="#pane-value" type="button">💰 Value Bet</button>
@@ -293,7 +320,6 @@
                         </ul>
 
                         <div class="tab-content">
-                            <!-- Pane 1: Value Bet -->
                             <div class="tab-pane fade show active" id="pane-value" role="tabpanel">
                                 <div id="valueBetContainer">
                                     <div class="alert alert-light text-center py-4 text-muted small">
@@ -302,7 +328,6 @@
                                 </div>
                             </div>
 
-                            <!-- Pane 2: Handicap -->
                             <div class="tab-pane fade" id="pane-handicap" role="tabpanel">
                                 <div class="mb-2">
                                     <label class="small fw-bold text-muted">เลือก Handicap (Asian Handicap มุมมองทีมเหย้า):</label>
@@ -326,7 +351,6 @@
                                 <div id="handicapResult" class="mt-3"></div>
                             </div>
 
-                            <!-- Pane 3: Scores & 1st Half -->
                             <div class="tab-pane fade" id="pane-scores" role="tabpanel">
                                 <div class="row g-3">
                                     <div class="col-md-6">
@@ -362,7 +386,6 @@
                                 </div>
                             </div>
 
-                            <!-- Pane 4: Team Total Goals -->
                             <div class="tab-pane fade" id="pane-team-total" role="tabpanel">
                                 <h6 class="fw-bold mb-2 text-secondary small">⚽ ประตูของแต่ละทีม (Team Total)</h6>
                                 <div class="table-responsive">
@@ -381,7 +404,6 @@
                             </div>
                         </div>
 
-                        <!-- Confidence & Standard Markets -->
                         <hr class="my-3">
                         <div class="row g-2">
                             <div class="col-6 col-md-3">
@@ -416,20 +438,67 @@
     </div>
 
     <script>
-        // ============ LEAGUE PROFILES ============
+        // ============ LEAGUE PROFILES (49+ ลีกทั่วโลก) ============
         const LEAGUES = {
-            EPL: { name: 'พรีเมียร์ลีก', avg: 1.40, homeAdvAtk: 1.15, homeAdvDef: 0.92, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
-            CHAMPIONSHIP: { name: 'แชมเปี้ยนชิพ', avg: 1.32, homeAdvAtk: 1.14, homeAdvDef: 0.93, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
-            LA_LIGA: { name: 'ลาลีกา', avg: 1.25, homeAdvAtk: 1.18, homeAdvDef: 0.90, fhRatio: 0.42, rho: -0.07, fhRho: -0.02 },
-            BUNDESLIGA: { name: 'บุนเดสลีกา', avg: 1.55, homeAdvAtk: 1.13, homeAdvDef: 0.93, fhRatio: 0.47, rho: -0.09, fhRho: -0.04 },
-            SERIE_A: { name: 'เซเรีย อา', avg: 1.30, homeAdvAtk: 1.16, homeAdvDef: 0.91, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
-            LIGUE_1: { name: 'ลีกเอิง', avg: 1.35, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
-            J1_LEAGUE: { name: 'เจลีก 1', avg: 1.32, homeAdvAtk: 1.12, homeAdvDef: 0.94, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
-            J2_LEAGUE: { name: 'เจลีก 2', avg: 1.25, homeAdvAtk: 1.11, homeAdvDef: 0.95, fhRatio: 0.42, rho: -0.05, fhRho: -0.02 },
-            J3_LEAGUE: { name: 'เจลีก 3', avg: 1.28, homeAdvAtk: 1.10, homeAdvDef: 0.96, fhRatio: 0.42, rho: -0.05, fhRho: -0.02 },
-            K_LEAGUE_1: { name: 'เค ลีก 1', avg: 1.30, homeAdvAtk: 1.13, homeAdvDef: 0.93, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
-            THAI_LEAGUE: { name: 'ไทยลีก 1', avg: 1.45, homeAdvAtk: 1.20, homeAdvDef: 0.88, fhRatio: 0.46, rho: -0.10, fhRho: -0.04 },
-            THAI_LEAGUE_2: { name: 'ไทยลีก 2', avg: 1.35, homeAdvAtk: 1.18, homeAdvDef: 0.89, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
+            // 🏴 อังกฤษ
+            EPL:           { name: 'พรีเมียร์ลีก (อังกฤษ)',           avg: 1.40, homeAdvAtk: 1.15, homeAdvDef: 0.92, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
+            CHAMPIONSHIP:  { name: 'แชมเปี้ยนชิพ (อังกฤษ)',          avg: 1.32, homeAdvAtk: 1.14, homeAdvDef: 0.93, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
+            LEAGUE_ONE:    { name: 'ลีกวัน (อังกฤษ)',                avg: 1.28, homeAdvAtk: 1.13, homeAdvDef: 0.94, fhRatio: 0.44, rho: -0.07, fhRho: -0.02 },
+            LEAGUE_TWO:    { name: 'ลีกทู (อังกฤษ)',                 avg: 1.25, homeAdvAtk: 1.12, homeAdvDef: 0.95, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
+            // 🇪🇸 สเปน
+            LA_LIGA:       { name: 'ลาลีกา (สเปน)',                  avg: 1.25, homeAdvAtk: 1.18, homeAdvDef: 0.90, fhRatio: 0.42, rho: -0.07, fhRho: -0.02 },
+            LA_LIGA_2:     { name: 'ลาลีกา 2 (สเปน)',                avg: 1.18, homeAdvAtk: 1.16, homeAdvDef: 0.91, fhRatio: 0.41, rho: -0.06, fhRho: -0.02 },
+            // 🇩🇪 เยอรมนี
+            BUNDESLIGA:    { name: 'บุนเดสลีกา (เยอรมนี)',            avg: 1.55, homeAdvAtk: 1.13, homeAdvDef: 0.93, fhRatio: 0.47, rho: -0.09, fhRho: -0.04 },
+            BUNDESLIGA_2:  { name: 'บุนเดสลีกา 2 (เยอรมนี)',          avg: 1.42, homeAdvAtk: 1.12, homeAdvDef: 0.94, fhRatio: 0.46, rho: -0.08, fhRho: -0.03 },
+            // 🇮🇹 อิตาลี
+            SERIE_A:       { name: 'เซเรีย อา (อิตาลี)',              avg: 1.30, homeAdvAtk: 1.16, homeAdvDef: 0.91, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
+            SERIE_B:       { name: 'เซเรีย บี (อิตาลี)',              avg: 1.22, homeAdvAtk: 1.15, homeAdvDef: 0.92, fhRatio: 0.42, rho: -0.06, fhRho: -0.02 },
+            // 🇫🇷 ฝรั่งเศส
+            LIGUE_1:       { name: 'ลีกเอิง (ฝรั่งเศส)',              avg: 1.35, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
+            LIGUE_2:       { name: 'ลีกเดอ (ฝรั่งเศส)',               avg: 1.20, homeAdvAtk: 1.13, homeAdvDef: 0.93, fhRatio: 0.42, rho: -0.06, fhRho: -0.02 },
+            // 🇪🇺 ยุโรปอื่น
+            EREDIVISIE:    { name: 'เอเรอดีวีซี (เนเธอร์แลนด์)',       avg: 1.60, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.47, rho: -0.08, fhRho: -0.03 },
+            LIGA_PORTUGAL: { name: 'ลีกา โปรตุเกส',                   avg: 1.28, homeAdvAtk: 1.17, homeAdvDef: 0.90, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
+            BELGIAN_PRO:   { name: 'เบลเยียม โปร ลีก',                avg: 1.38, homeAdvAtk: 1.13, homeAdvDef: 0.93, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
+            SUPER_LIG:     { name: 'ซูเปอร์ลีก (ตุรกี)',              avg: 1.42, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.45, rho: -0.07, fhRho: -0.03 },
+            // 🌏 เอเชีย
+            J1_LEAGUE:     { name: 'เจลีก 1 (ญี่ปุ่น)',               avg: 1.32, homeAdvAtk: 1.12, homeAdvDef: 0.94, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
+            J2_LEAGUE:     { name: 'เจลีก 2 (ญี่ปุ่น)',               avg: 1.25, homeAdvAtk: 1.11, homeAdvDef: 0.95, fhRatio: 0.42, rho: -0.05, fhRho: -0.02 },
+            J3_LEAGUE:     { name: 'เจลีก 3 (ญี่ปุ่น)',               avg: 1.28, homeAdvAtk: 1.10, homeAdvDef: 0.96, fhRatio: 0.42, rho: -0.05, fhRho: -0.02 },
+            K_LEAGUE_1:    { name: 'เค ลีก 1 (เกาหลีใต้)',            avg: 1.30, homeAdvAtk: 1.13, homeAdvDef: 0.93, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
+            CSL:           { name: 'ไชนีส ซูเปอร์ลีก (จีน)',           avg: 1.45, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
+            KARNATAKA_SUPER: { name: 'อินเดีย คาร์นาตากา ซูเปอร์ ดิวิชั่น', avg: 1.52, homeAdvAtk: 1.22, homeAdvDef: 0.86, fhRatio: 0.46, rho: -0.09, fhRho: -0.03 },
+            // 🌏 ตะวันออกกลาง
+            SAUDI_PRO:     { name: 'ซาอุดี โปร ลีก',                  avg: 1.48, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.45, rho: -0.07, fhRho: -0.03 },
+            UAE_PRO:       { name: 'ยูเออี โปร ลีก',                  avg: 1.55, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.46, rho: -0.08, fhRho: -0.03 },
+            QATAR_STARS:   { name: 'กาตาร์ สตาร์ส ลีก',               avg: 1.60, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.46, rho: -0.09, fhRho: -0.04 },
+            KUWAIT_PREMIER:{ name: 'คูเวต พรีเมียร์ลีก',              avg: 1.42, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.45, rho: -0.07, fhRho: -0.03 },
+            BAHRAIN_PREMIER:{ name: 'บาห์เรน พรีเมียร์ลีก',           avg: 1.38, homeAdvAtk: 1.13, homeAdvDef: 0.93, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
+            OMAN_PRO:      { name: 'โอมาน โปร ลีก',                   avg: 1.32, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.43, rho: -0.07, fhRho: -0.02 },
+            JORDAN_PRO:    { name: 'จอร์แดน โปร ลีก',                 avg: 1.28, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
+            IRAQ_STARS:    { name: 'อิรัก สตาร์ส ลีก',                avg: 1.30, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.43, rho: -0.07, fhRho: -0.02 },
+            IRAN_PRO:      { name: 'อิหร่าน โปร ลีก',                 avg: 1.25, homeAdvAtk: 1.20, homeAdvDef: 0.88, fhRatio: 0.42, rho: -0.08, fhRho: -0.03 },
+            // 🌏 โอเชียเนีย / อเมริกา
+            A_LEAGUE:      { name: 'เอลีก (ออสเตรเลีย)',              avg: 1.38, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
+            MLS:           { name: 'เมเจอร์ลีกซอกเกอร์ (สหรัฐฯ)',      avg: 1.45, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
+            BRASIL_SERIE_A:{ name: 'บราซิล เซเรีย อา',               avg: 1.32, homeAdvAtk: 1.18, homeAdvDef: 0.89, fhRatio: 0.43, rho: -0.07, fhRho: -0.02 },
+            ARGENTINA:     { name: 'ลีกา โปรเฟสชันนัล (อาร์เจนตินา)',  avg: 1.22, homeAdvAtk: 1.19, homeAdvDef: 0.88, fhRatio: 0.41, rho: -0.06, fhRho: -0.02 },
+            // 🌍 แอฟริกาเหนือ
+            EGYPT_PREMIER: { name: 'อียิปต์ พรีเมียร์ลีก',            avg: 1.35, homeAdvAtk: 1.18, homeAdvDef: 0.89, fhRatio: 0.44, rho: -0.08, fhRho: -0.03 },
+            MOROCCO_BOTOLA:{ name: 'โมร็อกโก โบโตลา โปร',             avg: 1.30, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.43, rho: -0.07, fhRho: -0.02 },
+            ALGERIA_LIGUE1:{ name: 'แอลจีเรีย ลีก 1',                avg: 1.22, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.42, rho: -0.06, fhRho: -0.02 },
+            TUNISIA_LIGUE1:{ name: 'ตูนิเซีย ลีก 1',                 avg: 1.20, homeAdvAtk: 1.17, homeAdvDef: 0.90, fhRatio: 0.41, rho: -0.06, fhRho: -0.02 },
+            LIBYA_PREMIER: { name: 'ลิเบีย พรีเมียร์ลีก',              avg: 1.24, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.42, rho: -0.06, fhRho: -0.02 },
+            // 🌍 แอฟริกาใต้ / แองโกลา
+            SA_PREMIERSHIP:{ name: 'แอฟริกาใต้ พรีเมียร์ชิพ',          avg: 1.25, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.42, rho: -0.06, fhRho: -0.02 },
+            ANGOLA_GIRABOLA:{ name: 'แองโกลา จิราโบลา',               avg: 1.32, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
+            ZAMBIA_SUPER:  { name: 'แซมเบีย ซูเปอร์ลีก',               avg: 1.28, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.43, rho: -0.07, fhRho: -0.02 },
+            ZIMBABWE_PREMIER:{ name: 'ซิมบับเว พรีเมียร์ลีก',           avg: 1.26, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
+            MOZAMBIQUE_MOC:{ name: 'โมซัมบิก โมซัมโบลา',              avg: 1.30, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.44, rho: -0.07, fhRho: -0.02 },
+            // 🇹🇭 ไทย
+            THAI_LEAGUE:   { name: 'ไทยลีก 1',                        avg: 1.45, homeAdvAtk: 1.20, homeAdvDef: 0.88, fhRatio: 0.46, rho: -0.10, fhRho: -0.04 },
+            THAI_LEAGUE_2: { name: 'ไทยลีก 2',                        avg: 1.35, homeAdvAtk: 1.18, homeAdvDef: 0.89, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
         };
 
         const MAX_GOALS = 8;
@@ -442,7 +511,6 @@
         let currentResult = null;
         let currentInput = null;
 
-        // ============ MATH ============
         function factorial(n) {
             if (n === 0 || n === 1) return 1;
             let res = 1;
@@ -477,27 +545,23 @@
             }
         }
 
-        // ============ ASIAN HANDICAP LOGIC ============
         function calculateAsianHandicap(scoresMatrix, handicap) {
             let h1, h2;
             const h = parseFloat(handicap);
             const absH = Math.abs(h);
             const frac = absH - Math.floor(absH);
             const sign = h < 0 ? -1 : 1;
-            
             if (Math.abs(frac - 0.25) < 0.001) {
-                h1 = sign * (Math.floor(absH));
-                h2 = sign * (Math.ceil(absH));
+                h1 = sign * Math.floor(absH);
+                h2 = sign * Math.ceil(absH);
             } else if (Math.abs(frac - 0.75) < 0.001) {
-                h1 = sign * (Math.floor(absH));
-                h2 = sign * (Math.ceil(absH));
+                h1 = sign * Math.floor(absH);
+                h2 = sign * Math.ceil(absH);
             } else {
                 return calculateSingleHandicap(scoresMatrix, h);
             }
-            
             const r1 = calculateSingleHandicap(scoresMatrix, h1);
             const r2 = calculateSingleHandicap(scoresMatrix, h2);
-            
             return {
                 win: (r1.win + r2.win) / 2,
                 push: (r1.push + r2.push) / 2,
@@ -506,12 +570,10 @@
                 label: `${h1} & ${h2}`
             };
         }
-        
         function calculateSingleHandicap(scoresMatrix, handicap) {
             let win = 0, push = 0, lose = 0;
             for (const s of scoresMatrix) {
-                const margin = s.h - s.a;
-                const adjusted = margin + handicap;
+                const adjusted = (s.h - s.a) + handicap;
                 if (adjusted > 0.001) win += s.prob;
                 else if (adjusted < -0.001) lose += s.prob;
                 else push += s.prob;
@@ -519,7 +581,6 @@
             return { win, push, lose };
         }
 
-        // ============ CORE MODEL ============
         function analyzeMatch(input) {
             const league = LEAGUES[input.league] || LEAGUES.EPL;
             const { homeAttack, homeDefense, awayAttack, awayDefense, homeForm, awayForm, h2hMatches, h2hHomeGoals, h2hAwayGoals, currentWeight } = input;
@@ -540,24 +601,18 @@
                 awayLambdaH2H = h2hAwayGoals / h2hMatches;
                 h2hReliability = h2hMatches / (h2hMatches + H2H_SHRINKAGE_K);
             }
-
-            const wCurrentBase = currentWeight / 100;
-            const wH2h = (1 - wCurrentBase) * h2hReliability;
-            const wCurrent = 1 - wH2h;
+            const wCurrent = 1 - ((1 - currentWeight / 100) * h2hReliability);
+            const wH2h = 1 - wCurrent;
 
             let homeLambda = Math.max(0.05, homeLambdaBase * wCurrent + homeLambdaH2H * wH2h);
             let awayLambda = Math.max(0.05, awayLambdaBase * wCurrent + awayLambdaH2H * wH2h);
 
-            // Full Time
             let homeWin = 0, draw = 0, awayWin = 0, over25 = 0, btts = 0;
             let scoresFT = [], rawFT = 0;
 
             for (let h = 0; h <= MAX_GOALS; h++) {
                 for (let a = 0; a <= MAX_GOALS; a++) {
-                    const pHome = poissonProbability(homeLambda, h);
-                    const pAway = poissonProbability(awayLambda, a);
-                    const tau = dixonColesTau(h, a, homeLambda, awayLambda, league.rho);
-                    let prob = Math.max(0, pHome * pAway * tau);
+                    const prob = Math.max(0, poissonProbability(homeLambda, h) * poissonProbability(awayLambda, a) * dixonColesTau(h, a, homeLambda, awayLambda, league.rho));
                     rawFT += prob;
                     if (h > a) homeWin += prob;
                     else if (a > h) awayWin += prob;
@@ -575,7 +630,6 @@
             const sortedFT = [...scoresFT].sort((a, b) => b.prob - a.prob);
             const top3FT = sortedFT.slice(0, 3).map(i => ({ score: i.str, percent: (i.prob * 100).toFixed(1) + '%' }));
 
-            // First Half
             const homeLambdaFH = homeLambda * league.fhRatio;
             const awayLambdaFH = awayLambda * league.fhRatio;
             let scoresFH = [], rawFH = 0;
@@ -583,10 +637,7 @@
 
             for (let h = 0; h <= MAX_GOALS; h++) {
                 for (let a = 0; a <= MAX_GOALS; a++) {
-                    const pHome = poissonProbability(homeLambdaFH, h);
-                    const pAway = poissonProbability(awayLambdaFH, a);
-                    const tau = dixonColesTau(h, a, homeLambdaFH, awayLambdaFH, league.fhRho);
-                    let prob = Math.max(0, pHome * pAway * tau);
+                    const prob = Math.max(0, poissonProbability(homeLambdaFH, h) * poissonProbability(awayLambdaFH, a) * dixonColesTau(h, a, homeLambdaFH, awayLambdaFH, league.fhRho));
                     rawFH += prob;
                     if (h > a) fhHomeWin += prob;
                     else if (a > h) fhAwayWin += prob;
@@ -604,10 +655,6 @@
             const sortedFH = [...scoresFH].sort((a, b) => b.prob - a.prob);
             const top3FH = sortedFH.slice(0, 3).map(i => ({ score: i.str, percent: (i.prob * 100).toFixed(1) + '%' }));
 
-            const dc1X = homeWin + draw, dc12 = homeWin + awayWin, dcX2 = draw + awayWin;
-            const dnbHome = homeWin / (homeWin + awayWin);
-
-            // Team Total
             const teamTotalHome = {
                 over05: 1 - poissonCdf(homeLambda, 0),
                 over15: 1 - poissonCdf(homeLambda, 1),
@@ -619,7 +666,6 @@
                 over25: 1 - poissonCdf(awayLambda, 2)
             };
 
-            // Monte Carlo
             let mcH = 0, mcD = 0, mcA = 0;
             for (let r = 0; r < MONTE_CARLO_RUNS; r++) {
                 const gh = poissonSample(homeLambda * (1 + (Math.random() - 0.5) * 0.2));
@@ -646,13 +692,8 @@
                 over25Pct: (over25 * 100).toFixed(1) + '%',
                 under25Pct: ((1 - over25) * 100).toFixed(1) + '%',
                 bttsPct: (btts * 100).toFixed(1) + '%',
-                dc1X: (dc1X * 100).toFixed(1) + '%',
-                dc12: (dc12 * 100).toFixed(1) + '%',
-                dcX2: (dcX2 * 100).toFixed(1) + '%',
-                dnbHome: (dnbHome * 100).toFixed(1) + '%',
                 confidencePct: confidence.toFixed(1) + '%',
-                top3FT, top3FH,
-                scoresFT,
+                top3FT, top3FH, scoresFT,
                 teamTotalHome, teamTotalAway,
                 htHome: (fhHomeWin * 100).toFixed(1) + '%',
                 htDraw: (fhDraw * 100).toFixed(1) + '%',
@@ -663,154 +704,86 @@
             };
         }
 
-        // ============ VALUE BET ============
         function calculateValueBet(modelProb, odds) {
             if (!odds || odds <= 1) return null;
             const impliedProb = 1 / odds;
             const ev = (modelProb * (odds - 1)) - (1 - modelProb);
-            
-            let verdict = 'no-value';
-            let label = '🔴 No Value';
+            let verdict = 'no-value', label = '🔴 No Value';
             if (ev > 0.05) { verdict = 'value'; label = '🟢 Value Bet'; }
             else if (ev > -0.02) { verdict = 'fair'; label = '🟡 Fair'; }
-            
             return {
                 impliedProb: (impliedProb * 100).toFixed(1) + '%',
                 modelProb: (modelProb * 100).toFixed(1) + '%',
                 ev: (ev * 100).toFixed(1) + '%',
-                evNum: ev,
-                verdict, label
+                evNum: ev, verdict, label
             };
         }
 
         function renderValueBet() {
             if (!currentResult || !currentInput) return;
-            
-            const oddsHome = parseFloat(document.getElementById('odd_home').value);
-            const oddsDraw = parseFloat(document.getElementById('odd_draw').value);
-            const oddsAway = parseFloat(document.getElementById('odd_away').value);
-            
+            const oH = parseFloat(document.getElementById('odd_home').value);
+            const oD = parseFloat(document.getElementById('odd_draw').value);
+            const oA = parseFloat(document.getElementById('odd_away').value);
             const container = document.getElementById('valueBetContainer');
-            
-            if (!oddsHome && !oddsDraw && !oddsAway) {
-                container.innerHTML = `<div class="alert alert-light text-center py-4 text-muted small">💡 กรอก Odds จากเจ้ามือ (ช่องสีฟ้า) เพื่อดู Value Bet</div>`;
+            if (!oH && !oD && !oA) {
+                container.innerHTML = `<div class="alert alert-light text-center py-4 text-muted small">💡 กรอก Odds จากเจ้ามือ เพื่อดู Value Bet</div>`;
                 return;
             }
-            
-            const homeVB = oddsHome ? calculateValueBet(currentResult.homeWinNum, oddsHome) : null;
-            const drawVB = oddsDraw ? calculateValueBet(currentResult.drawNum, oddsDraw) : null;
-            const awayVB = oddsAway ? calculateValueBet(currentResult.awayWinNum, oddsAway) : null;
-            
+            const hVB = oH ? calculateValueBet(currentResult.homeWinNum, oH) : null;
+            const dVB = oD ? calculateValueBet(currentResult.drawNum, oD) : null;
+            const aVB = oA ? calculateValueBet(currentResult.awayWinNum, oA) : null;
             function renderOutcome(name, icon, vb) {
                 if (!vb) return `<div class="col-4"><div class="p-2 border rounded-3 text-center bg-light"><div class="small fw-bold text-muted">${icon} ${name}</div><div class="text-xs text-muted">ไม่มี Odds</div></div></div>`;
-                return `
-                    <div class="col-4">
-                        <div class="value-card value-${vb.verdict === 'value' ? 'positive' : vb.verdict === 'fair' ? 'neutral' : 'negative'} text-center">
-                            <div class="small fw-bold">${icon} ${name}</div>
-                            <div class="h5 fw-bold my-1">${vb.modelProb}</div>
-                            <div class="text-xs text-muted">Model</div>
-                            <hr class="my-1">
-                            <div class="text-xs">Implied: <strong>${vb.impliedProb}</strong></div>
-                            <div class="text-xs">EV: <strong>${vb.ev}</strong></div>
-                            <div class="small fw-bold mt-1">${vb.label}</div>
-                        </div>
-                    </div>
-                `;
+                return `<div class="col-4"><div class="value-card value-${vb.verdict === 'value' ? 'positive' : vb.verdict === 'fair' ? 'neutral' : 'negative'} text-center"><div class="small fw-bold">${icon} ${name}</div><div class="h5 fw-bold my-1">${vb.modelProb}</div><div class="text-xs text-muted">Model</div><hr class="my-1"><div class="text-xs">Implied: <strong>${vb.impliedProb}</strong></div><div class="text-xs">EV: <strong>${vb.ev}</strong></div><div class="small fw-bold mt-1">${vb.label}</div></div></div>`;
             }
-            
-            const best = [homeVB, drawVB, awayVB].filter(v => v).sort((a, b) => b.evNum - a.evNum)[0];
-            
+            const best = [hVB, dVB, aVB].filter(v => v).sort((a, b) => b.evNum - a.evNum)[0];
             container.innerHTML = `
                 <div class="row g-2">
-                    ${renderOutcome('เหย้า', '🏠', homeVB)}
-                    ${renderOutcome('เสมอ', '⚖️', drawVB)}
-                    ${renderOutcome('เยือน', '✈️', awayVB)}
+                    ${renderOutcome('เหย้า', '🏠', hVB)}
+                    ${renderOutcome('เสมอ', '⚖️', dVB)}
+                    ${renderOutcome('เยือน', '✈️', aVB)}
                 </div>
-                ${best && best.verdict === 'value' ? `
-                    <div class="alert alert-success mt-3 mb-0 py-2 text-sm">
-                        <strong>⭐ แนะนำ:</strong> เดิมพันฝั่ง EV สูงสุด → <strong>${best.ev}</strong> (${best.label})
-                    </div>
-                ` : best ? `
-                    <div class="alert alert-secondary mt-3 mb-0 py-2 text-sm">
-                        <strong>ℹ️ สรุป:</strong> ไม่มี Value Bet ชัดเจน (EV สูงสุด ${best.ev})
-                    </div>
-                ` : ''}
+                ${best && best.verdict === 'value' ? `<div class="alert alert-success mt-3 mb-0 py-2 text-sm"><strong>⭐ แนะนำ:</strong> เดิมพันฝั่ง EV สูงสุด → <strong>${best.ev}</strong> (${best.label})</div>` : best ? `<div class="alert alert-secondary mt-3 mb-0 py-2 text-sm"><strong>ℹ️ สรุป:</strong> ไม่มี Value Bet ชัดเจน (EV สูงสุด ${best.ev})</div>` : ''}
             `;
         }
 
-        // ============ HANDICAP RENDER ============
         function renderHandicap() {
             if (!currentResult) return;
             const h = document.getElementById('handicapSelect').value;
             const res = calculateAsianHandicap(currentResult.scoresFT, h);
-            
             const container = document.getElementById('handicapResult');
             const totalProb = res.win + res.push + res.lose;
             const winPct = (res.win / totalProb * 100).toFixed(1);
             const pushPct = (res.push / totalProb * 100).toFixed(1);
             const losePct = (res.lose / totalProb * 100).toFixed(1);
-            
-            const winValue = res.win + (res.push / 2);
-            const fairOdds = winValue > 0 ? (1 / winValue).toFixed(2) : '-';
-            const effectiveWin = res.win / (res.win + res.lose);
-            const fairOddsStrict = effectiveWin > 0 ? (1 / effectiveWin).toFixed(2) : '-';
-            
+            const fairOdds = (1 / (res.win + (res.push / 2))).toFixed(2);
+            const fairOddsStrict = (1 / (res.win / (res.win + res.lose))).toFixed(2);
             container.innerHTML = `
                 <div class="p-3 bg-light rounded-3">
-                    <div class="text-center mb-2">
-                        <div class="small text-muted">Handicap: <strong>${h}</strong> ${res.isQuarter ? `<span class="badge bg-info">${res.label}</span>` : ''}</div>
-                    </div>
+                    <div class="text-center mb-2"><div class="small text-muted">Handicap: <strong>${h}</strong> ${res.isQuarter ? `<span class="badge bg-info">${res.label}</span>` : ''}</div></div>
                     <div class="row g-2 text-center">
-                        <div class="col-4">
-                            <div class="p-2 bg-success text-white rounded-3">
-                                <div class="small fw-bold">ชนะเดิมพัน</div>
-                                <div class="h5 mb-0">${winPct}%</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="p-2 bg-warning text-dark rounded-3">
-                                <div class="small fw-bold">คืนทุน</div>
-                                <div class="h5 mb-0">${pushPct}%</div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="p-2 bg-danger text-white rounded-3">
-                                <div class="small fw-bold">เสียเดิมพัน</div>
-                                <div class="h5 mb-0">${losePct}%</div>
-                            </div>
-                        </div>
+                        <div class="col-4"><div class="p-2 bg-success text-white rounded-3"><div class="small fw-bold">ชนะเดิมพัน</div><div class="h5 mb-0">${winPct}%</div></div></div>
+                        <div class="col-4"><div class="p-2 bg-warning text-dark rounded-3"><div class="small fw-bold">คืนทุน</div><div class="h5 mb-0">${pushPct}%</div></div></div>
+                        <div class="col-4"><div class="p-2 bg-danger text-white rounded-3"><div class="small fw-bold">เสียเดิมพัน</div><div class="h5 mb-0">${losePct}%</div></div></div>
                     </div>
                     <hr class="my-2">
                     <div class="row g-2 text-center small">
-                        <div class="col-6">
-                            <div class="text-muted">Fair Odds (รวม push)</div>
-                            <div class="h5 fw-bold text-primary mb-0">${fairOdds}</div>
-                        </div>
-                        <div class="col-6">
-                            <div class="text-muted">Fair Odds (เข้มงวด)</div>
-                            <div class="h5 fw-bold text-dark mb-0">${fairOddsStrict}</div>
-                        </div>
-                    </div>
-                    <div class="text-xs text-muted text-center mt-2">
-                        💡 ถ้าเจ้ามือให้ราคาสูงกว่า Fair Odds = มี Value Bet
+                        <div class="col-6"><div class="text-muted">Fair Odds (รวม push)</div><div class="h5 fw-bold text-primary mb-0">${fairOdds}</div></div>
+                        <div class="col-6"><div class="text-muted">Fair Odds (เข้มงวด)</div><div class="h5 fw-bold text-dark mb-0">${fairOddsStrict}</div></div>
                     </div>
                 </div>
             `;
         }
 
-        // ============ UI UPDATE ============
         function updateDashboard(res, input) {
             currentResult = res;
             currentInput = input;
-            
             document.getElementById('displayHomeGoals').textContent = res.xgHome;
             document.getElementById('displayAwayGoals').textContent = res.xgAway;
             document.getElementById('displayTotalGoals').textContent = res.xgTotal;
-
             const homeName = input.homeName, awayName = input.awayName;
             document.getElementById('labelHomeTeam').textContent = `🏠 ${homeName}`;
             document.getElementById('labelAwayTeam').textContent = `✈️ ${awayName}`;
-
             const hp = res.homeWinNum * 100, dp = res.drawNum * 100, ap = res.awayWinNum * 100;
             document.getElementById('progressHome').style.width = hp + '%';
             document.getElementById('progressDraw').style.width = dp + '%';
@@ -818,63 +791,34 @@
             document.getElementById('textHome').textContent = hp >= 10 ? `${homeName} ${res.homeWinPct}` : res.homeWinPct;
             document.getElementById('textDraw').textContent = dp >= 10 ? `เสมอ ${res.drawPct}` : res.drawPct;
             document.getElementById('textAway').textContent = ap >= 10 ? `${awayName} ${res.awayWinPct}` : res.awayWinPct;
-
             function renderScores(id, scores, color) {
                 const el = document.getElementById(id);
                 el.innerHTML = '';
                 const badges = ['bg-danger', 'bg-warning text-dark', 'bg-secondary'];
                 scores.forEach((s, i) => {
-                    el.innerHTML += `
-                        <div class="p-2 border rounded-3 bg-light d-flex justify-content-between align-items-center shadow-sm mb-1" style="font-size:0.85rem; border-left: 3px solid ${color} !important;">
-                            <div><span class="badge ${badges[i]} rounded-pill me-1">${i+1}</span> <strong>${s.score}</strong></div>
-                            <span class="fw-bold">${s.percent}</span>
-                        </div>`;
+                    el.innerHTML += `<div class="p-2 border rounded-3 bg-light d-flex justify-content-between align-items-center shadow-sm mb-1" style="font-size:0.85rem; border-left: 3px solid ${color} !important;"><div><span class="badge ${badges[i]} rounded-pill me-1">${i+1}</span> <strong>${s.score}</strong></div><span class="fw-bold">${s.percent}</span></div>`;
                 });
             }
             renderScores('topScoresFullTime', res.top3FT, '#3b82f6');
             renderScores('topScoresFirstHalf', res.top3FH, '#ef4444');
-
-            document.getElementById('ht1x2').innerHTML = `
-                <div class="text-success">🏠 ${res.htHome}</div>
-                <div class="text-secondary">⚖️ ${res.htDraw}</div>
-                <div class="text-primary">✈️ ${res.htAway}</div>
-            `;
+            document.getElementById('ht1x2').innerHTML = `<div class="text-success">🏠 ${res.htHome}</div><div class="text-secondary">⚖️ ${res.htDraw}</div><div class="text-primary">✈️ ${res.htAway}</div>`;
             document.getElementById('htOU05').textContent = res.htOver05;
             document.getElementById('htOU15').textContent = res.htOver15;
-
             document.getElementById('teamTotalBody').innerHTML = `
-                <tr>
-                    <td class="text-start fw-bold text-success">🏠 ${homeName}</td>
-                    <td>${(res.teamTotalHome.over05 * 100).toFixed(1)}% / ${((1-res.teamTotalHome.over05) * 100).toFixed(1)}%</td>
-                    <td>${(res.teamTotalHome.over15 * 100).toFixed(1)}% / ${((1-res.teamTotalHome.over15) * 100).toFixed(1)}%</td>
-                    <td>${(res.teamTotalHome.over25 * 100).toFixed(1)}% / ${((1-res.teamTotalHome.over25) * 100).toFixed(1)}%</td>
-                </tr>
-                <tr>
-                    <td class="text-start fw-bold text-primary">✈️ ${awayName}</td>
-                    <td>${(res.teamTotalAway.over05 * 100).toFixed(1)}% / ${((1-res.teamTotalAway.over05) * 100).toFixed(1)}%</td>
-                    <td>${(res.teamTotalAway.over15 * 100).toFixed(1)}% / ${((1-res.teamTotalAway.over15) * 100).toFixed(1)}%</td>
-                    <td>${(res.teamTotalAway.over25 * 100).toFixed(1)}% / ${((1-res.teamTotalAway.over25) * 100).toFixed(1)}%</td>
-                </tr>
+                <tr><td class="text-start fw-bold text-success">🏠 ${homeName}</td><td>${(res.teamTotalHome.over05*100).toFixed(1)}% / ${((1-res.teamTotalHome.over05)*100).toFixed(1)}%</td><td>${(res.teamTotalHome.over15*100).toFixed(1)}% / ${((1-res.teamTotalHome.over15)*100).toFixed(1)}%</td><td>${(res.teamTotalHome.over25*100).toFixed(1)}% / ${((1-res.teamTotalHome.over25)*100).toFixed(1)}%</td></tr>
+                <tr><td class="text-start fw-bold text-primary">✈️ ${awayName}</td><td>${(res.teamTotalAway.over05*100).toFixed(1)}% / ${((1-res.teamTotalAway.over05)*100).toFixed(1)}%</td><td>${(res.teamTotalAway.over15*100).toFixed(1)}% / ${((1-res.teamTotalAway.over15)*100).toFixed(1)}%</td><td>${(res.teamTotalAway.over25*100).toFixed(1)}% / ${((1-res.teamTotalAway.over25)*100).toFixed(1)}%</td></tr>
             `;
-
             document.getElementById('displayOver25').textContent = res.over25Pct;
             document.getElementById('displayUnder25').textContent = res.under25Pct;
             document.getElementById('displayBTTS').textContent = res.bttsPct;
             document.getElementById('displayConfidence').textContent = res.confidencePct;
-
             const warnBox = document.getElementById('globalWarning');
-            if (res.warnings.length > 0) {
-                warnBox.classList.remove('d-none');
-                document.getElementById('warningText').textContent = res.warnings.join(" | ");
-            } else {
-                warnBox.classList.add('d-none');
-            }
-
+            if (res.warnings.length > 0) { warnBox.classList.remove('d-none'); document.getElementById('warningText').textContent = res.warnings.join(" | "); }
+            else warnBox.classList.add('d-none');
             renderValueBet();
             renderHandicap();
         }
 
-        // ============ FORM ============
         function getInput() {
             return {
                 league: document.getElementById('leagueSelect').value,
@@ -905,44 +849,30 @@
             if (saveHistory) saveToHistory(input, result);
         }
 
-        // ============ HISTORY ============
         function getHistory() { return JSON.parse(localStorage.getItem('jackai_history') || '[]'); }
         function saveHistoryToStorage(h) { localStorage.setItem('jackai_history', JSON.stringify(h)); }
-        
         function saveToHistory(input, result) {
             let history = getHistory();
-            history.unshift({
-                id: 'item_' + Date.now(),
-                date: new Date().toLocaleString('th-TH'),
-                timestamp: Date.now(),
-                home: input.homeName, away: input.awayName,
-                input, result, actualScore: null
-            });
+            history.unshift({ id: 'item_' + Date.now(), date: new Date().toLocaleString('th-TH'), timestamp: Date.now(), home: input.homeName, away: input.awayName, input, result, actualScore: null });
             history = history.slice(0, MAX_HISTORY);
             saveHistoryToStorage(history);
             renderHistory();
         }
-        
         function classifyResult(item) {
             if (!item.actualScore) return 'pending';
-            const predTop = item.result.top3FT[0].score;
             const [ah, aa] = item.actualScore.split('-').map(Number);
-            const [ph, pa] = predTop.split('-').map(Number);
+            const [ph, pa] = item.result.top3FT[0].score.split('-').map(Number);
             if (ah === ph && aa === pa) return 'exact';
             const actualOutcome = ah > aa ? 'home' : ah < aa ? 'away' : 'draw';
             const hp = parseFloat(item.result.homeWinPct), dp = parseFloat(item.result.drawPct), ap = parseFloat(item.result.awayWinPct);
             const predOutcome = hp > ap && hp > dp ? 'home' : ap > hp && ap > dp ? 'away' : 'draw';
             return actualOutcome === predOutcome ? 'correct' : 'wrong';
         }
-
         function renderHistory() {
             const list = document.getElementById('historyList');
             const history = getHistory();
-            if (history.length === 0) {
-                list.innerHTML = '<div class="text-muted text-center py-2">ยังไม่มีประวัติ</div>';
-                return;
-            }
-            list.innerHTML = history.map((item) => {
+            if (history.length === 0) { list.innerHTML = '<div class="text-muted text-center py-2">ยังไม่มีประวัติ</div>'; return; }
+            list.innerHTML = history.map(item => {
                 const status = classifyResult(item);
                 let badge = '<span class="actual-score-badge result-pending">⏳ รอผล</span>';
                 if (item.actualScore) {
@@ -950,30 +880,9 @@
                     const ic = status === 'exact' ? '🎯' : status === 'correct' ? '✅' : '❌';
                     badge = `<span class="actual-score-badge ${cls}">${ic} ${item.actualScore}</span>`;
                 }
-                return `
-                <div class="list-group-item history-item px-2 py-2" data-id="${item.id}">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div class="flex-grow-1" style="cursor: pointer;" onclick="loadHistory('${item.id}')">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="fw-bold text-truncate" style="max-width: 65%;">${item.home} vs ${item.away}</span>
-                                <span class="badge bg-secondary rounded-pill">${item.result.homeWinPct}</span>
-                            </div>
-                            <div class="text-xs text-muted mb-1">xG: ${item.result.xgHome} - ${item.result.xgAway}</div>
-                            <div class="d-flex gap-1 flex-wrap">
-                                ${badge}
-                                <button class="btn btn-xs btn-outline-secondary rounded-pill" onclick="event.stopPropagation(); promptActualScore('${item.id}')">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <button class="icon-btn icon-btn-danger btn-delete ms-2" onclick="event.stopPropagation(); deleteHistoryItem('${item.id}')">
-                            <i class="bi bi-trash3 text-danger"></i>
-                        </button>
-                    </div>
-                </div>`;
+                return `<div class="list-group-item history-item px-2 py-2" data-id="${item.id}"><div class="d-flex justify-content-between align-items-start"><div class="flex-grow-1" style="cursor: pointer;" onclick="loadHistory('${item.id}')"><div class="d-flex justify-content-between mb-1"><span class="fw-bold text-truncate" style="max-width: 65%;">${item.home} vs ${item.away}</span><span class="badge bg-secondary rounded-pill">${item.result.homeWinPct}</span></div><div class="text-xs text-muted mb-1">xG: ${item.result.xgHome} - ${item.result.xgAway}</div><div class="d-flex gap-1 flex-wrap">${badge}<button class="btn btn-xs btn-outline-secondary rounded-pill" onclick="event.stopPropagation(); promptActualScore('${item.id}')"><i class="bi bi-pencil-square"></i></button></div></div><button class="icon-btn icon-btn-danger btn-delete ms-2" onclick="event.stopPropagation(); deleteHistoryItem('${item.id}')"><i class="bi bi-trash3 text-danger"></i></button></div></div>`;
             }).join('');
         }
-        
         window.loadHistory = function(id) {
             const item = getHistory().find(h => h.id === id);
             if (!item) return;
@@ -992,28 +901,23 @@
             document.getElementById('weightSlider').value = item.input.currentWeight;
             document.getElementById('weightHomeLabel').textContent = item.input.currentWeight + '%';
             document.getElementById('weightH2hLabel').textContent = (100 - item.input.currentWeight) + '%';
-            
             if (item.input.odds) {
                 document.getElementById('odd_home').value = item.input.odds.home || '';
                 document.getElementById('odd_draw').value = item.input.odds.draw || '';
                 document.getElementById('odd_away').value = item.input.odds.away || '';
             }
-            
             triggerCalculation(false);
         };
-        
         window.deleteHistoryItem = function(id) {
             if (!confirm('ลบรายการนี้?')) return;
-            let history = getHistory().filter(h => h.id !== id);
-            saveHistoryToStorage(history);
+            saveHistoryToStorage(getHistory().filter(h => h.id !== id));
             renderHistory();
         };
-        
         window.promptActualScore = function(id) {
             const history = getHistory();
             const item = history.find(h => h.id === id);
             if (!item) return;
-            const input = prompt(`ผลจริงของ ${item.home} vs ${item.away}\nรูปแบบ: 2-1 หรือ 0-0`, item.actualScore || '');
+            const input = prompt(`ผลจริงของ ${item.home} vs ${item.away}\nรูปแบบ: 2-1`, item.actualScore || '');
             if (input === null) return;
             if (input.trim() === '') item.actualScore = null;
             else {
@@ -1025,14 +929,12 @@
             renderHistory();
         };
 
-        // ============ EXPORT & CLEAR ============
         document.getElementById('btnClearAll').addEventListener('click', () => {
             if (getHistory().length === 0) { alert('ไม่มีประวัติ'); return; }
             if (!confirm('ล้างทั้งหมด?')) return;
             localStorage.removeItem('jackai_history');
             renderHistory();
         });
-
         document.getElementById('btnExport').addEventListener('click', function() {
             const history = getHistory();
             if (history.length === 0) { alert('ไม่มีประวัติ'); return; }
@@ -1048,39 +950,27 @@
             a.download = `JackAI_${new Date().toISOString().slice(0,10)}.html`;
             a.click();
         });
-
         document.getElementById('btnExportPDF').addEventListener('click', function() {
             const history = getHistory();
             if (history.length === 0) { alert('ไม่มีประวัติ'); return; }
             if (typeof html2pdf === 'undefined') { alert('โหลด PDF ไม่ได้'); return; }
-            
             const rows = history.map((h, i) => {
                 const status = classifyResult(h);
-                const st = status === 'exact' ? '🎯 เป๊ะ' : status === 'correct' ? '✅ ถูก' : status === 'wrong' ? '❌ ผิด' : '⏳ รอ';
+                const st = status === 'exact' ? '🎯' : status === 'correct' ? '✅' : status === 'wrong' ? '❌' : '⏳';
                 return `<tr><td>${i+1}</td><td>${h.home} vs ${h.away}</td><td>${h.result.xgHome}-${h.result.xgAway}</td><td>${h.result.homeWinPct}</td><td>${h.result.top3FT[0].score}</td><td>${h.actualScore || '-'}</td><td>${st}</td></tr>`;
             }).join('');
-            
             const temp = document.createElement('div');
             temp.innerHTML = `<div style="padding:20px;font-family:sans-serif;"><h1>⚽ JackAI History</h1><p>${new Date().toLocaleString('th-TH')} | ${history.length} รายการ</p><table style="width:100%;border-collapse:collapse;font-size:11px;"><thead style="background:#1e293b;color:white;"><tr><th style="padding:6px;">#</th><th>แมตช์</th><th>xG</th><th>Home%</th><th>Top Score</th><th>ผลจริง</th><th>สถานะ</th></tr></thead><tbody>${rows.split('</tr>').map(r => r.replace('<tr>', '<tr style="border-bottom:1px solid #ddd;">')).join('')}</tbody></table></div>`;
             document.body.appendChild(temp);
-            
             const btn = this;
-            btn.disabled = true;
-            btn.innerHTML = '⏳...';
-            
-            html2pdf().set({
-                margin: 10,
-                filename: `JackAI_${new Date().toISOString().slice(0,10)}.pdf`,
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-            }).from(temp.firstElementChild).save().then(() => {
+            btn.disabled = true; btn.innerHTML = '⏳...';
+            html2pdf().set({ margin: 10, filename: `JackAI_${new Date().toISOString().slice(0,10)}.pdf`, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } }).from(temp.firstElementChild).save().then(() => {
                 document.body.removeChild(temp);
                 btn.disabled = false;
                 btn.innerHTML = '<i class="bi bi-file-earmark-pdf"></i> PDF';
             });
         });
 
-        // ============ COPY ============
         document.getElementById('btnCopy').addEventListener('click', function() {
             if (!currentResult) return;
             const text = `
@@ -1102,35 +992,28 @@
             });
         });
 
-        // ============ EVENT BINDINGS ============
         document.addEventListener('DOMContentLoaded', function() {
             const slider = document.getElementById('weightSlider');
             const savedWeight = localStorage.getItem('football_model_weight');
             if (savedWeight !== null) slider.value = savedWeight;
-            
             function updateSliderLabels(v) {
                 document.getElementById('weightHomeLabel').textContent = `${v}%`;
                 document.getElementById('weightH2hLabel').textContent = `${100 - v}%`;
             }
             updateSliderLabels(slider.value);
-
             slider.addEventListener('input', function() {
                 updateSliderLabels(this.value);
                 localStorage.setItem('football_model_weight', this.value);
                 triggerCalculation(false);
             });
-
             ['odd_home', 'odd_draw', 'odd_away'].forEach(id => {
                 document.getElementById(id).addEventListener('input', renderValueBet);
             });
-
             document.getElementById('handicapSelect').addEventListener('change', renderHandicap);
-
             document.getElementById('footballForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 triggerCalculation(true);
             });
-
             renderHistory();
             triggerCalculation(false);
         });
