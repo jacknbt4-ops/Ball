@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI v3.7 - Global Expansion Edition</title>
+    <title>⚽ JackAI v3.8 - Ultimate Live Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -43,13 +43,21 @@
         .odds-input { font-size: 0.85rem; padding: 4px 8px; text-align: center; }
         .custom-tabs .nav-link { color: #475569; border-radius: 20px; padding: 4px 14px; font-size: 0.85rem; font-weight: 600; }
         .custom-tabs .nav-link.active { background: #1e293b; color: white; }
+        
+        /* Live styles */
+        .live-badge { animation: pulse 1.5s infinite; }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="text-center mb-4">
             <h1 class="fw-extrabold text-dark mb-2">⚽ JackAI</h1>
-            <p class="text-secondary fs-5 mb-0">Global Expansion Edition v3.7.1</p>
+            <p class="text-secondary fs-5 mb-0">Ultimate Live Edition v3.8</p>
         </div>
 
         <div class="row g-4">
@@ -257,7 +265,7 @@
                         <h4 class="mb-0 fs-5 fw-bold">📊 ผลวิเคราะห์ Pro Bettor</h4>
                         <div class="d-flex gap-2">
                             <button class="btn btn-sm btn-outline-light rounded-pill px-3" id="btnCopy">📋 Copy</button>
-                            <span class="badge bg-success px-2 py-1 rounded-pill fw-semibold small">v3.7.1</span>
+                            <span class="badge bg-success px-2 py-1 rounded-pill fw-semibold small">v3.8</span>
                         </div>
                     </div>
 
@@ -314,6 +322,9 @@
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="tab-team-total" data-bs-toggle="pill" data-bs-target="#pane-team-total" type="button">⚽ ประตูทีม</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link text-danger fw-bold live-badge" id="tab-live" data-bs-toggle="pill" data-bs-target="#pane-live" type="button">🔴 บอลสด</button>
                             </li>
                         </ul>
 
@@ -400,6 +411,127 @@
                                     </table>
                                 </div>
                             </div>
+
+                            <!-- Pane 5: Live Analysis -->
+                            <div class="tab-pane fade" id="pane-live" role="tabpanel">
+                                <div class="alert alert-danger py-2 text-sm mb-3">
+                                    <strong>🔴 โหมดบอลสด:</strong> กรอกเวลาที่ผ่านไป และสกอร์ปัจจุบัน เพื่อคำนวณโอกาสเกิดประตูในเวลาที่เหลือ
+                                </div>
+                                
+                                <div class="row g-2 mb-3">
+                                    <div class="col-4">
+                                        <label class="small fw-bold text-muted">⏱️ นาทีที่ (1-90)</label>
+                                        <input type="number" id="live_minute" class="form-control" value="45" min="1" max="90">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="small fw-bold text-muted">🏠 สกอร์เหย้า</label>
+                                        <input type="number" id="live_home_score" class="form-control" value="0" min="0">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="small fw-bold text-muted">✈️ สกอร์เยือน</label>
+                                        <input type="number" id="live_away_score" class="form-control" value="0" min="0">
+                                    </div>
+                                </div>
+                                <div class="d-grid mb-3">
+                                    <button type="button" class="btn btn-danger fw-bold rounded-pill" id="btnCalcLive">🔄 คำนวณบอลสด</button>
+                                </div>
+
+                                <div id="liveResults" class="d-none">
+                                    <h6 class="fw-bold mb-2 text-secondary small">⚡ คาดการณ์ประตูที่จะเกิดขึ้น (Remaining xG)</h6>
+                                    <div class="row g-2 text-center mb-3">
+                                        <div class="col-4">
+                                            <div class="p-2 border rounded-3 bg-light">
+                                                <div class="small fw-bold text-success">เหย้า</div>
+                                                <div class="h5 fw-bold mb-0" id="liveXgHome">0.00</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="p-2 border rounded-3 bg-light">
+                                                <div class="small fw-bold text-muted">รวม</div>
+                                                <div class="h5 fw-bold mb-0" id="liveXgTotal">0.00</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="p-2 border rounded-3 bg-light">
+                                                <div class="small fw-bold text-primary">เยือน</div>
+                                                <div class="h5 fw-bold mb-0" id="liveXgAway">0.00</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h6 class="fw-bold mb-2 text-secondary small">🎯 ประตูถัดไป (Next Goal)</h6>
+                                    <div class="row g-2 text-center mb-3">
+                                        <div class="col-4">
+                                            <div class="p-2 border rounded-3 bg-light">
+                                                <div class="small fw-bold text-success">เหย้ายิง</div>
+                                                <div class="h6 fw-bold mb-0" id="liveNextHome">-%</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="p-2 border rounded-3 bg-light">
+                                                <div class="small fw-bold text-muted">ไม่มีประตู</div>
+                                                <div class="h6 fw-bold mb-0" id="liveNextNone">-%</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="p-2 border rounded-3 bg-light">
+                                                <div class="small fw-bold text-primary">เยือนยิง</div>
+                                                <div class="h6 fw-bold mb-0" id="liveNextAway">-%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h6 class="fw-bold mb-2 text-secondary small">🎯 สกอร์จบเกม Top 3 (จากสถานะปัจจุบัน)</h6>
+                                    <div id="liveTopScores" class="mb-3"></div>
+
+                                    <!-- ตลาด Over/Under บอลสด -->
+                                    <h6 class="fw-bold mb-2 mt-3 text-secondary small">📊 ตลาด Over/Under (ผลรวมประตูจบเกม)</h6>
+                                    <div class="row g-2">
+                                        <div class="col-6 col-md-4">
+                                            <div class="p-2 border rounded-3 bg-light text-center">
+                                                <div class="small fw-bold text-muted">Over 0.5</div>
+                                                <div class="h6 fw-bold text-success mb-0" id="liveOver05">-%</div>
+                                                <div class="text-xs text-muted">Under <span id="liveUnder05">-%</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-4">
+                                            <div class="p-2 border rounded-3 bg-light text-center">
+                                                <div class="small fw-bold text-muted">Over 1.5</div>
+                                                <div class="h6 fw-bold text-success mb-0" id="liveOver15">-%</div>
+                                                <div class="text-xs text-muted">Under <span id="liveUnder15">-%</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-4">
+                                            <div class="p-2 border rounded-3 bg-light text-center">
+                                                <div class="small fw-bold text-muted">Over 2.5</div>
+                                                <div class="h6 fw-bold text-success mb-0" id="liveOver25">-%</div>
+                                                <div class="text-xs text-muted">Under <span id="liveUnder25">-%</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-4">
+                                            <div class="p-2 border rounded-3 bg-light text-center">
+                                                <div class="small fw-bold text-muted">Over 3.5</div>
+                                                <div class="h6 fw-bold text-success mb-0" id="liveOver35">-%</div>
+                                                <div class="text-xs text-muted">Under <span id="liveUnder35">-%</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-4">
+                                            <div class="p-2 border rounded-3 bg-light text-center">
+                                                <div class="small fw-bold text-muted">Over 4.5</div>
+                                                <div class="h6 fw-bold text-success mb-0" id="liveOver45">-%</div>
+                                                <div class="text-xs text-muted">Under <span id="liveUnder45">-%</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-4">
+                                            <div class="p-2 border rounded-3 bg-light text-center">
+                                                <div class="small fw-bold text-muted">Over 5.5</div>
+                                                <div class="h6 fw-bold text-success mb-0" id="liveOver55">-%</div>
+                                                <div class="text-xs text-muted">Under <span id="liveUnder55">-%</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <hr class="my-3">
@@ -438,36 +570,28 @@
     <script>
         // ============ LEAGUE PROFILES (49+ ลีกทั่วโลก) ============
         const LEAGUES = {
-            // 🏴 อังกฤษ
             EPL:           { name: 'พรีเมียร์ลีก (อังกฤษ)',           avg: 1.40, homeAdvAtk: 1.15, homeAdvDef: 0.92, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
             CHAMPIONSHIP:  { name: 'แชมเปี้ยนชิพ (อังกฤษ)',          avg: 1.32, homeAdvAtk: 1.14, homeAdvDef: 0.93, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
             LEAGUE_ONE:    { name: 'ลีกวัน (อังกฤษ)',                avg: 1.28, homeAdvAtk: 1.13, homeAdvDef: 0.94, fhRatio: 0.44, rho: -0.07, fhRho: -0.02 },
             LEAGUE_TWO:    { name: 'ลีกทู (อังกฤษ)',                 avg: 1.25, homeAdvAtk: 1.12, homeAdvDef: 0.95, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
-            // 🇪🇸 สเปน
             LA_LIGA:       { name: 'ลาลีกา (สเปน)',                  avg: 1.25, homeAdvAtk: 1.18, homeAdvDef: 0.90, fhRatio: 0.42, rho: -0.07, fhRho: -0.02 },
             LA_LIGA_2:     { name: 'ลาลีกา 2 (สเปน)',                avg: 1.18, homeAdvAtk: 1.16, homeAdvDef: 0.91, fhRatio: 0.41, rho: -0.06, fhRho: -0.02 },
-            // 🇩🇪 เยอรมนี
             BUNDESLIGA:    { name: 'บุนเดสลีกา (เยอรมนี)',            avg: 1.55, homeAdvAtk: 1.13, homeAdvDef: 0.93, fhRatio: 0.47, rho: -0.09, fhRho: -0.04 },
             BUNDESLIGA_2:  { name: 'บุนเดสลีกา 2 (เยอรมนี)',          avg: 1.42, homeAdvAtk: 1.12, homeAdvDef: 0.94, fhRatio: 0.46, rho: -0.08, fhRho: -0.03 },
-            // 🇮🇹 อิตาลี
             SERIE_A:       { name: 'เซเรีย อา (อิตาลี)',              avg: 1.30, homeAdvAtk: 1.16, homeAdvDef: 0.91, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
             SERIE_B:       { name: 'เซเรีย บี (อิตาลี)',              avg: 1.22, homeAdvAtk: 1.15, homeAdvDef: 0.92, fhRatio: 0.42, rho: -0.06, fhRho: -0.02 },
-            // 🇫🇷 ฝรั่งเศส
             LIGUE_1:       { name: 'ลีกเอิง (ฝรั่งเศส)',              avg: 1.35, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
             LIGUE_2:       { name: 'ลีกเดอ (ฝรั่งเศส)',               avg: 1.20, homeAdvAtk: 1.13, homeAdvDef: 0.93, fhRatio: 0.42, rho: -0.06, fhRho: -0.02 },
-            // 🇪🇺 ยุโรปอื่น
             EREDIVISIE:    { name: 'เอเรอดีวีซี (เนเธอร์แลนด์)',       avg: 1.60, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.47, rho: -0.08, fhRho: -0.03 },
             LIGA_PORTUGAL: { name: 'ลีกา โปรตุเกส',                   avg: 1.28, homeAdvAtk: 1.17, homeAdvDef: 0.90, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
             BELGIAN_PRO:   { name: 'เบลเยียม โปร ลีก',                avg: 1.38, homeAdvAtk: 1.13, homeAdvDef: 0.93, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
             SUPER_LIG:     { name: 'ซูเปอร์ลีก (ตุรกี)',              avg: 1.42, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.45, rho: -0.07, fhRho: -0.03 },
-            // 🌏 เอเชีย
             J1_LEAGUE:     { name: 'เจลีก 1 (ญี่ปุ่น)',               avg: 1.32, homeAdvAtk: 1.12, homeAdvDef: 0.94, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
             J2_LEAGUE:     { name: 'เจลีก 2 (ญี่ปุ่น)',               avg: 1.25, homeAdvAtk: 1.11, homeAdvDef: 0.95, fhRatio: 0.42, rho: -0.05, fhRho: -0.02 },
             J3_LEAGUE:     { name: 'เจลีก 3 (ญี่ปุ่น)',               avg: 1.28, homeAdvAtk: 1.10, homeAdvDef: 0.96, fhRatio: 0.42, rho: -0.05, fhRho: -0.02 },
             K_LEAGUE_1:    { name: 'เค ลีก 1 (เกาหลีใต้)',            avg: 1.30, homeAdvAtk: 1.13, homeAdvDef: 0.93, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
             CSL:           { name: 'ไชนีส ซูเปอร์ลีก (จีน)',           avg: 1.45, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
             KARNATAKA_SUPER: { name: 'อินเดีย คาร์นาตากา ซูเปอร์ ดิวิชั่น', avg: 1.52, homeAdvAtk: 1.22, homeAdvDef: 0.86, fhRatio: 0.46, rho: -0.09, fhRho: -0.03 },
-            // 🌏 ตะวันออกกลาง
             SAUDI_PRO:     { name: 'ซาอุดี โปร ลีก',                  avg: 1.48, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.45, rho: -0.07, fhRho: -0.03 },
             UAE_PRO:       { name: 'ยูเออี โปร ลีก',                  avg: 1.55, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.46, rho: -0.08, fhRho: -0.03 },
             QATAR_STARS:   { name: 'กาตาร์ สตาร์ส ลีก',               avg: 1.60, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.46, rho: -0.09, fhRho: -0.04 },
@@ -477,24 +601,20 @@
             JORDAN_PRO:    { name: 'จอร์แดน โปร ลีก',                 avg: 1.28, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
             IRAQ_STARS:    { name: 'อิรัก สตาร์ส ลีก',                avg: 1.30, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.43, rho: -0.07, fhRho: -0.02 },
             IRAN_PRO:      { name: 'อิหร่าน โปร ลีก',                 avg: 1.25, homeAdvAtk: 1.20, homeAdvDef: 0.88, fhRatio: 0.42, rho: -0.08, fhRho: -0.03 },
-            // 🌏 โอเชียเนีย / อเมริกา
             A_LEAGUE:      { name: 'เอลีก (ออสเตรเลีย)',              avg: 1.38, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
             MLS:           { name: 'เมเจอร์ลีกซอกเกอร์ (สหรัฐฯ)',      avg: 1.45, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
             BRASIL_SERIE_A:{ name: 'บราซิล เซเรีย อา',               avg: 1.32, homeAdvAtk: 1.18, homeAdvDef: 0.89, fhRatio: 0.43, rho: -0.07, fhRho: -0.02 },
             ARGENTINA:     { name: 'ลีกา โปรเฟสชันนัล (อาร์เจนตินา)',  avg: 1.22, homeAdvAtk: 1.19, homeAdvDef: 0.88, fhRatio: 0.41, rho: -0.06, fhRho: -0.02 },
-            // 🌍 แอฟริกาเหนือ
             EGYPT_PREMIER: { name: 'อียิปต์ พรีเมียร์ลีก',            avg: 1.35, homeAdvAtk: 1.18, homeAdvDef: 0.89, fhRatio: 0.44, rho: -0.08, fhRho: -0.03 },
             MOROCCO_BOTOLA:{ name: 'โมร็อกโก โบโตลา โปร',             avg: 1.30, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.43, rho: -0.07, fhRho: -0.02 },
             ALGERIA_LIGUE1:{ name: 'แอลจีเรีย ลีก 1',                avg: 1.22, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.42, rho: -0.06, fhRho: -0.02 },
             TUNISIA_LIGUE1:{ name: 'ตูนิเซีย ลีก 1',                 avg: 1.20, homeAdvAtk: 1.17, homeAdvDef: 0.90, fhRatio: 0.41, rho: -0.06, fhRho: -0.02 },
             LIBYA_PREMIER: { name: 'ลิเบีย พรีเมียร์ลีก',              avg: 1.24, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.42, rho: -0.06, fhRho: -0.02 },
-            // 🌍 แอฟริกาใต้ / แองโกลา
             SA_PREMIERSHIP:{ name: 'แอฟริกาใต้ พรีเมียร์ชิพ',          avg: 1.25, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.42, rho: -0.06, fhRho: -0.02 },
             ANGOLA_GIRABOLA:{ name: 'แองโกลา จิราโบลา',               avg: 1.32, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
             ZAMBIA_SUPER:  { name: 'แซมเบีย ซูเปอร์ลีก',               avg: 1.28, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.43, rho: -0.07, fhRho: -0.02 },
             ZIMBABWE_PREMIER:{ name: 'ซิมบับเว พรีเมียร์ลีก',           avg: 1.26, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
             MOZAMBIQUE_MOC:{ name: 'โมซัมบิก โมซัมโบลา',              avg: 1.30, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.44, rho: -0.07, fhRho: -0.02 },
-            // 🇹🇭 ไทย
             THAI_LEAGUE:   { name: 'ไทยลีก 1',                        avg: 1.45, homeAdvAtk: 1.20, homeAdvDef: 0.88, fhRatio: 0.46, rho: -0.10, fhRho: -0.04 },
             THAI_LEAGUE_2: { name: 'ไทยลีก 2',                        avg: 1.35, homeAdvAtk: 1.18, homeAdvDef: 0.89, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
         };
@@ -773,6 +893,115 @@
             `;
         }
 
+        // ============ LIVE ANALYSIS ============
+        function calculateLiveAnalysis(baseHomeLambda, baseAwayLambda, minute, homeScore, awayScore) {
+            const remainingRatio = Math.max(0, (90 - minute) / 90);
+            const liveHomeLambda = baseHomeLambda * remainingRatio;
+            const liveAwayLambda = baseAwayLambda * remainingRatio;
+            
+            const pNoMoreGoals = Math.exp(-(liveHomeLambda + liveAwayLambda));
+            const pHomeNext = (liveHomeLambda / (liveHomeLambda + liveAwayLambda + 0.0001)) * (1 - pNoMoreGoals);
+            const pAwayNext = (liveAwayLambda / (liveHomeLambda + liveAwayLambda + 0.0001)) * (1 - pNoMoreGoals);
+
+            let finalScores = [];
+            let over05 = 0, over15 = 0, over25 = 0, over35 = 0, over45 = 0, over55 = 0;
+            
+            for (let h = 0; h <= 5; h++) {
+                for (let a = 0; a <= 5; a++) {
+                    const prob = poissonProbability(liveHomeLambda, h) * poissonProbability(liveAwayLambda, a);
+                    const finalTotal = homeScore + h + awayScore + a;
+                    
+                    if (finalTotal > 0.5) over05 += prob;
+                    if (finalTotal > 1.5) over15 += prob;
+                    if (finalTotal > 2.5) over25 += prob;
+                    if (finalTotal > 3.5) over35 += prob;
+                    if (finalTotal > 4.5) over45 += prob;
+                    if (finalTotal > 5.5) over55 += prob;
+                    
+                    finalScores.push({ 
+                        score: `${homeScore + h}-${awayScore + a}`, 
+                        prob 
+                    });
+                }
+            }
+            finalScores.sort((x, y) => y.prob - x.prob);
+            const top3 = finalScores.slice(0, 3).map(s => ({
+                score: s.score,
+                percent: (s.prob * 100).toFixed(1) + '%'
+            }));
+
+            return {
+                liveHomeLambda,
+                liveAwayLambda,
+                pHomeNext: (pHomeNext * 100).toFixed(1) + '%',
+                pAwayNext: (pAwayNext * 100).toFixed(1) + '%',
+                pNoGoal: (pNoMoreGoals * 100).toFixed(1) + '%',
+                top3,
+                overUnder: {
+                    over05: (over05 * 100).toFixed(1) + '%',
+                    under05: ((1 - over05) * 100).toFixed(1) + '%',
+                    over15: (over15 * 100).toFixed(1) + '%',
+                    under15: ((1 - over15) * 100).toFixed(1) + '%',
+                    over25: (over25 * 100).toFixed(1) + '%',
+                    under25: ((1 - over25) * 100).toFixed(1) + '%',
+                    over35: (over35 * 100).toFixed(1) + '%',
+                    under35: ((1 - over35) * 100).toFixed(1) + '%',
+                    over45: (over45 * 100).toFixed(1) + '%',
+                    under45: ((1 - over45) * 100).toFixed(1) + '%',
+                    over55: (over55 * 100).toFixed(1) + '%',
+                    under55: ((1 - over55) * 100).toFixed(1) + '%'
+                }
+            };
+        }
+
+        function renderLiveAnalysis() {
+            if (!currentResult || !currentInput) {
+                alert('กรุณากดคำนวณผลวิเคราะห์ก่อนครับ');
+                return;
+            }
+            
+            const minute = parseInt(document.getElementById('live_minute').value) || 45;
+            const hScore = parseInt(document.getElementById('live_home_score').value) || 0;
+            const aScore = parseInt(document.getElementById('live_away_score').value) || 0;
+
+            const live = calculateLiveAnalysis(currentResult.xgHomeNum, currentResult.xgAwayNum, minute, hScore, aScore);
+
+            document.getElementById('liveXgHome').textContent = live.liveHomeLambda.toFixed(2);
+            document.getElementById('liveXgAway').textContent = live.liveAwayLambda.toFixed(2);
+            document.getElementById('liveXgTotal').textContent = (live.liveHomeLambda + live.liveAwayLambda).toFixed(2);
+            
+            document.getElementById('liveNextHome').textContent = live.pHomeNext;
+            document.getElementById('liveNextAway').textContent = live.pAwayNext;
+            document.getElementById('liveNextNone').textContent = live.pNoGoal;
+
+            const container = document.getElementById('liveTopScores');
+            container.innerHTML = '';
+            const badges = ['bg-danger', 'bg-warning text-dark', 'bg-secondary'];
+            live.top3.forEach((s, i) => {
+                container.innerHTML += `
+                    <div class="p-2 border rounded-3 bg-light d-flex justify-content-between align-items-center shadow-sm mb-1" style="font-size:0.85rem;">
+                        <div><span class="badge ${badges[i]} rounded-pill me-1">${i+1}</span> <strong>สกอร์ ${s.score}</strong></div>
+                        <span class="fw-bold">${s.percent}</span>
+                    </div>`;
+            });
+
+            const ou = live.overUnder;
+            document.getElementById('liveOver05').textContent = ou.over05;
+            document.getElementById('liveUnder05').textContent = ou.under05;
+            document.getElementById('liveOver15').textContent = ou.over15;
+            document.getElementById('liveUnder15').textContent = ou.under15;
+            document.getElementById('liveOver25').textContent = ou.over25;
+            document.getElementById('liveUnder25').textContent = ou.under25;
+            document.getElementById('liveOver35').textContent = ou.over35;
+            document.getElementById('liveUnder35').textContent = ou.under35;
+            document.getElementById('liveOver45').textContent = ou.over45;
+            document.getElementById('liveUnder45').textContent = ou.under45;
+            document.getElementById('liveOver55').textContent = ou.over55;
+            document.getElementById('liveUnder55').textContent = ou.under55;
+
+            document.getElementById('liveResults').classList.remove('d-none');
+        }
+
         function updateDashboard(res, input) {
             currentResult = res;
             currentInput = input;
@@ -998,6 +1227,10 @@
                 e.preventDefault();
                 triggerCalculation(true);
             });
+            
+            // ปุ่มคำนวณบอลสด
+            document.getElementById('btnCalcLive').addEventListener('click', renderLiveAnalysis);
+
             renderHistory();
             triggerCalculation(false);
         });
