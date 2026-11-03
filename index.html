@@ -24,13 +24,7 @@
             <p class="text-secondary fs-5"></p>
         </div>
 
-        <div class="text-center mb-4">
-            <div class="btn-group shadow-sm rounded-pill p-1 bg-white border" role="group">
-                <button type="button" class="btn btn-outline-secondary rounded-pill border-0 px-3 fw-semibold" id="btnMockDerby">🏴 ศึกแดงเดือด</button>
-                <button type="button" class="btn btn-outline-secondary rounded-pill border-0 px-3 fw-semibold" id="btnMockAttackVsDefense">🛡️ บุกโหด vs รับเหนียว</button>
-                <button type="button" class="btn btn-outline-secondary rounded-pill border-0 px-3 fw-semibold" id="btnMockRandom">🎲 สุ่มทีม</button>
-            </div>
-        </div>
+        <!-- ลบแถบปุ่ม Mock Data ออกแล้ว -->
 
         <div class="row g-4">
             <!-- ฝั่งซ้าย: ฟอร์ม -->
@@ -432,20 +426,7 @@
             updateDashboard(mathResult);
         }
 
-        function setMockData(homeName, homeAtk, homeDef, homeFrm, awayName, awayAtk, awayDef, awayFrm, h2hM, h2hH, h2hA) {
-            document.getElementById('home_name').value = homeName;
-            document.getElementById('home_attack').value = homeAtk;
-            document.getElementById('home_defense').value = homeDef;
-            document.getElementById('home_form').value = homeFrm;
-            document.getElementById('away_name').value = awayName;
-            document.getElementById('away_attack').value = awayAtk;
-            document.getElementById('away_defense').value = awayDef;
-            document.getElementById('away_form').value = awayFrm;
-            document.getElementById('h2h_matches').value = h2hM;
-            document.getElementById('h2h_home_goals').value = h2hH;
-            document.getElementById('h2h_away_goals').value = h2hA;
-            triggerReplayCalculation();
-        }
+        // ลบฟังก์ชัน setMockData ออกแล้ว
 
         document.addEventListener('DOMContentLoaded', function() {
             const slider = document.getElementById('weightSlider');
@@ -472,33 +453,7 @@
                 triggerReplayCalculation();
             });
 
-            document.getElementById('btnMockDerby').addEventListener('click', () => {
-                setMockData('ลิเวอร์พูล', 2.4, 0.8, 13, 'แมนฯ ยูไนเต็ด', 1.2, 1.6, 5, 4, 6, 4);
-            });
-
-            document.getElementById('btnMockAttackVsDefense').addEventListener('click', () => {
-                setMockData('แมนฯ ซิตี้', 2.8, 1.1, 11, 'แอตฯ มาดริด', 1.0, 0.6, 9, 2, 2, 1);
-            });
-
-            document.getElementById('btnMockRandom').addEventListener('click', () => {
-                const randomTeams = [
-                    { h: 'เรอัล มาดริด', a: 'บาร์เซโลน่า' },
-                    { h: 'อาร์เซน่อล', a: 'เชลซี' },
-                    { h: 'บาเยิร์น มิวนิค', a: 'ดอร์ทมุนด์' }
-                ];
-                const pair = randomTeams[Math.floor(Math.random() * randomTeams.length)];
-                const hAtk = (Math.random() * (2.8 - 0.6) + 0.6).toFixed(1);
-                const hDef = (Math.random() * (2.2 - 0.6) + 0.6).toFixed(1);
-                const aAtk = (Math.random() * (2.5 - 0.6) + 0.6).toFixed(1);
-                const aDef = (Math.random() * (2.2 - 0.6) + 0.6).toFixed(1);
-                const hFrm = Math.floor(Math.random() * 16);
-                const aFrm = Math.floor(Math.random() * 16);
-                const h2hM = 5;
-                const h2hH = Math.floor(Math.random() * 10);
-                const h2hA = Math.floor(Math.random() * 10);
-                setMockData(pair.h, parseFloat(hAtk), parseFloat(hDef), hFrm,
-                            pair.a, parseFloat(aAtk), parseFloat(aDef), aFrm, h2hM, h2hH, h2hA);
-            });
+            // ลบ Event Listeners ของปุ่ม Mock Data ทั้ง 3 ปุ่มออกแล้ว
 
             triggerReplayCalculation();
         });
