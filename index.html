@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI v3.8 - Ultimate Live Edition</title>
+    <title>⚽ JackAI v3.9 - Ultimate Live Edition (Red Card)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -16,9 +16,6 @@
         .stat-box { background-color: #f8fafc; transition: transform 0.2s ease; }
         .stat-box:hover { transform: translateY(-2px); }
         .slider-box { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; }
-        .market-box { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #86efac; transition: transform 0.2s; }
-        .market-box:hover { transform: translateY(-2px); }
-        .market-box-secondary { background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #93c5fd; }
         .value-card { padding: 12px; border-radius: 10px; border: 2px solid; transition: all 0.2s; }
         .value-positive { background: #f0fdf4; border-color: #16a34a; }
         .value-neutral { background: #fefce8; border-color: #eab308; }
@@ -27,8 +24,6 @@
         .text-xs { font-size: 0.75rem; }
         .history-item { transition: all 0.2s; border-left: 3px solid transparent; }
         .history-item:hover { background-color: #f1f5f9; border-left-color: #3b82f6; }
-        .history-item .btn-delete { opacity: 0; transition: opacity 0.2s; }
-        .history-item:hover .btn-delete { opacity: 1; }
         .actual-score-badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; }
         .result-hit { background-color: #dcfce7; color: #166534; }
         .result-miss { background-color: #fee2e2; color: #991b1b; }
@@ -38,29 +33,24 @@
         .icon-btn:hover { background-color: #e2e8f0; }
         .icon-btn-danger:hover { background-color: #fee2e2; color: #dc2626 !important; }
         .btn-xs { font-size: 0.75rem; padding: 2px 8px; }
-        .filter-bar { background: #f8fafc; border-radius: 10px; padding: 10px; border: 1px solid #e2e8f0; }
-        .filter-bar input, .filter-bar select { font-size: 0.8rem; }
         .odds-input { font-size: 0.85rem; padding: 4px 8px; text-align: center; }
         .custom-tabs .nav-link { color: #475569; border-radius: 20px; padding: 4px 14px; font-size: 0.85rem; font-weight: 600; }
         .custom-tabs .nav-link.active { background: #1e293b; color: white; }
-        
-        /* Live styles */
         .live-badge { animation: pulse 1.5s infinite; }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .red-card-input { border-color: #dc2626 !important; }
+        .red-card-input:focus { box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25); }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="text-center mb-4">
             <h1 class="fw-extrabold text-dark mb-2">⚽ JackAI</h1>
-            <p class="text-secondary fs-5 mb-0">Ultimate Live Edition v3.8</p>
+            <p class="text-secondary fs-5 mb-0">Ultimate Live Edition v3.9 — พร้อมใบแดง</p>
         </div>
 
         <div class="row g-4">
+            <!-- ฝั่งซ้าย: ฟอร์ม (เหมือนเดิม ไม่เปลี่ยนแปลง) -->
             <div class="col-lg-5">
                 <form id="footballForm" novalidate>
                     <div class="card p-3 shadow-sm mb-3 border-start border-4 border-dark">
@@ -112,6 +102,9 @@
                                 <option value="JORDAN_PRO">จอร์แดน โปร ลีก</option>
                                 <option value="IRAQ_STARS">อิรัก สตาร์ส ลีก</option>
                                 <option value="IRAN_PRO">อิหร่าน โปร ลีก</option>
+                            </optgroup>
+                            <optgroup label="🌏 เอเชีย – สโมสร">
+                                <option value="AFC_CHAMPIONS_ELITE">เอเอฟซี แชมเปี้ยนส์ ลีก อีลิท</option>
                             </optgroup>
                             <optgroup label="🌏 โอเชียเนีย / อเมริกา">
                                 <option value="A_LEAGUE">เอลีก</option>
@@ -248,6 +241,7 @@
                 </div>
             </div>
 
+            <!-- ฝั่งขวา: แดชบอร์ด -->
             <div class="col-lg-7">
                 <div class="card border-0 shadow-sm overflow-hidden bg-white">
                     <div class="p-3 bg-light border-bottom">
@@ -265,7 +259,7 @@
                         <h4 class="mb-0 fs-5 fw-bold">📊 ผลวิเคราะห์ Pro Bettor</h4>
                         <div class="d-flex gap-2">
                             <button class="btn btn-sm btn-outline-light rounded-pill px-3" id="btnCopy">📋 Copy</button>
-                            <span class="badge bg-success px-2 py-1 rounded-pill fw-semibold small">v3.8</span>
+                            <span class="badge bg-success px-2 py-1 rounded-pill fw-semibold small">v3.9</span>
                         </div>
                     </div>
 
@@ -311,29 +305,17 @@
                         </div>
 
                         <ul class="nav nav-pills custom-tabs mb-3 gap-1" id="marketTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="tab-value" data-bs-toggle="pill" data-bs-target="#pane-value" type="button">💰 Value Bet</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-handicap" data-bs-toggle="pill" data-bs-target="#pane-handicap" type="button">🛡️ Handicap</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-scores" data-bs-toggle="pill" data-bs-target="#pane-scores" type="button">🎯 สกอร์ & ครึ่งแรก</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-team-total" data-bs-toggle="pill" data-bs-target="#pane-team-total" type="button">⚽ ประตูทีม</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link text-danger fw-bold live-badge" id="tab-live" data-bs-toggle="pill" data-bs-target="#pane-live" type="button">🔴 บอลสด</button>
-                            </li>
+                            <li class="nav-item"><button class="nav-link active" id="tab-value" data-bs-toggle="pill" data-bs-target="#pane-value" type="button">💰 Value Bet</button></li>
+                            <li class="nav-item"><button class="nav-link" id="tab-handicap" data-bs-toggle="pill" data-bs-target="#pane-handicap" type="button">🛡️ Handicap</button></li>
+                            <li class="nav-item"><button class="nav-link" id="tab-scores" data-bs-toggle="pill" data-bs-target="#pane-scores" type="button">🎯 สกอร์ & ครึ่งแรก</button></li>
+                            <li class="nav-item"><button class="nav-link" id="tab-team-total" data-bs-toggle="pill" data-bs-target="#pane-team-total" type="button">⚽ ประตูทีม</button></li>
+                            <li class="nav-item"><button class="nav-link text-danger fw-bold live-badge" id="tab-live" data-bs-toggle="pill" data-bs-target="#pane-live" type="button">🔴 บอลสด</button></li>
                         </ul>
 
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="pane-value" role="tabpanel">
                                 <div id="valueBetContainer">
-                                    <div class="alert alert-light text-center py-4 text-muted small">
-                                        💡 กรอก Odds จากเจ้ามือ (ช่องสีฟ้า) เพื่อดู Value Bet
-                                    </div>
+                                    <div class="alert alert-light text-center py-4 text-muted small">💡 กรอก Odds จากเจ้ามือ เพื่อดู Value Bet</div>
                                 </div>
                             </div>
 
@@ -374,24 +356,9 @@
                                 <hr class="my-3">
                                 <h6 class="fw-bold mb-2 text-secondary small">📊 ตลาดครึ่งแรก</h6>
                                 <div class="row g-2">
-                                    <div class="col-4">
-                                        <div class="p-2 border rounded-3 bg-light text-center">
-                                            <div class="small fw-bold text-muted">1X2 (HT)</div>
-                                            <div class="text-xs mt-1" id="ht1x2">-</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="p-2 border rounded-3 bg-light text-center">
-                                            <div class="small fw-bold text-muted">O/U 0.5 (HT)</div>
-                                            <div class="h6 fw-bold text-dark mb-0" id="htOU05">-</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="p-2 border rounded-3 bg-light text-center">
-                                            <div class="small fw-bold text-muted">O/U 1.5 (HT)</div>
-                                            <div class="h6 fw-bold text-dark mb-0" id="htOU15">-</div>
-                                        </div>
-                                    </div>
+                                    <div class="col-4"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">1X2 (HT)</div><div class="text-xs mt-1" id="ht1x2">-</div></div></div>
+                                    <div class="col-4"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">O/U 0.5 (HT)</div><div class="h6 fw-bold text-dark mb-0" id="htOU05">-</div></div></div>
+                                    <div class="col-4"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">O/U 1.5 (HT)</div><div class="h6 fw-bold text-dark mb-0" id="htOU15">-</div></div></div>
                                 </div>
                             </div>
 
@@ -399,26 +366,19 @@
                                 <h6 class="fw-bold mb-2 text-secondary small">⚽ ประตูของแต่ละทีม (Team Total)</h6>
                                 <div class="table-responsive">
                                     <table class="table table-sm table-bordered text-center" style="font-size:0.85rem;">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th>ทีม</th>
-                                                <th>O/U 0.5</th>
-                                                <th>O/U 1.5</th>
-                                                <th>O/U 2.5</th>
-                                            </tr>
-                                        </thead>
+                                        <thead class="table-dark"><tr><th>ทีม</th><th>O/U 0.5</th><th>O/U 1.5</th><th>O/U 2.5</th></tr></thead>
                                         <tbody id="teamTotalBody"></tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <!-- Pane 5: Live Analysis -->
+                            <!-- ========== LIVE ANALYSIS (มีใบแดง) ========== -->
                             <div class="tab-pane fade" id="pane-live" role="tabpanel">
                                 <div class="alert alert-danger py-2 text-sm mb-3">
-                                    <strong>🔴 โหมดบอลสด:</strong> กรอกเวลาที่ผ่านไป และสกอร์ปัจจุบัน เพื่อคำนวณโอกาสเกิดประตูในเวลาที่เหลือ
+                                    <strong>🔴 โหมดบอลสด:</strong> กรอกเวลา สกอร์ปัจจุบัน และ <strong>ใบแดง</strong> เพื่อคำนวณโอกาสประตูในเวลาที่เหลือ
                                 </div>
                                 
-                                <div class="row g-2 mb-3">
+                                <div class="row g-2 mb-2">
                                     <div class="col-4">
                                         <label class="small fw-bold text-muted">⏱️ นาทีที่ (1-90)</label>
                                         <input type="number" id="live_minute" class="form-control" value="45" min="1" max="90">
@@ -432,134 +392,63 @@
                                         <input type="number" id="live_away_score" class="form-control" value="0" min="0">
                                     </div>
                                 </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="small fw-bold text-danger">🟥 ใบแดงเหย้า</label>
+                                        <input type="number" id="live_red_home" class="form-control red-card-input" value="0" min="0" max="5">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="small fw-bold text-danger">🟥 ใบแดงเยือน</label>
+                                        <input type="number" id="live_red_away" class="form-control red-card-input" value="0" min="0" max="5">
+                                    </div>
+                                </div>
                                 <div class="d-grid mb-3">
                                     <button type="button" class="btn btn-danger fw-bold rounded-pill" id="btnCalcLive">🔄 คำนวณบอลสด</button>
                                 </div>
 
                                 <div id="liveResults" class="d-none">
+                                    <!-- แสดงผลกระทบใบแดง -->
+                                    <div id="redCardImpact" class="alert alert-warning py-2 text-sm d-none mb-3">
+                                        <strong>🟥 ผลกระทบใบแดง:</strong> <span id="redCardImpactText"></span>
+                                    </div>
+
                                     <h6 class="fw-bold mb-2 text-secondary small">⚡ คาดการณ์ประตูที่จะเกิดขึ้น (Remaining xG)</h6>
                                     <div class="row g-2 text-center mb-3">
-                                        <div class="col-4">
-                                            <div class="p-2 border rounded-3 bg-light">
-                                                <div class="small fw-bold text-success">เหย้า</div>
-                                                <div class="h5 fw-bold mb-0" id="liveXgHome">0.00</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="p-2 border rounded-3 bg-light">
-                                                <div class="small fw-bold text-muted">รวม</div>
-                                                <div class="h5 fw-bold mb-0" id="liveXgTotal">0.00</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="p-2 border rounded-3 bg-light">
-                                                <div class="small fw-bold text-primary">เยือน</div>
-                                                <div class="h5 fw-bold mb-0" id="liveXgAway">0.00</div>
-                                            </div>
-                                        </div>
+                                        <div class="col-4"><div class="p-2 border rounded-3 bg-light"><div class="small fw-bold text-success">เหย้า</div><div class="h5 fw-bold mb-0" id="liveXgHome">0.00</div></div></div>
+                                        <div class="col-4"><div class="p-2 border rounded-3 bg-light"><div class="small fw-bold text-muted">รวม</div><div class="h5 fw-bold mb-0" id="liveXgTotal">0.00</div></div></div>
+                                        <div class="col-4"><div class="p-2 border rounded-3 bg-light"><div class="small fw-bold text-primary">เยือน</div><div class="h5 fw-bold mb-0" id="liveXgAway">0.00</div></div></div>
                                     </div>
 
                                     <h6 class="fw-bold mb-2 text-secondary small">🎯 ประตูถัดไป (Next Goal)</h6>
                                     <div class="row g-2 text-center mb-3">
-                                        <div class="col-4">
-                                            <div class="p-2 border rounded-3 bg-light">
-                                                <div class="small fw-bold text-success">เหย้ายิง</div>
-                                                <div class="h6 fw-bold mb-0" id="liveNextHome">-%</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="p-2 border rounded-3 bg-light">
-                                                <div class="small fw-bold text-muted">ไม่มีประตู</div>
-                                                <div class="h6 fw-bold mb-0" id="liveNextNone">-%</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="p-2 border rounded-3 bg-light">
-                                                <div class="small fw-bold text-primary">เยือนยิง</div>
-                                                <div class="h6 fw-bold mb-0" id="liveNextAway">-%</div>
-                                            </div>
-                                        </div>
+                                        <div class="col-4"><div class="p-2 border rounded-3 bg-light"><div class="small fw-bold text-success">เหย้ายิง</div><div class="h6 fw-bold mb-0" id="liveNextHome">-%</div></div></div>
+                                        <div class="col-4"><div class="p-2 border rounded-3 bg-light"><div class="small fw-bold text-muted">ไม่มีประตู</div><div class="h6 fw-bold mb-0" id="liveNextNone">-%</div></div></div>
+                                        <div class="col-4"><div class="p-2 border rounded-3 bg-light"><div class="small fw-bold text-primary">เยือนยิง</div><div class="h6 fw-bold mb-0" id="liveNextAway">-%</div></div></div>
                                     </div>
 
                                     <h6 class="fw-bold mb-2 text-secondary small">🎯 สกอร์จบเกม Top 3 (จากสถานะปัจจุบัน)</h6>
                                     <div id="liveTopScores" class="mb-3"></div>
 
-                                    <!-- ตลาด Over/Under บอลสด -->
                                     <h6 class="fw-bold mb-2 mt-3 text-secondary small">📊 ตลาด Over/Under (ผลรวมประตูจบเกม)</h6>
                                     <div class="row g-2">
-                                        <div class="col-6 col-md-4">
-                                            <div class="p-2 border rounded-3 bg-light text-center">
-                                                <div class="small fw-bold text-muted">Over 0.5</div>
-                                                <div class="h6 fw-bold text-success mb-0" id="liveOver05">-%</div>
-                                                <div class="text-xs text-muted">Under <span id="liveUnder05">-%</span></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 col-md-4">
-                                            <div class="p-2 border rounded-3 bg-light text-center">
-                                                <div class="small fw-bold text-muted">Over 1.5</div>
-                                                <div class="h6 fw-bold text-success mb-0" id="liveOver15">-%</div>
-                                                <div class="text-xs text-muted">Under <span id="liveUnder15">-%</span></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 col-md-4">
-                                            <div class="p-2 border rounded-3 bg-light text-center">
-                                                <div class="small fw-bold text-muted">Over 2.5</div>
-                                                <div class="h6 fw-bold text-success mb-0" id="liveOver25">-%</div>
-                                                <div class="text-xs text-muted">Under <span id="liveUnder25">-%</span></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 col-md-4">
-                                            <div class="p-2 border rounded-3 bg-light text-center">
-                                                <div class="small fw-bold text-muted">Over 3.5</div>
-                                                <div class="h6 fw-bold text-success mb-0" id="liveOver35">-%</div>
-                                                <div class="text-xs text-muted">Under <span id="liveUnder35">-%</span></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 col-md-4">
-                                            <div class="p-2 border rounded-3 bg-light text-center">
-                                                <div class="small fw-bold text-muted">Over 4.5</div>
-                                                <div class="h6 fw-bold text-success mb-0" id="liveOver45">-%</div>
-                                                <div class="text-xs text-muted">Under <span id="liveUnder45">-%</span></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-6 col-md-4">
-                                            <div class="p-2 border rounded-3 bg-light text-center">
-                                                <div class="small fw-bold text-muted">Over 5.5</div>
-                                                <div class="h6 fw-bold text-success mb-0" id="liveOver55">-%</div>
-                                                <div class="text-xs text-muted">Under <span id="liveUnder55">-%</span></div>
-                                            </div>
-                                        </div>
+                                        <div class="col-6 col-md-4"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">Over 0.5</div><div class="h6 fw-bold text-success mb-0" id="liveOver05">-%</div><div class="text-xs text-muted">Under <span id="liveUnder05">-%</span></div></div></div>
+                                        <div class="col-6 col-md-4"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">Over 1.5</div><div class="h6 fw-bold text-success mb-0" id="liveOver15">-%</div><div class="text-xs text-muted">Under <span id="liveUnder15">-%</span></div></div></div>
+                                        <div class="col-6 col-md-4"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">Over 2.5</div><div class="h6 fw-bold text-success mb-0" id="liveOver25">-%</div><div class="text-xs text-muted">Under <span id="liveUnder25">-%</span></div></div></div>
+                                        <div class="col-6 col-md-4"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">Over 3.5</div><div class="h6 fw-bold text-success mb-0" id="liveOver35">-%</div><div class="text-xs text-muted">Under <span id="liveUnder35">-%</span></div></div></div>
+                                        <div class="col-6 col-md-4"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">Over 4.5</div><div class="h6 fw-bold text-success mb-0" id="liveOver45">-%</div><div class="text-xs text-muted">Under <span id="liveUnder45">-%</span></div></div></div>
+                                        <div class="col-6 col-md-4"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">Over 5.5</div><div class="h6 fw-bold text-success mb-0" id="liveOver55">-%</div><div class="text-xs text-muted">Under <span id="liveUnder55">-%</span></div></div></div>
                                     </div>
                                 </div>
                             </div>
+                            <!-- ========== END LIVE ========== -->
                         </div>
 
                         <hr class="my-3">
                         <div class="row g-2">
-                            <div class="col-6 col-md-3">
-                                <div class="p-2 border rounded-3 bg-light text-center">
-                                    <div class="small fw-bold text-muted">Over 2.5</div>
-                                    <div class="h6 fw-bold text-dark mb-0" id="displayOver25">0%</div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <div class="p-2 border rounded-3 bg-light text-center">
-                                    <div class="small fw-bold text-muted">Under 2.5</div>
-                                    <div class="h6 fw-bold text-dark mb-0" id="displayUnder25">0%</div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <div class="p-2 border rounded-3 bg-light text-center">
-                                    <div class="small fw-bold text-muted">BTTS</div>
-                                    <div class="h6 fw-bold text-dark mb-0" id="displayBTTS">0%</div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3">
-                                <div class="p-2 border rounded-3 bg-light text-center">
-                                    <div class="small fw-bold text-muted">Confidence</div>
-                                    <div class="h6 fw-bold text-success mb-0" id="displayConfidence">0%</div>
-                                </div>
-                            </div>
+                            <div class="col-6 col-md-3"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">Over 2.5</div><div class="h6 fw-bold text-dark mb-0" id="displayOver25">0%</div></div></div>
+                            <div class="col-6 col-md-3"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">Under 2.5</div><div class="h6 fw-bold text-dark mb-0" id="displayUnder25">0%</div></div></div>
+                            <div class="col-6 col-md-3"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">BTTS</div><div class="h6 fw-bold text-dark mb-0" id="displayBTTS">0%</div></div></div>
+                            <div class="col-6 col-md-3"><div class="p-2 border rounded-3 bg-light text-center"><div class="small fw-bold text-muted">Confidence</div><div class="h6 fw-bold text-success mb-0" id="displayConfidence">0%</div></div></div>
                         </div>
                     </div>
                 </div>
@@ -568,7 +457,7 @@
     </div>
 
     <script>
-        // ============ LEAGUE PROFILES (49+ ลีกทั่วโลก) ============
+        // ============ LEAGUE PROFILES (เหมือนเดิม + AFC) ============
         const LEAGUES = {
             EPL:           { name: 'พรีเมียร์ลีก (อังกฤษ)',           avg: 1.40, homeAdvAtk: 1.15, homeAdvDef: 0.92, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
             CHAMPIONSHIP:  { name: 'แชมเปี้ยนชิพ (อังกฤษ)',          avg: 1.32, homeAdvAtk: 1.14, homeAdvDef: 0.93, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
@@ -601,6 +490,7 @@
             JORDAN_PRO:    { name: 'จอร์แดน โปร ลีก',                 avg: 1.28, homeAdvAtk: 1.15, homeAdvDef: 0.91, fhRatio: 0.43, rho: -0.06, fhRho: -0.02 },
             IRAQ_STARS:    { name: 'อิรัก สตาร์ส ลีก',                avg: 1.30, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.43, rho: -0.07, fhRho: -0.02 },
             IRAN_PRO:      { name: 'อิหร่าน โปร ลีก',                 avg: 1.25, homeAdvAtk: 1.20, homeAdvDef: 0.88, fhRatio: 0.42, rho: -0.08, fhRho: -0.03 },
+            AFC_CHAMPIONS_ELITE: { name: 'เอเอฟซี แชมเปี้ยนส์ ลีก อีลิท', avg: 1.38, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
             A_LEAGUE:      { name: 'เอลีก (ออสเตรเลีย)',              avg: 1.38, homeAdvAtk: 1.14, homeAdvDef: 0.92, fhRatio: 0.44, rho: -0.07, fhRho: -0.03 },
             MLS:           { name: 'เมเจอร์ลีกซอกเกอร์ (สหรัฐฯ)',      avg: 1.45, homeAdvAtk: 1.16, homeAdvDef: 0.90, fhRatio: 0.45, rho: -0.08, fhRho: -0.03 },
             BRASIL_SERIE_A:{ name: 'บราซิล เซเรีย อา',               avg: 1.32, homeAdvAtk: 1.18, homeAdvDef: 0.89, fhRatio: 0.43, rho: -0.07, fhRho: -0.02 },
@@ -629,38 +519,21 @@
         let currentResult = null;
         let currentInput = null;
 
-        function factorial(n) {
-            if (n === 0 || n === 1) return 1;
-            let res = 1;
-            for (let i = 2; i <= n; i++) res *= i;
-            return res;
-        }
-        function poissonProbability(lambda, x) {
-            return (Math.exp(-lambda) * Math.pow(lambda, x)) / factorial(x);
-        }
-        function poissonCdf(lambda, k) {
-            let sum = 0;
-            for (let i = 0; i <= k; i++) sum += poissonProbability(lambda, i);
-            return sum;
-        }
-        function dixonColesTau(h, a, lambdaH, lambdaA, rho) {
-            if (h === 0 && a === 0) return 1 - lambdaH * lambdaA * rho;
-            if (h === 0 && a === 1) return 1 + lambdaH * rho;
-            if (h === 1 && a === 0) return 1 + lambdaA * rho;
+        function factorial(n) { if (n === 0 || n === 1) return 1; let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
+        function poissonProbability(lambda, x) { return (Math.exp(-lambda) * Math.pow(lambda, x)) / factorial(x); }
+        function poissonCdf(lambda, k) { let s = 0; for (let i = 0; i <= k; i++) s += poissonProbability(lambda, i); return s; }
+        function dixonColesTau(h, a, lH, lA, rho) {
+            if (h === 0 && a === 0) return 1 - lH * lA * rho;
+            if (h === 0 && a === 1) return 1 + lH * rho;
+            if (h === 1 && a === 0) return 1 + lA * rho;
             if (h === 1 && a === 1) return 1 - rho;
             return 1;
         }
         function poissonSample(lambda) {
-            if (lambda < 10) {
-                const L = Math.exp(-lambda);
-                let k = 0, p = 1;
-                do { k++; p *= Math.random(); } while (p > L);
-                return k - 1;
-            } else {
-                let u1 = Math.random(), u2 = Math.random();
-                let z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-                return Math.max(0, Math.round(lambda + Math.sqrt(lambda) * z));
-            }
+            if (lambda < 10) { const L = Math.exp(-lambda); let k = 0, p = 1; do { k++; p *= Math.random(); } while (p > L); return k - 1; }
+            let u1 = Math.random(), u2 = Math.random();
+            let z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+            return Math.max(0, Math.round(lambda + Math.sqrt(lambda) * z));
         }
 
         function calculateAsianHandicap(scoresMatrix, handicap) {
@@ -669,31 +542,21 @@
             const absH = Math.abs(h);
             const frac = absH - Math.floor(absH);
             const sign = h < 0 ? -1 : 1;
-            if (Math.abs(frac - 0.25) < 0.001) {
-                h1 = sign * Math.floor(absH);
-                h2 = sign * Math.ceil(absH);
-            } else if (Math.abs(frac - 0.75) < 0.001) {
-                h1 = sign * Math.floor(absH);
-                h2 = sign * Math.ceil(absH);
+            if (Math.abs(frac - 0.25) < 0.001 || Math.abs(frac - 0.75) < 0.001) {
+                h1 = sign * Math.floor(absH); h2 = sign * Math.ceil(absH);
             } else {
                 return calculateSingleHandicap(scoresMatrix, h);
             }
             const r1 = calculateSingleHandicap(scoresMatrix, h1);
             const r2 = calculateSingleHandicap(scoresMatrix, h2);
-            return {
-                win: (r1.win + r2.win) / 2,
-                push: (r1.push + r2.push) / 2,
-                lose: (r1.lose + r2.lose) / 2,
-                isQuarter: true,
-                label: `${h1} & ${h2}`
-            };
+            return { win: (r1.win + r2.win) / 2, push: (r1.push + r2.push) / 2, lose: (r1.lose + r2.lose) / 2, isQuarter: true, label: `${h1} & ${h2}` };
         }
         function calculateSingleHandicap(scoresMatrix, handicap) {
             let win = 0, push = 0, lose = 0;
             for (const s of scoresMatrix) {
-                const adjusted = (s.h - s.a) + handicap;
-                if (adjusted > 0.001) win += s.prob;
-                else if (adjusted < -0.001) lose += s.prob;
+                const adj = (s.h - s.a) + handicap;
+                if (adj > 0.001) win += s.prob;
+                else if (adj < -0.001) lose += s.prob;
                 else push += s.prob;
             }
             return { win, push, lose };
@@ -702,11 +565,7 @@
         function analyzeMatch(input) {
             const league = LEAGUES[input.league] || LEAGUES.EPL;
             const { homeAttack, homeDefense, awayAttack, awayDefense, homeForm, awayForm, h2hMatches, h2hHomeGoals, h2hAwayGoals, currentWeight } = input;
-
-            function formModifier(form) {
-                const norm = (form - 7.5) / 7.5;
-                return Math.min(FORM_MAX_MOD, Math.max(FORM_MIN_MOD, Math.exp(norm * 0.25)));
-            }
+            function formModifier(form) { const norm = (form - 7.5) / 7.5; return Math.min(FORM_MAX_MOD, Math.max(FORM_MIN_MOD, Math.exp(norm * 0.25))); }
             const homeFormMod = formModifier(homeForm);
             const awayFormMod = formModifier(awayForm);
 
@@ -727,70 +586,47 @@
 
             let homeWin = 0, draw = 0, awayWin = 0, over25 = 0, btts = 0;
             let scoresFT = [], rawFT = 0;
-
-            for (let h = 0; h <= MAX_GOALS; h++) {
-                for (let a = 0; a <= MAX_GOALS; a++) {
-                    const prob = Math.max(0, poissonProbability(homeLambda, h) * poissonProbability(awayLambda, a) * dixonColesTau(h, a, homeLambda, awayLambda, league.rho));
-                    rawFT += prob;
-                    if (h > a) homeWin += prob;
-                    else if (a > h) awayWin += prob;
-                    else draw += prob;
-                    if (h + a > 2.5) over25 += prob;
-                    if (h > 0 && a > 0) btts += prob;
-                    scoresFT.push({ h, a, str: `${h}-${a}`, prob });
-                }
+            for (let h = 0; h <= MAX_GOALS; h++) for (let a = 0; a <= MAX_GOALS; a++) {
+                const prob = Math.max(0, poissonProbability(homeLambda, h) * poissonProbability(awayLambda, a) * dixonColesTau(h, a, homeLambda, awayLambda, league.rho));
+                rawFT += prob;
+                if (h > a) homeWin += prob; else if (a > h) awayWin += prob; else draw += prob;
+                if (h + a > 2.5) over25 += prob;
+                if (h > 0 && a > 0) btts += prob;
+                scoresFT.push({ h, a, str: `${h}-${a}`, prob });
             }
             const normFT = v => rawFT > 0 ? v / rawFT : 0;
             homeWin = normFT(homeWin); draw = normFT(draw); awayWin = normFT(awayWin);
             over25 = normFT(over25); btts = normFT(btts);
             scoresFT.forEach(s => s.prob = normFT(s.prob));
-
             const sortedFT = [...scoresFT].sort((a, b) => b.prob - a.prob);
             const top3FT = sortedFT.slice(0, 3).map(i => ({ score: i.str, percent: (i.prob * 100).toFixed(1) + '%' }));
 
             const homeLambdaFH = homeLambda * league.fhRatio;
             const awayLambdaFH = awayLambda * league.fhRatio;
-            let scoresFH = [], rawFH = 0;
-            let fhHomeWin = 0, fhDraw = 0, fhAwayWin = 0, fhOver05 = 0, fhOver15 = 0;
-
-            for (let h = 0; h <= MAX_GOALS; h++) {
-                for (let a = 0; a <= MAX_GOALS; a++) {
-                    const prob = Math.max(0, poissonProbability(homeLambdaFH, h) * poissonProbability(awayLambdaFH, a) * dixonColesTau(h, a, homeLambdaFH, awayLambdaFH, league.fhRho));
-                    rawFH += prob;
-                    if (h > a) fhHomeWin += prob;
-                    else if (a > h) fhAwayWin += prob;
-                    else fhDraw += prob;
-                    if (h + a > 0.5) fhOver05 += prob;
-                    if (h + a > 1.5) fhOver15 += prob;
-                    scoresFH.push({ h, a, str: `${h}-${a}`, prob });
-                }
+            let scoresFH = [], rawFH = 0, fhHomeWin = 0, fhDraw = 0, fhAwayWin = 0, fhOver05 = 0, fhOver15 = 0;
+            for (let h = 0; h <= MAX_GOALS; h++) for (let a = 0; a <= MAX_GOALS; a++) {
+                const prob = Math.max(0, poissonProbability(homeLambdaFH, h) * poissonProbability(awayLambdaFH, a) * dixonColesTau(h, a, homeLambdaFH, awayLambdaFH, league.fhRho));
+                rawFH += prob;
+                if (h > a) fhHomeWin += prob; else if (a > h) fhAwayWin += prob; else fhDraw += prob;
+                if (h + a > 0.5) fhOver05 += prob;
+                if (h + a > 1.5) fhOver15 += prob;
+                scoresFH.push({ h, a, str: `${h}-${a}`, prob });
             }
             const normFH = v => rawFH > 0 ? v / rawFH : 0;
             scoresFH.forEach(s => s.prob = normFH(s.prob));
             fhHomeWin = normFH(fhHomeWin); fhDraw = normFH(fhDraw); fhAwayWin = normFH(fhAwayWin);
             fhOver05 = normFH(fhOver05); fhOver15 = normFH(fhOver15);
-
             const sortedFH = [...scoresFH].sort((a, b) => b.prob - a.prob);
             const top3FH = sortedFH.slice(0, 3).map(i => ({ score: i.str, percent: (i.prob * 100).toFixed(1) + '%' }));
 
-            const teamTotalHome = {
-                over05: 1 - poissonCdf(homeLambda, 0),
-                over15: 1 - poissonCdf(homeLambda, 1),
-                over25: 1 - poissonCdf(homeLambda, 2)
-            };
-            const teamTotalAway = {
-                over05: 1 - poissonCdf(awayLambda, 0),
-                over15: 1 - poissonCdf(awayLambda, 1),
-                over25: 1 - poissonCdf(awayLambda, 2)
-            };
+            const teamTotalHome = { over05: 1 - poissonCdf(homeLambda, 0), over15: 1 - poissonCdf(homeLambda, 1), over25: 1 - poissonCdf(homeLambda, 2) };
+            const teamTotalAway = { over05: 1 - poissonCdf(awayLambda, 0), over15: 1 - poissonCdf(awayLambda, 1), over25: 1 - poissonCdf(awayLambda, 2) };
 
             let mcH = 0, mcD = 0, mcA = 0;
             for (let r = 0; r < MONTE_CARLO_RUNS; r++) {
                 const gh = poissonSample(homeLambda * (1 + (Math.random() - 0.5) * 0.2));
                 const ga = poissonSample(awayLambda * (1 + (Math.random() - 0.5) * 0.2));
-                if (gh > ga) mcH++;
-                else if (ga > gh) mcA++;
-                else mcD++;
+                if (gh > ga) mcH++; else if (ga > gh) mcA++; else mcD++;
             }
             const avgDiff = (Math.abs(mcH/MONTE_CARLO_RUNS - homeWin) + Math.abs(mcD/MONTE_CARLO_RUNS - draw) + Math.abs(mcA/MONTE_CARLO_RUNS - awayWin)) / 3;
             const confidence = Math.max(0, Math.min(100, (1 - avgDiff * 4) * 100));
@@ -803,21 +639,13 @@
                 leagueName: league.name,
                 xgHome: homeLambda.toFixed(2), xgAway: awayLambda.toFixed(2), xgTotal: (homeLambda + awayLambda).toFixed(2),
                 xgHomeNum: homeLambda, xgAwayNum: awayLambda, xgTotalNum: homeLambda + awayLambda,
-                homeWinPct: (homeWin * 100).toFixed(1) + '%',
-                drawPct: (draw * 100).toFixed(1) + '%',
-                awayWinPct: (awayWin * 100).toFixed(1) + '%',
+                homeWinPct: (homeWin * 100).toFixed(1) + '%', drawPct: (draw * 100).toFixed(1) + '%', awayWinPct: (awayWin * 100).toFixed(1) + '%',
                 homeWinNum: homeWin, drawNum: draw, awayWinNum: awayWin,
-                over25Pct: (over25 * 100).toFixed(1) + '%',
-                under25Pct: ((1 - over25) * 100).toFixed(1) + '%',
-                bttsPct: (btts * 100).toFixed(1) + '%',
+                over25Pct: (over25 * 100).toFixed(1) + '%', under25Pct: ((1 - over25) * 100).toFixed(1) + '%', bttsPct: (btts * 100).toFixed(1) + '%',
                 confidencePct: confidence.toFixed(1) + '%',
-                top3FT, top3FH, scoresFT,
-                teamTotalHome, teamTotalAway,
-                htHome: (fhHomeWin * 100).toFixed(1) + '%',
-                htDraw: (fhDraw * 100).toFixed(1) + '%',
-                htAway: (fhAwayWin * 100).toFixed(1) + '%',
-                htOver05: (fhOver05 * 100).toFixed(1) + '%',
-                htOver15: (fhOver15 * 100).toFixed(1) + '%',
+                top3FT, top3FH, scoresFT, teamTotalHome, teamTotalAway,
+                htHome: (fhHomeWin * 100).toFixed(1) + '%', htDraw: (fhDraw * 100).toFixed(1) + '%', htAway: (fhAwayWin * 100).toFixed(1) + '%',
+                htOver05: (fhOver05 * 100).toFixed(1) + '%', htOver15: (fhOver15 * 100).toFixed(1) + '%',
                 warnings
             };
         }
@@ -829,12 +657,7 @@
             let verdict = 'no-value', label = '🔴 No Value';
             if (ev > 0.05) { verdict = 'value'; label = '🟢 Value Bet'; }
             else if (ev > -0.02) { verdict = 'fair'; label = '🟡 Fair'; }
-            return {
-                impliedProb: (impliedProb * 100).toFixed(1) + '%',
-                modelProb: (modelProb * 100).toFixed(1) + '%',
-                ev: (ev * 100).toFixed(1) + '%',
-                evNum: ev, verdict, label
-            };
+            return { impliedProb: (impliedProb * 100).toFixed(1) + '%', modelProb: (modelProb * 100).toFixed(1) + '%', ev: (ev * 100).toFixed(1) + '%', evNum: ev, verdict, label };
         }
 
         function renderValueBet() {
@@ -843,10 +666,7 @@
             const oD = parseFloat(document.getElementById('odd_draw').value);
             const oA = parseFloat(document.getElementById('odd_away').value);
             const container = document.getElementById('valueBetContainer');
-            if (!oH && !oD && !oA) {
-                container.innerHTML = `<div class="alert alert-light text-center py-4 text-muted small">💡 กรอก Odds จากเจ้ามือ เพื่อดู Value Bet</div>`;
-                return;
-            }
+            if (!oH && !oD && !oA) { container.innerHTML = `<div class="alert alert-light text-center py-4 text-muted small">💡 กรอก Odds จากเจ้ามือ เพื่อดู Value Bet</div>`; return; }
             const hVB = oH ? calculateValueBet(currentResult.homeWinNum, oH) : null;
             const dVB = oD ? calculateValueBet(currentResult.drawNum, oD) : null;
             const aVB = oA ? calculateValueBet(currentResult.awayWinNum, oA) : null;
@@ -855,14 +675,7 @@
                 return `<div class="col-4"><div class="value-card value-${vb.verdict === 'value' ? 'positive' : vb.verdict === 'fair' ? 'neutral' : 'negative'} text-center"><div class="small fw-bold">${icon} ${name}</div><div class="h5 fw-bold my-1">${vb.modelProb}</div><div class="text-xs text-muted">Model</div><hr class="my-1"><div class="text-xs">Implied: <strong>${vb.impliedProb}</strong></div><div class="text-xs">EV: <strong>${vb.ev}</strong></div><div class="small fw-bold mt-1">${vb.label}</div></div></div>`;
             }
             const best = [hVB, dVB, aVB].filter(v => v).sort((a, b) => b.evNum - a.evNum)[0];
-            container.innerHTML = `
-                <div class="row g-2">
-                    ${renderOutcome('เหย้า', '🏠', hVB)}
-                    ${renderOutcome('เสมอ', '⚖️', dVB)}
-                    ${renderOutcome('เยือน', '✈️', aVB)}
-                </div>
-                ${best && best.verdict === 'value' ? `<div class="alert alert-success mt-3 mb-0 py-2 text-sm"><strong>⭐ แนะนำ:</strong> เดิมพันฝั่ง EV สูงสุด → <strong>${best.ev}</strong> (${best.label})</div>` : best ? `<div class="alert alert-secondary mt-3 mb-0 py-2 text-sm"><strong>ℹ️ สรุป:</strong> ไม่มี Value Bet ชัดเจน (EV สูงสุด ${best.ev})</div>` : ''}
-            `;
+            container.innerHTML = `<div class="row g-2">${renderOutcome('เหย้า', '🏠', hVB)}${renderOutcome('เสมอ', '⚖️', dVB)}${renderOutcome('เยือน', '✈️', aVB)}</div>${best && best.verdict === 'value' ? `<div class="alert alert-success mt-3 mb-0 py-2 text-sm"><strong>⭐ แนะนำ:</strong> เดิมพันฝั่ง EV สูงสุด → <strong>${best.ev}</strong> (${best.label})</div>` : best ? `<div class="alert alert-secondary mt-3 mb-0 py-2 text-sm"><strong>ℹ️ สรุป:</strong> ไม่มี Value Bet ชัดเจน (EV สูงสุด ${best.ev})</div>` : ''}`;
         }
 
         function renderHandicap() {
@@ -876,113 +689,101 @@
             const losePct = (res.lose / totalProb * 100).toFixed(1);
             const fairOdds = (1 / (res.win + (res.push / 2))).toFixed(2);
             const fairOddsStrict = (1 / (res.win / (res.win + res.lose))).toFixed(2);
-            container.innerHTML = `
-                <div class="p-3 bg-light rounded-3">
-                    <div class="text-center mb-2"><div class="small text-muted">Handicap: <strong>${h}</strong> ${res.isQuarter ? `<span class="badge bg-info">${res.label}</span>` : ''}</div></div>
-                    <div class="row g-2 text-center">
-                        <div class="col-4"><div class="p-2 bg-success text-white rounded-3"><div class="small fw-bold">ชนะเดิมพัน</div><div class="h5 mb-0">${winPct}%</div></div></div>
-                        <div class="col-4"><div class="p-2 bg-warning text-dark rounded-3"><div class="small fw-bold">คืนทุน</div><div class="h5 mb-0">${pushPct}%</div></div></div>
-                        <div class="col-4"><div class="p-2 bg-danger text-white rounded-3"><div class="small fw-bold">เสียเดิมพัน</div><div class="h5 mb-0">${losePct}%</div></div></div>
-                    </div>
-                    <hr class="my-2">
-                    <div class="row g-2 text-center small">
-                        <div class="col-6"><div class="text-muted">Fair Odds (รวม push)</div><div class="h5 fw-bold text-primary mb-0">${fairOdds}</div></div>
-                        <div class="col-6"><div class="text-muted">Fair Odds (เข้มงวด)</div><div class="h5 fw-bold text-dark mb-0">${fairOddsStrict}</div></div>
-                    </div>
-                </div>
-            `;
+            container.innerHTML = `<div class="p-3 bg-light rounded-3"><div class="text-center mb-2"><div class="small text-muted">Handicap: <strong>${h}</strong> ${res.isQuarter ? `<span class="badge bg-info">${res.label}</span>` : ''}</div></div><div class="row g-2 text-center"><div class="col-4"><div class="p-2 bg-success text-white rounded-3"><div class="small fw-bold">ชนะเดิมพัน</div><div class="h5 mb-0">${winPct}%</div></div></div><div class="col-4"><div class="p-2 bg-warning text-dark rounded-3"><div class="small fw-bold">คืนทุน</div><div class="h5 mb-0">${pushPct}%</div></div></div><div class="col-4"><div class="p-2 bg-danger text-white rounded-3"><div class="small fw-bold">เสียเดิมพัน</div><div class="h5 mb-0">${losePct}%</div></div></div></div><hr class="my-2"><div class="row g-2 text-center small"><div class="col-6"><div class="text-muted">Fair Odds (รวม push)</div><div class="h5 fw-bold text-primary mb-0">${fairOdds}</div></div><div class="col-6"><div class="text-muted">Fair Odds (เข้มงวด)</div><div class="h5 fw-bold text-dark mb-0">${fairOddsStrict}</div></div></div></div>`;
         }
 
-        // ============ LIVE ANALYSIS ============
-        function calculateLiveAnalysis(baseHomeLambda, baseAwayLambda, minute, homeScore, awayScore) {
+        // ============ LIVE ANALYSIS + RED CARD ============
+        function calculateRedCardModifier(redHome, redAway) {
+            // ทีมที่มีใบแดง: attack ลดลง, defense แย่ลง (โอกาสเสียประตูเพิ่ม)
+            // ใช้สูตร: attackMult = 0.78^redCards ; defenseMult (โอกาสเสีย) = 1.18^redCards
+            const attackMultHome = Math.pow(0.78, redHome);
+            const defenseMultHome = Math.pow(1.18, redHome);
+            const attackMultAway = Math.pow(0.78, redAway);
+            const defenseMultAway = Math.pow(1.18, redAway);
+            return { attackMultHome, defenseMultHome, attackMultAway, defenseMultAway };
+        }
+
+        function calculateLiveAnalysis(baseHomeLambda, baseAwayLambda, minute, homeScore, awayScore, redHome, redAway) {
             const remainingRatio = Math.max(0, (90 - minute) / 90);
-            const liveHomeLambda = baseHomeLambda * remainingRatio;
-            const liveAwayLambda = baseAwayLambda * remainingRatio;
-            
+            const rc = calculateRedCardModifier(redHome, redAway);
+
+            // ปรับ xG ตามใบแดง: ทีมที่โดนใบแดง攻击ลดลง, อีกทีมได้ประโยชน์ (defense ของทีมที่โดนแย่ลง)
+            const liveHomeLambda = baseHomeLambda * remainingRatio * rc.attackMultHome * rc.defenseMultAway;
+            const liveAwayLambda = baseAwayLambda * remainingRatio * rc.attackMultAway * rc.defenseMultHome;
+
             const pNoMoreGoals = Math.exp(-(liveHomeLambda + liveAwayLambda));
             const pHomeNext = (liveHomeLambda / (liveHomeLambda + liveAwayLambda + 0.0001)) * (1 - pNoMoreGoals);
             const pAwayNext = (liveAwayLambda / (liveHomeLambda + liveAwayLambda + 0.0001)) * (1 - pNoMoreGoals);
 
             let finalScores = [];
             let over05 = 0, over15 = 0, over25 = 0, over35 = 0, over45 = 0, over55 = 0;
-            
-            for (let h = 0; h <= 5; h++) {
-                for (let a = 0; a <= 5; a++) {
-                    const prob = poissonProbability(liveHomeLambda, h) * poissonProbability(liveAwayLambda, a);
-                    const finalTotal = homeScore + h + awayScore + a;
-                    
-                    if (finalTotal > 0.5) over05 += prob;
-                    if (finalTotal > 1.5) over15 += prob;
-                    if (finalTotal > 2.5) over25 += prob;
-                    if (finalTotal > 3.5) over35 += prob;
-                    if (finalTotal > 4.5) over45 += prob;
-                    if (finalTotal > 5.5) over55 += prob;
-                    
-                    finalScores.push({ 
-                        score: `${homeScore + h}-${awayScore + a}`, 
-                        prob 
-                    });
-                }
+            for (let h = 0; h <= 5; h++) for (let a = 0; a <= 5; a++) {
+                const prob = poissonProbability(liveHomeLambda, h) * poissonProbability(liveAwayLambda, a);
+                const ft = homeScore + h + awayScore + a;
+                if (ft > 0.5) over05 += prob;
+                if (ft > 1.5) over15 += prob;
+                if (ft > 2.5) over25 += prob;
+                if (ft > 3.5) over35 += prob;
+                if (ft > 4.5) over45 += prob;
+                if (ft > 5.5) over55 += prob;
+                finalScores.push({ score: `${homeScore + h}-${awayScore + a}`, prob });
             }
             finalScores.sort((x, y) => y.prob - x.prob);
-            const top3 = finalScores.slice(0, 3).map(s => ({
-                score: s.score,
-                percent: (s.prob * 100).toFixed(1) + '%'
-            }));
+            const top3 = finalScores.slice(0, 3).map(s => ({ score: s.score, percent: (s.prob * 100).toFixed(1) + '%' }));
 
             return {
-                liveHomeLambda,
-                liveAwayLambda,
+                liveHomeLambda, liveAwayLambda,
                 pHomeNext: (pHomeNext * 100).toFixed(1) + '%',
                 pAwayNext: (pAwayNext * 100).toFixed(1) + '%',
                 pNoGoal: (pNoMoreGoals * 100).toFixed(1) + '%',
                 top3,
+                redCardImpact: { redHome, redAway, ...rc },
                 overUnder: {
-                    over05: (over05 * 100).toFixed(1) + '%',
-                    under05: ((1 - over05) * 100).toFixed(1) + '%',
-                    over15: (over15 * 100).toFixed(1) + '%',
-                    under15: ((1 - over15) * 100).toFixed(1) + '%',
-                    over25: (over25 * 100).toFixed(1) + '%',
-                    under25: ((1 - over25) * 100).toFixed(1) + '%',
-                    over35: (over35 * 100).toFixed(1) + '%',
-                    under35: ((1 - over35) * 100).toFixed(1) + '%',
-                    over45: (over45 * 100).toFixed(1) + '%',
-                    under45: ((1 - over45) * 100).toFixed(1) + '%',
-                    over55: (over55 * 100).toFixed(1) + '%',
-                    under55: ((1 - over55) * 100).toFixed(1) + '%'
+                    over05: (over05 * 100).toFixed(1) + '%', under05: ((1 - over05) * 100).toFixed(1) + '%',
+                    over15: (over15 * 100).toFixed(1) + '%', under15: ((1 - over15) * 100).toFixed(1) + '%',
+                    over25: (over25 * 100).toFixed(1) + '%', under25: ((1 - over25) * 100).toFixed(1) + '%',
+                    over35: (over35 * 100).toFixed(1) + '%', under35: ((1 - over35) * 100).toFixed(1) + '%',
+                    over45: (over45 * 100).toFixed(1) + '%', under45: ((1 - over45) * 100).toFixed(1) + '%',
+                    over55: (over55 * 100).toFixed(1) + '%', under55: ((1 - over55) * 100).toFixed(1) + '%'
                 }
             };
         }
 
         function renderLiveAnalysis() {
-            if (!currentResult || !currentInput) {
-                alert('กรุณากดคำนวณผลวิเคราะห์ก่อนครับ');
-                return;
-            }
-            
+            if (!currentResult || !currentInput) { alert('กรุณากดคำนวณผลวิเคราะห์ก่อนครับ'); return; }
             const minute = parseInt(document.getElementById('live_minute').value) || 45;
             const hScore = parseInt(document.getElementById('live_home_score').value) || 0;
             const aScore = parseInt(document.getElementById('live_away_score').value) || 0;
+            const redHome = Math.max(0, parseInt(document.getElementById('live_red_home').value) || 0);
+            const redAway = Math.max(0, parseInt(document.getElementById('live_red_away').value) || 0);
 
-            const live = calculateLiveAnalysis(currentResult.xgHomeNum, currentResult.xgAwayNum, minute, hScore, aScore);
+            const live = calculateLiveAnalysis(currentResult.xgHomeNum, currentResult.xgAwayNum, minute, hScore, aScore, redHome, redAway);
 
             document.getElementById('liveXgHome').textContent = live.liveHomeLambda.toFixed(2);
             document.getElementById('liveXgAway').textContent = live.liveAwayLambda.toFixed(2);
             document.getElementById('liveXgTotal').textContent = (live.liveHomeLambda + live.liveAwayLambda).toFixed(2);
-            
             document.getElementById('liveNextHome').textContent = live.pHomeNext;
             document.getElementById('liveNextAway').textContent = live.pAwayNext;
             document.getElementById('liveNextNone').textContent = live.pNoGoal;
+
+            // แสดงผลกระทบใบแดง
+            const impactBox = document.getElementById('redCardImpact');
+            const impactText = document.getElementById('redCardImpactText');
+            if (redHome > 0 || redAway > 0) {
+                let parts = [];
+                if (redHome > 0) parts.push(`เหย้าโดน ${redHome} ใบ → attack ×${live.redCardImpact.attackMultHome.toFixed(2)}, โอกาสเสียประตู ×${live.redCardImpact.defenseMultHome.toFixed(2)}`);
+                if (redAway > 0) parts.push(`เยือนโดน ${redAway} ใบ → attack ×${live.redCardImpact.attackMultAway.toFixed(2)}, โอกาสเสียประตู ×${live.redCardImpact.defenseMultAway.toFixed(2)}`);
+                impactText.textContent = parts.join(' | ');
+                impactBox.classList.remove('d-none');
+            } else {
+                impactBox.classList.add('d-none');
+            }
 
             const container = document.getElementById('liveTopScores');
             container.innerHTML = '';
             const badges = ['bg-danger', 'bg-warning text-dark', 'bg-secondary'];
             live.top3.forEach((s, i) => {
-                container.innerHTML += `
-                    <div class="p-2 border rounded-3 bg-light d-flex justify-content-between align-items-center shadow-sm mb-1" style="font-size:0.85rem;">
-                        <div><span class="badge ${badges[i]} rounded-pill me-1">${i+1}</span> <strong>สกอร์ ${s.score}</strong></div>
-                        <span class="fw-bold">${s.percent}</span>
-                    </div>`;
+                container.innerHTML += `<div class="p-2 border rounded-3 bg-light d-flex justify-content-between align-items-center shadow-sm mb-1" style="font-size:0.85rem;"><div><span class="badge ${badges[i]} rounded-pill me-1">${i+1}</span> <strong>สกอร์ ${s.score}</strong></div><span class="fw-bold">${s.percent}</span></div>`;
             });
 
             const ou = live.overUnder;
@@ -1003,8 +804,7 @@
         }
 
         function updateDashboard(res, input) {
-            currentResult = res;
-            currentInput = input;
+            currentResult = res; currentInput = input;
             document.getElementById('displayHomeGoals').textContent = res.xgHome;
             document.getElementById('displayAwayGoals').textContent = res.xgAway;
             document.getElementById('displayTotalGoals').textContent = res.xgTotal;
@@ -1019,22 +819,16 @@
             document.getElementById('textDraw').textContent = dp >= 10 ? `เสมอ ${res.drawPct}` : res.drawPct;
             document.getElementById('textAway').textContent = ap >= 10 ? `${awayName} ${res.awayWinPct}` : res.awayWinPct;
             function renderScores(id, scores, color) {
-                const el = document.getElementById(id);
-                el.innerHTML = '';
+                const el = document.getElementById(id); el.innerHTML = '';
                 const badges = ['bg-danger', 'bg-warning text-dark', 'bg-secondary'];
-                scores.forEach((s, i) => {
-                    el.innerHTML += `<div class="p-2 border rounded-3 bg-light d-flex justify-content-between align-items-center shadow-sm mb-1" style="font-size:0.85rem; border-left: 3px solid ${color} !important;"><div><span class="badge ${badges[i]} rounded-pill me-1">${i+1}</span> <strong>${s.score}</strong></div><span class="fw-bold">${s.percent}</span></div>`;
-                });
+                scores.forEach((s, i) => { el.innerHTML += `<div class="p-2 border rounded-3 bg-light d-flex justify-content-between align-items-center shadow-sm mb-1" style="font-size:0.85rem; border-left: 3px solid ${color} !important;"><div><span class="badge ${badges[i]} rounded-pill me-1">${i+1}</span> <strong>${s.score}</strong></div><span class="fw-bold">${s.percent}</span></div>`; });
             }
             renderScores('topScoresFullTime', res.top3FT, '#3b82f6');
             renderScores('topScoresFirstHalf', res.top3FH, '#ef4444');
             document.getElementById('ht1x2').innerHTML = `<div class="text-success">🏠 ${res.htHome}</div><div class="text-secondary">⚖️ ${res.htDraw}</div><div class="text-primary">✈️ ${res.htAway}</div>`;
             document.getElementById('htOU05').textContent = res.htOver05;
             document.getElementById('htOU15').textContent = res.htOver15;
-            document.getElementById('teamTotalBody').innerHTML = `
-                <tr><td class="text-start fw-bold text-success">🏠 ${homeName}</td><td>${(res.teamTotalHome.over05*100).toFixed(1)}% / ${((1-res.teamTotalHome.over05)*100).toFixed(1)}%</td><td>${(res.teamTotalHome.over15*100).toFixed(1)}% / ${((1-res.teamTotalHome.over15)*100).toFixed(1)}%</td><td>${(res.teamTotalHome.over25*100).toFixed(1)}% / ${((1-res.teamTotalHome.over25)*100).toFixed(1)}%</td></tr>
-                <tr><td class="text-start fw-bold text-primary">✈️ ${awayName}</td><td>${(res.teamTotalAway.over05*100).toFixed(1)}% / ${((1-res.teamTotalAway.over05)*100).toFixed(1)}%</td><td>${(res.teamTotalAway.over15*100).toFixed(1)}% / ${((1-res.teamTotalAway.over15)*100).toFixed(1)}%</td><td>${(res.teamTotalAway.over25*100).toFixed(1)}% / ${((1-res.teamTotalAway.over25)*100).toFixed(1)}%</td></tr>
-            `;
+            document.getElementById('teamTotalBody').innerHTML = `<tr><td class="text-start fw-bold text-success">🏠 ${homeName}</td><td>${(res.teamTotalHome.over05*100).toFixed(1)}% / ${((1-res.teamTotalHome.over05)*100).toFixed(1)}%</td><td>${(res.teamTotalHome.over15*100).toFixed(1)}% / ${((1-res.teamTotalHome.over15)*100).toFixed(1)}%</td><td>${(res.teamTotalHome.over25*100).toFixed(1)}% / ${((1-res.teamTotalHome.over25)*100).toFixed(1)}%</td></tr><tr><td class="text-start fw-bold text-primary">✈️ ${awayName}</td><td>${(res.teamTotalAway.over05*100).toFixed(1)}% / ${((1-res.teamTotalAway.over05)*100).toFixed(1)}%</td><td>${(res.teamTotalAway.over15*100).toFixed(1)}% / ${((1-res.teamTotalAway.over15)*100).toFixed(1)}%</td><td>${(res.teamTotalAway.over25*100).toFixed(1)}% / ${((1-res.teamTotalAway.over25)*100).toFixed(1)}%</td></tr>`;
             document.getElementById('displayOver25').textContent = res.over25Pct;
             document.getElementById('displayUnder25').textContent = res.under25Pct;
             document.getElementById('displayBTTS').textContent = res.bttsPct;
@@ -1061,11 +855,7 @@
                 currentWeight: parseInt(document.getElementById('weightSlider').value),
                 homeName: document.getElementById('home_name').value.trim() || 'ทีมเหย้า',
                 awayName: document.getElementById('away_name').value.trim() || 'ทีมเยือน',
-                odds: {
-                    home: parseFloat(document.getElementById('odd_home').value) || null,
-                    draw: parseFloat(document.getElementById('odd_draw').value) || null,
-                    away: parseFloat(document.getElementById('odd_away').value) || null
-                }
+                odds: { home: parseFloat(document.getElementById('odd_home').value) || null, draw: parseFloat(document.getElementById('odd_draw').value) || null, away: parseFloat(document.getElementById('odd_away').value) || null }
             };
         }
 
@@ -1076,14 +866,14 @@
             if (saveHistory) saveToHistory(input, result);
         }
 
+        // ===== History (ย่อเหมือนเดิม) =====
         function getHistory() { return JSON.parse(localStorage.getItem('jackai_history') || '[]'); }
         function saveHistoryToStorage(h) { localStorage.setItem('jackai_history', JSON.stringify(h)); }
         function saveToHistory(input, result) {
             let history = getHistory();
             history.unshift({ id: 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5), date: new Date().toLocaleString('th-TH'), timestamp: Date.now(), home: input.homeName, away: input.awayName, input, result, actualScore: null });
             history = history.slice(0, MAX_HISTORY);
-            saveHistoryToStorage(history);
-            renderHistory();
+            saveHistoryToStorage(history); renderHistory();
         }
         function classifyResult(item) {
             if (!item.actualScore) return 'pending';
@@ -1096,23 +886,17 @@
             return actualOutcome === predOutcome ? 'correct' : 'wrong';
         }
         function renderHistory() {
-            const list = document.getElementById('historyList');
-            const history = getHistory();
+            const list = document.getElementById('historyList'); const history = getHistory();
             if (history.length === 0) { list.innerHTML = '<div class="text-muted text-center py-2">ยังไม่มีประวัติ</div>'; return; }
             list.innerHTML = history.map(item => {
                 const status = classifyResult(item);
                 let badge = '<span class="actual-score-badge result-pending">⏳ รอผล</span>';
-                if (item.actualScore) {
-                    const cls = status === 'exact' ? 'result-exact' : status === 'correct' ? 'result-hit' : 'result-miss';
-                    const ic = status === 'exact' ? '🎯' : status === 'correct' ? '✅' : '❌';
-                    badge = `<span class="actual-score-badge ${cls}">${ic} ${item.actualScore}</span>`;
-                }
+                if (item.actualScore) { const cls = status === 'exact' ? 'result-exact' : status === 'correct' ? 'result-hit' : 'result-miss'; const ic = status === 'exact' ? '🎯' : status === 'correct' ? '✅' : '❌'; badge = `<span class="actual-score-badge ${cls}">${ic} ${item.actualScore}</span>`; }
                 return `<div class="list-group-item history-item px-2 py-2" data-id="${item.id}"><div class="d-flex justify-content-between align-items-start"><div class="flex-grow-1" style="cursor: pointer;" onclick="loadHistory('${item.id}')"><div class="d-flex justify-content-between mb-1"><span class="fw-bold text-truncate" style="max-width: 65%;">${item.home} vs ${item.away}</span><span class="badge bg-secondary rounded-pill">${item.result.homeWinPct}</span></div><div class="text-xs text-muted mb-1">${item.result.leagueName} | xG: ${item.result.xgHome} - ${item.result.xgAway}</div><div class="d-flex gap-1 flex-wrap">${badge}<button class="btn btn-xs btn-outline-secondary rounded-pill" onclick="event.stopPropagation(); promptActualScore('${item.id}')"><i class="bi bi-pencil-square"></i></button></div></div><button class="icon-btn icon-btn-danger btn-delete ms-2" onclick="event.stopPropagation(); deleteHistoryItem('${item.id}')"><i class="bi bi-trash3 text-danger"></i></button></div></div>`;
             }).join('');
         }
         window.loadHistory = function(id) {
-            const item = getHistory().find(h => h.id === id);
-            if (!item) return;
+            const item = getHistory().find(h => h.id === id); if (!item) return;
             document.getElementById('leagueSelect').value = item.input.league || 'EPL';
             document.getElementById('home_name').value = item.input.homeName;
             document.getElementById('home_attack').value = item.input.homeAttack;
@@ -1137,40 +921,26 @@
         };
         window.deleteHistoryItem = function(id) {
             if (!confirm('ลบรายการนี้?')) return;
-            try {
-                let history = getHistory();
-                const idx = history.findIndex(h => h.id === id);
-                if (idx === -1) { alert('ไม่พบรายการนี้'); renderHistory(); return; }
-                history.splice(idx, 1);
-                saveHistoryToStorage(history);
-                renderHistory();
-            } catch(e) { alert('เกิดข้อผิดพลาด: ' + e.message); }
+            let history = getHistory(); const idx = history.findIndex(h => h.id === id);
+            if (idx === -1) { alert('ไม่พบรายการนี้'); renderHistory(); return; }
+            history.splice(idx, 1); saveHistoryToStorage(history); renderHistory();
         };
         window.promptActualScore = function(id) {
-            const history = getHistory();
-            const item = history.find(h => h.id === id);
-            if (!item) return;
+            const history = getHistory(); const item = history.find(h => h.id === id); if (!item) return;
             const input = prompt(`ผลจริงของ ${item.home} vs ${item.away}\nรูปแบบ: 2-1`, item.actualScore || '');
             if (input === null) return;
             if (input.trim() === '') item.actualScore = null;
-            else {
-                const m = input.trim().match(/^(\d+)\s*[-:]\s*(\d+)$/);
-                if (!m) { alert('รูปแบบไม่ถูกต้อง'); return; }
-                item.actualScore = `${m[1]}-${m[2]}`;
-            }
-            saveHistoryToStorage(history);
-            renderHistory();
+            else { const m = input.trim().match(/^(\d+)\s*[-:]\s*(\d+)$/); if (!m) { alert('รูปแบบไม่ถูกต้อง'); return; } item.actualScore = `${m[1]}-${m[2]}`; }
+            saveHistoryToStorage(history); renderHistory();
         };
 
         document.getElementById('btnClearAll').addEventListener('click', () => {
             if (getHistory().length === 0) { alert('ไม่มีประวัติ'); return; }
             if (!confirm('ล้างทั้งหมด?')) return;
-            localStorage.removeItem('jackai_history');
-            renderHistory();
+            localStorage.removeItem('jackai_history'); renderHistory();
         });
         document.getElementById('btnExport').addEventListener('click', function() {
-            const history = getHistory();
-            if (history.length === 0) { alert('ไม่มีประวัติ'); return; }
+            const history = getHistory(); if (history.length === 0) { alert('ไม่มีประวัติ'); return; }
             const rows = history.map((h, i) => {
                 const status = classifyResult(h);
                 const st = status === 'exact' ? '🎯' : status === 'correct' ? '✅' : status === 'wrong' ? '❌' : '⏳';
@@ -1178,59 +948,30 @@
             }).join('');
             const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>JackAI History</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"></head><body style="padding:30px;background:#f1f5f9;"><div class="container"><div class="card p-4"><h2>⚽ JackAI History</h2><p class="text-muted">${history.length} รายการ | ${new Date().toLocaleString('th-TH')}</p><table class="table table-sm table-striped"><thead class="table-dark"><tr><th>#</th><th>วันที่</th><th>แมตช์</th><th>ลีก</th><th>xG</th><th>1X2</th><th>Top Score</th><th>ผลจริง</th><th>สถานะ</th></tr></thead><tbody>${rows}</tbody></table></div></div></body></html>`;
             const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `JackAI_${new Date().toISOString().slice(0,10)}.html`;
-            a.click();
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `JackAI_${new Date().toISOString().slice(0,10)}.html`; a.click();
         });
 
         document.getElementById('btnCopy').addEventListener('click', function() {
             if (!currentResult) return;
-            const text = `
-⚽ ผลวิเคราะห์ JackAI (${currentResult.leagueName})
-🏠 ${currentInput.homeName} vs ✈️ ${currentInput.awayName}
-
-📊 1X2: ${currentResult.homeWinPct} / ${currentResult.drawPct} / ${currentResult.awayWinPct}
-⚽ xG: ${currentResult.xgHome} - ${currentResult.xgAway}
-🎯 FT Top: ${currentResult.top3FT[0].score} (${currentResult.top3FT[0].percent})
-⏱️ HT Top: ${currentResult.top3FH[0].score} (${currentResult.top3FH[0].percent})
-💰 O2.5: ${currentResult.over25Pct} | BTTS: ${currentResult.bttsPct}
-📈 Confidence: ${currentResult.confidencePct}
-            `.trim();
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = this;
-                const orig = btn.innerHTML;
-                btn.innerHTML = '✅';
-                setTimeout(() => btn.innerHTML = orig, 1500);
-            });
+            const text = `\n⚽ ผลวิเคราะห์ JackAI (${currentResult.leagueName})\n🏠 ${currentInput.homeName} vs ✈️ ${currentInput.awayName}\n\n📊 1X2: ${currentResult.homeWinPct} / ${currentResult.drawPct} / ${currentResult.awayWinPct}\n⚽ xG: ${currentResult.xgHome} - ${currentResult.xgAway}\n🎯 FT Top: ${currentResult.top3FT[0].score} (${currentResult.top3FT[0].percent})\n⏱️ HT Top: ${currentResult.top3FH[0].score} (${currentResult.top3FH[0].percent})\n💰 O2.5: ${currentResult.over25Pct} | BTTS: ${currentResult.bttsPct}\n📈 Confidence: ${currentResult.confidencePct}\n            `.trim();
+            navigator.clipboard.writeText(text).then(() => { const btn = this; const orig = btn.innerHTML; btn.innerHTML = '✅'; setTimeout(() => btn.innerHTML = orig, 1500); });
         });
 
         document.addEventListener('DOMContentLoaded', function() {
             const slider = document.getElementById('weightSlider');
             const savedWeight = localStorage.getItem('football_model_weight');
             if (savedWeight !== null) slider.value = savedWeight;
-            function updateSliderLabels(v) {
-                document.getElementById('weightHomeLabel').textContent = `${v}%`;
-                document.getElementById('weightH2hLabel').textContent = `${100 - v}%`;
-            }
+            function updateSliderLabels(v) { document.getElementById('weightHomeLabel').textContent = `${v}%`; document.getElementById('weightH2hLabel').textContent = `${100 - v}%`; }
             updateSliderLabels(slider.value);
             slider.addEventListener('input', function() {
                 updateSliderLabels(this.value);
                 localStorage.setItem('football_model_weight', this.value);
                 triggerCalculation(false);
             });
-            ['odd_home', 'odd_draw', 'odd_away'].forEach(id => {
-                document.getElementById(id).addEventListener('input', renderValueBet);
-            });
+            ['odd_home', 'odd_draw', 'odd_away'].forEach(id => document.getElementById(id).addEventListener('input', renderValueBet));
             document.getElementById('handicapSelect').addEventListener('change', renderHandicap);
-            document.getElementById('footballForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                triggerCalculation(true);
-            });
-            
-            // ปุ่มคำนวณบอลสด
+            document.getElementById('footballForm').addEventListener('submit', function(e) { e.preventDefault(); triggerCalculation(true); });
             document.getElementById('btnCalcLive').addEventListener('click', renderLiveAnalysis);
-
             renderHistory();
             triggerCalculation(false);
         });
