@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ โปรแกรมวิเคราะห์ฟุตบอลด้วยแบบจำลอง Poisson Distribution</title>
-    <!-- Bootstrap CSS CDN (v5.3.3) -->
+    <title>⚽ JackZaa AI - โปรแกรมวิเคราะห์ฟุตบอลขั้นสูง</title>
+    <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f1f5f9; padding: 40px 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f1f5f9; padding: 40px 0; font-family: system-ui, -apple-system, sans-serif; }
         .container { max-width: 1000px; }
         .card { border-radius: 16px; border: none; }
         .progress-stacked { height: 32px; border-radius: 50px; overflow: hidden; background-color: #e2e8f0; }
         .progress-bar { font-weight: 700; font-size: 0.95rem; transition: width 0.5s ease-in-out; }
         .stat-box { background-color: #f8fafc; transition: transform 0.2s ease; }
         .stat-box:hover { transform: translateY(-2px); }
+        .score-badge { font-size: 1.1rem; font-weight: bold; width: 70px; display: inline-block; text-align: center; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="text-center mb-4">
-            <h1 class="fw-extrabold text-dark mb-2">⚽ โปรแกรมวิเคราะห์ฟุตบอล + H2H</h1>
-            <p class="text-secondary fs-5">กรอกสถิติทีมเพื่อทำการวิเคราะห์ด้วยแบบจำลอง Poisson Distribution แบบ Real-time</p>
+            <h1 class="fw-extrabold text-dark mb-2">⚽ โปรแกรมวิเคราะห์ฟุตบอลขั้นสูง (Poisson + H2H)</h1>
+            <p class="text-secondary fs-5">พัฒนาโดยเครดิตโปรเจกต์ JackZaa AI</p>
         </div>
 
         <!-- แผงปุ่มสำหรับโหลดข้อมูลจำลอง (Mock Data) -->
@@ -29,6 +30,19 @@
                 <button type="button" class="btn btn-outline-secondary rounded-pill border-0 px-3 fw-semibold" id="btnMockDerby">🏴󠁧󠁢󠁥󠁮󠁧󠁿 ศึกแดงเดือด (บิ๊กแมตช์)</button>
                 <button type="button" class="btn btn-outline-secondary rounded-pill border-0 px-3 fw-semibold" id="btnMockAttackVsDefense">🛡️ ทีมบุกโหด เจอ ทีมรับเหนียว</button>
                 <button type="button" class="btn btn-outline-secondary rounded-pill border-0 px-3 fw-semibold" id="btnMockRandom">🎲 สุ่มทีมคู่อื่นๆ</button>
+            </div>
+        </div>
+
+        <!-- กล่องควบคุมแถบสไลด์ปรับค่าน้ำหนัก -->
+        <div class="card p-4 shadow-sm mb-4 bg-white">
+            <h5 class="fw-bold mb-3 text-secondary fs-6 text-uppercase tracking-wide">🎛️ แถบปรับสัดส่วนการถ่วงน้ำหนัก (Dynamic Weight Slider)</h5>
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <input type="range" class="form-range" id="weightSlider" min="0" max="100" value="70">
+                </div>
+                <div class="col-md-4 text-center">
+                    <span class="fs-6 fw-bold text-dark" id="weightLabel">ปัจจุบัน 70% : H2H 30%</span>
+                </div>
             </div>
         </div>
         
@@ -48,13 +62,17 @@
                             <input type="number" id="home_attack" class="form-control form-control-lg" value="1.8" step="0.1" min="0">
                         </div>
                         <div class="mb-3">
-                            <label safest for="home_defense" class="form-label fw-semibold text-muted">❌ ประตูเฉลี่ยต่อเกม (เสีย)</label>
+                            <label for="home_defense" class="form-label fw-semibold text-muted">❌ ประตูเฉลี่ยต่อเกม (เสีย)</label>
                             <input type="number" id="home_defense" class="form-control form-control-lg" value="1.0" step="0.1" min="0">
                         </div>
                         <div class="mb-3">
-                            <label for="home_form" class="form-label fw-semibold text-muted">📈 ฟอร์ม 5 นัดล่าสุด (ชนะ=3, เสมอ=1, แพ้=0)</label>
+                            <label for="home_form" class="form-label fw-semibold text-muted">📈 ฟอร์ม 5 นัดล่าสุด (คะแนนเต็ม 15)</label>
                             <input type="number" id="home_form" class="form-control form-control-lg" value="9" min="0" max="15">
-                            <div class="form-text text-end">คะแนนระหว่าง 0 - 15</div>
+                        </div>
+                        <div class="mb-3 border-top pt-3">
+                            <h6 class="fw-bold text-muted mb-2">📜 สถิติเจอกันในอดีต (H2H) ของคู่นี้</h6>
+                            <label for="h2h_home_goals" class="form-label small text-muted">จำนวนประตูรวมที่เจ้าบ้านยิงได้ในอดีต</label>
+                            <input type="number" id="h2h_home_goals" class="form-control" value="8" min="0">
                         </div>
                     </div>
                 </div>
@@ -76,16 +94,22 @@
                             <input type="number" id="away_defense" class="form-control form-control-lg" value="1.3" step="0.1" min="0">
                         </div>
                         <div class="mb-3">
-                            <label for="away_form" class="form-label fw-semibold text-muted">📈 ฟอร์ม 5 นัดล่าสุด (ชนะ=3, เสมอ=1, แพ้=0)</label>
+                            <label for="away_form" class="form-label fw-semibold text-muted">📈 ฟอร์ม 5 นัดล่าสุด (คะแนนเต็ม 15)</label>
                             <input type="number" id="away_form" class="form-control form-control-lg" value="7" min="0" max="15">
-                            <div class="form-text text-end">คะแนนระหว่าง 0 - 15</div>
+                        </div>
+                        <div class="mb-3 border-top pt-3">
+                            <h6 class="fw-bold text-muted mb-2">&nbsp;</h6>
+                            <label for="h2h_matches" class="form-label small text-muted">จำนวนนัดรวมที่เคยเจอกันย้อนหลัง</label>
+                            <input type="number" id="h2h_matches" class="form-control" value="5" min="1">
+                            <label for="h2h_away_goals" class="form-label small text-muted mt-2">จำนวนประตูรวมที่ทีมเยือนยิงได้ในอดีต</label>
+                            <input type="number" id="h2h_away_goals" class="form-control" value="6" min="0">
                         </div>
                     </div>
                 </div>
             </div>
             
             <div class="text-center mt-4">
-                <button type="submit" id="btnAnalyze" class="btn btn-danger btn-lg px-5 py-3 shadow fw-bold rounded-pill text-uppercase tracking-wider">🔍 วิเคราะห์ผลการแข่งขัน</button>
+                <button type="submit" id="btnAnalyze" class="btn btn-danger btn-lg px-5 py-3 shadow fw-bold rounded-pill text-uppercase">🔍 วิเคราะห์ผลการแข่งขัน</button>
             </div>
         </form>
         
@@ -117,7 +141,7 @@
                 
                 <!-- จำนวนประตูคาดการณ์ Expected Goals -->
                 <h5 class="fw-bold mb-4 text-secondary fs-6 text-uppercase tracking-wide">⚽ ค่าเฉลี่ยประตูคาดการณ์ (Expected Goals)</h5>
-                <div class="row g-4 text-center">
+                <div class="row g-4 text-center mb-4">
                     <div class="col-md-4">
                         <div class="p-4 rounded-4 border stat-box shadow-sm">
                             <div class="text-success fw-bold fs-6 mb-2">🏠 คาดการณ์ประตูเจ้าบ้าน</div>
@@ -140,11 +164,38 @@
                         </div>
                     </div>
                 </div>
+
+                <hr class="my-4 opacity-25">
+
+                <!-- คาดการณ์ผลสกอร์ยอดฮิต Top 3 -->
+                <div class="mb-2">
+                    <h5 class="fw-bold mb-3 text-secondary fs-6 text-uppercase tracking-wide">🎯 คาดการณ์สกอร์ที่มีโอกาสเกิดขึ้นมากที่สุด 3 อันดับแรก</h5>
+                    <div class="row g-3" id="topScoresContainer">
+                        <div class="col-md-4">
+                            <div class="p-3 rounded-3 border bg-light d-flex justify-content-between align-items-center">
+                                <div><span class="badge bg-danger me-2">อันดับ 1</span> <span class="score-badge text-dark" id="score1">0 - 0</span></div>
+                                <span class="fw-bold text-primary" id="prob1">0.0%</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 rounded-3 border bg-light d-flex justify-content-between align-items-center">
+                                <div><span class="badge bg-warning text-dark me-2">อันดับ 2</span> <span class="score-badge text-dark" id="score2">0 - 0</span></div>
+                                <span class="fw-bold text-primary" id="prob2">0.0%</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 rounded-3 border bg-light d-flex justify-content-between align-items-center">
+                                <div><span class="badge bg-secondary me-2">อันดับ 3</span> <span class="score-badge text-dark" id="score3">0 - 0</span></div>
+                                <span class="fw-bold text-primary" id="prob3">0.0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="mt-4 p-3 rounded-3 d-flex align-items-center" style="background-color: #fffbeb; border-left: 5px solid #f59e0b;">
                     <div class="me-3 fs-3">⚠️</div>
                     <div class="text-warning-emphasis small fw-medium">
-                        แบบจำลองทางสถิตินี้คำนวณจากสูตร Poisson Distribution โดยระบบ Client-side Javascript โปรดใช้เพื่อประกอบการตัดสินใจและการพิจารณาเท่านั้น ไม่ใช่การรับประกันผลการแข่งขันจริง 100%
+                        แบบจำลองทางสถิตินี้คำนวณจากสูตร Poisson Distribution ถ่วงน้ำหนักร่วมกับสถิติ H2H โดยระบบเดสก์ท็อป Client-side JavaScript โปรดใช้เพื่อประกอบการพิจารณาเท่านั้น ไม่รับประกันผลจริง 100%
                     </div>
                 </div>
             </div>
@@ -163,13 +214,22 @@
             return (Math.exp(-lambda) * Math.pow(lambda, x)) / factorial(x);
         }
 
-        function analyzeMatch(homeAttack, homeDefense, awayAttack, awayDefense, homeForm, awayForm) {
+        function analyzeMatch(homeAttack, homeDefense, awayAttack, awayDefense, homeForm, awayForm, h2hMatches, h2hHomeGoals, h2hAwayGoals, currentWeight) {
+            let currentWeightPercent = currentWeight / 100;
+            let h2hWeightPercent = 1 - currentWeightPercent;
+
             let homeFormModifier = 1 + ((homeForm - 7) * 0.05);
             let awayFormModifier = 1 + ((awayForm - 7) * 0.05);
             
-            let homeLambda = ((homeAttack + awayDefense) / 2) * homeFormModifier;
-            let awayLambda = ((awayAttack + homeDefense) / 2) * awayFormModifier;
+            let homeBaseLambda = ((homeAttack + awayDefense) / 2) * homeFormModifier;
+            let awayBaseLambda = ((awayAttack + homeDefense) / 2) * awayFormModifier;
             
+            let h2hHomeAvg = h2hHomeGoals / h2hMatches;
+            let h2hAwayAvg = h2hAwayGoals / h2hMatches;
+
+            let homeLambda = (homeBaseLambda * currentWeightPercent) + (h2hHomeAvg * h2hWeightPercent);
+            let awayLambda = (awayBaseLambda * currentWeightPercent) + (h2hAwayAvg * h2hWeightPercent);
+
             homeLambda = Math.max(0.01, homeLambda);
             awayLambda = Math.max(0.01, awayLambda);
             
@@ -177,6 +237,8 @@
             let awayWinProb = 0;
             let drawProb = 0;
             const maxGoals = 5;
+            
+            let scoreMatrix = [];
             
             for (let h = 0; h <= maxGoals; h++) {
                 for (let a = 0; a <= maxGoals; a++) {
@@ -187,10 +249,18 @@
                     if (h > a) homeWinProb += matchProb;
                     else if (a > h) awayWinProb += matchProb;
                     else drawProb += matchProb;
+
+                    scoreMatrix.push({
+                        score: `${h} - ${a}`,
+                        prob: matchProb
+                    });
                 }
             }
             
             let totalProb = homeWinProb + awayWinProb + drawProb;
+            
+            scoreMatrix.sort((x, y) => y.prob - x.prob);
+            let top3 = scoreMatrix.slice(0, 3);
             
             return {
                 expectedHomeGoals: homeLambda.toFixed(2),
@@ -199,6 +269,7 @@
                 homeWinPercent: ((homeWinProb / totalProb) * 100).toFixed(1) + '%',
                 drawPercent: ((drawProb / totalProb) * 100).toFixed(1) + '%',
                 awayWinPercent: ((awayWinProb / totalProb) * 100).toFixed(1) + '%',
+                topScores: top3.map(s => ({ score: s.score, pct: ((s.prob / totalProb) * 100).toFixed(1) + '%' }))
             };
         }
 
@@ -218,9 +289,36 @@
             document.getElementById('textHome').textContent = homePercent >= 8 ? 'เจ้าบ้าน ' + resultObj.homeWinPercent : resultObj.homeWinPercent;
             document.getElementById('textDraw').textContent = drawPercent >= 8 ? 'เสมอ ' + resultObj.drawPercent : resultObj.drawPercent;
             document.getElementById('textAway').textContent = awayPercent >= 8 ? 'ทีมเยือน ' + resultObj.awayWinPercent : resultObj.awayWinPercent;
+
+            if(resultObj.topScores && resultObj.topScores.length >= 3) {
+                document.getElementById('score1').textContent = resultObj.topScores[0].score;
+                document.getElementById('prob1').textContent = resultObj.topScores[0].pct;
+                document.getElementById('score2').textContent = resultObj.topScores[1].score;
+                document.getElementById('prob2').textContent = resultObj.topScores[1].pct;
+                document.getElementById('score3').textContent = resultObj.topScores[2].score;
+                document.getElementById('prob3').textContent = resultObj.topScores[2].pct;
+            }
         }
 
-        function setMockData(homeName, homeAtk, homeDef, homeFrm, awayName, awayAtk, awayDef, awayFrm) {
+        function triggerCalculation() {
+            let homeAttack = Math.max(0, parseFloat(document.getElementById('home_attack').value) || 0);
+            let homeDefense = Math.max(0, parseFloat(document.getElementById('home_defense').value) || 0);
+            let awayAttack = Math.max(0, parseFloat(document.getElementById('away_attack').value) || 0);
+            let awayDefense = Math.max(0, parseFloat(document.getElementById('away_defense').value) || 0);
+            let homeForm = Math.min(15, Math.max(0, parseInt(document.getElementById('home_form').value) || 7));
+            let awayForm = Math.min(15, Math.max(0, parseInt(document.getElementById('away_form').value) || 7));
+            
+            let h2hMatches = Math.max(1, parseInt(document.getElementById('h2h_matches').value) || 1);
+            let h2hHomeGoals = Math.max(0, parseInt(document.getElementById('h2h_home_goals').value) || 0);
+            let h2hAwayGoals = Math.max(0, parseInt(document.getElementById('h2h_away_goals').value) || 0);
+
+            let currentWeight = parseInt(document.getElementById('weightSlider').value);
+
+            const mathResult = analyzeMatch(homeAttack, homeDefense, awayAttack, awayDefense, homeForm, awayForm, h2hMatches, h2hHomeGoals, h2hAwayGoals, currentWeight);
+            updateDashboard(mathResult);
+        }
+
+        function setMockData(homeName, homeAtk, homeDef, homeFrm, awayName, awayAtk, awayDef, awayFrm, h2hMatches, h2hHome, h2hAway) {
             document.getElementById('home_name').value = homeName;
             document.getElementById('home_attack').value = homeAtk;
             document.getElementById('home_defense').value = homeDef;
@@ -231,30 +329,42 @@
             document.getElementById('away_defense').value = awayDef;
             document.getElementById('away_form').value = awayFrm;
 
-            const mathResult = analyzeMatch(homeAtk, homeDef, awayAtk, awayDef, homeFrm, awayFrm);
-            updateDashboard(mathResult);
+            document.getElementById('h2h_matches').value = h2hMatches;
+            document.getElementById('h2h_home_goals').value = h2hHome;
+            document.getElementById('h2h_away_goals').value = h2hAway;
+
+            triggerCalculation();
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            const slider = document.getElementById('weightSlider');
+            const label = document.getElementById('weightLabel');
+
+            // โหลดค่าน้ำหนักล่าสุดจาก localStorage (ถ้ามี)
+            const savedWeight = localStorage.getItem('football_analysis_weight');
+            if (savedWeight !== null) {
+                slider.value = savedWeight;
+                label.textContent = `ปัจจุบัน ${savedWeight}% : H2H ${100 - savedWeight}%`;
+            }
+
+            slider.addEventListener('input', function() {
+                let currentVal = slider.value;
+                label.textContent = `ปัจจุบัน ${currentVal}% : H2H ${100 - currentVal}%`;
+                localStorage.setItem('football_analysis_weight', currentVal);
+                triggerCalculation();
+            });
+
             document.getElementById('footballForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                let homeAttack = Math.max(0, parseFloat(document.getElementById('home_attack').value) || 0);
-                let homeDefense = Math.max(0, parseFloat(document.getElementById('home_defense').value) || 0);
-                let awayAttack = Math.max(0, parseFloat(document.getElementById('away_attack').value) || 0);
-                let awayDefense = Math.max(0, parseFloat(document.getElementById('away_defense').value) || 0);
-                let homeForm = Math.min(15, Math.max(0, parseInt(document.getElementById('home_form').value) || 7));
-                let awayForm = Math.min(15, Math.max(0, parseInt(document.getElementById('away_form').value) || 7));
-                
-                const mathResult = analyzeMatch(homeAttack, homeDefense, awayAttack, awayDefense, homeForm, awayForm);
-                updateDashboard(mathResult);
+                triggerCalculation();
             });
 
             document.getElementById('btnMockDerby').addEventListener('click', function() {
-                setMockData('ลิเวอร์พูล', 2.4, 0.8, 13, 'แมนเชสเตอร์ ยูไนเต็ด', 1.2, 1.6, 5);
+                setMockData('ลิเวอร์พูล', 2.4, 0.8, 13, 'แมนเชสเตอร์ ยูไนเต็ด', 1.2, 1.6, 5, 5, 12, 4);
             });
 
             document.getElementById('btnMockAttackVsDefense').addEventListener('click', function() {
-                setMockData('แมนเชสเตอร์ ซิตี้ (สายบุก)', 2.8, 1.1, 11, 'แอตเลติโก มาดริด (สายอุด)', 1.0, 0.6, 9);
+                setMockData('แมนเชสเตอร์ ซิตี้', 2.8, 1.1, 11, 'แอตเลติโก มาดริด', 1.0, 0.6, 9, 4, 6, 3);
             });
 
             document.getElementById('btnMockRandom').addEventListener('click', function() {
@@ -274,10 +384,15 @@
                 const hFrm = Math.floor(Math.random() * 16);
                 const aFrm = Math.floor(Math.random() * 16);
 
-                setMockData(pair.h, parseFloat(hAtk), parseFloat(hDef), hFrm, pair.a, parseFloat(aAtk), parseFloat(aDef), aFrm);
+                const matches = Math.floor(Math.random() * 5) + 3;
+                const h2hH = Math.floor(Math.random() * 10);
+                const h2hA = Math.floor(Math.random() * 10);
+
+                setMockData(pair.h, parseFloat(hAtk), parseFloat(hDef), hFrm, pair.a, parseFloat(aAtk), parseFloat(aDef), aFrm, matches, h2hH, h2hA);
             });
 
-            setMockData('ทีมเหย้า', 1.8, 1.0, 9, 'ทีมเยือน', 1.4, 1.3, 7);
+            // เรียกการคำนวณเบื้องต้นตอนหน้าเว็บโหลด
+            triggerCalculation();
         });
     </script>
 </body>
