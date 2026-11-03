@@ -1,673 +1,284 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>โปรแกรมวิเคราะห์ฟุตบอล + H2H</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    min-height: 100vh;
-    padding: 20px;
-    color: #333;
-  }
-  .container {
-    max-width: 950px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-  }
-  h1 { text-align: center; color: #1e3c72; margin-bottom: 8px; }
-  .subtitle { text-align: center; color: #777; margin-bottom: 25px; font-size: 14px; }
-
-  .teams {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-  .team-box {
-    background: #f5f7fa;
-    padding: 18px;
-    border-radius: 12px;
-    border-left: 5px solid #2a5298;
-  }
-  .team-box.away { border-left-color: #e74c3c; }
-  .team-box h3 { margin-bottom: 12px; color: #1e3c72; }
-  .team-box.away h3 { color: #c0392b; }
-
-  label { display: block; font-size: 13px; color: #555; margin: 10px 0 4px; }
-  input[type="text"], input[type="number"], select {
-    width: 100%;
-    padding: 9px 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-    background: #fff;
-  }
-  input:focus, select:focus { outline: none; border-color: #2a5298; }
-
-  /* ---------- H2H Section ---------- */
-  .h2h-section {
-    margin-top: 25px;
-    background: #fff8e7;
-    border: 1px solid #f5d76e;
-    border-radius: 12px;
-    padding: 20px;
-  }
-  .h2h-section h3 {
-    color: #b8860b;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .h2h-hint {
-    font-size: 12px;
-    color: #999;
-    margin-bottom: 15px;
-  }
-  .h2h-inputs {
-    display: grid;
-    grid-template-columns: 2fr 80px 40px 80px 1fr 90px;
-    gap: 8px;
-    align-items: end;
-    margin-bottom: 10px;
-  }
-  .h2h-inputs label { margin: 0 0 4px 0; font-size: 12px; }
-  .h2h-inputs .vs {
-    text-align: center;
-    font-weight: bold;
-    color: #b8860b;
-    padding-bottom: 10px;
-  }
-  .h2h-inputs input, .h2h-inputs select {
-    padding: 8px 6px;
-    text-align: center;
-    font-size: 13px;
-  }
-  .h2h-inputs input[type="text"] { text-align: left; padding: 8px 10px; }
-  .h2h-inputs .score { text-align: center; }
-  .btn-add {
-    background: #f39c12;
-    color: #fff;
-    border: none;
-    padding: 9px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: bold;
-    white-space: nowrap;
-  }
-  .btn-add:hover { background: #e67e22; }
-
-  /* ---------- H2H Table ---------- */
-  .h2h-table-wrap {
-    max-height: 260px;
-    overflow-y: auto;
-    border-radius: 10px;
-    border: 1px solid #eee;
-    margin-top: 10px;
-    background: #fff;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-  table th {
-    background: #f0f4f8;
-    padding: 10px 8px;
-    text-align: center;
-    color: #555;
-    font-weight: 600;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-  table td {
-    padding: 9px 8px;
-    text-align: center;
-    border-top: 1px solid #eee;
-  }
-  table td:first-child { text-align: left; padding-left: 12px; }
-  .badge {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: bold;
-    color: #fff;
-  }
-  .badge-home { background: #2ecc71; }
-  .badge-draw { background: #f39c12; }
-  .badge-away { background: #e74c3c; }
-  .btn-del {
-    background: #e74c3c;
-    color: #fff;
-    border: none;
-    padding: 4px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
-  }
-  .btn-del:hover { background: #c0392b; }
-  .empty-row { text-align: center; color: #aaa; padding: 20px; font-size: 13px; }
-
-  .h2h-summary {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 15px;
-  }
-  .h2h-summary .sum-item {
-    background: #fff;
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #f5d76e;
-  }
-  .h2h-summary .sum-item .label { font-size: 11px; color: #888; }
-  .h2h-summary .sum-item .value { font-size: 20px; font-weight: bold; }
-
-  /* ---------- Buttons ---------- */
-  .btn-analyze {
-    width: 100%;
-    margin-top: 25px;
-    padding: 14px;
-    background: linear-gradient(135deg, #2a5298, #1e3c72);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-  .btn-analyze:hover { transform: translateY(-2px); }
-  .btn-clear {
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    background: #eef1f5;
-    color: #666;
-    border: none;
-    border-radius: 10px;
-    font-size: 13px;
-    cursor: pointer;
-  }
-
-  /* ---------- Result ---------- */
-  #result { margin-top: 30px; display: none; }
-  .result-card {
-    background: #f5f7fa;
-    border-radius: 12px;
-    padding: 22px;
-    text-align: center;
-  }
-  .prob-bar {
-    display: flex;
-    height: 50px;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 20px 0;
-    font-weight: bold;
-    color: #fff;
-  }
-  .prob-bar div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    transition: width 0.6s ease;
-  }
-  .home-bar { background: #2ecc71; }
-  .draw-bar { background: #f39c12; }
-  .away-bar { background: #e74c3c; }
-  .score-pred {
-    font-size: 32px;
-    font-weight: bold;
-    color: #1e3c72;
-    margin: 15px 0;
-  }
-  .info-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-top: 18px;
-  }
-  .info-item {
-    background: #fff;
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  }
-  .info-item .label { font-size: 12px; color: #888; }
-  .info-item .value { font-size: 18px; font-weight: bold; color: #1e3c72; }
-
-  /* H2H adjustment note */
-  .h2h-adjust {
-    margin-top: 15px;
-    background: #fff8e7;
-    border-left: 4px solid #f39c12;
-    padding: 12px 15px;
-    border-radius: 6px;
-    text-align: left;
-    font-size: 13px;
-    color: #7a5c00;
-    line-height: 1.6;
-  }
-  .h2h-adjust strong { color: #b8860b; }
-
-  .note {
-    font-size: 12px;
-    color: #999;
-    text-align: center;
-    margin-top: 18px;
-    line-height: 1.6;
-  }
-
-  @media (max-width: 700px) {
-    .teams, .info-grid, .h2h-summary { grid-template-columns: 1fr; }
-    .h2h-inputs {
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-    }
-    .h2h-inputs .vs { display: none; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚽ โปรแกรมวิเคราะห์ฟุตบอลด้วยแบบจำลอง Poisson Distribution</title>
+    <!-- Bootstrap CSS CDN (v5.3.3) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f1f5f9; padding: 40px 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+        .container { max-width: 1000px; }
+        .card { border-radius: 16px; border: none; }
+        .progress-stacked { height: 32px; border-radius: 50px; overflow: hidden; background-color: #e2e8f0; }
+        .progress-bar { font-weight: 700; font-size: 0.95rem; transition: width 0.5s ease-in-out; }
+        .stat-box { background-color: #f8fafc; transition: transform 0.2s ease; }
+        .stat-box:hover { transform: translateY(-2px); }
+    </style>
 </head>
 <body>
-<div class="container">
-  <h1>⚽ โปรแกรมวิเคราะห์ฟุตบอล + H2H</h1>
-  <p class="subtitle">กรอกสถิติทีม และประวัติการเจอกัน เพื่อวิเคราะห์ที่แม่นยำขึ้น</p>
-
-  <!-- ================= ข้อมูลทีม ================= -->
-  <div class="teams">
-    <div class="team-box">
-      <h3>🏠 ทีมเหย้า</h3>
-      <label>ชื่อทีมเหย้า</label>
-      <input type="text" id="homeName" value="ทีมเหย้า">
-
-      <label>ประตูเฉลี่ยต่อเกม (ยิงได้)</label>
-      <input type="number" id="homeGoalsFor" value="1.8" step="0.1" min="0">
-
-      <label>ประตูเฉลี่ยต่อเกม (เสีย)</label>
-      <input type="number" id="homeGoalsAgainst" value="1.0" step="0.1" min="0">
-
-      <label>ฟอร์ม 5 นัดล่าสุด (ชนะ=3, เสมอ=1, แพ้=0)</label>
-      <input type="number" id="homeForm" value="9" min="0" max="15">
-    </div>
-
-    <div class="team-box away">
-      <h3>✈️ ทีมเยือน</h3>
-      <label>ชื่อทีมเยือน</label>
-      <input type="text" id="awayName" value="ทีมเยือน">
-
-      <label>ประตูเฉลี่ยต่อเกม (ยิงได้)</label>
-      <input type="number" id="awayGoalsFor" value="1.4" step="0.1" min="0">
-
-      <label>ประตูเฉลี่ยต่อเกม (เสีย)</label>
-      <input type="number" id="awayGoalsAgainst" value="1.3" step="0.1" min="0">
-
-      <label>ฟอร์ม 5 นัดล่าสุด (ชนะ=3, เสมอ=1, แพ้=0)</label>
-      <input type="number" id="awayForm" value="7" min="0" max="15">
-    </div>
-  </div>
-
-  <!-- ================= H2H Section ================= -->
-  <div class="h2h-section">
-    <h3>🤝 ประวัติการเจอกัน (H2H)</h3>
-    <p class="h2h-hint">เพิ่มผลการแข่งขันที่ผ่านมา (สูงสุด 10 นัด) ระบบจะนำไปปรับความน่าจะเป็น</p>
-
-    <div class="h2h-inputs">
-      <div>
-        <label>วันที่</label>
-        <input type="text" id="h2hDate" placeholder="เช่น 2024-05-10">
-      </div>
-      <div>
-        <label>ประตูเหย้า</label>
-        <input type="number" class="score" id="h2hHomeScore" min="0" value="0">
-      </div>
-      <div class="vs">-</div>
-      <div>
-        <label>ประตูเยือน</label>
-        <input type="number" class="score" id="h2hAwayScore" min="0" value="0">
-      </div>
-      <div>
-        <label>สนาม</label>
-        <select id="h2hVenue">
-          <option value="home">เหย้าเจ้าบ้าน</option>
-          <option value="away">เหย้าทีมเยือน</option>
-          <option value="neutral">สนามกลาง</option>
-        </select>
-      </div>
-      <div>
-        <label>&nbsp;</label>
-        <button class="btn-add" onclick="addH2H()">+ เพิ่ม</button>
-      </div>
-    </div>
-
-    <div class="h2h-table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>วันที่</th>
-            <th>สกอร์</th>
-            <th>สนาม</th>
-            <th>ผล</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="h2hBody">
-          <tr><td colspan="5" class="empty-row">ยังไม่มีข้อมูล H2H</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="h2h-summary">
-      <div class="sum-item">
-        <div class="label">เจ้าบ้านชนะ</div>
-        <div class="value" style="color:#2ecc71" id="sumHomeWin">0</div>
-      </div>
-      <div class="sum-item">
-        <div class="label">เสมอ</div>
-        <div class="value" style="color:#f39c12" id="sumDraw">0</div>
-      </div>
-      <div class="sum-item">
-        <div class="label">ทีมเยือนชนะ</div>
-        <div class="value" style="color:#e74c3c" id="sumAwayWin">0</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= ปุ่ม ================= -->
-  <button class="btn-analyze" onclick="analyze()">🔍 วิเคราะห์ผลการแข่งขัน</button>
-  <button class="btn-clear" onclick="clearH2H()">🗑️ ล้างข้อมูล H2H</button>
-
-  <!-- ================= ผลลัพธ์ ================= -->
-  <div id="result">
-    <div class="result-card">
-      <h2 id="matchTitle"></h2>
-      <div class="score-pred" id="scorePred"></div>
-
-      <div class="prob-bar">
-        <div class="home-bar" id="homeBar">เจ้าบ้าน</div>
-        <div class="draw-bar" id="drawBar">เสมอ</div>
-        <div class="away-bar" id="awayBar">ทีมเยือน</div>
-      </div>
-
-      <div class="info-grid">
-        <div class="info-item">
-          <div class="label">คาดการณ์ประตูเจ้าบ้าน</div>
-          <div class="value" id="expHome"></div>
+    <div class="container">
+        <div class="text-center mb-4">
+            <h1 class="fw-extrabold text-dark mb-2">⚽ โปรแกรมวิเคราะห์ฟุตบอล + H2H</h1>
+            <p class="text-secondary fs-5">กรอกสถิติทีมเพื่อทำการวิเคราะห์ด้วยแบบจำลอง Poisson Distribution แบบ Real-time</p>
         </div>
-        <div class="info-item">
-          <div class="label">คาดการณ์ประตูทีมเยือน</div>
-          <div class="value" id="expAway"></div>
-        </div>
-        <div class="info-item">
-          <div class="label">ผลรวมประตูคาดการณ์</div>
-          <div class="value" id="expTotal"></div>
-        </div>
-      </div>
 
-      <div class="h2h-adjust" id="h2hAdjust" style="display:none"></div>
-
-      <p class="note">
-        ⚠️ ผลวิเคราะห์นี้ใช้แบบจำลอง Poisson + ปรับด้วย H2H
-        ใช้เพื่อประกอบการพิจารณาเท่านั้น ไม่ใช่การรับประกันผล
-      </p>
+        <!-- แผงปุ่มสำหรับโหลดข้อมูลจำลอง (Mock Data) -->
+        <div class="text-center mb-4">
+            <div class="btn-group shadow-sm rounded-pill p-1 bg-white border" role="group">
+                <button type="button" class="btn btn-outline-secondary rounded-pill border-0 px-3 fw-semibold" id="btnMockDerby">🏴󠁧󠁢󠁥󠁮󠁧󠁿 ศึกแดงเดือด (บิ๊กแมตช์)</button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill border-0 px-3 fw-semibold" id="btnMockAttackVsDefense">🛡️ ทีมบุกโหด เจอ ทีมรับเหนียว</button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill border-0 px-3 fw-semibold" id="btnMockRandom">🎲 สุ่มทีมคู่อื่นๆ</button>
+            </div>
+        </div>
+        
+        <!-- ฟอร์มกรอกข้อมูลสถิติแยกฝั่ง เหย้า - เยือน -->
+        <form id="footballForm" class="mb-5">
+            <div class="row g-4">
+                <!-- ฝั่งทีมเหย้า -->
+                <div class="col-md-6">
+                    <div class="card p-4 shadow-sm h-100 border-top border-5 border-success">
+                        <h4 class="fw-bold text-success mb-4 d-flex align-items-center">🏠 ทีมเหย้า</h4>
+                        <div class="mb-3">
+                            <label for="home_name" class="form-label fw-semibold text-muted">ชื่อทีมเหย้า</label>
+                            <input type="text" id="home_name" class="form-control form-control-lg" value="ทีมเหย้า">
+                        </div>
+                        <div class="mb-3">
+                            <label for="home_attack" class="form-label fw-semibold text-muted">⚽ ประตูเฉลี่ยต่อเกม (ยิงได้)</label>
+                            <input type="number" id="home_attack" class="form-control form-control-lg" value="1.8" step="0.1" min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label safest for="home_defense" class="form-label fw-semibold text-muted">❌ ประตูเฉลี่ยต่อเกม (เสีย)</label>
+                            <input type="number" id="home_defense" class="form-control form-control-lg" value="1.0" step="0.1" min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="home_form" class="form-label fw-semibold text-muted">📈 ฟอร์ม 5 นัดล่าสุด (ชนะ=3, เสมอ=1, แพ้=0)</label>
+                            <input type="number" id="home_form" class="form-control form-control-lg" value="9" min="0" max="15">
+                            <div class="form-text text-end">คะแนนระหว่าง 0 - 15</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ฝั่งทีมเยือน -->
+                <div class="col-md-6">
+                    <div class="card p-4 shadow-sm h-100 border-top border-5 border-primary">
+                        <h4 class="fw-bold text-primary mb-4 d-flex align-items-center">✈️ ทีมเยือน</h4>
+                        <div class="mb-3">
+                            <label for="away_name" class="form-label fw-semibold text-muted">ชื่อทีมเยือน</label>
+                            <input type="text" id="away_name" class="form-control form-control-lg" value="ทีมเยือน">
+                        </div>
+                        <div class="mb-3">
+                            <label for="away_attack" class="form-label fw-semibold text-muted">⚽ ประตูเฉลี่ยต่อเกม (ยิงได้)</label>
+                            <input type="number" id="away_attack" class="form-control form-control-lg" value="1.4" step="0.1" min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="away_defense" class="form-label fw-semibold text-muted">❌ ประตูเฉลี่ยต่อเกม (เสีย)</label>
+                            <input type="number" id="away_defense" class="form-control form-control-lg" value="1.3" step="0.1" min="0">
+                        </div>
+                        <div class="mb-3">
+                            <label for="away_form" class="form-label fw-semibold text-muted">📈 ฟอร์ม 5 นัดล่าสุด (ชนะ=3, เสมอ=1, แพ้=0)</label>
+                            <input type="number" id="away_form" class="form-control form-control-lg" value="7" min="0" max="15">
+                            <div class="form-text text-end">คะแนนระหว่าง 0 - 15</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button type="submit" id="btnAnalyze" class="btn btn-danger btn-lg px-5 py-3 shadow fw-bold rounded-pill text-uppercase tracking-wider">🔍 วิเคราะห์ผลการแข่งขัน</button>
+            </div>
+        </form>
+        
+        <!-- แดชบอร์ดสรุปผลการวิเคราะห์ -->
+        <div class="card border-0 shadow-lg overflow-hidden rounded-4">
+            <div class="card-header text-white p-4 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
+                <h3 class="mb-0 fs-4 fw-bold">📊 ผลการวิเคราะห์และคาดการณ์สถิติ</h3>
+                <span class="badge bg-success px-3 py-2 rounded-pill fw-semibold fs-6">Poisson Model (Real-time)</span>
+            </div>
+            <div class="card-body p-4 bg-white">
+                
+                <!-- ความน่าจะเป็นของผลลัพธ์การแข่ง -->
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-3 text-secondary fs-6 text-uppercase tracking-wide">🔮 ความน่าจะเป็นของผลการแข่งขัน</h5>
+                    <div class="progress-stacked shadow-sm mb-3">
+                        <div class="progress" role="progressbar" id="progressHome" style="width: 0%">
+                            <div class="progress-bar bg-success text-white" id="textHome">เจ้าบ้าน 0%</div>
+                        </div>
+                        <div class="progress" role="progressbar" id="progressDraw" style="width: 0%">
+                            <div class="progress-bar bg-secondary text-white" id="textDraw" style="background-color: #64748b !important;">เสมอ 0%</div>
+                        </div>
+                        <div class="progress" role="progressbar" id="progressAway" style="width: 0%">
+                            <div class="progress-bar bg-primary text-white" id="textAway" style="background-color: #3b82f6 !important;">ทีมเยือน 0%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="my-4 opacity-25">
+                
+                <!-- จำนวนประตูคาดการณ์ Expected Goals -->
+                <h5 class="fw-bold mb-4 text-secondary fs-6 text-uppercase tracking-wide">⚽ ค่าเฉลี่ยประตูคาดการณ์ (Expected Goals)</h5>
+                <div class="row g-4 text-center">
+                    <div class="col-md-4">
+                        <div class="p-4 rounded-4 border stat-box shadow-sm">
+                            <div class="text-success fw-bold fs-6 mb-2">🏠 คาดการณ์ประตูเจ้าบ้าน</div>
+                            <div class="display-5 fw-bold text-dark" id="displayHomeGoals">0.00</div>
+                            <div class="text-muted small mt-2">ประตูต่อเกม</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 rounded-4 text-white shadow-sm" style="background: linear-gradient(135deg, #334155, #1e293b);">
+                            <div class="text-warning fw-bold fs-6 mb-2">🔥 ผลรวมประตูคาดการณ์</div>
+                            <div class="display-5 fw-bold text-warning" id="displayTotalGoals">0.00</div>
+                            <div class="text-light-emphasis small mt-2">สกอร์รวม (Over/Under)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 rounded-4 border stat-box shadow-sm">
+                            <div class="text-primary fw-bold fs-6 mb-2">✈️ คาดการณ์ประตูทีมเยือน</div>
+                            <div class="display-5 fw-bold text-dark" id="displayAwayGoals">0.00</div>
+                            <div class="text-muted small mt-2">ประตูต่อเกม</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 p-3 rounded-3 d-flex align-items-center" style="background-color: #fffbeb; border-left: 5px solid #f59e0b;">
+                    <div class="me-3 fs-3">⚠️</div>
+                    <div class="text-warning-emphasis small fw-medium">
+                        แบบจำลองทางสถิตินี้คำนวณจากสูตร Poisson Distribution โดยระบบ Client-side Javascript โปรดใช้เพื่อประกอบการตัดสินใจและการพิจารณาเท่านั้น ไม่ใช่การรับประกันผลการแข่งขันจริง 100%
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+    
+    <script>
+        function factorial(n) {
+            if (n === 0 || n === 1) return 1;
+            let res = 1;
+            for (let i = 2; i <= n; i++) res *= i;
+            return res;
+        }
 
-<script>
-/* ============================================================
-   H2H DATA STORAGE
-   ============================================================ */
-let h2hList = []; // { date, homeScore, awayScore, venue, outcome }
+        function poissonProbability(lambda, x) {
+            return (Math.exp(-lambda) * Math.pow(lambda, x)) / factorial(x);
+        }
 
-/* ---------- เพิ่มข้อมูล H2H ---------- */
-function addH2H() {
-  const date = document.getElementById('h2hDate').value.trim() || '-';
-  const homeScore = parseInt(document.getElementById('h2hHomeScore').value);
-  const awayScore = parseInt(document.getElementById('h2hAwayScore').value);
-  const venue = document.getElementById('h2hVenue').value;
+        function analyzeMatch(homeAttack, homeDefense, awayAttack, awayDefense, homeForm, awayForm) {
+            let homeFormModifier = 1 + ((homeForm - 7) * 0.05);
+            let awayFormModifier = 1 + ((awayForm - 7) * 0.05);
+            
+            let homeLambda = ((homeAttack + awayDefense) / 2) * homeFormModifier;
+            let awayLambda = ((awayAttack + homeDefense) / 2) * awayFormModifier;
+            
+            homeLambda = Math.max(0.01, homeLambda);
+            awayLambda = Math.max(0.01, awayLambda);
+            
+            let homeWinProb = 0;
+            let awayWinProb = 0;
+            let drawProb = 0;
+            const maxGoals = 5;
+            
+            for (let h = 0; h <= maxGoals; h++) {
+                for (let a = 0; a <= maxGoals; a++) {
+                    let pHome = poissonProbability(homeLambda, h);
+                    let pAway = poissonProbability(awayLambda, a);
+                    let matchProb = pHome * pAway;
+                    
+                    if (h > a) homeWinProb += matchProb;
+                    else if (a > h) awayWinProb += matchProb;
+                    else drawProb += matchProb;
+                }
+            }
+            
+            let totalProb = homeWinProb + awayWinProb + drawProb;
+            
+            return {
+                expectedHomeGoals: homeLambda.toFixed(2),
+                expectedAwayGoals: awayLambda.toFixed(2),
+                totalExpectedGoals: (homeLambda + awayLambda).toFixed(2),
+                homeWinPercent: ((homeWinProb / totalProb) * 100).toFixed(1) + '%',
+                drawPercent: ((drawProb / totalProb) * 100).toFixed(1) + '%',
+                awayWinPercent: ((awayWinProb / totalProb) * 100).toFixed(1) + '%',
+            };
+        }
 
-  if (isNaN(homeScore) || isNaN(awayScore) || homeScore < 0 || awayScore < 0) {
-    alert('กรุณากรอกสกอร์ให้ถูกต้อง');
-    return;
-  }
-  if (h2hList.length >= 10) {
-    alert('เพิ่มได้สูงสุด 10 นัด');
-    return;
-  }
+        function updateDashboard(resultObj) {
+            document.getElementById('displayHomeGoals').textContent = resultObj.expectedHomeGoals;
+            document.getElementById('displayAwayGoals').textContent = resultObj.expectedAwayGoals;
+            document.getElementById('displayTotalGoals').textContent = resultObj.totalExpectedGoals;
+            
+            const homePercent = parseFloat(resultObj.homeWinPercent);
+            const drawPercent = parseFloat(resultObj.drawPercent);
+            const awayPercent = parseFloat(resultObj.awayWinPercent);
+            
+            document.getElementById('progressHome').style.width = homePercent + '%';
+            document.getElementById('progressDraw').style.width = drawPercent + '%';
+            document.getElementById('progressAway').style.width = awayPercent + '%';
+            
+            document.getElementById('textHome').textContent = homePercent >= 8 ? 'เจ้าบ้าน ' + resultObj.homeWinPercent : resultObj.homeWinPercent;
+            document.getElementById('textDraw').textContent = drawPercent >= 8 ? 'เสมอ ' + resultObj.drawPercent : resultObj.drawPercent;
+            document.getElementById('textAway').textContent = awayPercent >= 8 ? 'ทีมเยือน ' + resultObj.awayWinPercent : resultObj.awayWinPercent;
+        }
 
-  // ผลจากมุมมอง "ทีมเหย้าปัจจุบัน" (home team ปัจจุบัน)
-  // ถ้า venue = home → ทีมเหย้าปัจจุบันเป็นเจ้าบ้าน
-  // ถ้า venue = away → ทีมเหย้าปัจจุบันเป็นทีมเยือน (สลับ)
-  let curHomeScore, curAwayScore;
-  if (venue === 'away') {
-    curHomeScore = awayScore;
-    curAwayScore = homeScore;
-  } else {
-    curHomeScore = homeScore;
-    curAwayScore = awayScore;
-  }
+        function setMockData(homeName, homeAtk, homeDef, homeFrm, awayName, awayAtk, awayDef, awayFrm) {
+            document.getElementById('home_name').value = homeName;
+            document.getElementById('home_attack').value = homeAtk;
+            document.getElementById('home_defense').value = homeDef;
+            document.getElementById('home_form').value = homeFrm;
 
-  let outcome;
-  if (curHomeScore > curAwayScore) outcome = 'home';
-  else if (curHomeScore < curAwayScore) outcome = 'away';
-  else outcome = 'draw';
+            document.getElementById('away_name').value = awayName;
+            document.getElementById('away_attack').value = awayAtk;
+            document.getElementById('away_defense').value = awayDef;
+            document.getElementById('away_form').value = awayFrm;
 
-  h2hList.push({ date, homeScore, awayScore, venue, outcome });
-  renderH2H();
+            const mathResult = analyzeMatch(homeAtk, homeDef, awayAtk, awayDef, homeFrm, awayFrm);
+            updateDashboard(mathResult);
+        }
 
-  // เคลียร์ช่องกรอก
-  document.getElementById('h2hDate').value = '';
-  document.getElementById('h2hHomeScore').value = 0;
-  document.getElementById('h2hAwayScore').value = 0;
-}
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('footballForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                let homeAttack = Math.max(0, parseFloat(document.getElementById('home_attack').value) || 0);
+                let homeDefense = Math.max(0, parseFloat(document.getElementById('home_defense').value) || 0);
+                let awayAttack = Math.max(0, parseFloat(document.getElementById('away_attack').value) || 0);
+                let awayDefense = Math.max(0, parseFloat(document.getElementById('away_defense').value) || 0);
+                let homeForm = Math.min(15, Math.max(0, parseInt(document.getElementById('home_form').value) || 7));
+                let awayForm = Math.min(15, Math.max(0, parseInt(document.getElementById('away_form').value) || 7));
+                
+                const mathResult = analyzeMatch(homeAttack, homeDefense, awayAttack, awayDefense, homeForm, awayForm);
+                updateDashboard(mathResult);
+            });
 
-/* ---------- ลบ ---------- */
-function removeH2H(index) {
-  h2hList.splice(index, 1);
-  renderH2H();
-}
+            document.getElementById('btnMockDerby').addEventListener('click', function() {
+                setMockData('ลิเวอร์พูล', 2.4, 0.8, 13, 'แมนเชสเตอร์ ยูไนเต็ด', 1.2, 1.6, 5);
+            });
 
-/* ---------- ล้างทั้งหมด ---------- */
-function clearH2H() {
-  if (h2hList.length === 0) return;
-  if (confirm('ต้องการล้างข้อมูล H2H ทั้งหมดหรือไม่?')) {
-    h2hList = [];
-    renderH2H();
-  }
-}
+            document.getElementById('btnMockAttackVsDefense').addEventListener('click', function() {
+                setMockData('แมนเชสเตอร์ ซิตี้ (สายบุก)', 2.8, 1.1, 11, 'แอตเลติโก มาดริด (สายอุด)', 1.0, 0.6, 9);
+            });
 
-/* ---------- แสดงผลตาราง ---------- */
-function renderH2H() {
-  const tbody = document.getElementById('h2hBody');
-  const homeName = document.getElementById('homeName').value || 'เจ้าบ้าน';
-  const awayName = document.getElementById('awayName').value || 'ทีมเยือน';
+            document.getElementById('btnMockRandom').addEventListener('click', function() {
+                const randomTeams = [
+                    { h: 'เรอัล มาดริด', a: 'บาร์เซโลน่า' },
+                    { h: 'อาร์เซน่อล', a: 'เชลซี' },
+                    { h: 'บาเยิร์น มิวนิค', a: 'ดอร์ทมุนด์' },
+                    { h: 'อินเตอร์ มิลาน', a: 'ยูเวนตุส' }
+                ];
+                const pair = randomTeams[Math.floor(Math.random() * randomTeams.length)];
+                
+                const hAtk = (Math.random() * (3.0 - 0.5) + 0.5).toFixed(1);
+                const hDef = (Math.random() * (2.5 - 0.5) + 0.5).toFixed(1);
+                const aAtk = (Math.random() * (2.8 - 0.5) + 0.5).toFixed(1);
+                const aDef = (Math.random() * (2.5 - 0.5) + 0.5).toFixed(1);
+                
+                const hFrm = Math.floor(Math.random() * 16);
+                const aFrm = Math.floor(Math.random() * 16);
 
-  if (h2hList.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty-row">ยังไม่มีข้อมูล H2H</td></tr>';
-  } else {
-    tbody.innerHTML = h2hList.map((m, i) => {
-      let badge;
-      if (m.outcome === 'home') badge = '<span class="badge badge-home">เจ้าบ้านชนะ</span>';
-      else if (m.outcome === 'away') badge = '<span class="badge badge-away">ทีมเยือนชนะ</span>';
-      else badge = '<span class="badge badge-draw">เสมอ</span>';
+                setMockData(pair.h, parseFloat(hAtk), parseFloat(hDef), hFrm, pair.a, parseFloat(aAtk), parseFloat(aDef), aFrm);
+            });
 
-      const venueText = m.venue === 'home' ? '🏠 เจ้าบ้าน' : m.venue === 'away' ? '✈️ ทีมเยือน' : '⚖️ กลาง';
-
-      return `<tr>
-        <td>${m.date}</td>
-        <td><strong>${m.homeScore} - ${m.awayScore}</strong></td>
-        <td>${venueText}</td>
-        <td>${badge}</td>
-        <td><button class="btn-del" onclick="removeH2H(${i})">ลบ</button></td>
-      </tr>`;
-    }).join('');
-  }
-
-  // สรุป
-  const hw = h2hList.filter(m => m.outcome === 'home').length;
-  const dr = h2hList.filter(m => m.outcome === 'draw').length;
-  const aw = h2hList.filter(m => m.outcome === 'away').length;
-  document.getElementById('sumHomeWin').textContent = hw;
-  document.getElementById('sumDraw').textContent = dr;
-  document.getElementById('sumAwayWin').textContent = aw;
-}
-
-/* ============================================================
-   POISSON & ANALYZE
-   ============================================================ */
-function factorial(n) {
-  if (n <= 1) return 1;
-  let r = 1;
-  for (let i = 2; i <= n; i++) r *= i;
-  return r;
-}
-function poisson(k, lambda) {
-  return Math.exp(-lambda) * Math.pow(lambda, k) / factorial(k);
-}
-
-function analyze() {
-  const homeName = document.getElementById('homeName').value || 'ทีมเหย้า';
-  const awayName = document.getElementById('awayName').value || 'ทีมเยือน';
-
-  const hGF = parseFloat(document.getElementById('homeGoalsFor').value);
-  const hGA = parseFloat(document.getElementById('homeGoalsAgainst').value);
-  const hForm = parseFloat(document.getElementById('homeForm').value);
-
-  const aGF = parseFloat(document.getElementById('awayGoalsFor').value);
-  const aGA = parseFloat(document.getElementById('awayGoalsAgainst').value);
-  const aForm = parseFloat(document.getElementById('awayForm').value);
-
-  if ([hGF, hGA, aGF, aGA, hForm, aForm].some(v => isNaN(v) || v < 0)) {
-    alert('กรุณากรอกข้อมูลทีมให้ถูกต้อง');
-    return;
-  }
-
-  /* ---------- 1. ค่า Expected Goals พื้นฐาน ---------- */
-  const leagueAvg = 1.35;
-  const homeAttack = hGF / leagueAvg;
-  const homeDefense = hGA / leagueAvg;
-  const awayAttack = aGF / leagueAvg;
-  const awayDefense = aGA / leagueAvg;
-
-  const homeFormFactor = 0.85 + (hForm / 15) * 0.3;
-  const awayFormFactor = 0.85 + (aForm / 15) * 0.3;
-  const homeAdvantage = 1.1;
-
-  let expHome = homeAttack * awayDefense * leagueAvg * homeFormFactor * homeAdvantage;
-  let expAway = awayAttack * homeDefense * leagueAvg * awayFormFactor;
-  expHome = Math.max(0.1, Math.min(expHome, 5));
-  expAway = Math.max(0.1, Math.min(expAway, 5));
-
-  /* ---------- 2. ปรับด้วย H2H ---------- */
-  let h2hNote = '';
-  let h2hHomeBoost = 1.0;
-  let h2hAwayBoost = 1.0;
-
-  if (h2hList.length > 0) {
-    const n = h2hList.length;
-    const hw = h2hList.filter(m => m.outcome === 'home').length;
-    const dr = h2hList.filter(m => m.outcome === 'draw').length;
-    const aw = h2hList.filter(m => m.outcome === 'away').length;
-
-    // ค่าเฉลี่ยประตูใน H2H (จากมุมมองทีมเหย้าปัจจุบัน)
-    let sumHome = 0, sumAway = 0;
-    h2hList.forEach(m => {
-      if (m.venue === 'away') {
-        sumHome += m.awayScore;
-        sumAway += m.homeScore;
-      } else {
-        sumHome += m.homeScore;
-        sumAway += m.awayScore;
-      }
-    });
-    const avgHomeH2H = sumHome / n;
-    const avgAwayH2H = sumAway / n;
-
-    // น้ำหนัก H2H (เพิ่มขึ้นตามจำนวนนัด แต่สูงสุด 50%)
-    const weight = Math.min(0.5, n * 0.08); // 1 นัด=8%, 5 นัด=40%, 6+นัด=50%
-
-    // ผสมค่า xG: xG ใหม่ = xG เดิม * (1 - weight) + ค่าเฉลี่ย H2H * weight
-    const newExpHome = expHome * (1 - weight) + avgHomeH2H * weight;
-    const newExpAway = expAway * (1 - weight) + avgAwayH2H * weight;
-
-    // ปรับผลชนะ/เสมอ/แพ้ ตามสัดส่วน H2H
-    const winRateHome = hw / n;
-    const drawRate = dr / n;
-    const winRateAway = aw / n;
-
-    // boost = 1 + (สัดส่วน - 0.33) * weight * 2   (ถ้าชนะมากกว่า 1/3 จะ boost)
-    h2hHomeBoost = 1 + (winRateHome - 0.33) * weight * 2;
-    h2hAwayBoost = 1 + (winRateAway - 0.33) * weight * 2;
-
-    expHome = Math.max(0.1, Math.min(newExpHome * h2hHomeBoost, 5));
-    expAway = Math.max(0.1, Math.min(newExpAway * h2hAwayBoost, 5));
-
-    h2hNote = `📊 ปรับด้วย H2H ${n} นัด (น้ำหนัก ${(weight*100).toFixed(0)}%): ` +
-              `เจ้าบ้านชนะ ${hw}, เสมอ ${dr}, ทีมเยือนชนะ ${aw} | ` +
-              `ค่าเฉลี่ยสกอร์ H2H: ${avgHomeH2H.toFixed(2)} - ${avgAwayH2H.toFixed(2)}`;
-  } else {
-    h2hNote = 'ℹ️ ยังไม่มีข้อมูล H2H — ใช้สถิติทีมเพียงอย่างเดียว';
-  }
-
-  /* ---------- 3. คำนวณความน่าจะเป็น ---------- */
-  const maxGoals = 8;
-  let pHome = 0, pDraw = 0, pAway = 0;
-  let bestScore = { h: 0, a: 0, p: 0 };
-
-  for (let h = 0; h <= maxGoals; h++) {
-    for (let a = 0; a <= maxGoals; a++) {
-      const p = poisson(h, expHome) * poisson(a, expAway);
-      if (p > bestScore.p) bestScore = { h, a, p };
-      if (h > a) pHome += p;
-      else if (h === a) pDraw += p;
-      else pAway += p;
-    }
-  }
-
-  const total = pHome + pDraw + pAway;
-  pHome = (pHome / total) * 100;
-  pDraw = (pDraw / total) * 100;
-  pAway = (pAway / total) * 100;
-
-  /* ---------- 4. แสดงผล ---------- */
-  document.getElementById('matchTitle').textContent = `${homeName}  vs  ${awayName}`;
-  document.getElementById('scorePred').textContent = `ผลที่คาดเดา: ${bestScore.h} - ${bestScore.a}`;
-
-  document.getElementById('homeBar').style.width = pHome.toFixed(1) + '%';
-  document.getElementById('drawBar').style.width = pDraw.toFixed(1) + '%';
-  document.getElementById('awayBar').style.width = pAway.toFixed(1) + '%';
-
-  document.getElementById('homeBar').textContent = pHome.toFixed(1) + '%';
-  document.getElementById('drawBar').textContent = pDraw.toFixed(1) + '%';
-  document.getElementById('awayBar').textContent = pAway.toFixed(1) + '%';
-
-  document.getElementById('expHome').textContent = expHome.toFixed(2);
-  document.getElementById('expAway').textContent = expAway.toFixed(2);
-  document.getElementById('expTotal').textContent = (expHome + expAway).toFixed(2);
-
-  const adjustBox = document.getElementById('h2hAdjust');
-  adjustBox.style.display = 'block';
-  adjustBox.innerHTML = `<strong>H2H Impact:</strong> ${h2hNote}`;
-
-  document.getElementById('result').style.display = 'block';
-  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
-}
-
-/* ---------- อัปเดตชื่อทีมแบบเรียลไทม์ ---------- */
-document.getElementById('homeName').addEventListener('input', renderH2H);
-document.getElementById('awayName').addEventListener('input', renderH2H);
-</script>
+            setMockData('ทีมเหย้า', 1.8, 1.0, 9, 'ทีมเยือน', 1.4, 1.3, 7);
+        });
+    </script>
 </body>
 </html>
