@@ -7,6 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- ✅ เพิ่ม Bootstrap JavaScript Bundle (แก้ไขปัญหาแท็บกดไม่ได้) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body { background-color: #f1f5f9; padding: 40px 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
         .container { max-width: 1280px; }
@@ -25,13 +27,6 @@
         .value-positive { background: #f0fdf4; border-color: #16a34a; }
         .value-neutral { background: #fefce8; border-color: #eab308; }
         .value-negative { background: #fef2f2; border-color: #dc2626; }
-        
-        /* Score Matrix */
-        .score-matrix { font-size: 0.75rem; text-align: center; }
-        .score-matrix th, .score-matrix td { padding: 4px 6px; border: 1px solid #e2e8f0; }
-        .score-matrix th { background: #1e293b; color: white; font-weight: 600; }
-        .score-matrix .best-cell { background: #fef08a; font-weight: 700; }
-        .score-matrix .hot-cell { background: #fecaca; font-weight: 700; }
         
         /* History */
         .text-sm { font-size: 0.85rem; }
@@ -54,7 +49,6 @@
         .filter-bar input, .filter-bar select { font-size: 0.8rem; }
 
         .odds-input { font-size: 0.85rem; padding: 4px 8px; text-align: center; }
-        .tab-pane-pad { padding: 12px; }
         
         /* Custom nav pills */
         .custom-tabs .nav-link { color: #475569; border-radius: 20px; padding: 4px 14px; font-size: 0.85rem; font-weight: 600; }
@@ -172,7 +166,7 @@
                             </div>
                         </div>
 
-                        <!-- Value Bet Odds Input (NEW in v3.6) -->
+                        <!-- Value Bet Odds Input -->
                         <div class="col-12">
                             <div class="card p-3 shadow-sm border-start border-4 border-info">
                                 <h5 class="fw-bold text-info mb-3">💰 อัตราต่อรอง (Odds) - ทางเลือก</h5>
@@ -180,15 +174,15 @@
                                 <div class="row g-2">
                                     <div class="col-4">
                                         <label class="form-label small fw-semibold text-muted">🏠 เหย้า</label>
-                                        <input type="number" id="odd_home" class="form-control odds-input" placeholder="เช่น 1.85" step="0.01" min="1.01">
+                                        <input type="number" id="odd_home" class="form-control odds-input" placeholder="1.85" step="0.01" min="1.01">
                                     </div>
                                     <div class="col-4">
                                         <label class="form-label small fw-semibold text-muted">⚖️ เสมอ</label>
-                                        <input type="number" id="odd_draw" class="form-control odds-input" placeholder="เช่น 3.50" step="0.01" min="1.01">
+                                        <input type="number" id="odd_draw" class="form-control odds-input" placeholder="3.50" step="0.01" min="1.01">
                                     </div>
                                     <div class="col-4">
                                         <label class="form-label small fw-semibold text-muted">✈️ เยือน</label>
-                                        <input type="number" id="odd_away" class="form-control odds-input" placeholder="เช่น 4.00" step="0.01" min="1.01">
+                                        <input type="number" id="odd_away" class="form-control odds-input" placeholder="4.00" step="0.01" min="1.01">
                                     </div>
                                 </div>
                             </div>
@@ -200,7 +194,7 @@
                     </div>
                 </form>
 
-                <!-- History (compact) -->
+                <!-- History -->
                 <div class="card p-3 shadow-sm mt-3 bg-white">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h6 class="fw-bold text-secondary mb-0">🕒 ประวัติล่าสุด</h6>
@@ -240,7 +234,6 @@
                     </div>
 
                     <div class="card-body p-3">
-                        <!-- Warning Alert -->
                         <div id="globalWarning" class="alert alert-warning py-2 text-sm d-none mb-3">
                             <strong>⚠️</strong> <span id="warningText"></span>
                         </div>
@@ -283,7 +276,7 @@
                             </div>
                         </div>
 
-                        <!-- Tabs for Detailed Markets -->
+                        <!-- Tabs -->
                         <ul class="nav nav-pills custom-tabs mb-3 gap-1" id="marketTabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="tab-value" data-bs-toggle="pill" data-bs-target="#pane-value" type="button">💰 Value Bet</button>
@@ -485,15 +478,7 @@
         }
 
         // ============ ASIAN HANDICAP LOGIC ============
-        // คำนวณความน่าจะเป็นของ AH โดยพิจารณา Quarter Ball
-        // handicap คือมุมมองทีมเหย้า (ลบ = เหย้าต้องชนะห่าง, บวก = เหย้าได้เปรียบ)
         function calculateAsianHandicap(scoresMatrix, handicap) {
-            // จัดกลุ่มตาม "การแบ่งเดิมพัน"
-            // ถ้า handicap เป็น .25 หรือ .75 → แบ่งเป็น 2 เดิมพัน
-            // -0.25 = แบ่งครึ่งระหว่าง 0 และ -0.5
-            // -0.75 = แบ่งครึ่งระหว่าง -0.5 และ -1
-            // -1.25 = แบ่งครึ่งระหว่าง -1 และ -1.5
-            
             let h1, h2;
             const h = parseFloat(handicap);
             const absH = Math.abs(h);
@@ -501,18 +486,15 @@
             const sign = h < 0 ? -1 : 1;
             
             if (Math.abs(frac - 0.25) < 0.001) {
-                // แบ่งครึ่ง: ระหว่าง h-floor(h) และ h-ceil(h)
-                h1 = sign * (Math.floor(absH));  // เช่น -0.25 → 0
-                h2 = sign * (Math.ceil(absH));   // เช่น -0.25 → -0.5
+                h1 = sign * (Math.floor(absH));
+                h2 = sign * (Math.ceil(absH));
             } else if (Math.abs(frac - 0.75) < 0.001) {
-                h1 = sign * (Math.floor(absH));  // เช่น -0.75 → -0.5
-                h2 = sign * (Math.ceil(absH));   // เช่น -0.75 → -1
+                h1 = sign * (Math.floor(absH));
+                h2 = sign * (Math.ceil(absH));
             } else {
-                // Quarter ball ไม่มี → ใช้ h เดียว
                 return calculateSingleHandicap(scoresMatrix, h);
             }
             
-            // คำนวณ 2 เดิมพันแยก แล้วรวม
             const r1 = calculateSingleHandicap(scoresMatrix, h1);
             const r2 = calculateSingleHandicap(scoresMatrix, h2);
             
@@ -521,17 +503,15 @@
                 push: (r1.push + r2.push) / 2,
                 lose: (r1.lose + r2.lose) / 2,
                 isQuarter: true,
-                label: `${h1} & ${h2} (แบ่งครึ่งเดิมพัน)`
+                label: `${h1} & ${h2}`
             };
         }
         
         function calculateSingleHandicap(scoresMatrix, handicap) {
             let win = 0, push = 0, lose = 0;
-            
             for (const s of scoresMatrix) {
-                const margin = s.h - s.a; // ผลต่างประตู
-                const adjusted = margin + handicap; // บวก handicap (เพราะ handicap ติดลบหมายถึงเหย้าต้องชนะห่าง)
-                
+                const margin = s.h - s.a;
+                const adjusted = margin + handicap;
                 if (adjusted > 0.001) win += s.prob;
                 else if (adjusted < -0.001) lose += s.prob;
                 else push += s.prob;
@@ -568,7 +548,7 @@
             let homeLambda = Math.max(0.05, homeLambdaBase * wCurrent + homeLambdaH2H * wH2h);
             let awayLambda = Math.max(0.05, awayLambdaBase * wCurrent + awayLambdaH2H * wH2h);
 
-            // Full Time Matrix
+            // Full Time
             let homeWin = 0, draw = 0, awayWin = 0, over25 = 0, btts = 0;
             let scoresFT = [], rawFT = 0;
 
@@ -592,7 +572,6 @@
             over25 = normFT(over25); btts = normFT(btts);
             scoresFT.forEach(s => s.prob = normFT(s.prob));
 
-            // Top 3 FT
             const sortedFT = [...scoresFT].sort((a, b) => b.prob - a.prob);
             const top3FT = sortedFT.slice(0, 3).map(i => ({ score: i.str, percent: (i.prob * 100).toFixed(1) + '%' }));
 
@@ -625,11 +604,10 @@
             const sortedFH = [...scoresFH].sort((a, b) => b.prob - a.prob);
             const top3FH = sortedFH.slice(0, 3).map(i => ({ score: i.str, percent: (i.prob * 100).toFixed(1) + '%' }));
 
-            // Markets
             const dc1X = homeWin + draw, dc12 = homeWin + awayWin, dcX2 = draw + awayWin;
             const dnbHome = homeWin / (homeWin + awayWin);
 
-            // Team Total (Over/Under แต่ละทีม)
+            // Team Total
             const teamTotalHome = {
                 over05: 1 - poissonCdf(homeLambda, 0),
                 over15: 1 - poissonCdf(homeLambda, 1),
@@ -641,7 +619,7 @@
                 over25: 1 - poissonCdf(awayLambda, 2)
             };
 
-            // Monte Carlo Confidence
+            // Monte Carlo
             let mcH = 0, mcD = 0, mcA = 0;
             for (let r = 0; r < MONTE_CARLO_RUNS; r++) {
                 const gh = poissonSample(homeLambda * (1 + (Math.random() - 0.5) * 0.2));
@@ -653,7 +631,6 @@
             const avgDiff = (Math.abs(mcH/MONTE_CARLO_RUNS - homeWin) + Math.abs(mcD/MONTE_CARLO_RUNS - draw) + Math.abs(mcA/MONTE_CARLO_RUNS - awayWin)) / 3;
             const confidence = Math.max(0, Math.min(100, (1 - avgDiff * 4) * 100));
 
-            // Warnings
             const warnings = [];
             if (homeLambda > 4.5 || awayLambda > 4.5) warnings.push("xG สูงผิดปกติ");
             if (h2hMatches > 0 && ((h2hHomeGoals + h2hAwayGoals) / h2hMatches) > 6) warnings.push("H2H ประตูสูงผิดปกติ");
@@ -686,12 +663,11 @@
             };
         }
 
-        // ============ VALUE BET CALCULATION ============
+        // ============ VALUE BET ============
         function calculateValueBet(modelProb, odds) {
             if (!odds || odds <= 1) return null;
             const impliedProb = 1 / odds;
-            const ev = (modelProb * (odds - 1)) - (1 - modelProb); // Expected Value per 1 unit
-            const valuePercent = ev * 100;
+            const ev = (modelProb * (odds - 1)) - (1 - modelProb);
             
             let verdict = 'no-value';
             let label = '🔴 No Value';
@@ -725,9 +701,8 @@
             const drawVB = oddsDraw ? calculateValueBet(currentResult.drawNum, oddsDraw) : null;
             const awayVB = oddsAway ? calculateValueBet(currentResult.awayWinNum, oddsAway) : null;
             
-            function renderOutcome(name, icon, modelPct, vb) {
+            function renderOutcome(name, icon, vb) {
                 if (!vb) return `<div class="col-4"><div class="p-2 border rounded-3 text-center bg-light"><div class="small fw-bold text-muted">${icon} ${name}</div><div class="text-xs text-muted">ไม่มี Odds</div></div></div>`;
-                
                 return `
                     <div class="col-4">
                         <div class="value-card value-${vb.verdict === 'value' ? 'positive' : vb.verdict === 'fair' ? 'neutral' : 'negative'} text-center">
@@ -747,13 +722,13 @@
             
             container.innerHTML = `
                 <div class="row g-2">
-                    ${renderOutcome('เหย้า', '🏠', currentResult.homeWinPct, homeVB)}
-                    ${renderOutcome('เสมอ', '⚖️', currentResult.drawPct, drawVB)}
-                    ${renderOutcome('เยือน', '✈️', currentResult.awayWinPct, awayVB)}
+                    ${renderOutcome('เหย้า', '🏠', homeVB)}
+                    ${renderOutcome('เสมอ', '⚖️', drawVB)}
+                    ${renderOutcome('เยือน', '✈️', awayVB)}
                 </div>
                 ${best && best.verdict === 'value' ? `
                     <div class="alert alert-success mt-3 mb-0 py-2 text-sm">
-                        <strong>⭐ แนะนำ:</strong> เดิมพันฝั่งที่มี EV สูงสุด → <strong>${best.ev}</strong> (${best.label})
+                        <strong>⭐ แนะนำ:</strong> เดิมพันฝั่ง EV สูงสุด → <strong>${best.ev}</strong> (${best.label})
                     </div>
                 ` : best ? `
                     <div class="alert alert-secondary mt-3 mb-0 py-2 text-sm">
@@ -770,18 +745,13 @@
             const res = calculateAsianHandicap(currentResult.scoresFT, h);
             
             const container = document.getElementById('handicapResult');
-            
-            // แปลงเป็น %
             const totalProb = res.win + res.push + res.lose;
             const winPct = (res.win / totalProb * 100).toFixed(1);
             const pushPct = (res.push / totalProb * 100).toFixed(1);
             const losePct = (res.lose / totalProb * 100).toFixed(1);
             
-            // คำนวณ "ราคายุติธรรม" (Fair Odds) = 1 / (win% + push%/2)
             const winValue = res.win + (res.push / 2);
             const fairOdds = winValue > 0 ? (1 / winValue).toFixed(2) : '-';
-            
-            // คำนวณราคาแบบเต็ม (ถ้าไม่มีการคืนทุน)
             const effectiveWin = res.win / (res.win + res.lose);
             const fairOddsStrict = effectiveWin > 0 ? (1 / effectiveWin).toFixed(2) : '-';
             
@@ -849,7 +819,6 @@
             document.getElementById('textDraw').textContent = dp >= 10 ? `เสมอ ${res.drawPct}` : res.drawPct;
             document.getElementById('textAway').textContent = ap >= 10 ? `${awayName} ${res.awayWinPct}` : res.awayWinPct;
 
-            // Top Scores
             function renderScores(id, scores, color) {
                 const el = document.getElementById(id);
                 el.innerHTML = '';
@@ -865,7 +834,6 @@
             renderScores('topScoresFullTime', res.top3FT, '#3b82f6');
             renderScores('topScoresFirstHalf', res.top3FH, '#ef4444');
 
-            // HT Markets
             document.getElementById('ht1x2').innerHTML = `
                 <div class="text-success">🏠 ${res.htHome}</div>
                 <div class="text-secondary">⚖️ ${res.htDraw}</div>
@@ -874,7 +842,6 @@
             document.getElementById('htOU05').textContent = res.htOver05;
             document.getElementById('htOU15').textContent = res.htOver15;
 
-            // Team Total
             document.getElementById('teamTotalBody').innerHTML = `
                 <tr>
                     <td class="text-start fw-bold text-success">🏠 ${homeName}</td>
@@ -890,13 +857,11 @@
                 </tr>
             `;
 
-            // Standard Markets
             document.getElementById('displayOver25').textContent = res.over25Pct;
             document.getElementById('displayUnder25').textContent = res.under25Pct;
             document.getElementById('displayBTTS').textContent = res.bttsPct;
             document.getElementById('displayConfidence').textContent = res.confidencePct;
 
-            // Warnings
             const warnBox = document.getElementById('globalWarning');
             if (res.warnings.length > 0) {
                 warnBox.classList.remove('d-none');
@@ -905,7 +870,6 @@
                 warnBox.classList.add('d-none');
             }
 
-            // Render dynamic panes
             renderValueBet();
             renderHandicap();
         }
@@ -1029,7 +993,6 @@
             document.getElementById('weightHomeLabel').textContent = item.input.currentWeight + '%';
             document.getElementById('weightH2hLabel').textContent = (100 - item.input.currentWeight) + '%';
             
-            // Load odds ถ้ามี
             if (item.input.odds) {
                 document.getElementById('odd_home').value = item.input.odds.home || '';
                 document.getElementById('odd_draw').value = item.input.odds.draw || '';
@@ -1157,12 +1120,10 @@
                 triggerCalculation(false);
             });
 
-            // Odds inputs → อัปเดต Value Bet ทันที
             ['odd_home', 'odd_draw', 'odd_away'].forEach(id => {
                 document.getElementById(id).addEventListener('input', renderValueBet);
             });
 
-            // Handicap select → อัปเดต Handicap ทันที
             document.getElementById('handicapSelect').addEventListener('change', renderHandicap);
 
             document.getElementById('footballForm').addEventListener('submit', function(e) {
