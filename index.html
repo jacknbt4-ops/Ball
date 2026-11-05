@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v2.5 - High Accuracy + Red Card + 1st Half</title>
+    <title>⚽ JackAI Scanner v2.6 - Ultimate Realism</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
@@ -26,7 +26,6 @@
         .red-card-box { border: 2px solid #dc2626; background: #fef2f2; border-radius: 12px; padding: 15px; }
         .red-card-input { border-color: #dc2626 !important; font-weight: 700; color: #991b1b; }
         .red-card-input:focus { box-shadow: 0 0 0 0.2rem rgba(220, 38, 38, 0.25); }
-        .red-impact-badge { font-size: 0.78rem; padding: 4px 10px; border-radius: 20px; }
         .fh-card { border-radius: 12px; padding: 15px; text-align: center; border: 2px solid; transition: transform 0.2s; }
         .fh-card:hover { transform: translateY(-2px); }
         .fh-home { background: #f0fdf4; border-color: #22c55e; }
@@ -46,8 +45,8 @@
 
     <div class="container">
         <div class="text-center mb-4">
-            <h1 class="fw-extrabold text-dark mb-2">⚽ JackAI Scanner v2.5</h1>
-            <p class="text-secondary fs-5 mb-0">SOT-Weighted xG + Game State + Red Card + 1st Half</p>
+            <h1 class="fw-extrabold text-dark mb-2">⚽ JackAI Scanner v2.6</h1>
+            <p class="text-secondary fs-5 mb-0">Ultimate Realism + Game State 2.0</p>
         </div>
 
         <div class="card p-4">
@@ -157,12 +156,10 @@
                         <div class="col-md-6">
                             <label class="small fw-bold text-success mb-1">🏠 ใบแดงเหย้า</label>
                             <input type="number" id="red_home" class="form-control red-card-input" value="0" min="0" max="5" step="1">
-                            <small class="text-muted">0 = ไม่มีใบแดง</small>
                         </div>
                         <div class="col-md-6">
                             <label class="small fw-bold text-primary mb-1">✈️ ใบแดงเยือน</label>
                             <input type="number" id="red_away" class="form-control red-card-input" value="0" min="0" max="5" step="1">
-                            <small class="text-muted">0 = ไม่มีใบแดง</small>
                         </div>
                     </div>
                 </div>
@@ -199,7 +196,7 @@
 
             <div class="d-grid mb-4">
                 <button type="button" class="btn btn-danger btn-lg fw-bold rounded-pill shadow-sm" onclick="predictMatch()">
-                    🔮 ประมวลผลคาดการณ์ (แม่นยำสูง + ใบแดง + ครึ่งแรก)
+                    🔮 ประมวลผลคาดการณ์ (Realism Edition)
                 </button>
             </div>
 
@@ -212,7 +209,6 @@
                     <div class="mt-2"><span class="badge bg-info text-dark" id="confidenceBadge">Confidence: -</span></div>
                 </div>
 
-                <!-- คำเตือนข้อมูลผิดปกติ -->
                 <div id="inputWarning" class="warn-box mb-3 d-none">
                     <strong>⚠️ คำเตือน:</strong> <span id="inputWarningText"></span>
                 </div>
@@ -228,9 +224,7 @@
                     <div class="col-md-4"><div class="next-goal-card ng-away"><div class="text-primary small fw-bold mb-1">✈️ เยือนยิง</div><div class="h1 fw-extrabold text-primary mb-0" id="probAway">0%</div></div></div>
                 </div>
 
-                <!-- 🕐 ครึ่งแรก -->
                 <h6 class="fw-bold mb-3 text-secondary text-center text-uppercase mt-4">🕐 คาดการณ์ครึ่งแรก (1st Half)</h6>
-
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
                         <div class="fh-card fh-home">
@@ -255,10 +249,8 @@
                     </div>
                 </div>
 
-                <!-- สรุปตลาด Over/Under ครึ่งแรก -->
                 <div class="p-3 border rounded-3 bg-light mb-3">
                     <div class="fw-bold small text-secondary mb-3">📊 สรุปตลาดครึ่งแรก</div>
-
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <span class="small">มีประตูอย่างน้อย <strong>1 ลูก</strong></span>
@@ -321,11 +313,12 @@
         let isManualSelect = false;
         let currentLeagueAvgGoals = 2.7;
 
+        // ✅ Realism Weights (ปรับใหม่)
         const XG_WEIGHTS = {
-            SOT: 0.50,
-            OFF_TARGET: 0.04,
-            DANGEROUS: 0.008,
-            POSSESSION: 0.010
+            SOT: 0.50,          // ยิงตรงกรอบ สำคัญสุด
+            OFF_TARGET: 0.04,   // ยิงไม่ตรงกรอบ
+            DANGEROUS: 0.015,   // บุกอันตราย (เพิ่มน้ำหนักเพื่อชี้วัดเกมรุกจริง)
+            POSSESSION: 0.003   // ครองบอล (ลดน้ำหนักลง)
         };
 
         const RED_CARD_ATTACK_MULT = 0.75;
@@ -483,12 +476,10 @@
             return 1;
         }
 
-        // ✅ Minor #3: timeWeight ยังใช้เป็น baseline แต่มี avgTimeWeight สำหรับคูณ xG ที่เหลือ
         function timeWeight(minute) {
             return 0.90 + 0.30 * Math.pow(minute / 90, 1.5);
         }
 
-        // ✅ Minor #3: ค่าเฉลี่ย timeWeight ของช่วง [minute, minute+remaining]
         function avgTimeWeight(minute, remaining) {
             if (remaining <= 0) return 1;
             const steps = 10;
@@ -503,18 +494,13 @@
             if (minute >= 45) {
                 return {
                     isPast: true,
-                    homeFirstHalf: cH,
-                    awayFirstHalf: cA,
-                    totalFirstHalf: cH + cA,
                     probHome: cH > 0 ? 100 : 0,
                     probTotal: (cH + cA) > 0 ? 100 : 0,
                     probAway: cA > 0 ? 100 : 0,
                     over05: (cH + cA) > 0.5 ? 100 : 0,
                     over15: (cH + cA) > 1.5 ? 100 : 0,
                     over25: (cH + cA) > 2.5 ? 100 : 0,
-                    xgHomeFH: 0,
-                    xgAwayFH: 0,
-                    remainingFH: 0
+                    xgHomeFH: 0, xgAwayFH: 0, remainingFH: 0
                 };
             }
 
@@ -606,7 +592,6 @@
             const redHome = Math.max(0, parseInt(document.getElementById('red_home').value) || 0);
             const redAway = Math.max(0, parseInt(document.getElementById('red_away').value) || 0);
 
-            // ดึงสถิติดิบ
             let hPossRaw = Math.max(0, parseFloat(document.getElementById('h_poss').value) || 0);
             let aPossRaw = Math.max(0, parseFloat(document.getElementById('a_poss').value) || 0);
             let hShotsRaw = Math.max(0, parseInt(document.getElementById('h_shots').value) || 0);
@@ -618,44 +603,25 @@
 
             if (remaining === 0) { alert('เกมจบแล้ว (นาที 90)'); return; }
 
-            // ✅ Minor #1: clamp SOT ไม่ให้เกิน Shots
             let inputWarnings = [];
-            if (hSotRaw > hShotsRaw) {
-                inputWarnings.push(`SOT เหย้า (${hSotRaw}) > ยิงทั้งหมด (${hShotsRaw}) → ปรับเป็น ${hShotsRaw}`);
-                hSotRaw = hShotsRaw;
-            }
-            if (aSotRaw > aShotsRaw) {
-                inputWarnings.push(`SOT เยือน (${aSotRaw}) > ยิงทั้งหมด (${aShotsRaw}) → ปรับเป็น ${aShotsRaw}`);
-                aSotRaw = aShotsRaw;
-            }
-            const hSot = hSotRaw;
-            const aSot = aSotRaw;
-            const hShots = hShotsRaw;
-            const aShots = aShotsRaw;
+            if (hSotRaw > hShotsRaw) { inputWarnings.push(`SOT เหย้า (${hSotRaw}) > ยิงทั้งหมด (${hShotsRaw}) → ปรับเป็น ${hShotsRaw}`); hSotRaw = hShotsRaw; }
+            if (aSotRaw > aShotsRaw) { inputWarnings.push(`SOT เยือน (${aSotRaw}) > ยิงทั้งหมด (${aShotsRaw}) → ปรับเป็น ${aShotsRaw}`); aSotRaw = aShotsRaw; }
+            const hSot = hSotRaw, aSot = aSotRaw, hShots = hShotsRaw, aShots = aShotsRaw;
 
-            // ✅ Minor #2: normalize possession ให้รวมเป็น 100
             const possSum = hPossRaw + aPossRaw;
             let hPoss, aPoss;
             if (possSum > 0 && Math.abs(possSum - 100) > 0.5) {
-                hPoss = (hPossRaw / possSum) * 100;
-                aPoss = (aPossRaw / possSum) * 100;
-                inputWarnings.push(`ครองบอสรวม ${possSum.toFixed(1)}% → normalize เป็น 100% (เหย้า ${hPoss.toFixed(1)}%, เยือน ${aPoss.toFixed(1)}%)`);
-            } else {
-                hPoss = hPossRaw;
-                aPoss = aPossRaw;
-            }
+                hPoss = (hPossRaw / possSum) * 100; aPoss = (aPossRaw / possSum) * 100;
+                inputWarnings.push(`ครองบอสรวม ${possSum.toFixed(1)}% → normalize เป็น 100%`);
+            } else { hPoss = hPossRaw; aPoss = aPossRaw; }
 
-            // แสดงคำเตือน (ถ้ามี)
             const warnBox = document.getElementById('inputWarning');
             const warnText = document.getElementById('inputWarningText');
             if (inputWarnings.length > 0) {
                 warnText.innerHTML = inputWarnings.join('<br>');
                 warnBox.classList.remove('d-none');
-            } else {
-                warnBox.classList.add('d-none');
-            }
+            } else { warnBox.classList.add('d-none'); }
 
-            // Shot-based xG
             const hShotXg = hSot * XG_WEIGHTS.SOT + Math.max(0, hShots - hSot) * XG_WEIGHTS.OFF_TARGET;
             const aShotXg = aSot * XG_WEIGHTS.SOT + Math.max(0, aShots - aSot) * XG_WEIGHTS.OFF_TARGET;
             const hDangXg = hDang * XG_WEIGHTS.DANGEROUS;
@@ -676,7 +642,6 @@
             const leagueAvg = leagueInfo.avg;
             const leagueMod = leagueInfo.modifier;
 
-            // ✅ Minor #3: ใช้ avgTimeWeight แทน timeWeight ตรงๆ
             const baseXgPerMin = (leagueAvg / 90) * leagueMod;
             const avgTw = avgTimeWeight(minute, remaining);
             let expectedGoals = baseXgPerMin * remaining * avgTw;
@@ -684,15 +649,20 @@
             let xgH = expectedGoals * hRatio;
             let xgA = expectedGoals * aRatio;
 
+            // ✅ Game State 2.0
             const diff = cH - cA;
             let hStateMod = 1.0, aStateMod = 1.0;
+            
+            hStateMod *= 1.05; // Home Advantage
+
             if (diff > 0) {
-                hStateMod = 1 - 0.10 * Math.min(3, diff);
-                aStateMod = 1 + 0.12 * Math.min(3, diff);
+                hStateMod *= (1 - 0.25 * Math.min(2, diff));
+                aStateMod *= (1 + 0.30 * Math.min(2, diff));
             } else if (diff < 0) {
-                aStateMod = 1 - 0.10 * Math.min(3, -diff);
-                hStateMod = 1 + 0.12 * Math.min(3, -diff);
+                aStateMod *= (1 - 0.25 * Math.min(2, -diff));
+                hStateMod *= (1 + 0.30 * Math.min(2, -diff));
             }
+            
             xgH *= hStateMod;
             xgA *= aStateMod;
 
@@ -752,18 +722,12 @@
             const rcText = document.getElementById('redImpactText');
             if (redHome > 0 || redAway > 0) {
                 let parts = [];
-                if (redHome > 0) {
-                    parts.push(`🏠 เหย้าโดน ${redHome} ใบ → attack ×${rcAttackHome.toFixed(2)}, โอกาสเสียประตู ×${rcDefenseHome.toFixed(2)}`);
-                }
-                if (redAway > 0) {
-                    parts.push(`✈️ เยือนโดน ${redAway} ใบ → attack ×${rcAttackAway.toFixed(2)}, โอกาสเสียประตู ×${rcDefenseAway.toFixed(2)}`);
-                }
+                if (redHome > 0) parts.push(`🏠 เหย้าโดน ${redHome} ใบ → attack ×${rcAttackHome.toFixed(2)}, โอกาสเสียประตู ×${rcDefenseHome.toFixed(2)}`);
+                if (redAway > 0) parts.push(`✈️ เยือนโดน ${redAway} ใบ → attack ×${rcAttackAway.toFixed(2)}, โอกาสเสียประตู ×${rcDefenseAway.toFixed(2)}`);
                 parts.push(`(xG เหย้า: ${xgHBeforeRed.toFixed(2)} → ${xgH.toFixed(2)}, xG เยือน: ${xgABeforeRed.toFixed(2)} → ${xgA.toFixed(2)})`);
                 rcText.innerHTML = parts.join('<br>');
                 rcArea.classList.remove('d-none');
-            } else {
-                rcArea.classList.add('d-none');
-            }
+            } else { rcArea.classList.add('d-none'); }
 
             document.getElementById('probNone').innerText = (pNone * 100).toFixed(1) + '%';
             document.getElementById('probHome').innerText = (pHomeNext * 100).toFixed(1) + '%';
@@ -778,7 +742,6 @@
                 document.getElementById('fhTotalHint').innerText = (cH + cA) > 0 ? 'ประตูที่เกิดจริง' : 'ยังไม่มีประตู';
                 document.getElementById('fhProbAway').innerText = cA > 0 ? '✅' : '❌';
                 document.getElementById('fhAwayHint').innerText = cA > 0 ? `ยิงแล้ว ${cA} ลูก` : 'ยังไม่ยิง';
-
                 const totalFH = cH + cA;
                 setOverRow('fhOver05', 'fhOver05Bar', 'fhOver05Label', 'fhUnder05', 0, true, totalFH, 0.5);
                 setOverRow('fhOver15', 'fhOver15Bar', 'fhOver15Label', 'fhUnder15', 0, true, totalFH, 1.5);
@@ -790,7 +753,6 @@
                 document.getElementById('fhTotalHint').innerText = 'โอกาสมีประตูอย่างน้อย 1 ลูก';
                 document.getElementById('fhProbAway').innerText = fh.probAway.toFixed(1) + '%';
                 document.getElementById('fhAwayHint').innerText = 'โอกาสเยือนยิงอย่างน้อย 1 ลูก';
-
                 setOverRow('fhOver05', 'fhOver05Bar', 'fhOver05Label', 'fhUnder05', fh.over05, false, 0, 0);
                 setOverRow('fhOver15', 'fhOver15Bar', 'fhOver15Label', 'fhUnder15', fh.over15, false, 0, 0);
                 setOverRow('fhOver25', 'fhOver25Bar', 'fhOver25Label', 'fhUnder25', fh.over25, false, 0, 0);
