@@ -168,19 +168,16 @@
                     <h6 class="fw-bold text-secondary mb-3">📊 โอกาสเกิดประตูครึ่งแรก (เจาะจงจำนวน)</h6>
                     <div class="row g-3">
                         <div class="col-md-4 border-end">
-                            <div class="d-flex justify-content-between small fw-bold"><span>ยิง 1 ลูก</span><span id="fhOver05">0%</span></div>
+                            <div class="d-flex justify-content-between small fw-bold"><span>ยิง 0 ลูก</span><span id="fhOver05">0%</span></div>
                             <div class="progress mb-1" style="height: 6px;"><div class="progress-bar" id="fhOver05Bar" style="width: 0%"></div></div>
-                            <div class="text-xs text-muted text-end">ยิง 0 ลูก = <span id="fhUnder05">0%</span></div>
                         </div>
                         <div class="col-md-4 border-end">
-                            <div class="d-flex justify-content-between small fw-bold"><span>ยิง 2 ลูก</span><span id="fhOver15">0%</span></div>
+                            <div class="d-flex justify-content-between small fw-bold"><span>ยิง 1 ลูก</span><span id="fhOver15">0%</span></div>
                             <div class="progress mb-1" style="height: 6px;"><div class="progress-bar" id="fhOver15Bar" style="width: 0%"></div></div>
-                            <div class="text-xs text-muted text-end">ยิง 0-1 ลูก = <span id="fhUnder15">0%</span></div>
                         </div>
                         <div class="col-md-4">
-                            <div class="d-flex justify-content-between small fw-bold"><span>ยิง 3+ ลูก</span><span id="fhOver25">0%</span></div>
+                            <div class="d-flex justify-content-between small fw-bold"><span>ยิง 2 ลูก</span><span id="fhOver25">0%</span></div>
                             <div class="progress mb-1" style="height: 6px;"><div class="progress-bar" id="fhOver25Bar" style="width: 0%"></div></div>
-                            <div class="text-xs text-muted text-end">ยิง 0-2 ลูก = <span id="fhUnder25">0%</span></div>
                         </div>
                     </div>
                 </div>
@@ -514,31 +511,39 @@
             document.getElementById('probAway').innerText = (pAwayNext * 100).toFixed(1) + '%';
 
             const fh = calculateFirstHalfProb(xgH, xgA, minute, cH, cA);
+            
             if (fh.isPast) {
                 document.getElementById('fhProbHome').innerText = cH > 0 ? '✅' : '❌';
                 document.getElementById('fhProbTotal').innerText = (cH + cA) + '';
                 document.getElementById('fhProbAway').innerText = cA > 0 ? '✅' : '❌';
                 
-                document.getElementById('fhOver05').innerText = fh.exact1 === 100 ? '✅' : '❌';
-                document.getElementById('fhOver05Bar').style.width = fh.exact1 === 100 ? '100%' : '0%';
-                document.getElementById('fhOver05Bar').className = fh.exact1 === 100 ? 'progress-bar bg-success' : 'progress-bar bg-danger';
-                document.getElementById('fhUnder05').innerText = fh.exact0 === 100 ? '✅' : '❌';
+                document.getElementById('fhOver05').innerText = fh.exact0 === 100 ? '✅' : '❌';
+                document.getElementById('fhOver05Bar').style.width = fh.exact0 === 100 ? '100%' : '0%';
+                document.getElementById('fhOver05Bar').className = fh.exact0 === 100 ? 'progress-bar bg-success' : 'progress-bar bg-danger';
 
-                document.getElementById('fhOver15').innerText = fh.exact2 === 100 ? '✅' : '❌';
-                document.getElementById('fhOver15Bar').style.width = fh.exact2 === 100 ? '100%' : '0%';
-                document.getElementById('fhOver15Bar').className = fh.exact2 === 100 ? 'progress-bar bg-success' : 'progress-bar bg-danger';
-                document.getElementById('fhUnder15').innerText = (fh.exact0 + fh.exact1) === 100 ? '✅' : '❌';
+                document.getElementById('fhOver15').innerText = fh.exact1 === 100 ? '✅' : '❌';
+                document.getElementById('fhOver15Bar').style.width = fh.exact1 === 100 ? '100%' : '0%';
+                document.getElementById('fhOver15Bar').className = fh.exact1 === 100 ? 'progress-bar bg-success' : 'progress-bar bg-danger';
 
-                document.getElementById('fhOver25').innerText = fh.exact3plus === 100 ? '✅' : '❌';
-                document.getElementById('fhOver25Bar').style.width = fh.exact3plus === 100 ? '100%' : '0%';
-                document.getElementById('fhOver25Bar').className = fh.exact3plus === 100 ? 'progress-bar bg-success' : 'progress-bar bg-danger';
-                document.getElementById('fhUnder25').innerText = (fh.exact0 + fh.exact1 + fh.exact2) === 100 ? '✅' : '❌';
+                document.getElementById('fhOver25').innerText = fh.exact2 === 100 ? '✅' : '❌';
+                document.getElementById('fhOver25Bar').style.width = fh.exact2 === 100 ? '100%' : '0%';
+                document.getElementById('fhOver25Bar').className = fh.exact2 === 100 ? 'progress-bar bg-success' : 'progress-bar bg-danger';
 
             } else {
                 document.getElementById('fhProbHome').innerText = fh.probHome.toFixed(1) + '%';
                 document.getElementById('fhProbTotal').innerText = fh.probTotal.toFixed(1) + '%';
                 document.getElementById('fhProbAway').innerText = fh.probAway.toFixed(1) + '%';
                 
+                // ✅ Normalize ค่า exact0, exact1, exact2 ให้รวมเป็น 100%
+                const sumGoalEvents = fh.exact0 + fh.exact1 + fh.exact2;
+                let norm0 = 0, norm1 = 0, norm2 = 0;
+                
+                if (sumGoalEvents > 0) {
+                    norm0 = (fh.exact0 / sumGoalEvents) * 100;
+                    norm1 = (fh.exact1 / sumGoalEvents) * 100;
+                    norm2 = (fh.exact2 / sumGoalEvents) * 100;
+                }
+
                 const setExactRow = (id, val) => {
                     const el = document.getElementById(id);
                     const c = pickColor(val);
@@ -546,20 +551,16 @@
                     el.className = 'fw-bold ' + c.text;
                 };
 
-                setExactRow('fhOver05', fh.exact1);
-                setExactRow('fhOver15', fh.exact2);
-                setExactRow('fhOver25', fh.exact3plus);
+                setExactRow('fhOver05', norm0);
+                setExactRow('fhOver15', norm1);
+                setExactRow('fhOver25', norm2);
 
-                document.getElementById('fhUnder05').innerText = fh.exact0.toFixed(1) + '%';
-                document.getElementById('fhUnder15').innerText = (fh.exact0 + fh.exact1).toFixed(1) + '%';
-                document.getElementById('fhUnder25').innerText = (fh.exact0 + fh.exact1 + fh.exact2).toFixed(1) + '%';
-                
-                document.getElementById('fhOver05Bar').style.width = fh.exact1 + '%';
-                document.getElementById('fhOver05Bar').className = 'progress-bar ' + pickColor(fh.exact1).bar;
-                document.getElementById('fhOver15Bar').style.width = fh.exact2 + '%';
-                document.getElementById('fhOver15Bar').className = 'progress-bar ' + pickColor(fh.exact2).bar;
-                document.getElementById('fhOver25Bar').style.width = fh.exact3plus + '%';
-                document.getElementById('fhOver25Bar').className = 'progress-bar ' + pickColor(fh.exact3plus).bar;
+                document.getElementById('fhOver05Bar').style.width = norm0 + '%';
+                document.getElementById('fhOver05Bar').className = 'progress-bar ' + pickColor(norm0).bar;
+                document.getElementById('fhOver15Bar').style.width = norm1 + '%';
+                document.getElementById('fhOver15Bar').className = 'progress-bar ' + pickColor(norm1).bar;
+                document.getElementById('fhOver25Bar').style.width = norm2 + '%';
+                document.getElementById('fhOver25Bar').className = 'progress-bar ' + pickColor(norm2).bar;
             }
 
             const fhXgLine = !fh.isPast ? ` | ครึ่งแรก: ${(fh.xgHomeFH ?? 0).toFixed(2)} - ${(fh.xgAwayFH ?? 0).toFixed(2)}` : '';
