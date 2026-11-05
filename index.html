@@ -39,6 +39,9 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* สไตล์สำหรับ Slider ครองบอล */
+        input[type=range] { height: 6px; padding: 0; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -63,7 +66,7 @@
                     <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold" value="ทีมเยือน" oninput="debounceSearch()" placeholder="ทีมเยือน"></div>
                 </div>
 
-                <!-- ✅ เปลี่ยนจาก Dropdown เป็นช่องกรอกชื่อลีก -->
+                <!-- ช่องกรอกชื่อลีก -->
                 <div class="mb-3">
                     <label class="form-label small fw-bold text-secondary mb-1">🌍 ชื่อลีก (พิมพ์เอง)</label>
                     <input type="text" id="leagueInput" class="form-control form-control-sm border-dark" placeholder="เช่น Premier League, ลาลีกา..." oninput="handleLeagueInput()">
@@ -89,11 +92,20 @@
                     <div class="flex-fill"><label class="small text-danger fw-bold">🟥 แดงเยือน</label><input type="number" id="red_away" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
                 </div>
 
+                <!-- ✅ สไลเดอร์ครองบอล -->
+                <div class="mb-3 p-3 bg-light rounded border">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="fw-bold text-success small">🏠 เหย้า: <span id="h_poss_label">50</span>%</span>
+                        <span class="fw-bold text-primary small">✈️ เยือน: <span id="a_poss_label">50</span>%</span>
+                    </div>
+                    <input type="range" class="form-range" id="poss_slider" min="0" max="100" value="50" oninput="updatePossession()">
+                    <div class="text-center text-muted" style="font-size: 0.7rem;">เลื่อนเพื่อปรับสัดส่วนการครองบอล</div>
+                </div>
+
                 <div class="row g-3 mb-3">
                     <div class="col-6 border-end">
                         <div class="text-success fw-bold small mb-2 border-bottom pb-1">🏠 เหย้า</div>
                         <div class="stat-grid d-flex flex-column gap-2">
-                            <div><label>ครองบอล %</label><input type="number" id="h_poss" class="form-control form-control-sm" value="50" min="0" max="100"></div>
                             <div><label>ยิงทั้งหมด</label><input type="number" id="h_shots" class="form-control form-control-sm" value="5" min="0"></div>
                             <div><label class="text-danger fw-bold">ยิงตรงกรอบ (SOT)</label><input type="number" id="h_sot" class="form-control form-control-sm border-danger" value="2" min="0"></div>
                             <div><label>บุกอันตราย</label><input type="number" id="h_dang" class="form-control form-control-sm" value="14" min="0"></div>
@@ -102,7 +114,6 @@
                     <div class="col-6">
                         <div class="text-primary fw-bold small mb-2 border-bottom pb-1">✈️ เยือน</div>
                         <div class="stat-grid d-flex flex-column gap-2">
-                            <div><label>ครองบอล %</label><input type="number" id="a_poss" class="form-control form-control-sm" value="50" min="0" max="100"></div>
                             <div><label>ยิงทั้งหมด</label><input type="number" id="a_shots" class="form-control form-control-sm" value="5" min="0"></div>
                             <div><label class="text-danger fw-bold">ยิงตรงกรอบ (SOT)</label><input type="number" id="a_sot" class="form-control form-control-sm border-danger" value="2" min="0"></div>
                             <div><label>บุกอันตราย</label><input type="number" id="a_dang" class="form-control form-control-sm" value="14" min="0"></div>
@@ -197,6 +208,13 @@
         const RED_CARD_DEFENSE_MULT = 1.22;
         const FIRST_HALF_RATIO = 0.45;
 
+        // ✅ อัปเดตค่าสไลเดอร์ครองบอล
+        function updatePossession() {
+            const val = document.getElementById('poss_slider').value;
+            document.getElementById('h_poss_label').innerText = val;
+            document.getElementById('a_poss_label').innerText = 100 - val;
+        }
+
         // ระบบประเมินลีกจากคำที่พิมพ์
         function handleLeagueInput() {
             const input = document.getElementById('leagueInput').value.trim().toLowerCase();
@@ -210,7 +228,6 @@
                 return;
             }
 
-            // ตรวจหาคำสำคัญในชื่อลีก
             if (input.includes('bundesliga') || input.includes('eredivisie') || input.includes('mls') || input.includes('major league soccer')) {
                 currentLeagueModifier = 1.15; currentLeagueAvgGoals = 3.10; currentLeagueText = "ลีกเน้นรุก (เกมเปิด)";
                 resultEl.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> ตรวจพบ: ลีกเน้นรุก</span>`;
@@ -233,7 +250,6 @@
             }
         }
 
-        // ค้นหาชื่อทีม (TheSportsDB) - ยังคงมีไว้เพื่อเป็นข้อมูลเสริม
         function debounceSearch() {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
@@ -257,7 +273,6 @@
                 if (data.teams && data.teams.length > 0) {
                     const team = data.teams.find(t => t.strSport === 'Soccer') || data.teams[0];
                     if (team.strLeague && team.strLeague !== "Unknown") {
-                        // ถ้าผู้ใช้ยังไม่ได้พิมพ์ลีกเอง ให้ระบบดึงชื่อลีกมาใส่ให้
                         if (!document.getElementById('leagueInput').value.trim()) {
                             document.getElementById('leagueInput').value = team.strLeague;
                             handleLeagueInput();
@@ -380,8 +395,11 @@
             const redHome = Math.max(0, parseInt(document.getElementById('red_home').value) || 0);
             const redAway = Math.max(0, parseInt(document.getElementById('red_away').value) || 0);
 
-            let hPossRaw = Math.max(0, parseFloat(document.getElementById('h_poss').value) || 0);
-            let aPossRaw = Math.max(0, parseFloat(document.getElementById('a_poss').value) || 0);
+            // ✅ ดึงค่าครองบอลจากสไลเดอร์
+            const sliderVal = parseFloat(document.getElementById('poss_slider').value);
+            let hPoss = sliderVal;
+            let aPoss = 100 - sliderVal;
+
             let hShotsRaw = Math.max(0, parseInt(document.getElementById('h_shots').value) || 0);
             let aShotsRaw = Math.max(0, parseInt(document.getElementById('a_shots').value) || 0);
             let hSotRaw = Math.max(0, parseInt(document.getElementById('h_sot').value) || 0);
@@ -395,11 +413,6 @@
             if (hSotRaw > hShotsRaw) { inputWarnings.push(`SOT เหย้า > ยิงทั้งหมด`); hSotRaw = hShotsRaw; }
             if (aSotRaw > aShotsRaw) { inputWarnings.push(`SOT เยือน > ยิงทั้งหมด`); aSotRaw = aShotsRaw; }
             const hSot = hSotRaw, aSot = aSotRaw, hShots = hShotsRaw, aShots = aShotsRaw;
-
-            const possSum = hPossRaw + aPossRaw;
-            let hPoss, aPoss;
-            if (possSum > 0 && Math.abs(possSum - 100) > 0.5) { hPoss = (hPossRaw / possSum) * 100; aPoss = (aPossRaw / possSum) * 100; inputWarnings.push(`ครองบอลไม่รวม 100%`); }
-            else { hPoss = hPossRaw; aPoss = aPossRaw; }
 
             const warnBox = document.getElementById('inputWarning');
             if (inputWarnings.length > 0) { document.getElementById('inputWarningText').innerText = inputWarnings.join(' | '); warnBox.classList.remove('d-none'); }
@@ -458,7 +471,6 @@
             const dataRichness = Math.min(1, (hShots + aShots + hDang + aDang) / 40);
             const confidence = Math.round((possessionConsistency * 0.35 + shotConsistency * 0.35 + dataRichness * 0.30) * 100);
 
-            // Update UI
             document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
             document.getElementById('displayMinute').innerText = minute;
             document.getElementById('displayRemaining').innerText = remaining;
@@ -504,7 +516,6 @@
                 document.getElementById('fhOver25Bar').className = fh.exact2 === 100 ? 'progress-bar bg-success' : 'progress-bar bg-danger';
 
             } else {
-                // ✅ Normalize ค่า ครึ่งแรก (เหย้า, รวม, เยือน) ให้รวมเป็น 100%
                 const fhSum = fh.probHome + fh.probTotal + fh.probAway;
                 let normFhHome = 0, normFhTotal = 0, normFhAway = 0;
                 
@@ -518,7 +529,6 @@
                 document.getElementById('fhProbTotal').innerText = normFhTotal.toFixed(1) + '%';
                 document.getElementById('fhProbAway').innerText = normFhAway.toFixed(1) + '%';
                 
-                // ✅ Normalize ค่า exact0, exact1, exact2 ให้รวมเป็น 100%
                 const sumGoalEvents = fh.exact0 + fh.exact1 + fh.exact2;
                 let norm0 = 0, norm1 = 0, norm2 = 0;
                 
