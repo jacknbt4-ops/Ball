@@ -96,6 +96,9 @@
                                 <option value="BRASIL_B">บราซิล ซีรี่ย์ บี</option>
                                 <option value="MLS">เมเจอร์ลีกซอกเกอร์</option>
                             </optgroup>
+                            <optgroup label="🇦🇺 โอเชียเนีย">
+                                <option value="AUS_CHAMPIONSHIP">ออสเตรเลีย แชมเปี้ยนชิพ</option>
+                            </optgroup>
                         </select>
                     </div>
                 </div>
@@ -138,7 +141,7 @@
                 </div>
             </div>
 
-            <!-- 🟥 ใบแดง (ใหม่) -->
+            <!-- 🟥 ใบแดง -->
             <div class="mb-3">
                 <label class="form-label small fw-bold text-danger text-uppercase">🟥 ใบแดง (Red Cards)</label>
                 <div class="red-card-box">
@@ -201,7 +204,6 @@
                     <div class="mt-2"><span class="badge bg-info text-dark" id="confidenceBadge">Confidence: -</span></div>
                 </div>
 
-                <!-- แสดงผลกระทบใบแดง -->
                 <div id="redCardImpactArea" class="alert alert-danger py-2 small d-none mb-3">
                     <strong>🟥 ผลกระทบใบแดง:</strong> <span id="redImpactText"></span>
                 </div>
@@ -232,17 +234,15 @@
         let isManualSelect = false;
         let currentLeagueAvgGoals = 2.7;
 
-        // ✅ ปรับ SOT ให้น้ำหนักสูงขึ้น (0.50) และ off-target ลดลง (0.04)
         const XG_WEIGHTS = {
-            SOT: 0.50,          // ยิงตรงกรอบ — สำคัญที่สุด (เดิม 0.30)
-            OFF_TARGET: 0.04,   // ยิงไม่ตรงกรอบ (เดิม 0.05)
-            DANGEROUS: 0.008,   // บุกอันตราย
-            POSSESSION: 0.010   // ครองบอล
+            SOT: 0.50,
+            OFF_TARGET: 0.04,
+            DANGEROUS: 0.008,
+            POSSESSION: 0.010
         };
 
-        // ✅ ตัวคูณใบแดง
-        const RED_CARD_ATTACK_MULT = 0.75;   // ทีมที่โดนใบแดง attack × 0.75^reds
-        const RED_CARD_DEFENSE_MULT = 1.22;  // โอกาสเสียประตู × 1.22^reds
+        const RED_CARD_ATTACK_MULT = 0.75;
+        const RED_CARD_DEFENSE_MULT = 1.22;
 
         const LEAGUE_DB = {
             "EPL":           { name: "พรีเมียร์ลีก",        mod: 1.00, avg: 2.85 },
@@ -266,7 +266,8 @@
             "ARGENTINA":     { name: "อาร์เจนตินา",         mod: 0.85, avg: 2.30 },
             "BRASIL_A":      { name: "บราซิล ซีรี่ย์ เอ",  mod: 0.95, avg: 2.40 },
             "BRASIL_B":      { name: "บราซิล ซีรี่ย์ บี",  mod: 0.90, avg: 2.30 },
-            "MLS":           { name: "เมเจอร์ลีกซอกเกอร์", mod: 1.15, avg: 3.10 }
+            "MLS":           { name: "เมเจอร์ลีกซอกเกอร์", mod: 1.15, avg: 3.10 },
+            "AUS_CHAMPIONSHIP": { name: "ออสเตรเลีย แชมเปี้ยนชิพ", mod: 1.10, avg: 2.80 }
         };
 
         function debounceSearch() {
@@ -412,11 +413,9 @@
             const cA = parseInt(document.getElementById('current_away_score').value, 10) || 0;
             const remaining = Math.max(0, 90 - minute);
 
-            // ใบแดง
             const redHome = Math.max(0, parseInt(document.getElementById('red_home').value) || 0);
             const redAway = Math.max(0, parseInt(document.getElementById('red_away').value) || 0);
 
-            // สถิติ
             const hPoss = Math.max(0, parseFloat(document.getElementById('h_poss').value) || 0);
             const aPoss = Math.max(0, parseFloat(document.getElementById('a_poss').value) || 0);
             const hShots = Math.max(0, parseInt(document.getElementById('h_shots').value) || 0);
@@ -428,7 +427,6 @@
 
             if (remaining === 0) { alert('เกมจบแล้ว (นาที 90)'); return; }
 
-            // ✅ Shot-based xG — SOT น้ำหนัก 0.50 (สูงขึ้นชัดเจน)
             const hShotXg = hSot * XG_WEIGHTS.SOT + Math.max(0, hShots - hSot) * XG_WEIGHTS.OFF_TARGET;
             const aShotXg = aSot * XG_WEIGHTS.SOT + Math.max(0, aShots - aSot) * XG_WEIGHTS.OFF_TARGET;
             const hDangXg = hDang * XG_WEIGHTS.DANGEROUS;
@@ -455,7 +453,6 @@
             let xgH = expectedGoals * hRatio;
             let xgA = expectedGoals * aRatio;
 
-            // Game state adjustment
             const diff = cH - cA;
             let hStateMod = 1.0, aStateMod = 1.0;
             if (diff > 0) {
@@ -468,19 +465,16 @@
             xgH *= hStateMod;
             xgA *= aStateMod;
 
-            // ✅ ใบแดง — attack ลด, โอกาสเสียเพิ่ม
             const rcAttackHome = Math.pow(RED_CARD_ATTACK_MULT, redHome);
             const rcDefenseHome = Math.pow(RED_CARD_DEFENSE_MULT, redHome);
             const rcAttackAway = Math.pow(RED_CARD_ATTACK_MULT, redAway);
             const rcDefenseAway = Math.pow(RED_CARD_DEFENSE_MULT, redAway);
 
-            // xG ของเหย้า: attack ตัวเอง × defense ของเยือน
             const xgHBeforeRed = xgH;
             const xgABeforeRed = xgA;
             xgH = xgH * rcAttackHome * rcDefenseAway;
             xgA = xgA * rcAttackAway * rcDefenseHome;
 
-            // Dixon-Coles
             const rho = -0.06;
             let probGrid = [], total = 0;
             for (let h = 0; h <= 5; h++) {
@@ -501,7 +495,6 @@
                 prob: x.p
             })).sort((a, b) => b.prob - a.prob).slice(0, 3);
 
-            // Confidence
             const hShotAcc = hShots > 0 ? hSot / hShots : 0;
             const aShotAcc = aShots > 0 ? aSot / aShots : 0;
             const possTotal = hPoss + aPoss || 100;
@@ -510,7 +503,6 @@
             const dataRichness = Math.min(1, (hShots + aShots + hDang + aDang) / 40);
             const confidence = Math.round((possessionConsistency * 0.35 + shotConsistency * 0.35 + dataRichness * 0.30) * 100);
 
-            // อัปเดต UI
             document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
             document.getElementById('displayMinute').innerText = minute;
             document.getElementById('displayRemaining').innerText = remaining;
@@ -525,7 +517,6 @@
             confBadge.innerText = `Confidence: ${confidence}%`;
             confBadge.className = confidence >= 70 ? "badge bg-success" : confidence >= 45 ? "badge bg-warning text-dark" : "badge bg-danger";
 
-            // แสดงผลกระทบใบแดง
             const rcArea = document.getElementById('redCardImpactArea');
             const rcText = document.getElementById('redImpactText');
             if (redHome > 0 || redAway > 0) {
