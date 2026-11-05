@@ -313,12 +313,11 @@
         let isManualSelect = false;
         let currentLeagueAvgGoals = 2.7;
 
-        // ✅ Realism Weights (ปรับใหม่)
         const XG_WEIGHTS = {
-            SOT: 0.50,          // ยิงตรงกรอบ สำคัญสุด
-            OFF_TARGET: 0.04,   // ยิงไม่ตรงกรอบ
-            DANGEROUS: 0.015,   // บุกอันตราย (เพิ่มน้ำหนักเพื่อชี้วัดเกมรุกจริง)
-            POSSESSION: 0.003   // ครองบอล (ลดน้ำหนักลง)
+            SOT: 0.50,
+            OFF_TARGET: 0.04,
+            DANGEROUS: 0.015,
+            POSSESSION: 0.003
         };
 
         const RED_CARD_ATTACK_MULT = 0.75;
@@ -649,11 +648,10 @@
             let xgH = expectedGoals * hRatio;
             let xgA = expectedGoals * aRatio;
 
-            // ✅ Game State 2.0
             const diff = cH - cA;
             let hStateMod = 1.0, aStateMod = 1.0;
             
-            hStateMod *= 1.05; // Home Advantage
+            hStateMod *= 1.05;
 
             if (diff > 0) {
                 hStateMod *= (1 - 0.25 * Math.min(2, diff));
@@ -691,10 +689,17 @@
             const pHomeNext = (xgH / (xgH + xgA || 1)) * (1 - pNone);
             const pAwayNext = (xgA / (xgH + xgA || 1)) * (1 - pNone);
 
-            const finalScores = probGrid.map(x => ({
+            // ✅ Top 3 Normalized
+            const top3Raw = probGrid.map(x => ({
                 score: `${cH + x.h}-${cA + x.a}`,
                 prob: x.p
             })).sort((a, b) => b.prob - a.prob).slice(0, 3);
+
+            const top3Sum = top3Raw.reduce((sum, item) => sum + item.prob, 0);
+            const finalScores = top3Raw.map(x => ({
+                score: x.score,
+                prob: (x.prob / top3Sum) * 100
+            }));
 
             const hShotAcc = hShots > 0 ? hSot / hShots : 0;
             const aShotAcc = aShots > 0 ? aSot / aShots : 0;
@@ -772,6 +777,7 @@
             scoreContainer.innerHTML = '';
             const colors = ['bg-success text-white border-success', 'bg-warning text-dark border-warning', 'bg-secondary text-white border-secondary'];
             const icons = ['🥇', '🥈', '🥉'];
+            
             finalScores.forEach((item, i) => {
                 const col = document.createElement('div');
                 col.className = 'col-md-4';
@@ -779,7 +785,7 @@
                     <div class="p-3 border rounded-3 ${colors[i]} shadow-sm">
                         <div class="small fw-bold mb-2">${icons[i]} สกอร์จบเกม</div>
                         <div class="h2 fw-extrabold mb-1">${item.score}</div>
-                        <div class="small">โอกาสเกิด: <strong>${(item.prob * 100).toFixed(1)}%</strong></div>
+                        <div class="small">โอกาสเกิด: <strong>${item.prob.toFixed(1)}%</strong></div>
                     </div>`;
                 scoreContainer.appendChild(col);
             });
