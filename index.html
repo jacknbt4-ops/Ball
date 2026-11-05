@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v2.2 - High Accuracy + Red Card + 1st Half</title>
+    <title>⚽ JackAI Scanner v2.3 - High Accuracy + Red Card + 1st Half</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
@@ -43,7 +43,7 @@
 
     <div class="container">
         <div class="text-center mb-4">
-            <h1 class="fw-extrabold text-dark mb-2">⚽ JackAI Scanner v2.2</h1>
+            <h1 class="fw-extrabold text-dark mb-2">⚽ JackAI Scanner v2.3</h1>
             <p class="text-secondary fs-5 mb-0">SOT-Weighted xG + Game State + Red Card + 1st Half</p>
         </div>
 
@@ -286,7 +286,7 @@
 
         const RED_CARD_ATTACK_MULT = 0.75;
         const RED_CARD_DEFENSE_MULT = 1.22;
-        const FIRST_HALF_RATIO = 0.45; // สัดส่วนประตูที่เกิดในครึ่งแรก (~45% ของทั้งเกม)
+        const FIRST_HALF_RATIO = 0.45;
 
         const LEAGUE_DB = {
             "EPL":           { name: "พรีเมียร์ลีก",        mod: 1.00, avg: 2.85 },
@@ -439,16 +439,12 @@
             return 1;
         }
 
+        // ✅ Minor #3: smooth timeWeight (exponential curve แทนขั้นบันได)
         function timeWeight(minute) {
-            if (minute < 15) return 0.92;
-            if (minute < 30) return 0.98;
-            if (minute < 45) return 1.02;
-            if (minute < 60) return 1.05;
-            if (minute < 75) return 1.10;
-            return 1.18;
+            return 0.90 + 0.30 * Math.pow(minute / 90, 1.5);
         }
 
-        // 🕐 คำนวณความน่าจะเป็นประตูในครึ่งแรก
+        // ✅ Minor #4: คำนวณ HT Over/Under จาก probGrid โดยตรง (Dixon-Coles aware)
         function calculateFirstHalfProb(xgH, xgA, minute, cH, cA) {
             if (minute >= 45) {
                 return {
@@ -477,18 +473,31 @@
 
             const probHomeAtLeast1 = 1 - Math.exp(-xgHomeFH);
             const probAwayAtLeast1 = 1 - Math.exp(-xgAwayFH);
-            const probTotalAtLeast1 = 1 - Math.exp(-(xgHomeFH + xgAwayFH));
 
-            const p0 = Math.exp(-(xgHomeFH + xgAwayFH));
-            const p1 = (xgHomeFH + xgAwayFH) * p0;
-            const over15 = 1 - p0 - p1;
+            // ✅ ใช้ Dixon-Coles probGrid สำหรับ Over/Under (แม่นกว่า Poisson รวม)
+            const fhRho = -0.06;
+            let fhGrid = [], fhTotal = 0;
+            for (let h = 0; h <= 5; h++) {
+                for (let a = 0; a <= 5; a++) {
+                    const p = poisson(xgHomeFH, h) * poisson(xgAwayFH, a) * dixonColesTau(h, a, xgHomeFH, xgAwayFH, fhRho);
+                    fhGrid.push({ h, a, p });
+                    fhTotal += p;
+                }
+            }
+            fhGrid.forEach(x => x.p /= fhTotal);
+
+            let over05 = 0, over15 = 0;
+            for (const s of fhGrid) {
+                if (s.h + s.a > 0.5) over05 += s.p;
+                if (s.h + s.a > 1.5) over15 += s.p;
+            }
 
             return {
                 isPast: false,
                 probHome: probHomeAtLeast1 * 100,
-                probTotal: probTotalAtLeast1 * 100,
+                probTotal: (1 - Math.exp(-(xgHomeFH + xgAwayFH))) * 100,
                 probAway: probAwayAtLeast1 * 100,
-                over05: probTotalAtLeast1 * 100,
+                over05: over05 * 100,
                 over15: over15 * 100,
                 xgHomeFH,
                 xgAwayFH,
@@ -646,11 +655,15 @@
                 document.getElementById('fhOver15').innerText = fh.over15.toFixed(1) + '%';
             }
 
+            // ✅ Minor #1 & #2: optional chaining + ซ่อน xG ครึ่งแรกเมื่อ isPast
+            const fhXgLine = !fh.isPast
+                ? `<br><span class="text-muted">🕐 ครึ่งแรก: เหย้า ${(fh.xgHomeFH ?? 0).toFixed(2)} xG, เยือน ${(fh.xgAwayFH ?? 0).toFixed(2)} xG (เหลือ ${fh.remainingFH ?? 0} นาทีในครึ่งแรก)</span>`
+                : '';
+
             document.getElementById('xgBreakdown').innerHTML = `
                 เหย้า xG = <strong>${xgH.toFixed(2)}</strong> (SOT ${hSot}×${XG_WEIGHTS.SOT} + off ${Math.max(0, hShots - hSot)}×${XG_WEIGHTS.OFF_TARGET} + dang ${(hDangXg).toFixed(2)} + poss ${(hPossXg).toFixed(2)}) × state ${hStateMod.toFixed(2)} × red ${(rcAttackHome * rcDefenseAway).toFixed(2)}<br>
                 เยือน xG = <strong>${xgA.toFixed(2)}</strong> (SOT ${aSot}×${XG_WEIGHTS.SOT} + off ${Math.max(0, aShots - aSot)}×${XG_WEIGHTS.OFF_TARGET} + dang ${(aDangXg).toFixed(2)} + poss ${(aPossXg).toFixed(2)}) × state ${aStateMod.toFixed(2)} × red ${(rcAttackAway * rcDefenseHome).toFixed(2)}<br>
-                <span class="text-muted">รวม ${(xgH + xgA).toFixed(2)} xG ใน ${remaining} นาที (time weight ×${timeWeight(minute).toFixed(2)})</span><br>
-                <span class="text-muted">🕐 ครึ่งแรก: เหย้า ${fh.xgHomeFH.toFixed(2)} xG, เยือน ${fh.xgAwayFH.toFixed(2)} xG (เหลือ ${fh.remainingFH} นาทีในครึ่งแรก)</span>
+                <span class="text-muted">รวม ${(xgH + xgA).toFixed(2)} xG ใน ${remaining} นาที (time weight ×${timeWeight(minute).toFixed(2)})</span>${fhXgLine}
             `;
 
             const scoreContainer = document.getElementById('topScoresContainer');
