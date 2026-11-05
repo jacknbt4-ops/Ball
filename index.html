@@ -51,7 +51,7 @@
     <nav class="navbar navbar-dark bg-dark px-3 py-2 shadow-sm">
         <div class="container-fluid">
             <span class="navbar-brand mb-0 h1 fs-5">⚽ JackAI Scanner v2.6</span>
-            <span class="text-light small d-none d-md-block">Realism Edition + Dashboard</span>
+            <span class="text-light small d-none d-md-block">Realism Edition + Custom League</span>
         </div>
     </nav>
 
@@ -63,20 +63,13 @@
                     <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold" value="ทีมเยือน" oninput="debounceSearch()" placeholder="ทีมเยือน"></div>
                 </div>
 
-                <div class="d-flex align-items-center gap-2 mb-3">
-                    <select id="manualLeague" class="form-select form-select-sm" onchange="handleManualLeague()">
-                        <option value="">-- เลือกลีกเอง --</option>
-                        <optgroup label="🏴 อังกฤษ"><option value="EPL">พรีเมียร์ลีก</option><option value="CHAMPIONSHIP">แชมเปี้ยนชิพ</option></optgroup>
-                        <optgroup label="🇪🇸 สเปน"><option value="LA_LIGA">ลาลีกา</option></optgroup>
-                        <optgroup label="🇩🇪 เยอรมนี"><option value="BUNDESLIGA">บุนเดสลีกา</option></optgroup>
-                        <optgroup label="🇮🇹 อิตาลี"><option value="SERIE_A">เซเรีย อา</option></optgroup>
-                        <optgroup label="🇫🇷 ฝรั่งเศส"><option value="LIGUE_1">ลีกเอิง</option></optgroup>
-                        <optgroup label="🇪🇺 ยุโรป"><option value="EREDIVISIE">เอเรอดีวีซี</option><option value="PRIMEIRA_LIGA">ลีกา โปรตุเกส</option></optgroup>
-                        <optgroup label="🌏 เอเชีย"><option value="THAI_LEAGUE">ไทยลีก</option><option value="J1_LEAGUE">เจลีก</option><option value="AFC_CL2">เอเอฟซี CL2</option></optgroup>
-                        <optgroup label="🌎 อเมริกา"><option value="ARGENTINA">อาร์เจนตินา</option><option value="MLS">MLS</option></optgroup>
-                        <optgroup label="🇦🇺 โอเชียเนีย"><option value="AUS_CHAMPIONSHIP">ออสเตรเลีย แชมเปี้ยนชิพ</option></optgroup>
-                    </select>
-                    <div id="leagueResult" class="small text-truncate" style="max-width: 120px;"><span class="text-muted">ค้นหาอัตโนมัติ</span></div>
+                <!-- ✅ เปลี่ยนจาก Dropdown เป็นช่องกรอกชื่อลีก -->
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-secondary mb-1">🌍 ชื่อลีก (พิมพ์เอง)</label>
+                    <input type="text" id="leagueInput" class="form-control form-control-sm border-dark" placeholder="เช่น Premier League, ลาลีกา..." oninput="handleLeagueInput()">
+                    <div id="leagueResult" class="small mt-1">
+                        <span class="text-muted" style="font-size: 0.75rem;">ระบบจะประเมินจากชื่อลีก</span>
+                    </div>
                 </div>
 
                 <div class="upload-zone mb-3" onclick="document.getElementById('graphUpload').click()">
@@ -127,7 +120,7 @@
                     <h4 class="fw-bold mb-1" id="resultTitle">ทีมเหย้า 0 - 0 ทีมเยือน</h4>
                     <div class="small text-warning">นาทีที่ <span id="displayMinute">45</span> (เหลือ <span id="displayRemaining">45</span> นาที)</div>
                     <div class="d-flex justify-content-center gap-2 mt-2">
-                        <span class="badge bg-secondary d-none" id="leagueInfluenceText"></span>
+                        <span class="badge bg-secondary" id="leagueInfluenceText">ลีกมาตรฐาน</span>
                         <span class="badge bg-info text-dark" id="confidenceBadge">Confidence: -</span>
                     </div>
                 </div>
@@ -163,7 +156,6 @@
                     </div>
                 </div>
 
-                <!-- ครึ่งแรก (แบบเจาะจง 100%) -->
                 <div class="card p-3">
                     <h6 class="fw-bold text-secondary mb-3">📊 โอกาสเกิดประตูครึ่งแรก (เจาะจงจำนวน)</h6>
                     <div class="row g-3">
@@ -198,7 +190,6 @@
         let searchTimeout;
         let currentLeagueModifier = 1.0;
         let currentLeagueText = "ลีกมาตรฐาน";
-        let isManualSelect = false;
         let currentLeagueAvgGoals = 2.7;
 
         const XG_WEIGHTS = { SOT: 0.50, OFF_TARGET: 0.04, DANGEROUS: 0.015, POSSESSION: 0.003 };
@@ -206,16 +197,43 @@
         const RED_CARD_DEFENSE_MULT = 1.22;
         const FIRST_HALF_RATIO = 0.45;
 
-        const LEAGUE_DB = {
-            "EPL": { name: "พรีเมียร์ลีก", mod: 1.00, avg: 2.85 }, "CHAMPIONSHIP": { name: "แชมเปี้ยนชิพ", mod: 1.05, avg: 2.65 },
-            "LA_LIGA": { name: "ลาลีกา", mod: 1.00, avg: 2.50 }, "BUNDESLIGA": { name: "บุนเดสลีกา", mod: 1.15, avg: 3.10 },
-            "SERIE_A": { name: "เซเรีย อา", mod: 0.90, avg: 2.60 }, "LIGUE_1": { name: "ลีกเอิง", mod: 0.95, avg: 2.70 },
-            "EREDIVISIE": { name: "เอเรอดีวีซี", mod: 1.15, avg: 3.20 }, "PRIMEIRA_LIGA": { name: "ลีกา โปรตุเกส", mod: 0.95, avg: 2.50 },
-            "THAI_LEAGUE": { name: "ไทยลีก", mod: 1.10, avg: 2.90 }, "J1_LEAGUE": { name: "เจลีก", mod: 1.00, avg: 2.60 },
-            "AFC_CL2": { name: "เอเอฟซี CL2", mod: 0.95, avg: 2.50 }, "ARGENTINA": { name: "อาร์เจนตินา", mod: 0.85, avg: 2.30 },
-            "MLS": { name: "เมเจอร์ลีก", mod: 1.15, avg: 3.10 }, "AUS_CHAMPIONSHIP": { name: "ออสเตรเลีย", mod: 1.10, avg: 2.80 }
-        };
+        // ระบบประเมินลีกจากคำที่พิมพ์
+        function handleLeagueInput() {
+            const input = document.getElementById('leagueInput').value.trim().toLowerCase();
+            const resultEl = document.getElementById('leagueResult');
+            
+            if (!input) {
+                currentLeagueModifier = 1.0;
+                currentLeagueAvgGoals = 2.7;
+                currentLeagueText = "ลีกมาตรฐาน";
+                resultEl.innerHTML = '<span class="text-muted" style="font-size: 0.75rem;">ระบบจะประเมินจากชื่อลีก</span>';
+                return;
+            }
 
+            // ตรวจหาคำสำคัญในชื่อลีก
+            if (input.includes('bundesliga') || input.includes('eredivisie') || input.includes('mls') || input.includes('major league soccer')) {
+                currentLeagueModifier = 1.15; currentLeagueAvgGoals = 3.10; currentLeagueText = "ลีกเน้นรุก (เกมเปิด)";
+                resultEl.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> ตรวจพบ: ลีกเน้นรุก</span>`;
+            } 
+            else if (input.includes('serie a') || input.includes('ligue 1') || input.includes('argentina') || input.includes('colombia')) {
+                currentLeagueModifier = 0.90; currentLeagueAvgGoals = 2.40; currentLeagueText = "ลีกเน้นรับ (เกมปิด)";
+                resultEl.innerHTML = `<span class="text-danger fw-bold"><i class="bi bi-exclamation-circle-fill"></i> ตรวจพบ: ลีกเน้นรับ</span>`;
+            } 
+            else if (input.includes('thai') || input.includes('ไทย')) {
+                currentLeagueModifier = 1.10; currentLeagueAvgGoals = 2.90; currentLeagueText = "ไทยลีก";
+                resultEl.innerHTML = `<span class="text-primary fw-bold"><i class="bi bi-geo-alt-fill"></i> ตรวจพบ: ไทยลีก</span>`;
+            }
+            else if (input.includes('j1') || input.includes('เจลีก') || input.includes('japan')) {
+                currentLeagueModifier = 1.00; currentLeagueAvgGoals = 2.60; currentLeagueText = "เจลีก";
+                resultEl.innerHTML = `<span class="text-primary fw-bold"><i class="bi bi-geo-alt-fill"></i> ตรวจพบ: เจลีก</span>`;
+            }
+            else {
+                currentLeagueModifier = 1.0; currentLeagueAvgGoals = 2.7; currentLeagueText = `ลีกกำหนดเอง (${document.getElementById('leagueInput').value})`;
+                resultEl.innerHTML = `<span class="text-secondary fw-bold"><i class="bi bi-pencil-fill"></i> ใช้ค่ามาตรฐาน</span>`;
+            }
+        }
+
+        // ค้นหาชื่อทีม (TheSportsDB) - ยังคงมีไว้เพื่อเป็นข้อมูลเสริม
         function debounceSearch() {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
@@ -224,17 +242,12 @@
                 let teamToSearch = "";
                 if (homeTeam && homeTeam !== 'ทีมเหย้า') teamToSearch = homeTeam;
                 else if (awayTeam && awayTeam !== 'ทีมเยือน') teamToSearch = awayTeam;
-                if (teamToSearch.length > 2) autoSearchLeague(teamToSearch);
-                else if (!isManualSelect) {
-                    document.getElementById('leagueResult').innerHTML = '<span class="text-muted">ค้นหาอัตโนมัติ</span>';
-                    foundLeagueName = "";
-                }
+                
+                if (teamToSearch.length > 2) autoSearchTeam(teamToSearch);
             }, 1000);
         }
 
-        async function autoSearchLeague(teamName) {
-            const resultEl = document.getElementById('leagueResult');
-            resultEl.innerHTML = '<span class="spinner-border spinner-border-sm text-primary"></span>';
+        async function autoSearchTeam(teamName) {
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 3000);
@@ -243,52 +256,17 @@
                 const data = await response.json();
                 if (data.teams && data.teams.length > 0) {
                     const team = data.teams.find(t => t.strSport === 'Soccer') || data.teams[0];
-                    const league = team.strLeague;
-                    if (league && league !== "Unknown") {
-                        foundLeagueName = league;
-                        isManualSelect = false;
-                        document.getElementById('manualLeague').value = "";
-                        resultEl.innerHTML = `<span class="text-success fw-bold text-truncate d-block" title="${league}"><i class="bi bi-check-circle-fill"></i> ${league}</span>`;
-                    } else {
-                        foundLeagueName = "";
-                        resultEl.innerHTML = `<span class="text-warning">ไม่ระบุลีก</span>`;
+                    if (team.strLeague && team.strLeague !== "Unknown") {
+                        // ถ้าผู้ใช้ยังไม่ได้พิมพ์ลีกเอง ให้ระบบดึงชื่อลีกมาใส่ให้
+                        if (!document.getElementById('leagueInput').value.trim()) {
+                            document.getElementById('leagueInput').value = team.strLeague;
+                            handleLeagueInput();
+                        }
                     }
-                } else {
-                    foundLeagueName = "";
-                    resultEl.innerHTML = `<span class="text-secondary">ไม่พบข้อมูล</span>`;
                 }
             } catch (e) {
-                foundLeagueName = "";
-                resultEl.innerHTML = `<span class="text-secondary">ออฟไลน์</span>`;
+                console.log("Team search failed silently");
             }
-        }
-
-        function handleManualLeague() {
-            const key = document.getElementById('manualLeague').value;
-            if (key && LEAGUE_DB[key]) {
-                const league = LEAGUE_DB[key];
-                currentLeagueModifier = league.mod;
-                currentLeagueAvgGoals = league.avg;
-                currentLeagueText = league.name;
-                isManualSelect = true;
-                foundLeagueName = "";
-                document.getElementById('leagueResult').innerHTML = `<span class="text-primary fw-bold"><i class="bi bi-gear-fill"></i> ${league.name}</span>`;
-            } else {
-                isManualSelect = false;
-                currentLeagueModifier = 1.0;
-                currentLeagueAvgGoals = 2.7;
-                currentLeagueText = "ลีกมาตรฐาน";
-                document.getElementById('leagueResult').innerHTML = '<span class="text-muted">ค้นหาอัตโนมัติ</span>';
-            }
-        }
-
-        function getLeagueModifier(leagueName) {
-            if (isManualSelect) return { modifier: currentLeagueModifier, avg: currentLeagueAvgGoals, text: `เลือกเอง: ${currentLeagueText}` };
-            if (!leagueName) return { modifier: 1.0, avg: 2.7, text: "ไม่ได้ระบุลีก" };
-            const l = leagueName.toLowerCase();
-            if (l.includes('bundesliga') || l.includes('eredivisie') || l.includes('mls')) return { modifier: 1.15, avg: 3.10, text: `ลีกเน้นรุก` };
-            if (l.includes('serie a') || l.includes('ligue 1') || l.includes('argentina')) return { modifier: 0.90, avg: 2.40, text: `ลีกเน้นรับ` };
-            return { modifier: 1.0, avg: 2.7, text: `ลีกมาตรฐาน` };
         }
 
         async function processImage(event) {
@@ -344,7 +322,7 @@
         }
 
         function calculateFirstHalfProb(xgH, xgA, minute, cH, cA) {
-            if (minute >= 45) return { isPast: true, probHome: cH>0?100:0, probTotal: (cH+cA)>0?100:0, probAway: cA>0?100:0, exact0: (cH+cA)===0?100:0, exact1: (cH+cA)===1?100:0, exact2: (cH+cA)===2?100:0, exact3plus: (cH+cA)>=3?100:0, xgHomeFH: 0, xgAwayFH: 0, remainingFH: 0 };
+            if (minute >= 45) return { isPast: true, probHome: cH>0?100:0, probTotal: (cH+cA)>0?100:0, probAway: cA>0?100:0, exact0: (cH+cA)===0?100:0, exact1: (cH+cA)===1?100:0, exact2: (cH+cA)===2?100:0, xgHomeFH: 0, xgAwayFH: 0, remainingFH: 0 };
             
             const fhXgHome = xgH * FIRST_HALF_RATIO, fhXgAway = xgA * FIRST_HALF_RATIO;
             const remainingFH = Math.max(0, 45 - minute), timeRatioFH = remainingFH / 45;
@@ -358,13 +336,12 @@
             }
             fhGrid.forEach(x => x.p /= fhTotal);
             
-            let p0 = 0, p1 = 0, p2 = 0, p3plus = 0;
+            let p0 = 0, p1 = 0, p2 = 0;
             for (const s of fhGrid) {
                 const totalGoals = s.h + s.a;
                 if (totalGoals === 0) p0 += s.p;
                 else if (totalGoals === 1) p1 += s.p;
                 else if (totalGoals === 2) p2 += s.p;
-                else p3plus += s.p;
             }
 
             return { 
@@ -375,7 +352,6 @@
                 exact0: p0 * 100, 
                 exact1: p1 * 100, 
                 exact2: p2 * 100, 
-                exact3plus: p3plus * 100, 
                 xgHomeFH, 
                 xgAwayFH, 
                 remainingFH 
@@ -440,9 +416,8 @@
             if (totalAttack < 0.1) { alert('กรุณากรอกสถิติก่อนวิเคราะห์'); return; }
 
             const hRatio = hAttack / totalAttack, aRatio = aAttack / totalAttack;
-            const leagueInfo = getLeagueModifier(foundLeagueName);
             
-            const baseXgPerMin = (leagueInfo.avg / 90) * leagueInfo.modifier;
+            const baseXgPerMin = (currentLeagueAvgGoals / 90) * currentLeagueModifier;
             const avgTw = avgTimeWeight(minute, remaining);
             let expectedGoals = baseXgPerMin * remaining * avgTw;
             let xgH = expectedGoals * hRatio, xgA = expectedGoals * aRatio;
@@ -489,9 +464,8 @@
             document.getElementById('displayRemaining').innerText = remaining;
 
             const leagueText = document.getElementById('leagueInfluenceText');
-            leagueText.classList.remove('d-none');
-            leagueText.innerText = leagueInfo.text;
-            leagueText.className = leagueInfo.modifier > 1.0 ? "badge bg-success" : leagueInfo.modifier < 1.0 ? "badge bg-danger" : "badge bg-secondary";
+            leagueText.innerText = currentLeagueText;
+            leagueText.className = currentLeagueModifier > 1.0 ? "badge bg-success" : currentLeagueModifier < 1.0 ? "badge bg-danger" : "badge bg-secondary";
 
             const confBadge = document.getElementById('confidenceBadge');
             confBadge.innerText = `Confidence: ${confidence}%`;
@@ -530,9 +504,19 @@
                 document.getElementById('fhOver25Bar').className = fh.exact2 === 100 ? 'progress-bar bg-success' : 'progress-bar bg-danger';
 
             } else {
-                document.getElementById('fhProbHome').innerText = fh.probHome.toFixed(1) + '%';
-                document.getElementById('fhProbTotal').innerText = fh.probTotal.toFixed(1) + '%';
-                document.getElementById('fhProbAway').innerText = fh.probAway.toFixed(1) + '%';
+                // ✅ Normalize ค่า ครึ่งแรก (เหย้า, รวม, เยือน) ให้รวมเป็น 100%
+                const fhSum = fh.probHome + fh.probTotal + fh.probAway;
+                let normFhHome = 0, normFhTotal = 0, normFhAway = 0;
+                
+                if (fhSum > 0) {
+                    normFhHome = (fh.probHome / fhSum) * 100;
+                    normFhTotal = (fh.probTotal / fhSum) * 100;
+                    normFhAway = (fh.probAway / fhSum) * 100;
+                }
+
+                document.getElementById('fhProbHome').innerText = normFhHome.toFixed(1) + '%';
+                document.getElementById('fhProbTotal').innerText = normFhTotal.toFixed(1) + '%';
+                document.getElementById('fhProbAway').innerText = normFhAway.toFixed(1) + '%';
                 
                 // ✅ Normalize ค่า exact0, exact1, exact2 ให้รวมเป็น 100%
                 const sumGoalEvents = fh.exact0 + fh.exact1 + fh.exact2;
