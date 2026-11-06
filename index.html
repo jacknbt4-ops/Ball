@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v2.8 - Stable Live API</title>
+    <title>⚽ JackAI Scanner v2.9 - Pro Analytics</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
@@ -48,8 +48,8 @@
 
     <nav class="navbar navbar-dark bg-dark px-3 py-2 shadow-sm border-bottom border-secondary">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-5 text-light">⚽ JackAI Scanner v2.8</span>
-            <span class="text-muted small d-none d-sm-block">Stable Live API & OCR Hybrid</span>
+            <span class="navbar-brand mb-0 h1 fs-5 text-light">⚽ JackAI Scanner v2.9</span>
+            <span class="text-muted small d-none d-sm-block">Pro Analytics & Smart API</span>
         </div>
     </nav>
 
@@ -62,7 +62,7 @@
                     <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary" value="ทีมเยือน" placeholder="ทีมเยือน"></div>
                 </div>
 
-                <!-- 🔥 ส่วนใหม่: API Integration (เปลี่ยนเป็น Dropdown เลือกคู่) -->
+                <!-- 🔥 ระบบ API Integration -->
                 <div class="mb-3 p-2 rounded border border-info bg-dark">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <label class="small text-info fw-bold mb-0"><i class="bi bi-cloud-download"></i> ดึงข้อมูลสดจาก API จริง</label>
@@ -74,11 +74,10 @@
                         <button class="btn btn-info fw-bold text-dark" type="button" onclick="loadLiveMatches()" id="btnLoadLive"><i class="bi bi-arrow-repeat"></i> โหลดคู่สด</button>
                     </div>
                     
-                    <!-- Dropdown สำหรับเลือกคู่ที่กำลังแข่ง -->
                     <select id="liveMatchSelect" class="form-select form-select-sm" onchange="onSelectLiveMatch()" disabled>
                         <option value="">-- กดปุ่ม "โหลดคู่สด" เพื่อดึงรายชื่อ --</option>
                     </select>
-                    <div id="apiStatus" class="mt-1 text-muted" style="font-size:0.68rem;">พร้อมใช้งาน</div>
+                    <div id="apiStatus" class="mt-1 text-muted" style="font-size:0.68rem;">พร้อมใช้งาน (ระบบจะดึงบุกอันตรายให้อัตโนมัติ)</div>
                 </div>
 
                 <div class="row g-2 mb-2">
@@ -143,7 +142,6 @@
                     </div>
                 </div>
 
-                <!-- 📌 ช่องป้อนราคาพูลสดสำหรับสูตร Kelly -->
                 <div class="row g-2 mb-3 p-2 rounded border border-secondary bg-dark">
                     <div class="col-12"><label class="small text-light fw-bold mb-1">📈 ราคาพูลบ่อนสด (Live 1X2 Bookmaker Odds)</label></div>
                     <div class="col-4"><input type="number" id="odds_home" class="form-control form-control-sm" step="0.01" placeholder="เหย้า (1)" value="2.10"></div>
@@ -153,7 +151,6 @@
 
                 <button type="button" class="btn btn-danger w-100 fw-bold shadow-sm rounded-pill mb-3" onclick="predictMatch()">🔮 ประมวลผลคาดการณ์</button>
 
-                <!-- 📝 ประวัติล็อก -->
                 <div class="mt-1">
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <label class="small text-secondary fw-bold">📝 ประวัติล็อกแมตช์</label>
@@ -164,7 +161,7 @@
             </div>
         </div>
 
-        <!-- ฝั่งขวา: การแสดงผลการวิเคราะห์และคาดการณ์ (เหมือนเดิม) -->
+        <!-- ฝั่งขวา: การแสดงผลการวิเคราะห์และคาดการณ์ -->
         <div class="right-panel">
             <div id="resultsArea" class="d-flex flex-column gap-2 h-100 d-none">
                 <div class="card p-3 bg-dark text-white text-center position-relative border border-secondary">
@@ -275,10 +272,10 @@
         let currentLeagueText = "ลีกมาตรฐาน";
         let currentLeagueAvgGoals = 2.70;
         let globalLogString = "";
-        let fetchedMatchesCache = []; // เก็บข้อมูลแมตช์ที่ดึงมา
+        let fetchedMatchesCache = [];
 
         // ==========================================
-        // 🔥 ระบบดึงข้อมูลจาก API (เวอร์ชันใหม่)
+        // 🔥 ระบบดึงข้อมูลจาก API (Smart API v2.9)
         // ==========================================
         const API_BASE_URL = 'https://v3.football.api-sports.io';
 
@@ -315,7 +312,6 @@
                 fetchedMatchesCache = data.response;
                 selectEl.innerHTML = '<option value="">-- เลือกคู่ที่กำลังเตะ --</option>';
                 
-                // สร้าง Dropdown จากรายชื่อแมตช์ที่ดึงมา
                 data.response.forEach((match, index) => {
                     const home = match.teams.home.name;
                     const away = match.teams.away.name;
@@ -348,7 +344,6 @@
             
             statusEl.innerHTML = '<span class="spinner-border spinner-border-sm text-info"></span> กำลังดึงสถิติละเอียด...';
 
-            // 1. เติมข้อมูลพื้นฐานทันที
             document.getElementById('home_name').value = match.teams.home.name;
             document.getElementById('away_name').value = match.teams.away.name;
             document.getElementById('leagueInput').value = match.league.name;
@@ -357,7 +352,6 @@
             document.getElementById('current_home_score').value = match.goals.home || 0;
             document.getElementById('current_away_score').value = match.goals.away || 0;
 
-            // 2. ดึงสถิติแบบละเอียด (ครองบอล, ยิง)
             try {
                 const statsRes = await fetch(`${API_BASE_URL}/fixtures/statistics?fixture=${match.fixture.id}`, {
                     headers: { 'x-apisports-key': apiKey }
@@ -373,14 +367,12 @@
                         return s && s.value ? (typeof s.value === 'string' ? parseInt(s.value.replace('%','')) : s.value) : 0;
                     };
 
-                    // ครองบอล
                     const hPoss = getStat(homeStats, 'Ball Possession');
                     if (hPoss > 0) {
                         document.getElementById('poss_slider').value = hPoss;
                         updatePossession();
                     }
 
-                    // ยิง / ยิงตรงกรอบ / ใบแดง
                     document.getElementById('h_shots').value = getStat(homeStats, 'Total Shots');
                     document.getElementById('a_shots').value = getStat(awayStats, 'Total Shots');
                     document.getElementById('h_sot').value = getStat(homeStats, 'Shots on Goal');
@@ -388,22 +380,26 @@
                     document.getElementById('red_home').value = getStat(homeStats, 'Red Cards');
                     document.getElementById('red_away').value = getStat(awayStats, 'Red Cards');
                     
-                    // API ไม่มี Dangerous Attacks ต้องปล่อยให้Userกรอกเอง (ตั้งเป็น 0)
-                    document.getElementById('h_dang').value = 0;
-                    document.getElementById('a_dang').value = 0;
+                    // 🔥 [Smart API] คำนวณ Dangerous Attacks จาก (Shots insidebox * 2) + Corners + 5
+                    const hInside = getStat(homeStats, 'Shots insidebox');
+                    const aInside = getStat(awayStats, 'Shots insidebox');
+                    const hCorners = getStat(homeStats, 'Corner Kicks');
+                    const aCorners = getStat(awayStats, 'Corner Kicks');
+                    
+                    document.getElementById('h_dang').value = (hInside * 2) + hCorners + 5;
+                    document.getElementById('a_dang').value = (aInside * 2) + aCorners + 5;
                 }
-                statusEl.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> ดึงสถิติสำเร็จ! (กรอก Dangerous Attacks เพิ่มถ้าต้องการ)</span>`;
-                
-                // เลื่อนหน้าจอไปที่ปุ่มคำนวณ
+                statusEl.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> ดึงสถิติสำเร็จ! (คำนวณ Dangerous Attacks ให้แล้ว)</span>`;
                 document.getElementById('match_minute').scrollIntoView({behavior: "smooth", block: "center"});
                 
             } catch (e) {
                 statusEl.innerHTML = `<span class="text-warning">ดึงสถิติละเอียดไม่สำเร็จ แต่ข้อมูลพื้นฐานถูกเติมแล้ว</span>`;
             }
         }
-        // ==========================================
 
-        // 📊 Matrix ฐานข้อมูล League Constants
+        // ==========================================
+        // 📊 ฐานข้อมูลลีก (อัปเดต v2.9)
+        // ==========================================
         const LEAGUE_CONSTANTS = {
             'premier league': { name: "พรีเมียร์ลีกอังกฤษ", goals: 3.24, mod: 1.20 },
             'championship': { name: "แชมเปี้ยนชิพ อังกฤษ", goals: 2.68, mod: 0.98 },
@@ -416,8 +412,21 @@
             'thai league': { name: "ไทยลีก", goals: 2.95, mod: 1.10 },
             'ไทยลีก': { name: "ไทยลีก", goals: 2.95, mod: 1.10 },
             'j1 league': { name: "เจลีก J1", goals: 2.65, mod: 0.98 },
+            'j2 league': { name: "เจลีก J2", goals: 2.45, mod: 0.92 },
+            'j3 league': { name: "เจลีก J3", goals: 2.50, mod: 0.95 },
             'เจลีก': { name: "เจลีก J1", goals: 2.65, mod: 0.98 },
-            'k league': { name: "เคลีก เกาหลีใต้", goals: 2.55, mod: 0.94 }
+            'k league': { name: "เคลีก เกาหลีใต้", goals: 2.55, mod: 0.94 },
+            // อัปเดตเพิ่มลีกที่คุณเจอ
+            'liga de expansión mx': { name: "ลีกา เด เอ็กซ์แพนชั่น (เม็กซิโก)", goals: 2.60, mod: 0.95 },
+            'liga mx': { name: "ลีกา เอ็มเอ็กซ์ (เม็กซิโก)", goals: 2.85, mod: 1.05 },
+            'indian super league': { name: "อินเดีย ซูเปอร์ ลีก", goals: 2.80, mod: 1.05 },
+            'karnataka': { name: "อินเดีย คาร์นาตากา", goals: 2.90, mod: 1.10 },
+            'brazil serie a': { name: "บราซิล ซีรี่ส์ เอ", goals: 2.45, mod: 0.90 },
+            'brasileirao': { name: "บราซิล ซีรี่ส์ เอ", goals: 2.45, mod: 0.90 },
+            'argentina': { name: "อาร์เจนตินา ลีกา", goals: 2.30, mod: 0.85 },
+            'uefa europa': { name: "ยูฟ่า ยูโรปา ลีก", goals: 2.80, mod: 1.00 },
+            'uefa conference': { name: "ยูฟ่า คอนเฟอเรนซ์", goals: 2.75, mod: 1.00 },
+            'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98 }
         };
 
         const XG_WEIGHTS = { SOT: 0.52, OFF_TARGET: 0.05, DANGEROUS: 0.016, POSSESSION: 0.0035 };
@@ -540,9 +549,25 @@
 
             const hRatio = hAttack / totalAttack, aRatio = aAttack / totalAttack;
             
+            // 🔥 [NEW v2.9] คำนวณ Tempo Modifier (ความดุเดือด)
+            let tempoModifier = 1.0;
+            if (minute > 15) { 
+                const currentGoalRate = currentTotalGoals / minute; 
+                const normalGoalRate = (currentLeagueAvgGoals / 90);
+                
+                if (currentGoalRate > normalGoalRate) {
+                    tempoModifier = 1 + (currentGoalRate - normalGoalRate) * 20; 
+                    tempoModifier = Math.min(1.5, tempoModifier); 
+                } else if (currentTotalGoals === 0 && minute > 45) {
+                    tempoModifier = 0.85; 
+                }
+            }
+
             const baseXgPerMin = (currentLeagueAvgGoals / 90) * currentLeagueModifier;
             const avgTw = avgTimeWeight(minute, remaining);
-            let expectedGoals = baseXgPerMin * remaining * avgTw;
+            
+            let expectedGoals = baseXgPerMin * remaining * avgTw * tempoModifier; 
+            
             let xgH = expectedGoals * hRatio, xgA = expectedGoals * aRatio;
 
             const diff = cH - cA;
