@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v4.6 - Compact</title>
+    <title>⚽ JackAI Scanner v4.9 - Manual Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
     <style>
         html, body {
             margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
@@ -59,15 +58,12 @@
         .warn-box { background: #fff3cd; border: 1px solid #ffecb5; border-radius: 4px; padding: 4px 8px; font-size: 0.75rem; color: #856404; }
         .xh-highlight { font-size: 0.7rem; background: #e9ecef; padding: 5px; border-radius: 6px; border: 1px solid #ced4da; color: #495057; }
         
-        #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
-        
         ::-webkit-scrollbar { width: 4px; height: 4px; } 
         ::-webkit-scrollbar-track { background: transparent; } 
         ::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #adb5bd; }
         
         input[type=range] { height: 4px; padding: 0; cursor: pointer; }
-
         .bg-dark { background-color: #f1f3f5 !important; color: #212529 !important; }
         .text-light { color: #212529 !important; }
         .border-secondary { border-color: #dee2e6 !important; }
@@ -75,16 +71,10 @@
     </style>
 </head>
 <body>
-    <div id="loadingOverlay">
-        <div class="spinner-border text-primary mb-2" style="width: 2rem; height: 2rem;" role="status"></div>
-        <h6 class="fw-bold text-dark">🤖 กำลังประมวลผล...</h6>
-        <p class="text-muted small" id="ocrProgress" style="font-size: 0.75rem;">กำลังเตรียมการ...</p>
-    </div>
-
     <nav class="navbar navbar-light bg-white px-3 shadow-sm border-bottom navbar-custom">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">⚽ JackAI Scanner v4.6</span>
-            <span class="text-muted d-none d-sm-block" style="font-size: 0.75rem;">Compact Edition</span>
+            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">⚽ JackAI Scanner v4.9</span>
+            <span class="text-muted d-none d-sm-block" style="font-size: 0.75rem;">Manual Entry Edition</span>
         </div>
     </nav>
 
@@ -97,25 +87,110 @@
                     <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary" value="ทีมเยือน" placeholder="ทีมเยือน"></div>
                 </div>
 
-                <!-- API Integration -->
-                <div class="mb-2 p-2 rounded border bg-light">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <label class="text-primary fw-bold mb-0" style="font-size: 0.7rem;"><i class="bi bi-cloud-download"></i> ดึงข้อมูลสดจาก API</label>
-                        <a href="https://dashboard.api-football.com/register" target="_blank" class="text-muted text-decoration-none" style="font-size:0.6rem;">ขอ Key ฟรี</a>
-                    </div>
-                    <div class="input-group input-group-sm mb-1">
-                        <input type="password" id="apiKey" class="form-control form-control-sm" placeholder="ใส่ API Key ที่นี่" value="c872e2aa1f4de699be00ec8164e0556b">
-                        <button class="btn btn-primary fw-bold text-white btn-sm" type="button" onclick="loadLiveMatches()" id="btnLoadLive" style="font-size: 0.75rem;"><i class="bi bi-arrow-repeat"></i> โหลด</button>
-                    </div>
-                    <select id="liveMatchSelect" class="form-select form-select-sm" onchange="onSelectLiveMatch()" disabled>
-                        <option value="">-- กดปุ่ม "โหลด" เพื่อดึงรายชื่อ --</option>
-                    </select>
-                    <div id="apiStatus" class="mt-1 text-muted" style="font-size:0.65rem;">พร้อมใช้งาน</div>
-                </div>
-
+                <!-- ลีกและแฮนดิแคป -->
                 <div class="row g-1 mb-1">
                     <div class="col-7">
-                        <input type="text" id="leagueInput" class="form-control form-control-sm" placeholder="ชื่อลีก..." oninput="handleLeagueInput()">
+                        <select id="leagueInput" class="form-select form-select-sm fw-bold text-info" onchange="handleLeagueInput()">
+                            <option value="default">-- เลือกลีก --</option>
+                            <optgroup label="🏴󠁧󠁢󠁥󠁮󠁧󠁿 อังกฤษ (England)">
+                                <option value="premier league">พรีเมียร์ลีก (Premier League)</option>
+                                <option value="championship">แชมเปี้ยนชิพ (Championship)</option>
+                            </optgroup>
+                            <optgroup label="🇪🇸 สเปน (Spain)">
+                                <option value="la liga">ลาลีกา (La Liga)</option>
+                            </optgroup>
+                            <optgroup label="🇩🇪 เยอรมนี (Germany)">
+                                <option value="bundesliga">บุนเดสลีกา (Bundesliga)</option>
+                            </optgroup>
+                            <optgroup label="🇮🇹 อิตาลี (Italy)">
+                                <option value="serie a">เซเรียอา (Serie A)</option>
+                            </optgroup>
+                            <optgroup label="🇫🇷 ฝรั่งเศส (France)">
+                                <option value="ligue 1">ลีกเอิง (Ligue 1)</option>
+                            </optgroup>
+                            <optgroup label="🇳🇱 เนเธอร์แลนด์ (Netherlands)">
+                                <option value="eredivisie">เอเรดิวิซี (Eredivisie)</option>
+                            </optgroup>
+                            <optgroup label="🇹🇭 ไทย (Thailand)">
+                                <option value="thai league">ไทยลีก (Thai League)</option>
+                                <option value="thailand league 1">ไทยแลนด์ ลีก 1 (Thailand League 1)</option>
+                            </optgroup>
+                            <optgroup label="🇯🇵 ญี่ปุ่น (Japan)">
+                                <option value="j1 league">เจลีก J1 (J1 League)</option>
+                                <option value="j2 league">เจลีก J2 (J2 League)</option>
+                            </optgroup>
+                            <optgroup label="🇰🇷 เกาหลีใต้ (South Korea)">
+                                <option value="k league">เคลีก (K League)</option>
+                            </optgroup>
+                            <optgroup label="🇺🇸 สหรัฐอเมริกา (USA)">
+                                <option value="mls">เมเจอร์ลีกซอกเกอร์ (MLS)</option>
+                            </optgroup>
+                            <optgroup label="🇮🇳 อินเดีย (India)">
+                                <option value="indian super league">อินเดีย ซูเปอร์ ลีก (Indian Super League)</option>
+                                <option value="india football league">อินเดีย ฟุตบอล ลีก (India Football League)</option>
+                            </optgroup>
+                            <optgroup label="🇮🇱 อิสราเอล (Israel)">
+                                <option value="israel liga alif">อิสราเอล ลีกา อลีฟ (Israel Liga Alif)</option>
+                                <option value="israel liga leumit">อิสราเอล ลีกา ลีมิต (Israel Liga Leumit)</option>
+                            </optgroup>
+                            <optgroup label="🇵🇱 โปแลนด์ (Poland)">
+                                <option value="poland liga 3">โปแลนด์ ลีกา 3 (Poland Liga 3)</option>
+                            </optgroup>
+                            <optgroup label="🇦🇲 อาร์มีเนีย (Armenia)">
+                                <option value="armenia premier league">อาร์มีเนีย พรีเมียร์ ลีก (Armenia Premier League)</option>
+                            </optgroup>
+                            <optgroup label="🇺🇦 ยูเครน (Ukraine)">
+                                <option value="ukraine premier league">ยูเครน พรีเมียร์ ลีก (Ukraine Premier League)</option>
+                            </optgroup>
+                            <optgroup label="🇻🇳 เวียดนาม (Vietnam)">
+                                <option value="vietnam league 1">เวียดนาม ลีก 1 (Vietnam League 1)</option>
+                            </optgroup>
+                            <optgroup label="🇮🇩 อินโดนีเซีย (Indonesia)">
+                                <option value="indonesia super league">อินโดนีเซีย ซูเปอร์ ลีก (Indonesia Super League)</option>
+                            </optgroup>
+                            <optgroup label="🇲🇰 นอร์ท มาซิโดเนีย (North Macedonia)">
+                                <option value="north macedonia first league">นอร์ท มาซิโดเนีย เฟิร์ส ลีก (North Macedonia First League)</option>
+                            </optgroup>
+                            <optgroup label="🇷🇴 โรมาเนีย (Romania)">
+                                <option value="romania liga 3">โรมาเนีย ลีกา 3 (Romania Liga 3)</option>
+                            </optgroup>
+                            <!-- ลีกที่เพิ่มใหม่ -->
+                            <optgroup label="🇪🇬 อียิปต์ (Egypt)">
+                                <option value="egypt cup">อียิปต์ คัพ (Egypt Cup)</option>
+                            </optgroup>
+                            <optgroup label="🇸🇦 ซาอุดีอาระเบีย (Saudi Arabia)">
+                                <option value="saudi division 2">ซาอุฯ ดิวิชั่น 2 (Saudi Division 2)</option>
+                            </optgroup>
+                            <optgroup label="🇦🇪 สหรัฐอาหรับเอมิเรตส์ (UAE)">
+                                <option value="uae division 1">ยูเออี ดิวิชั่น 1 (UAE Division 1)</option>
+                            </optgroup>
+                            <optgroup label="🇸🇮 สโลวีเนีย (Slovenia)">
+                                <option value="slovenia division 2">สโลวีเนีย ดิวิชั่น 2 (Slovenia Division 2)</option>
+                            </optgroup>
+                            <optgroup label="🇮🇷 อิหร่าน (Iran)">
+                                <option value="iran pro league">อิหร่าน โปร ลีก (Iran Pro League)</option>
+                            </optgroup>
+                            <optgroup label="🇭🇷 โครเอเชีย (Croatia)">
+                                <option value="croatia prva liga">โครเอเชีย พีอาร์วีเอ ลีก้า (Croatia Prva Liga)</option>
+                            </optgroup>
+                            <optgroup label="🇺🇿 อุซเบกิสถาน (Uzbekistan)">
+                                <option value="uzbekistan super league">อุซเบกิสถาน ซุปเปอร์ ลีก (Uzbekistan Super League)</option>
+                            </optgroup>
+                            <optgroup label="🇯🇴 จอร์แดน (Jordan)">
+                                <option value="jordan pro league">จอร์แดน โปร ลีก (Jordan Pro League)</option>
+                            </optgroup>
+                            <optgroup label="🇦🇿 อาร์เซอร์ไบจาน (Azerbaijan)">
+                                <option value="azerbaijan premier league">อาร์เซอร์ไบจัน พรีเมียร์ ลีก (Azerbaijan Premier League)</option>
+                            </optgroup>
+                            <!-- ลีกอื่นๆ -->
+                            <optgroup label="🌎 ลีกอื่นๆ (Other)">
+                                <option value="brazil serie a">บราซิล ซีรี่ส์ เอ</option>
+                                <option value="argentina">อาร์เจนตินา ลีกา</option>
+                                <option value="uefa europa">ยูฟ่า ยูโรปา ลีก</option>
+                                <option value="uefa conference">ยูฟ่า คอนเฟอเรนซ์</option>
+                                <option value="afc champions">เอเอฟซี แชมเปี้ยนส์ ลีก</option>
+                            </optgroup>
+                        </select>
                     </div>
                     <div class="col-5">
                         <select id="handicapSelect" class="form-select form-select-sm text-warning fw-bold">
@@ -128,11 +203,15 @@
                             <option value="1.5">AH: 1.5</option>
                             <option value="1.75">AH: 1.75</option>
                             <option value="2.0">AH: 2.0</option>
+                            <option value="-0.25">AH: -0.25</option>
+                            <option value="-0.5">AH: -0.5</option>
+                            <option value="-0.75">AH: -0.75</option>
+                            <option value="-1.0">AH: -1.0</option>
                         </select>
                     </div>
                 </div>
                 <div id="leagueResult" class="mb-2" style="font-size: 0.65rem;">
-                    <span class="text-muted">ระบบจะประเมินจากชื่อลีกโดยอัตโนมัติ</span>
+                    <span class="text-muted">ระบบจะปรับค่าสถิติตามลีกที่เลือก</span>
                 </div>
 
                 <div class="row g-1 mb-1">
@@ -204,7 +283,7 @@
                 <div id="inputWarning" class="warn-box d-none py-1"><strong>⚠️ คำเตือน:</strong> <span id="inputWarningText"></span></div>
                 <div id="redCardImpactArea" class="alert alert-danger py-1 mb-0 d-none" style="font-size: 0.75rem;"><strong>🟥 ใบแดง:</strong> <span id="redImpactText"></span></div>
 
-                <!-- Live Asian Handicap (ขยายเต็มแถว) -->
+                <!-- Live Asian Handicap -->
                 <div class="card p-2">
                     <h6 class="fw-bold text-warning mb-1 text-center" style="font-size: 0.8rem;">Live Asian Handicap Probs</h6>
                     <div class="p-1 bg-light rounded border text-center mb-1">
@@ -279,7 +358,7 @@
             
             <div id="emptyState" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted card border p-5 bg-white">
                 <i class="bi bi-cpu-fill text-secondary mb-3" style="font-size: 4rem; opacity: 0.3;"></i>
-                <h6 class="text-dark">ดึงข้อมูลหรือกรอกสถิติ แล้วกดประมวลผล</h6>
+                <h6 class="text-dark">กรอกข้อมูลสถิติ และเลือกลีก แล้วกดประมวลผล</h6>
                 <p class="text-secondary" style="font-size: 0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้</p>
             </div>
         </div>
@@ -289,147 +368,6 @@
         let currentLeagueModifier = 1.0;
         let currentLeagueText = "ลีกมาตรฐาน";
         let currentLeagueAvgGoals = 2.70;
-        let fetchedMatchesCache = [];
-
-        const API_BASE_URL = 'https://v3.football.api-sports.io';
-
-        async function loadLiveMatches() {
-            const apiKey = document.getElementById('apiKey').value.trim();
-            const statusEl = document.getElementById('apiStatus');
-            const selectEl = document.getElementById('liveMatchSelect');
-            const btn = document.getElementById('btnLoadLive');
-            
-            if (!apiKey) {
-                statusEl.innerHTML = '<span class="text-danger">กรุณากรอก API Key ก่อนครับ</span>';
-                return;
-            }
-
-            statusEl.innerHTML = '<span class="spinner-border spinner-border-sm text-primary"></span> กำลังดึงรายชื่อแมตช์สด...';
-            btn.disabled = true;
-            selectEl.innerHTML = '<option value="">กำลังโหลด...</option>';
-            
-            try {
-                const res = await fetch(`${API_BASE_URL}/fixtures?live=all`, {
-                    headers: { 'x-apisports-key': apiKey }
-                });
-                
-                if (!res.ok) throw new Error('API Key ไม่ถูกต้อง หรือโควต้าหมด');
-                const data = await res.json();
-                
-                if (!data.response || data.response.length === 0) {
-                    statusEl.innerHTML = '<span class="text-warning">ตอนนี้ไม่มีแมตช์ที่กำลังเตะอยู่จริงๆ</span>';
-                    selectEl.innerHTML = '<option value="">-- ไม่มีแมตช์สด --</option>';
-                    btn.disabled = false;
-                    return;
-                }
-
-                fetchedMatchesCache = data.response;
-                selectEl.innerHTML = '<option value="">-- เลือกคู่ที่กำลังเตะ --</option>';
-                
-                data.response.forEach((match, index) => {
-                    const home = match.teams.home.name;
-                    const away = match.teams.away.name;
-                    const score = `${match.goals.home ?? 0} - ${match.goals.away ?? 0}`;
-                    const min = match.fixture.status.elapsed;
-                    const league = match.league.name;
-                    
-                    selectEl.innerHTML += `<option value="${index}">[${min}'] ${home} ${score} ${away} (${league})</option>`;
-                });
-                
-                selectEl.disabled = false;
-                statusEl.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> พบ ${data.response.length} แมตช์สด! เลือกคู่ที่ต้องการได้เลย</span>`;
-                btn.disabled = false;
-
-            } catch (error) {
-                console.error(error);
-                statusEl.innerHTML = `<span class="text-danger">ดึงข้อมูลไม่สำเร็จ: ${error.message}</span>`;
-                selectEl.innerHTML = '<option value="">-- เกิดข้อผิดพลาด --</option>';
-                btn.disabled = false;
-            }
-        }
-
-        async function onSelectLiveMatch() {
-            const index = document.getElementById('liveMatchSelect').value;
-            if (index === "") return;
-            
-            const match = fetchedMatchesCache[index];
-            const apiKey = document.getElementById('apiKey').value.trim();
-            const statusEl = document.getElementById('apiStatus');
-            
-            statusEl.innerHTML = '<span class="spinner-border spinner-border-sm text-primary"></span> กำลังดึงสถิติละเอียด...';
-
-            document.getElementById('h_shots').value = 0;
-            document.getElementById('a_shots').value = 0;
-            document.getElementById('h_sot').value = 0;
-            document.getElementById('a_sot').value = 0;
-            document.getElementById('red_home').value = 0;
-            document.getElementById('red_away').value = 0;
-            document.getElementById('poss_slider').value = 50;
-            updatePossession();
-
-            document.getElementById('home_name').value = match.teams.home.name;
-            document.getElementById('away_name').value = match.teams.away.name;
-            document.getElementById('leagueInput').value = match.league.name;
-            handleLeagueInput();
-            
-            let min = match.fixture.status.elapsed || 0;
-            let extra = match.fixture.status.extra || 0; 
-            
-            let i1 = 0, i2 = 0;
-            if (min <= 45 + extra) {
-                i1 = extra > 0 ? extra : 0;
-            } else {
-                i1 = 0; 
-                i2 = extra > 0 ? extra : 0;
-            }
-
-            document.getElementById('match_minute').value = min;
-            document.getElementById('injury_1').value = i1;
-            document.getElementById('injury_2').value = i2;
-            document.getElementById('current_home_score').value = match.goals.home || 0;
-            document.getElementById('current_away_score').value = match.goals.away || 0;
-            
-            if (match.fixture.status.short === 'ET' || match.fixture.status.short === 'P') {
-                document.getElementById('match_format').value = "120";
-            } else {
-                document.getElementById('match_format').value = "90";
-            }
-
-            try {
-                const statsRes = await fetch(`${API_BASE_URL}/fixtures/statistics?fixture=${match.fixture.id}`, {
-                    headers: { 'x-apisports-key': apiKey }
-                });
-                const statsData = await statsRes.json();
-
-                if (statsData.response && statsData.response.length === 2) {
-                    const homeStats = statsData.response[0].statistics;
-                    const awayStats = statsData.response[1].statistics;
-
-                    const getStat = (stats, type) => {
-                        const s = stats.find(x => x.type === type);
-                        return s && s.value ? (typeof s.value === 'string' ? parseInt(s.value.replace('%','')) : s.value) : 0;
-                    };
-
-                    const hPoss = getStat(homeStats, 'Ball Possession');
-                    if (hPoss > 0) {
-                        document.getElementById('poss_slider').value = hPoss;
-                        updatePossession();
-                    }
-
-                    document.getElementById('h_shots').value = getStat(homeStats, 'Total Shots');
-                    document.getElementById('a_shots').value = getStat(awayStats, 'Total Shots');
-                    document.getElementById('h_sot').value = getStat(homeStats, 'Shots on Goal');
-                    document.getElementById('a_sot').value = getStat(awayStats, 'Shots on Goal');
-                    document.getElementById('red_home').value = getStat(homeStats, 'Red Cards');
-                    document.getElementById('red_away').value = getStat(awayStats, 'Red Cards');
-                }
-                statusEl.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> ดึงสถิติสำเร็จ!</span>`;
-                document.getElementById('match_minute').scrollIntoView({behavior: "smooth", block: "center"});
-                
-            } catch (e) {
-                statusEl.innerHTML = `<span class="text-warning">ดึงสถิติละเอียดไม่สำเร็จ แต่ข้อมูลพื้นฐานถูกเติมแล้ว</span>`;
-            }
-        }
 
         const LEAGUE_CONSTANTS = {
             'premier league': { name: "พรีเมียร์ลีกอังกฤษ", goals: 3.24, mod: 1.20 },
@@ -440,19 +378,38 @@
             'ligue 1': { name: "ลีกเอิง ฝรั่งเศส", goals: 2.70, mod: 1.00 },
             'eredivisie': { name: "เอเรดิวิซี เนเธอร์แลนด์", goals: 3.15, mod: 1.15 },
             'mls': { name: "เมเจอร์ลีกซอกเกอร์ (MLS)", goals: 3.12, mod: 1.14 },
+            
             'thai league': { name: "ไทยลีก", goals: 2.95, mod: 1.10 },
-            'ไทยลีก': { name: "ไทยลีก", goals: 2.95, mod: 1.10 },
+            'thailand league 1': { name: "ไทยแลนด์ ลีก 1", goals: 2.95, mod: 1.10 },
+            
             'j1 league': { name: "เจลีก J1", goals: 2.65, mod: 0.98 },
             'j2 league': { name: "เจลีก J2", goals: 2.45, mod: 0.92 },
-            'j3 league': { name: "เจลีก J3", goals: 2.50, mod: 0.95 },
-            'เจลีก': { name: "เจลีก J1", goals: 2.65, mod: 0.98 },
             'k league': { name: "เคลีก เกาหลีใต้", goals: 2.55, mod: 0.94 },
-            'liga de expansión mx': { name: "ลีกา เด เอ็กซ์แพนชั่น (เม็กซิโก)", goals: 2.60, mod: 0.95 },
-            'liga mx': { name: "ลีกา เอ็มเอ็กซ์ (เม็กซิโก)", goals: 2.85, mod: 1.05 },
-            'indian super league': { name: "อินเดีย ซูเปอร์ ลีก", goals: 2.80, mod: 1.05 },
-            'karnataka': { name: "อินเดีย คาร์นาตากา", goals: 2.90, mod: 1.10 },
+            
+            'indian super league': { name: "อินเดีย ซูเปอร์ ลีก", goals: 2.85, mod: 1.05 },
+            'india football league': { name: "อินเดีย ฟุตบอล ลีก", goals: 2.75, mod: 1.02 },
+            'israel liga alif': { name: "อิสราเอล ลีกา อลีฟ", goals: 2.40, mod: 0.92 },
+            'poland liga 3': { name: "โปแลนด์ ลีกา 3", goals: 2.70, mod: 1.00 },
+            'armenia premier league': { name: "อาร์มีเนีย พรีเมียร์ ลีก", goals: 2.50, mod: 0.95 },
+            'ukraine premier league': { name: "ยูเครน พรีเมียร์ ลีก", goals: 2.45, mod: 0.92 },
+            'vietnam league 1': { name: "เวียดนาม ลีก 1", goals: 2.35, mod: 0.88 },
+            'indonesia super league': { name: "อินโดนีเซีย ซูเปอร์ ลีก", goals: 2.80, mod: 1.08 },
+            'north macedonia first league': { name: "นอร์ท มาซิโดเนีย เฟิร์ส ลีก", goals: 2.60, mod: 0.98 },
+            'romania liga 3': { name: "โรมาเนีย ลีกา 3", goals: 2.65, mod: 1.00 },
+
+            // ลีกที่เพิ่มใหม่ล่าสุด
+            'egypt cup': { name: "อียิปต์ คัพ", goals: 2.30, mod: 0.85 },
+            'saudi division 2': { name: "ซาอุฯ ดิวิชั่น 2", goals: 2.60, mod: 1.00 },
+            'uae division 1': { name: "ยูเออี ดิวิชั่น 1", goals: 3.10, mod: 1.15 },
+            'slovenia division 2': { name: "สโลวีเนีย ดิวิชั่น 2", goals: 2.80, mod: 1.05 },
+            'iran pro league': { name: "อิหร่าน โปร ลีก", goals: 2.20, mod: 0.80 },
+            'croatia prva liga': { name: "โครเอเชีย พีอาร์วีเอ ลีก้า", goals: 2.55, mod: 0.95 },
+            'israel liga leumit': { name: "อิสราเอล ลีกา ลีมิต", goals: 2.50, mod: 0.95 },
+            'uzbekistan super league': { name: "อุซเบกิสถาน ซุปเปอร์ ลีก", goals: 2.75, mod: 1.02 },
+            'jordan pro league': { name: "จอร์แดน โปร ลีก", goals: 2.45, mod: 0.90 },
+            'azerbaijan premier league': { name: "อาร์เซอร์ไบจัน พรีเมียร์ ลีก", goals: 2.40, mod: 0.92 },
+            
             'brazil serie a': { name: "บราซิล ซีรี่ส์ เอ", goals: 2.45, mod: 0.90 },
-            'brasileirao': { name: "บราซิล ซีรี่ส์ เอ", goals: 2.45, mod: 0.90 },
             'argentina': { name: "อาร์เจนตินา ลีกา", goals: 2.30, mod: 0.85 },
             'uefa europa': { name: "ยูฟ่า ยูโรปา ลีก", goals: 2.80, mod: 1.00 },
             'uefa conference': { name: "ยูฟ่า คอนเฟอเรนซ์", goals: 2.75, mod: 1.00 },
@@ -471,26 +428,18 @@
         }
 
         function handleLeagueInput() {
-            const input = document.getElementById('leagueInput').value.trim().toLowerCase();
+            const input = document.getElementById('leagueInput').value;
             const resultEl = document.getElementById('leagueResult');
-            if (!input) {
+            
+            if (input === 'default' || !LEAGUE_CONSTANTS[input]) {
                 currentLeagueModifier = 1.0; currentLeagueAvgGoals = 2.70; currentLeagueText = "ลีกมาตรฐาน";
-                resultEl.innerHTML = '<span class="text-muted" style="font-size: 0.65rem;">ระบบจะประเมินจากชื่อลีกโดยอัตโนมัติ</span>';
-                return;
-            }
-            let found = false;
-            for (const [key, value] of Object.entries(LEAGUE_CONSTANTS)) {
-                if (input.includes(key)) {
-                    currentLeagueModifier = value.mod;
-                    currentLeagueAvgGoals = value.goals;
-                    currentLeagueText = value.name;
-                    resultEl.innerHTML = `<span class="text-info fw-bold"><i class="bi bi-check-circle-fill"></i> ${value.name} (เฉลี่ย ${value.goals})</span>`;
-                    found = true; break;
-                }
-            }
-            if (!found) {
-                currentLeagueModifier = 1.0; currentLeagueAvgGoals = 2.70; currentLeagueText = `ลีกกำหนดเอง`;
-                resultEl.innerHTML = `<span class="text-warning fw-bold"><i class="bi bi-pencil-fill"></i> ใช้ค่ามาตรฐาน (2.70 ลูก)</span>`;
+                resultEl.innerHTML = '<span class="text-muted" style="font-size: 0.65rem;">ระบบจะใช้ค่ากลาง (2.70 ประตู/เกม)</span>';
+            } else {
+                const value = LEAGUE_CONSTANTS[input];
+                currentLeagueModifier = value.mod;
+                currentLeagueAvgGoals = value.goals;
+                currentLeagueText = value.name;
+                resultEl.innerHTML = `<span class="text-info fw-bold"><i class="bi bi-check-circle-fill"></i> ${value.name} (เฉลี่ย ${value.goals} ประตู/เกม)</span>`;
             }
         }
 
@@ -589,7 +538,7 @@
             const hAttack = hShotXg + hPossXg, aAttack = aShotXg + aPossXg;
             const totalAttack = hAttack + aAttack;
 
-            if (totalAttack < 0.05) { alert('กรุณาระบุข้อมูลค่าสถิติทีมก่อนทำการประมวลผล'); return; }
+            if (totalAttack < 0.05) { alert('กรุณาระบุข้อมูลค่าสถิติทีม (การยิง/ครองบอล) ก่อนทำการประมวลผล'); return; }
 
             const hRatio = hAttack / totalAttack, aRatio = aAttack / totalAttack;
             
@@ -713,7 +662,7 @@
                 if (totalFTGoals > 6.5) pFTOver65 += x.p;
             });
 
-            document.getElementById('ahCurrentRate').innerText = ahRate === 0 ? "เสมอ (0.0)" : `เหย้าต่อ -${ahRate.toFixed(2)}`;
+            document.getElementById('ahCurrentRate').innerText = ahRate === 0 ? "เสมอ (0.0)" : (ahRate < 0 ? `เยือนต่อ +${Math.abs(ahRate).toFixed(2)}` : `เหย้าต่อ -${ahRate.toFixed(2)}`);
             document.getElementById('ahHomeProb').innerText = (pAHHomeWin * 100).toFixed(1) + '%';
             document.getElementById('ahAwayProb').innerText = (pAHAwayWin * 100).toFixed(1) + '%';
 
@@ -761,7 +710,6 @@
                 document.getElementById('fhProbTotal').innerText = (pFHDraw * 100).toFixed(1) + '%'; 
                 document.getElementById('fhProbAway').innerText = (pFHLose * 100).toFixed(1) + '%';
 
-                // 🔥 [FIX] แก้ไขการคำนวณ Over/Under ครึ่งแรก ให้บวกสกอร์ที่ยิงไปแล้ว (currentTotalGoals) ด้วย
                 let fhOver05Calc = 0, fhOver15Calc = 0, fhOver25Calc = 0, fhOver35Calc = 0;
                 fhGrid.forEach(s => { 
                     const totalG = s.h + s.a + currentTotalGoals; 
@@ -793,6 +741,7 @@
             document.getElementById('displayMinute').innerText = minute;
             document.getElementById('displayRemaining').innerText = remaining;
             document.getElementById('confidenceBadge').innerText = `Confidence: ${confidence}%`;
+            document.getElementById('leagueInfluenceText').innerText = currentLeagueText;
 
             const rcArea = document.getElementById('redCardImpactArea');
             if (redHome > 0 || redAway > 0) {
