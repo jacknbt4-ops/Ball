@@ -3,53 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v3.0 - Smart Tempo Analytics</title>
+    <title>⚽ JackAI Scanner v3.4 - Light Mode Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
     <style>
-        body { background-color: #0f172a; color: #f8fafc; min-height: 100vh; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display: flex; flex-direction: column; }
+        /* 🌟 Light Mode Theme */
+        body { 
+            background-color: #f8f9fa; 
+            color: #212529; 
+            min-height: 100vh; 
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
         .main-container { flex: 1; padding: 15px; display: flex; gap: 15px; height: calc(100vh - 56px); overflow: hidden; }
         .left-panel { width: 420px; min-width: 420px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px; }
         .right-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px; }
-        @media (max-width: 991.98px) { body { overflow: auto !important; } .main-container { flex-direction: column; height: auto; overflow: visible; } .left-panel, .right-panel { width: 100% !important; min-width: 100% !important; height: auto !important; } }
-        .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .form-control-sm, .form-select-sm { padding: 4px 8px; font-size: 0.85rem; background-color: #0f172a; border: 1px solid #475569; color: #f8fafc; }
-        .form-control-sm:focus, .form-select-sm:focus { background-color: #0f172a; color: #f8fafc; border-color: #3b82f6; box-shadow: none; }
-        .stat-grid label { font-size: 0.75rem; margin-bottom: 2px; color: #94a3b8; }
+        
+        @media (max-width: 991.98px) { 
+            body { overflow: auto !important; } 
+            .main-container { flex-direction: column; height: auto; overflow: visible; } 
+            .left-panel, .right-panel { width: 100% !important; min-width: 100% !important; height: auto !important; } 
+        }
+
+        /* Card & Input Styling */
+        .card { 
+            background-color: #ffffff; 
+            border: 1px solid #dee2e6; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            color: #212529;
+        }
+        .form-control-sm, .form-select-sm { 
+            padding: 4px 8px; 
+            font-size: 0.85rem; 
+            background-color: #ffffff; 
+            border: 1px solid #ced4da; 
+            color: #212529; 
+        }
+        .form-control-sm:focus, .form-select-sm:focus { 
+            background-color: #ffffff; 
+            color: #212529; 
+            border-color: #86b7fe; 
+            box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25); 
+        }
+        
+        /* Stats & Custom Boxes */
+        .stat-grid label { font-size: 0.75rem; margin-bottom: 2px; color: #6c757d; }
         .stat-grid input { text-align: center; font-weight: 600; }
-        .red-card-box { border: 1px solid #7f1d1d; background: rgba(127, 29, 29, 0.2); border-radius: 8px; padding: 8px; }
-        .red-card-input { border-color: #ef4444 !important; font-weight: 700; color: #ef4444; }
+        
+        .red-card-box { 
+            border: 1px solid #f5c2c7; 
+            background: #f8d7da; 
+            border-radius: 8px; 
+            padding: 8px; 
+        }
+        .red-card-input { border-color: #dc3545 !important; font-weight: 700; color: #dc3545; }
+        
+        /* Result Cards */
         .next-goal-card { border-radius: 10px; padding: 10px; text-align: center; border: 1px solid; }
-        .ng-none { background: #334155; border-color: #475569; color: #cbd5e1; }
-        .ng-home { background: rgba(22, 163, 74, 0.2); border-color: #22c55e; color: #4ade80; }
-        .ng-away { background: rgba(37, 99, 235, 0.2); border-color: #3b82f6; color: #60a5fa; }
+        .ng-none { background: #e2e3e5; border-color: #d3d6d8; color: #383d41; }
+        .ng-home { background: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .ng-away { background: #cce5ff; border-color: #b8daff; color: #004085; }
+        
         .fh-card { border-radius: 10px; padding: 8px; text-align: center; border: 1px solid; }
-        .fh-home { background: rgba(22, 163, 74, 0.2); border-color: #22c55e; color: #4ade80; }
-        .fh-total { background: rgba(202, 138, 4, 0.2); border-color: #eab308; color: #fde047; }
-        .fh-away { background: rgba(37, 99, 235, 0.2); border-color: #3b82f6; color: #60a5fa; }
+        .fh-home { background: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .fh-total { background: #fff3cd; border-color: #ffeeba; color: #856404; }
+        .fh-away { background: #cce5ff; border-color: #b8daff; color: #004085; }
+        
         .score-box { border-radius: 10px; padding: 10px; text-align: center; color: white; }
-        .bg-orange { background-color: #ea580c !important; }
-        .text-orange { color: #ff781f !important; }
-        .warn-box { background: rgba(217, 119, 6, 0.2); border: 1px solid #d97706; border-radius: 6px; padding: 6px 10px; font-size: 0.75rem; color: #fcd34d; }
-        .xh-highlight { font-size: 0.75rem; background: #0f172a; padding: 8px; border-radius: 8px; border: 1px solid #334155; color: #94a3b8; }
-        #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.9); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
-        .log-box { background-color: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 10px; height: 120px; overflow-y: auto; font-family: monospace; font-size: 0.72rem; color: #38bdf8; }
-        ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        .bg-orange { background-color: #fd7e14 !important; }
+        .text-orange { color: #fd7e14 !important; }
+        
+        .warn-box { 
+            background: #fff3cd; 
+            border: 1px solid #ffecb5; 
+            border-radius: 6px; 
+            padding: 6px 10px; 
+            font-size: 0.75rem; 
+            color: #856404; 
+        }
+        
+        .xh-highlight { 
+            font-size: 0.75rem; 
+            background: #e9ecef; 
+            padding: 8px; 
+            border-radius: 8px; 
+            border: 1px solid #ced4da; 
+            color: #495057; 
+        }
+        
+        #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; } 
+        ::-webkit-scrollbar-track { background: transparent; } 
+        ::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #adb5bd; }
+        
         input[type=range] { height: 6px; padding: 0; cursor: pointer; }
+        
+        /* Market Cards (Over/Under/Draw) */
+        .market-card { border-radius: 10px; padding: 12px; text-align: center; border: 2px solid; transition: transform 0.2s; }
+        .market-card:hover { transform: translateY(-3px); }
+        .market-over { background: #ffe5d0; border-color: #fd7e14; color: #b24a00; }
+        .market-draw { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .market-under { background: #cfe2ff; border-color: #0d6efd; color: #084298; }
+
+        /* Override Bootstrap Dark Utilities for Light Mode */
+        .bg-dark { background-color: #f1f3f5 !important; color: #212529 !important; }
+        .text-light { color: #212529 !important; }
+        .border-secondary { border-color: #dee2e6 !important; }
+        .text-white { color: #212529 !important; }
     </style>
 </head>
 <body>
     <div id="loadingOverlay">
         <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
-        <h5 class="fw-bold text-light">🤖 กำลังประมวลผล...</h5>
+        <h5 class="fw-bold text-dark">🤖 กำลังประมวลผล...</h5>
         <p class="text-muted small" id="ocrProgress">กำลังเตรียมการ...</p>
     </div>
 
-    <nav class="navbar navbar-dark bg-dark px-3 py-2 shadow-sm border-bottom border-secondary">
+    <nav class="navbar navbar-light bg-white px-3 py-2 shadow-sm border-bottom">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-5 text-light">⚽ JackAI Scanner v3.0</span>
-            <span class="text-muted small d-none d-sm-block">Smart Tempo Analytics</span>
+            <span class="navbar-brand mb-0 h1 fs-5 text-dark fw-bold">⚽ JackAI Scanner v3.4</span>
+            <span class="text-muted small d-none d-sm-block">Smart Injury & Extra Time (Light Mode)</span>
         </div>
     </nav>
 
@@ -63,21 +143,21 @@
                 </div>
 
                 <!-- 🔥 ระบบ API Integration -->
-                <div class="mb-3 p-2 rounded border border-info bg-dark">
+                <div class="mb-3 p-2 rounded border bg-light">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <label class="small text-info fw-bold mb-0"><i class="bi bi-cloud-download"></i> ดึงข้อมูลสดจาก API จริง</label>
+                        <label class="small text-primary fw-bold mb-0"><i class="bi bi-cloud-download"></i> ดึงข้อมูลสดจาก API จริง</label>
                         <a href="https://dashboard.api-football.com/register" target="_blank" class="text-muted small text-decoration-none" style="font-size:0.65rem;">ขอ Key ฟรี</a>
                     </div>
                     
                     <div class="input-group input-group-sm mb-2">
                         <input type="password" id="apiKey" class="form-control form-control-sm" placeholder="ใส่ API Key ที่นี่" value="2e292132b40cbdf53f7f57741276bfad">
-                        <button class="btn btn-info fw-bold text-dark" type="button" onclick="loadLiveMatches()" id="btnLoadLive"><i class="bi bi-arrow-repeat"></i> โหลดคู่สด</button>
+                        <button class="btn btn-primary fw-bold text-white" type="button" onclick="loadLiveMatches()" id="btnLoadLive"><i class="bi bi-arrow-repeat"></i> โหลดคู่สด</button>
                     </div>
                     
                     <select id="liveMatchSelect" class="form-select form-select-sm" onchange="onSelectLiveMatch()" disabled>
                         <option value="">-- กดปุ่ม "โหลดคู่สด" เพื่อดึงรายชื่อ --</option>
                     </select>
-                    <div id="apiStatus" class="mt-1 text-muted" style="font-size:0.68rem;">พร้อมใช้งาน (ดึงบุกอันตรายอัตโนมัติ)</div>
+                    <div id="apiStatus" class="mt-1 text-muted" style="font-size:0.68rem;">พร้อมใช้งาน</div>
                 </div>
 
                 <div class="row g-2 mb-2">
@@ -104,10 +184,21 @@
                     <span class="text-muted" style="font-size: 0.72rem;">ระบบจะประเมินจากชื่อลีกโดยอัตโนมัติ</span>
                 </div>
 
+                <div class="row g-2 mb-2">
+                    <div class="col-4"><div class="stat-grid text-center"><label>นาที</label><input type="number" id="match_minute" class="form-control form-control-sm text-danger" value="45" min="0" max="120"></div></div>
+                    <div class="col-4"><div class="stat-grid text-center"><label class="text-warning">ทดเจ็บ 1H (+)</label><input type="number" id="injury_1" class="form-control form-control-sm text-warning" value="0" min="0" max="15"></div></div>
+                    <div class="col-4"><div class="stat-grid text-center"><label class="text-warning">ทดเจ็บ 2H (+)</label><input type="number" id="injury_2" class="form-control form-control-sm text-warning" value="0" min="0" max="15"></div></div>
+                </div>
+                
                 <div class="row g-2 mb-3">
-                    <div class="col-4"><div class="stat-grid text-center"><label>นาที</label><input type="number" id="match_minute" class="form-control form-control-sm text-danger" value="45" min="0" max="90"></div></div>
                     <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เหย้า</label><input type="number" id="current_home_score" class="form-control form-control-sm text-success" value="0" min="0"></div></div>
                     <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เยือน</label><input type="number" id="current_away_score" class="form-control form-control-sm text-primary" value="0" min="0"></div></div>
+                    <div class="col-4"><div class="stat-grid text-center"><label class="text-info">รูปแบบเกม</label>
+                        <select id="match_format" class="form-select form-select-sm text-info fw-bold">
+                            <option value="90">ปกติ (90 นาที)</option>
+                            <option value="120">ต่อเวลา (120 นาที)</option>
+                        </select>
+                    </div></div>
                 </div>
 
                 <div class="red-card-box d-flex gap-2 mb-3">
@@ -115,7 +206,7 @@
                     <div class="flex-fill"><label class="small text-danger fw-bold">🟥 แดงเยือน</label><input type="number" id="red_away" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
                 </div>
 
-                <div class="mb-3 p-2 bg-dark rounded border border-secondary">
+                <div class="mb-3 p-2 bg-light rounded border">
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <span class="fw-bold text-success small">🏠 เหย้า: <span id="h_poss_label">50</span>%</span>
                         <span class="fw-bold text-primary small">✈️ เยือน: <span id="a_poss_label">50</span>%</span>
@@ -124,8 +215,8 @@
                 </div>
 
                 <div class="row g-3 mb-3">
-                    <div class="col-6 border-end border-secondary">
-                        <div class="text-success fw-bold small mb-2 border-bottom border-secondary pb-1">🏠 เหย้า</div>
+                    <div class="col-6 border-end">
+                        <div class="text-success fw-bold small mb-2 border-bottom pb-1">🏠 เหย้า</div>
                         <div class="stat-grid d-flex flex-column gap-2">
                             <div><label>ยิงทั้งหมด</label><input type="number" id="h_shots" class="form-control form-control-sm" value="5" min="0"></div>
                             <div><label class="text-danger fw-bold">ยิงตรงกรอบ (SOT)</label><input type="number" id="h_sot" class="form-control form-control-sm border-danger" value="2" min="0"></div>
@@ -133,7 +224,7 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="text-primary fw-bold small mb-2 border-bottom border-secondary pb-1">✈️ เยือน</div>
+                        <div class="text-primary fw-bold small mb-2 border-bottom pb-1">✈️ เยือน</div>
                         <div class="stat-grid d-flex flex-column gap-2">
                             <div><label>ยิงทั้งหมด</label><input type="number" id="a_shots" class="form-control form-control-sm" value="5" min="0"></div>
                             <div><label class="text-danger fw-bold">ยิงตรงกรอบ (SOT)</label><input type="number" id="a_sot" class="form-control form-control-sm border-danger" value="2" min="0"></div>
@@ -142,48 +233,72 @@
                     </div>
                 </div>
 
-                <div class="row g-2 mb-3 p-2 rounded border border-secondary bg-dark">
-                    <div class="col-12"><label class="small text-light fw-bold mb-1">📈 ราคาพูลบ่อนสด (Live 1X2 Bookmaker Odds)</label></div>
-                    <div class="col-4"><input type="number" id="odds_home" class="form-control form-control-sm" step="0.01" placeholder="เหย้า (1)" value="2.10"></div>
-                    <div class="col-4"><input type="number" id="odds_draw" class="form-control form-control-sm" step="0.01" placeholder="เสมอ (X)" value="3.20"></div>
-                    <div class="col-4"><input type="number" id="odds_away" class="form-control form-control-sm" step="0.01" placeholder="เยือน (2)" value="3.40"></div>
+                <div class="row g-2 mb-3 p-2 rounded border bg-light">
+                    <div class="col-12"><label class="small text-dark fw-bold mb-1">📈 ราคาพูลบ่อนสด (Live Bookmaker Odds)</label></div>
+                    <div class="col-4"><label class="text-xs text-muted mb-0">เหย้า (1)</label><input type="number" id="odds_home" class="form-control form-control-sm" step="0.01" placeholder="2.10" value="2.10"></div>
+                    <div class="col-4"><label class="text-xs text-muted mb-0">เสมอ (X)</label><input type="number" id="odds_draw" class="form-control form-control-sm" step="0.01" placeholder="3.20" value="3.20"></div>
+                    <div class="col-4"><label class="text-xs text-muted mb-0">เยือน (2)</label><input type="number" id="odds_away" class="form-control form-control-sm" step="0.01" placeholder="3.40" value="3.40"></div>
+                    <div class="col-6 mt-2"><label class="text-xs text-muted mb-0">สูง 2.5 (Over)</label><input type="number" id="odds_over" class="form-control form-control-sm" step="0.01" placeholder="1.85" value="1.85"></div>
+                    <div class="col-6 mt-2"><label class="text-xs text-muted mb-0">ต่ำ 2.5 (Under)</label><input type="number" id="odds_under" class="form-control form-control-sm" step="0.01" placeholder="1.95" value="1.95"></div>
                 </div>
 
-                <button type="button" class="btn btn-danger w-100 fw-bold shadow-sm rounded-pill mb-3" onclick="predictMatch()">🔮 ประมวลผลคาดการณ์</button>
-
-                <div class="mt-1">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <label class="small text-secondary fw-bold">📝 ประวัติล็อกแมตช์</label>
-                        <button type="button" class="btn btn-xs btn-outline-info py-0 px-2 fw-bold" style="font-size: 0.68rem;" onclick="downloadLogs()">💾 Export .txt</button>
-                    </div>
-                    <div id="logArea" class="log-box">ยังไม่มีประวัติล็อก...</div>
-                </div>
+                <button type="button" class="btn btn-danger w-100 fw-bold shadow-sm rounded-pill mb-1" onclick="predictMatch()">🔮 ประมวลผลคาดการณ์</button>
             </div>
         </div>
 
         <!-- ฝั่งขวา: การแสดงผลการวิเคราะห์และคาดการณ์ -->
         <div class="right-panel">
             <div id="resultsArea" class="d-flex flex-column gap-2 h-100 d-none">
-                <div class="card p-3 bg-dark text-white text-center position-relative border border-secondary">
+                <div class="card p-3 bg-white text-dark text-center position-relative border">
                     <h4 class="fw-bold mb-1" id="resultTitle">ทีมเหย้า 0 - 0 ทีมเยือน</h4>
                     <div class="small text-warning">นาทีที่ <span id="displayMinute">45</span> (เหลือ <span id="displayRemaining">45</span> นาที)</div>
                     <div class="d-flex justify-content-center gap-2 mt-2 flex-wrap">
                         <span class="badge bg-secondary" id="leagueInfluenceText">ลีกมาตรฐาน</span>
                         <span class="badge bg-info text-dark" id="confidenceBadge">Confidence: -</span>
-                        <!-- 🔥 Badge แสดงสถานะ Tempo -->
                         <span class="badge bg-secondary" id="tempoBadge"><i class="bi bi-speedometer2"></i> Tempo: ปกติ</span>
                     </div>
                 </div>
 
                 <div id="inputWarning" class="warn-box d-none"><strong>⚠️ คำเตือน:</strong> <span id="inputWarningText"></span></div>
-                <div id="redCardImpactArea" class="alert alert-danger py-2 small d-none mb-0 bg-danger rgba-20 border-danger text-light"><strong>🟥 ใบแดง:</strong> <span id="redImpactText"></span></div>
+                <div id="redCardImpactArea" class="alert alert-danger py-2 small d-none mb-0"><strong>🟥 ใบแดง:</strong> <span id="redImpactText"></span></div>
 
-                <div class="card p-3" style="color: #ffffff !important;">
-                    <h6 class="fw-bold mb-2 text-center" style="color: #ffffff !important;"><i class="bi bi-cash-coin text-warning"></i> ขนาดไม้ที่คุ้มค่า (Kelly Criterion)</h6>
+                <!-- 🌟 การ์ดแนะนำ สูง / เสมอ / ต่ำ -->
+                <div class="card p-3">
+                    <h6 class="fw-bold text-dark mb-3 text-center"><i class="bi bi-stars text-warning"></i> AI แนะนำ: สูง / เสมอ / ต่ำ (Over / Draw / Under)</h6>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <div class="market-card market-over">
+                                <div class="small fw-bold mb-1">🔥 สูง 2.5 (Over)</div>
+                                <div class="h3 fw-extrabold mb-1" id="suggestOverProb">0%</div>
+                                <div class="small text-muted mb-1">Fair Odds: <span id="suggestOverFair" class="text-dark fw-bold">-</span></div>
+                                <div class="small fw-bold" id="suggestOverValue">-</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="market-card market-draw">
+                                <div class="small fw-bold mb-1">⚖️ เสมอ (Draw)</div>
+                                <div class="h3 fw-extrabold mb-1" id="suggestDrawProb">0%</div>
+                                <div class="small text-muted mb-1">Fair Odds: <span id="suggestDrawFair" class="text-dark fw-bold">-</span></div>
+                                <div class="small fw-bold" id="suggestDrawValue">-</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="market-card market-under">
+                                <div class="small fw-bold mb-1">🧊 ต่ำ 2.5 (Under)</div>
+                                <div class="h3 fw-extrabold mb-1" id="suggestUnderProb">0%</div>
+                                <div class="small text-muted mb-1">Fair Odds: <span id="suggestUnderFair" class="text-dark fw-bold">-</span></div>
+                                <div class="small fw-bold" id="suggestUnderValue">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-3">
+                    <h6 class="fw-bold mb-2 text-center text-dark"><i class="bi bi-cash-coin text-success"></i> ขนาดไม้ที่คุ้มค่า (Kelly Criterion 1X2)</h6>
                     <div class="row g-2 text-center">
-                        <div class="col-4"><div class="p-2 bg-dark rounded border border-secondary"><div class="small fw-bold mb-1">ไม้เหย้า (1)</div><div class="h5 fw-bold mb-0" id="kellyHome">-</div></div></div>
-                        <div class="col-4"><div class="p-2 bg-dark rounded border border-secondary"><div class="small fw-bold mb-1">ไม้เสมอ (X)</div><div class="h5 fw-bold mb-0" id="kellyDraw">-</div></div></div>
-                        <div class="col-4"><div class="p-2 bg-dark rounded border border-secondary"><div class="small fw-bold mb-1">ไม้เยือน (2)</div><div class="h5 fw-bold mb-0" id="kellyAway">-</div></div></div>
+                        <div class="col-4"><div class="p-2 bg-light rounded border"><div class="small fw-bold mb-1 text-dark">ไม้เหย้า (1)</div><div class="h5 fw-bold mb-0" id="kellyHome">-</div></div></div>
+                        <div class="col-4"><div class="p-2 bg-light rounded border"><div class="small fw-bold mb-1 text-dark">ไม้เสมอ (X)</div><div class="h5 fw-bold mb-0" id="kellyDraw">-</div></div></div>
+                        <div class="col-4"><div class="p-2 bg-light rounded border"><div class="small fw-bold mb-1 text-dark">ไม้เยือน (2)</div><div class="h5 fw-bold mb-0" id="kellyAway">-</div></div></div>
                     </div>
                 </div>
 
@@ -191,9 +306,9 @@
                     <div class="col-md-6">
                         <div class="card p-3 h-100">
                             <h6 class="fw-bold text-warning mb-2 text-center">Live Asian Handicap Probs</h6>
-                            <div class="p-2 bg-dark rounded border border-secondary text-center mb-2">
+                            <div class="p-2 bg-light rounded border text-center mb-2">
                                 <div class="small text-secondary mb-1">อัตราต่อรองปัจจุบัน</div>
-                                <div class="h5 fw-extrabold text-light mb-0" id="ahCurrentRate">0.0</div>
+                                <div class="h5 fw-extrabold text-dark mb-0" id="ahCurrentRate">0.0</div>
                             </div>
                             <div class="row g-2 text-center">
                                 <div class="col-6"><div class="p-1 rounded bg-success-subtle border border-success"><div class="small text-success fw-bold">เหย้าชนะราคา</div><div class="h5 fw-bold text-success mb-0" id="ahHomeProb">0%</div></div></div>
@@ -205,9 +320,9 @@
                         <div class="card p-3 h-100">
                             <h6 class="fw-bold text-info mb-2 text-center">FT 1X2 Probs</h6>
                             <div class="row g-2 text-center h-100 align-content-center">
-                                <div class="col-4"><div class="small text-success fw-bold">เหย้า (1)</div><div class="h5 fw-extrabold text-light" id="ftProb1">0%</div></div>
-                                <div class="col-4"><div class="small text-warning fw-bold">เสมอ (X)</div><div class="h5 fw-extrabold text-light" id="ftProbX">0%</div></div>
-                                <div class="col-4"><div class="small text-primary fw-bold">เยือน (2)</div><div class="h5 fw-extrabold text-light" id="ftProb2">0%</div></div>
+                                <div class="col-4"><div class="small text-success fw-bold">เหย้า (1)</div><div class="h5 fw-extrabold text-dark" id="ftProb1">0%</div></div>
+                                <div class="col-4"><div class="small text-warning fw-bold">เสมอ (X)</div><div class="h5 fw-extrabold text-dark" id="ftProbX">0%</div></div>
+                                <div class="col-4"><div class="small text-primary fw-bold">เยือน (2)</div><div class="h5 fw-extrabold text-dark" id="ftProb2">0%</div></div>
                             </div>
                         </div>
                     </div>
@@ -244,26 +359,26 @@
                 <div class="card p-3">
                     <h6 class="fw-bold text-secondary mb-3">โอกาสเกิดประตูครึ่งแรก (สูง/ต่ำ สะสม)</h6>
                     <div class="row g-3">
-                        <div class="col-md-4 border-end border-secondary"><div class="d-flex justify-content-between small fw-bold"><span>สูง 0.5</span><span id="fhOver05">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #334155;"><div class="progress-bar" id="fhOver05Bar" style="width: 0%"></div></div></div>
-                        <div class="col-md-4 border-end border-secondary"><div class="d-flex justify-content-between small fw-bold"><span>สูง 1.5</span><span id="fhOver15">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #334155;"><div class="progress-bar" id="fhOver15Bar" style="width: 0%"></div></div></div>
-                        <div class="col-md-4"><div class="d-flex justify-content-between small fw-bold"><span>สูง 2.5</span><span id="fhOver25">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #334155;"><div class="progress-bar" id="fhOver25Bar" style="width: 0%"></div></div></div>
+                        <div class="col-md-4 border-end"><div class="d-flex justify-content-between small fw-bold"><span>สูง 0.5</span><span id="fhOver05">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #e9ecef;"><div class="progress-bar" id="fhOver05Bar" style="width: 0%"></div></div></div>
+                        <div class="col-md-4 border-end"><div class="d-flex justify-content-between small fw-bold"><span>สูง 1.5</span><span id="fhOver15">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #e9ecef;"><div class="progress-bar" id="fhOver15Bar" style="width: 0%"></div></div></div>
+                        <div class="col-md-4"><div class="d-flex justify-content-between small fw-bold"><span>สูง 2.5</span><span id="fhOver25">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #e9ecef;"><div class="progress-bar" id="fhOver25Bar" style="width: 0%"></div></div></div>
                     </div>
                 </div>
 
                 <div class="card p-3">
                     <h6 class="fw-bold text-secondary mb-3">โอกาสเกิดประตูรวมเต็มเวลา 90 นาที (สูง/ต่ำ สะสม)</h6>
                     <div class="row g-3">
-                        <div class="col-md-4 border-end border-secondary"><div class="d-flex justify-content-between small fw-bold"><span>สูง 1.5</span><span id="ftOver15">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #334155;"><div class="progress-bar" id="ftOver15Bar" style="width: 0%"></div></div></div>
-                        <div class="col-md-4 border-end border-secondary"><div class="d-flex justify-content-between small fw-bold"><span>สูง 2.5</span><span id="ftOver25">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #334155;"><div class="progress-bar" id="ftOver25Bar" style="width: 0%"></div></div></div>
-                        <div class="col-md-4"><div class="d-flex justify-content-between small fw-bold"><span>สูง 3.5</span><span id="ftOver35">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #334155;"><div class="progress-bar" id="ftOver35Bar" style="width: 0%"></div></div></div>
+                        <div class="col-md-4 border-end"><div class="d-flex justify-content-between small fw-bold"><span>สูง 1.5</span><span id="ftOver15">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver15Bar" style="width: 0%"></div></div></div>
+                        <div class="col-md-4 border-end"><div class="d-flex justify-content-between small fw-bold"><span>สูง 2.5</span><span id="ftOver25">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver25Bar" style="width: 0%"></div></div></div>
+                        <div class="col-md-4"><div class="d-flex justify-content-between small fw-bold"><span>สูง 3.5</span><span id="ftOver35">0%</span></div><div class="progress mb-1" style="height: 6px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver35Bar" style="width: 0%"></div></div></div>
                     </div>
                 </div>
                 <div class="xh-highlight text-muted" id="xgBreakdown">-</div>
             </div>
             
-            <div id="emptyState" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted card border p-5">
+            <div id="emptyState" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted card border p-5 bg-white">
                 <i class="bi bi-cpu-fill text-secondary mb-3" style="font-size: 4rem; opacity: 0.3;"></i>
-                <h5 class="text-light">ดึงข้อมูลหรือกรอกสถิติ แล้วกดประมวลผล</h5>
+                <h5 class="text-dark">ดึงข้อมูลหรือกรอกสถิติ แล้วกดประมวลผล</h5>
                 <p class="small text-secondary">ผลวิเคราะห์จะแสดงตรงนี้</p>
             </div>
         </div>
@@ -273,11 +388,10 @@
         let currentLeagueModifier = 1.0;
         let currentLeagueText = "ลีกมาตรฐาน";
         let currentLeagueAvgGoals = 2.70;
-        let globalLogString = "";
         let fetchedMatchesCache = [];
 
         // ==========================================
-        // 🔥 ระบบดึงข้อมูลจาก API (Smart API v3.0)
+        // 🔥 ระบบดึงข้อมูลจาก API
         // ==========================================
         const API_BASE_URL = 'https://v3.football.api-sports.io';
 
@@ -292,7 +406,7 @@
                 return;
             }
 
-            statusEl.innerHTML = '<span class="spinner-border spinner-border-sm text-info"></span> กำลังดึงรายชื่อแมตช์สด...';
+            statusEl.innerHTML = '<span class="spinner-border spinner-border-sm text-primary"></span> กำลังดึงรายชื่อแมตช์สด...';
             btn.disabled = true;
             selectEl.innerHTML = '<option value="">กำลังโหลด...</option>';
             
@@ -344,15 +458,35 @@
             const apiKey = document.getElementById('apiKey').value.trim();
             const statusEl = document.getElementById('apiStatus');
             
-            statusEl.innerHTML = '<span class="spinner-border spinner-border-sm text-info"></span> กำลังดึงสถิติละเอียด...';
+            statusEl.innerHTML = '<span class="spinner-border spinner-border-sm text-primary"></span> กำลังดึงสถิติละเอียด...';
 
             document.getElementById('home_name').value = match.teams.home.name;
             document.getElementById('away_name').value = match.teams.away.name;
             document.getElementById('leagueInput').value = match.league.name;
             handleLeagueInput();
-            document.getElementById('match_minute').value = match.fixture.status.elapsed || 0;
+            
+            let min = match.fixture.status.elapsed || 0;
+            let extra = match.fixture.status.extra || 0; 
+            
+            let i1 = 0, i2 = 0;
+            if (min <= 45 + extra) {
+                i1 = extra > 0 ? extra : 0;
+            } else {
+                i1 = 0; 
+                i2 = extra > 0 ? extra : 0;
+            }
+
+            document.getElementById('match_minute').value = min;
+            document.getElementById('injury_1').value = i1;
+            document.getElementById('injury_2').value = i2;
             document.getElementById('current_home_score').value = match.goals.home || 0;
             document.getElementById('current_away_score').value = match.goals.away || 0;
+            
+            if (match.fixture.status.short === 'ET' || match.fixture.status.short === 'P') {
+                document.getElementById('match_format').value = "120";
+            } else {
+                document.getElementById('match_format').value = "90";
+            }
 
             try {
                 const statsRes = await fetch(`${API_BASE_URL}/fixtures/statistics?fixture=${match.fixture.id}`, {
@@ -382,7 +516,6 @@
                     document.getElementById('red_home').value = getStat(homeStats, 'Red Cards');
                     document.getElementById('red_away').value = getStat(awayStats, 'Red Cards');
                     
-                    // Smart API: คำนวณ Dangerous Attacks
                     const hInside = getStat(homeStats, 'Shots insidebox');
                     const aInside = getStat(awayStats, 'Shots insidebox');
                     const hCorners = getStat(homeStats, 'Corner Kicks');
@@ -474,26 +607,22 @@
             if (h === 1 && a === 1) return 1 - rho;
             return 1;
         }
-        function timeWeight(minute) { return 0.88 + 0.32 * Math.pow(minute / 90, 1.4); }
-        function avgTimeWeight(minute, remaining) {
+        
+        function timeWeight(minute, totalMatchTime) { 
+            return 0.88 + 0.32 * Math.pow(minute / totalMatchTime, 1.4); 
+        }
+        function avgTimeWeight(minute, remaining, totalMatchTime) {
             if (remaining <= 0) return 1;
             let sum = 0;
-            for (let i = 0; i < 10; i++) sum += timeWeight(minute + (remaining * i / 10));
+            for (let i = 0; i < 10; i++) sum += timeWeight(minute + (remaining * i / 10), totalMatchTime);
             return sum / 10;
         }
+        
         function pickColor(pct) {
             if (pct >= 65) return { bar: 'bg-success', text: 'text-success' };
             if (pct >= 35) return { bar: 'bg-warning', text: 'text-warning' };
             if (pct >= 15) return { bar: 'bg-orange',  text: 'text-orange' };
             return { bar: 'bg-danger', text: 'text-danger' };
-        }
-        function downloadLogs() {
-            if (!globalLogString.trim()) { alert("ไม่มีข้อมูลล็อก"); return; }
-            const blob = new Blob([globalLogString], { type: "text/plain;charset=utf-8;" });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.setAttribute("download", "jackai_match_logs.txt");
-            document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
         function predictMatch() {
@@ -503,11 +632,36 @@
 
             const homeName = document.getElementById('home_name').value.trim() || 'ทีมเหย้า';
             const awayName = document.getElementById('away_name').value.trim() || 'ทีมเยือน';
-            let minute = Math.min(90, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
+            
+            let minute = Math.min(120, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
+            let i1 = Math.max(0, parseInt(document.getElementById('injury_1').value, 10) || 0);
+            let i2 = Math.max(0, parseInt(document.getElementById('injury_2').value, 10) || 0);
+            let format = document.getElementById('match_format').value;
+            
+            let half1_end = 45 + i1;
+            let half2_end = 90 + i1 + i2;
+            let totalMatchTime = (format === "90") ? half2_end : (120 + i1 + i2);
+
+            let remaining = 0;
+            if (format === "90") {
+                if (minute <= half1_end) {
+                    remaining = (half1_end - minute) + (45 + i2);
+                } else if (minute <= half2_end) {
+                    remaining = half2_end - minute;
+                }
+            } else {
+                if (minute <= half1_end) {
+                    remaining = (half1_end - minute) + (45 + i2) + 30;
+                } else if (minute <= half2_end) {
+                    remaining = (half2_end - minute) + 30;
+                } else if (minute <= totalMatchTime) {
+                    remaining = totalMatchTime - minute;
+                }
+            }
+
             const cH = parseInt(document.getElementById('current_home_score').value, 10) || 0;
             const cA = parseInt(document.getElementById('current_away_score').value, 10) || 0;
             const currentTotalGoals = cH + cA;
-            const remaining = Math.max(0, 90 - minute);
 
             const redHome = Math.max(0, parseInt(document.getElementById('red_home').value) || 0);
             const redAway = Math.max(0, parseInt(document.getElementById('red_away').value) || 0);
@@ -516,6 +670,8 @@
             const oHome = parseFloat(document.getElementById('odds_home').value) || 1.0;
             const oDraw = parseFloat(document.getElementById('odds_draw').value) || 1.0;
             const oAway = parseFloat(document.getElementById('odds_away').value) || 1.0;
+            const oOver = parseFloat(document.getElementById('odds_over').value) || 1.0;
+            const oUnder = parseFloat(document.getElementById('odds_under').value) || 1.0;
 
             const sliderVal = parseFloat(document.getElementById('poss_slider').value);
             let hPoss = sliderVal; let aPoss = 100 - sliderVal;
@@ -527,7 +683,7 @@
             const hDang = Math.max(0, parseInt(document.getElementById('h_dang').value) || 0);
             const aDang = Math.max(0, parseInt(document.getElementById('a_dang').value) || 0);
 
-            if (remaining === 0) { alert('การแข่งขันจบลงครบ 90 นาทีแล้ว'); return; }
+            if (remaining === 0) { alert('การแข่งขันจบลงแล้ว (ไม่มีเวลาทดเจ็บหรือต่อเวลาเหลือ)'); return; }
 
             let inputWarnings = [];
             if (hSotRaw > hShotsRaw) { inputWarnings.push(`SOT เหย้า > ยิงทั้งหมด`); hSotRaw = hShotsRaw; }
@@ -550,38 +706,34 @@
 
             const hRatio = hAttack / totalAttack, aRatio = aAttack / totalAttack;
             
-            // 🔥 [CORE LOGIC] คำนวณ Tempo Modifier
             let tempoModifier = 1.0;
             let tempoText = "ปกติ";
-            let tempoBadgeClass = "bg-secondary";
+            let tempoBadgeClass = "bg-secondary text-white";
             let tempoIcon = "bi-speedometer2";
 
             if (minute >= 15) {
-                const expectedGoalsSoFar = (currentLeagueAvgGoals / 90) * minute;
+                const expectedGoalsSoFar = (currentLeagueAvgGoals / totalMatchTime) * minute;
                 const actualGoals = currentTotalGoals;
 
                 if (actualGoals > expectedGoalsSoFar) {
-                    // เกมดุเดือด (ยิงมากกว่าค่าเฉลี่ย)
                     const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
-                    tempoModifier = 1 + (diffRatio - 1) * 0.2; // บวกเพิ่ม
-                    tempoModifier = Math.min(1.5, tempoModifier); // สูงสุด 1.5 เท่า
+                    tempoModifier = 1 + (diffRatio - 1) * 0.2; 
+                    tempoModifier = Math.min(1.5, tempoModifier); 
                     
                     if (tempoModifier > 1.1) {
                         tempoText = `🔥 ดุเดือด (x${tempoModifier.toFixed(2)})`;
-                        tempoBadgeClass = "bg-danger";
+                        tempoBadgeClass = "bg-danger text-white";
                         tempoIcon = "bi-fire";
                     }
                 } else if (actualGoals === 0 && minute > 30) {
-                    // เกมเนือย 0-0
-                    tempoModifier = 0.85; // ลดลง 15%
+                    tempoModifier = 0.85; 
                     tempoText = `🧊 เนือย (x${tempoModifier.toFixed(2)})`;
-                    tempoBadgeClass = "bg-primary";
+                    tempoBadgeClass = "bg-primary text-white";
                     tempoIcon = "bi-snow";
                 } else if (actualGoals < expectedGoalsSoFar) {
-                    // เกมช้ากว่าปกติ
                     const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
                     tempoModifier = 1 - (1 - diffRatio) * 0.2;
-                    tempoModifier = Math.max(0.75, tempoModifier); // ต่ำสุด 0.75 เท่า
+                    tempoModifier = Math.max(0.75, tempoModifier); 
                     
                     if (tempoModifier < 0.9) {
                         tempoText = `🐢 ช้า (x${tempoModifier.toFixed(2)})`;
@@ -591,15 +743,13 @@
                 }
             }
 
-            // อัปเดต UI Badge
             const tempoEl = document.getElementById('tempoBadge');
             tempoEl.className = `badge ${tempoBadgeClass}`;
             tempoEl.innerHTML = `<i class="bi ${tempoIcon}"></i> Tempo: ${tempoText}`;
 
             const baseXgPerMin = (currentLeagueAvgGoals / 90) * currentLeagueModifier;
-            const avgTw = avgTimeWeight(minute, remaining);
+            const avgTw = avgTimeWeight(minute, remaining, totalMatchTime);
             
-            // นำ tempoModifier มาคูณกับ expectedGoals
             let expectedGoals = baseXgPerMin * remaining * avgTw * tempoModifier; 
             
             let xgH = expectedGoals * hRatio, xgA = expectedGoals * aRatio;
@@ -645,6 +795,27 @@
                 if (totalFTGoals > 3.5) pFTOver35 += x.p;
             });
 
+            const pFTUnder25 = 1 - pFTOver25;
+
+            const calcValueStatus = (prob, odds) => {
+                if (odds <= 1.0) return '<span class="text-muted">ไม่มีราคา</span>';
+                const edge = (odds * prob) - 1;
+                if (edge > 0.05) return `<span class="badge bg-success">เล่นได้ (Value +${(edge*100).toFixed(1)}%)</span>`;
+                return '<span class="badge bg-danger">ไม่คุ้ม (No Value)</span>';
+            };
+
+            document.getElementById('suggestOverProb').innerText = (pFTOver25 * 100).toFixed(1) + '%';
+            document.getElementById('suggestOverFair').innerText = pFTOver25 > 0 ? (1 / pFTOver25).toFixed(2) : '-';
+            document.getElementById('suggestOverValue').innerHTML = calcValueStatus(pFTOver25, oOver);
+
+            document.getElementById('suggestDrawProb').innerText = (pDraw * 100).toFixed(1) + '%';
+            document.getElementById('suggestDrawFair').innerText = pDraw > 0 ? (1 / pDraw).toFixed(2) : '-';
+            document.getElementById('suggestDrawValue').innerHTML = calcValueStatus(pDraw, oDraw);
+
+            document.getElementById('suggestUnderProb').innerText = (pFTUnder25 * 100).toFixed(1) + '%';
+            document.getElementById('suggestUnderFair').innerText = pFTUnder25 > 0 ? (1 / pFTUnder25).toFixed(2) : '-';
+            document.getElementById('suggestUnderValue').innerHTML = calcValueStatus(pFTUnder25, oUnder);
+
             const calcKelly = (prob, odds) => {
                 if (odds <= 1.0) return '<span class="text-danger fw-bold">เรตผิดพลาด</span>';
                 const q = 1 - prob; const b = odds - 1;
@@ -656,6 +827,7 @@
             document.getElementById('kellyHome').innerHTML = calcKelly(pHHome, oHome);
             document.getElementById('kellyDraw').innerHTML = calcKelly(pDraw, oDraw);
             document.getElementById('kellyAway').innerHTML = calcKelly(pAAway, oAway);
+            
             document.getElementById('ftProb1').innerText = (pHHome * 100).toFixed(1) + '%';
             document.getElementById('ftProbX').innerText = (pDraw * 100).toFixed(1) + '%';
             document.getElementById('ftProb2').innerText = (pAAway * 100).toFixed(1) + '%';
@@ -706,14 +878,15 @@
             const top3Sum = top3Raw.reduce((sum, item) => sum + item.prob, 0);
             const finalScores = top3Raw.map(x => ({ score: x.score, prob: (x.prob / top3Sum) * 100 }));
             const scoreContainer = document.getElementById('topScoresContainer'); scoreContainer.innerHTML = '';
-            const colors = ['bg-success', 'bg-warning text-dark', 'bg-secondary']; const icons = ['🥇', '🥈', '🥉'];
+            const colors = ['bg-success text-white', 'bg-warning text-dark', 'bg-secondary text-white']; const icons = ['🥇', '🥈', '🥉'];
             finalScores.forEach((item, i) => { scoreContainer.innerHTML += `<div class="col-4"><div class="score-box ${colors[i]} shadow-sm"><div class="small fw-bold mb-1">${icons[i]}</div><div class="h5 fw-extrabold mb-1">${item.score}</div><div class="text-xs fw-bold">${item.prob.toFixed(1)}%</div></div></div>`; });
 
             const hShotAcc = hShots > 0 ? hSot / hShots : 0, aShotAcc = aShots > 0 ? aSot / aShots : 0;
             const possessionConsistency = 1 - Math.abs((hPoss / 100) - hRatio);
             const confidence = Math.round((possessionConsistency * 0.40 + ((hShotAcc + aShotAcc) / 2) * 0.35 + Math.min(1, (hShots + aShots + hDang + aDang) / 45) * 0.25) * 100);
             document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
-            document.getElementById('displayMinute').innerText = minute; document.getElementById('displayRemaining').innerText = remaining;
+            document.getElementById('displayMinute').innerText = minute;
+            document.getElementById('displayRemaining').innerText = remaining;
             document.getElementById('confidenceBadge').innerText = `Confidence: ${confidence}%`;
 
             const rcArea = document.getElementById('redCardImpactArea');
@@ -723,13 +896,7 @@
                 rcArea.classList.remove('d-none');
             } else { rcArea.classList.add('d-none'); }
 
-            document.getElementById('xgBreakdown').innerHTML = `<div class="d-flex justify-content-between border-bottom border-secondary pb-1 mb-1"><span>🏠 เหย้า xG: <strong>${xgH.toFixed(2)}</strong></span><span class="text-success">${hShotXg.toFixed(2)} (ยิง)</span></div><div class="d-flex justify-content-between"><span>✈️ เยือน xG: <strong>${xgA.toFixed(2)}</strong></span><span class="text-primary">${aShotXg.toFixed(2)} (ยิง)</span></div>`;
-
-            const logTimestamp = new Date().toLocaleTimeString('th-TH');
-            // เพิ่มข้อมูล Tempo ลงใน Log
-            const logEntryText = `[${logTimestamp}] ลีก: ${currentLeagueText} | ${homeName} (${cH}) vs (${cA}) ${awayName} (นาที ${minute})\n  - Tempo: ${tempoText}\n  - 1X2: เหย้า ${(pHHome*100).toFixed(1)}% | เสมอ ${(pDraw*100).toFixed(1)}% | เยือน ${(pAAway*100).toFixed(1)}%\n  - AH (${ahRate}): เหย้า ${(pAHHomeWin*100).toFixed(1)}% | เยือน ${(pAHAwayWin*100).toFixed(1)}%\n  - สูง 2.5: ${(pFTOver25*100).toFixed(1)}%\n----------------------------------------------------------------------------------------------------\n`;
-            globalLogString = logEntryText + globalLogString;
-            document.getElementById('logArea').innerText = globalLogString;
+            document.getElementById('xgBreakdown').innerHTML = `<div class="d-flex justify-content-between border-bottom pb-1 mb-1"><span>🏠 เหย้า xG: <strong>${xgH.toFixed(2)}</strong></span><span class="text-success">${hShotXg.toFixed(2)} (ยิง)</span></div><div class="d-flex justify-content-between"><span>✈️ เยือน xG: <strong>${xgA.toFixed(2)}</strong></span><span class="text-primary">${aShotXg.toFixed(2)} (ยิง)</span></div>`;
 
             if (window.innerWidth < 992) document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
         }
