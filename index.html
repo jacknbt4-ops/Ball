@@ -3,66 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v3.4 - Light Mode Edition</title>
+    <title>⚽ JackAI Scanner v3.9 - Pure Predictor</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
     <style>
-        /* 🌟 Light Mode Theme */
-        body { 
-            background-color: #f8f9fa; 
-            color: #212529; 
-            min-height: 100vh; 
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; 
-            display: flex; 
-            flex-direction: column; 
+        html, body {
+            margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
         }
-        
-        .main-container { flex: 1; padding: 15px; display: flex; gap: 15px; height: calc(100vh - 56px); overflow: hidden; }
-        .left-panel { width: 420px; min-width: 420px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px; }
-        .right-panel { flex: 1; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px; }
+        body { 
+            background-color: #f8f9fa; color: #212529; 
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; 
+            display: flex; flex-direction: column; 
+        }
+        .navbar-custom { height: 56px; flex-shrink: 0; }
+        .main-container { 
+            flex: 1; padding: 10px; display: flex; gap: 10px; 
+            height: calc(100vh - 56px); box-sizing: border-box; overflow: hidden;
+        }
+        .left-panel { width: 420px; min-width: 420px; height: 100%; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px; }
+        .right-panel { flex: 1; height: 100%; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px; }
         
         @media (max-width: 991.98px) { 
-            body { overflow: auto !important; } 
+            html, body { overflow: auto; height: auto; }
             .main-container { flex-direction: column; height: auto; overflow: visible; } 
-            .left-panel, .right-panel { width: 100% !important; min-width: 100% !important; height: auto !important; } 
+            .left-panel, .right-panel { width: 100% !important; min-width: 100% !important; height: auto !important; overflow-y: visible !important; } 
         }
 
-        /* Card & Input Styling */
-        .card { 
-            background-color: #ffffff; 
-            border: 1px solid #dee2e6; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-            color: #212529;
-        }
-        .form-control-sm, .form-select-sm { 
-            padding: 4px 8px; 
-            font-size: 0.85rem; 
-            background-color: #ffffff; 
-            border: 1px solid #ced4da; 
-            color: #212529; 
-        }
-        .form-control-sm:focus, .form-select-sm:focus { 
-            background-color: #ffffff; 
-            color: #212529; 
-            border-color: #86b7fe; 
-            box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25); 
-        }
+        .card { background-color: #ffffff; border: 1px solid #dee2e6; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); color: #212529; }
+        .form-control-sm, .form-select-sm { padding: 4px 8px; font-size: 0.85rem; background-color: #ffffff; border: 1px solid #ced4da; color: #212529; }
+        .form-control-sm:focus, .form-select-sm:focus { background-color: #ffffff; color: #212529; border-color: #86b7fe; box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25); }
         
-        /* Stats & Custom Boxes */
         .stat-grid label { font-size: 0.75rem; margin-bottom: 2px; color: #6c757d; }
         .stat-grid input { text-align: center; font-weight: 600; }
         
-        .red-card-box { 
-            border: 1px solid #f5c2c7; 
-            background: #f8d7da; 
-            border-radius: 8px; 
-            padding: 8px; 
-        }
+        .red-card-box { border: 1px solid #f5c2c7; background: #f8d7da; border-radius: 8px; padding: 8px; }
         .red-card-input { border-color: #dc3545 !important; font-weight: 700; color: #dc3545; }
         
-        /* Result Cards */
         .next-goal-card { border-radius: 10px; padding: 10px; text-align: center; border: 1px solid; }
         .ng-none { background: #e2e3e5; border-color: #d3d6d8; color: #383d41; }
         .ng-home { background: #d4edda; border-color: #c3e6cb; color: #155724; }
@@ -77,46 +54,22 @@
         .bg-orange { background-color: #fd7e14 !important; }
         .text-orange { color: #fd7e14 !important; }
         
-        .warn-box { 
-            background: #fff3cd; 
-            border: 1px solid #ffecb5; 
-            border-radius: 6px; 
-            padding: 6px 10px; 
-            font-size: 0.75rem; 
-            color: #856404; 
-        }
-        
-        .xh-highlight { 
-            font-size: 0.75rem; 
-            background: #e9ecef; 
-            padding: 8px; 
-            border-radius: 8px; 
-            border: 1px solid #ced4da; 
-            color: #495057; 
-        }
+        .warn-box { background: #fff3cd; border: 1px solid #ffecb5; border-radius: 6px; padding: 6px 10px; font-size: 0.75rem; color: #856404; }
+        .xh-highlight { font-size: 0.75rem; background: #e9ecef; padding: 8px; border-radius: 8px; border: 1px solid #ced4da; color: #495057; }
         
         #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
         
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; } 
+        ::-webkit-scrollbar { width: 6px; height: 6px; } 
         ::-webkit-scrollbar-track { background: transparent; } 
         ::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #adb5bd; }
         
         input[type=range] { height: 6px; padding: 0; cursor: pointer; }
-        
-        /* Market Cards (Over/Under/Draw) */
-        .market-card { border-radius: 10px; padding: 12px; text-align: center; border: 2px solid; transition: transform 0.2s; }
-        .market-card:hover { transform: translateY(-3px); }
-        .market-over { background: #ffe5d0; border-color: #fd7e14; color: #b24a00; }
-        .market-draw { background: #fff3cd; border-color: #ffc107; color: #856404; }
-        .market-under { background: #cfe2ff; border-color: #0d6efd; color: #084298; }
 
-        /* Override Bootstrap Dark Utilities for Light Mode */
         .bg-dark { background-color: #f1f3f5 !important; color: #212529 !important; }
         .text-light { color: #212529 !important; }
         .border-secondary { border-color: #dee2e6 !important; }
-        .text-white { color: #212529 !important; }
+        .badge.text-white { color: #ffffff !important; }
     </style>
 </head>
 <body>
@@ -126,15 +79,15 @@
         <p class="text-muted small" id="ocrProgress">กำลังเตรียมการ...</p>
     </div>
 
-    <nav class="navbar navbar-light bg-white px-3 py-2 shadow-sm border-bottom">
+    <nav class="navbar navbar-light bg-white px-3 shadow-sm border-bottom navbar-custom">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-5 text-dark fw-bold">⚽ JackAI Scanner v3.4</span>
-            <span class="text-muted small d-none d-sm-block">Smart Injury & Extra Time (Light Mode)</span>
+            <span class="navbar-brand mb-0 h1 fs-5 text-dark fw-bold">⚽ JackAI Scanner v3.9</span>
+            <span class="text-muted small d-none d-sm-block">Pure Match Predictor</span>
         </div>
     </nav>
 
     <div class="main-container">
-        <!-- ฝั่งซ้าย: แผงควบคุมและกรอกสถิติ -->
+        <!-- ฝั่งซ้าย: แผงควบคุม -->
         <div class="left-panel">
             <div class="card p-3">
                 <div class="row g-2 mb-2">
@@ -142,7 +95,7 @@
                     <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary" value="ทีมเยือน" placeholder="ทีมเยือน"></div>
                 </div>
 
-                <!-- 🔥 ระบบ API Integration -->
+                <!-- API Integration -->
                 <div class="mb-3 p-2 rounded border bg-light">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <label class="small text-primary fw-bold mb-0"><i class="bi bi-cloud-download"></i> ดึงข้อมูลสดจาก API จริง</label>
@@ -218,35 +171,24 @@
                     <div class="col-6 border-end">
                         <div class="text-success fw-bold small mb-2 border-bottom pb-1">🏠 เหย้า</div>
                         <div class="stat-grid d-flex flex-column gap-2">
-                            <div><label>ยิงทั้งหมด</label><input type="number" id="h_shots" class="form-control form-control-sm" value="5" min="0"></div>
-                            <div><label class="text-danger fw-bold">ยิงตรงกรอบ (SOT)</label><input type="number" id="h_sot" class="form-control form-control-sm border-danger" value="2" min="0"></div>
-                            <div><label>บุกอันตราย</label><input type="number" id="h_dang" class="form-control form-control-sm" value="14" min="0"></div>
+                            <div><label>ยิงทั้งหมด</label><input type="number" id="h_shots" class="form-control form-control-sm" value="0" min="0"></div>
+                            <div><label class="text-danger fw-bold">ยิงตรงกรอบ (SOT)</label><input type="number" id="h_sot" class="form-control form-control-sm border-danger" value="0" min="0"></div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="text-primary fw-bold small mb-2 border-bottom pb-1">✈️ เยือน</div>
                         <div class="stat-grid d-flex flex-column gap-2">
-                            <div><label>ยิงทั้งหมด</label><input type="number" id="a_shots" class="form-control form-control-sm" value="5" min="0"></div>
-                            <div><label class="text-danger fw-bold">ยิงตรงกรอบ (SOT)</label><input type="number" id="a_sot" class="form-control form-control-sm border-danger" value="2" min="0"></div>
-                            <div><label>บุกอันตราย</label><input type="number" id="a_dang" class="form-control form-control-sm" value="14" min="0"></div>
+                            <div><label>ยิงทั้งหมด</label><input type="number" id="a_shots" class="form-control form-control-sm" value="0" min="0"></div>
+                            <div><label class="text-danger fw-bold">ยิงตรงกรอบ (SOT)</label><input type="number" id="a_sot" class="form-control form-control-sm border-danger" value="0" min="0"></div>
                         </div>
                     </div>
-                </div>
-
-                <div class="row g-2 mb-3 p-2 rounded border bg-light">
-                    <div class="col-12"><label class="small text-dark fw-bold mb-1">📈 ราคาพูลบ่อนสด (Live Bookmaker Odds)</label></div>
-                    <div class="col-4"><label class="text-xs text-muted mb-0">เหย้า (1)</label><input type="number" id="odds_home" class="form-control form-control-sm" step="0.01" placeholder="2.10" value="2.10"></div>
-                    <div class="col-4"><label class="text-xs text-muted mb-0">เสมอ (X)</label><input type="number" id="odds_draw" class="form-control form-control-sm" step="0.01" placeholder="3.20" value="3.20"></div>
-                    <div class="col-4"><label class="text-xs text-muted mb-0">เยือน (2)</label><input type="number" id="odds_away" class="form-control form-control-sm" step="0.01" placeholder="3.40" value="3.40"></div>
-                    <div class="col-6 mt-2"><label class="text-xs text-muted mb-0">สูง 2.5 (Over)</label><input type="number" id="odds_over" class="form-control form-control-sm" step="0.01" placeholder="1.85" value="1.85"></div>
-                    <div class="col-6 mt-2"><label class="text-xs text-muted mb-0">ต่ำ 2.5 (Under)</label><input type="number" id="odds_under" class="form-control form-control-sm" step="0.01" placeholder="1.95" value="1.95"></div>
                 </div>
 
                 <button type="button" class="btn btn-danger w-100 fw-bold shadow-sm rounded-pill mb-1" onclick="predictMatch()">🔮 ประมวลผลคาดการณ์</button>
             </div>
         </div>
 
-        <!-- ฝั่งขวา: การแสดงผลการวิเคราะห์และคาดการณ์ -->
+        <!-- ฝั่งขวา: แสดงผล -->
         <div class="right-panel">
             <div id="resultsArea" class="d-flex flex-column gap-2 h-100 d-none">
                 <div class="card p-3 bg-white text-dark text-center position-relative border">
@@ -261,46 +203,6 @@
 
                 <div id="inputWarning" class="warn-box d-none"><strong>⚠️ คำเตือน:</strong> <span id="inputWarningText"></span></div>
                 <div id="redCardImpactArea" class="alert alert-danger py-2 small d-none mb-0"><strong>🟥 ใบแดง:</strong> <span id="redImpactText"></span></div>
-
-                <!-- 🌟 การ์ดแนะนำ สูง / เสมอ / ต่ำ -->
-                <div class="card p-3">
-                    <h6 class="fw-bold text-dark mb-3 text-center"><i class="bi bi-stars text-warning"></i> AI แนะนำ: สูง / เสมอ / ต่ำ (Over / Draw / Under)</h6>
-                    <div class="row g-2">
-                        <div class="col-md-4">
-                            <div class="market-card market-over">
-                                <div class="small fw-bold mb-1">🔥 สูง 2.5 (Over)</div>
-                                <div class="h3 fw-extrabold mb-1" id="suggestOverProb">0%</div>
-                                <div class="small text-muted mb-1">Fair Odds: <span id="suggestOverFair" class="text-dark fw-bold">-</span></div>
-                                <div class="small fw-bold" id="suggestOverValue">-</div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="market-card market-draw">
-                                <div class="small fw-bold mb-1">⚖️ เสมอ (Draw)</div>
-                                <div class="h3 fw-extrabold mb-1" id="suggestDrawProb">0%</div>
-                                <div class="small text-muted mb-1">Fair Odds: <span id="suggestDrawFair" class="text-dark fw-bold">-</span></div>
-                                <div class="small fw-bold" id="suggestDrawValue">-</div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="market-card market-under">
-                                <div class="small fw-bold mb-1">🧊 ต่ำ 2.5 (Under)</div>
-                                <div class="h3 fw-extrabold mb-1" id="suggestUnderProb">0%</div>
-                                <div class="small text-muted mb-1">Fair Odds: <span id="suggestUnderFair" class="text-dark fw-bold">-</span></div>
-                                <div class="small fw-bold" id="suggestUnderValue">-</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card p-3">
-                    <h6 class="fw-bold mb-2 text-center text-dark"><i class="bi bi-cash-coin text-success"></i> ขนาดไม้ที่คุ้มค่า (Kelly Criterion 1X2)</h6>
-                    <div class="row g-2 text-center">
-                        <div class="col-4"><div class="p-2 bg-light rounded border"><div class="small fw-bold mb-1 text-dark">ไม้เหย้า (1)</div><div class="h5 fw-bold mb-0" id="kellyHome">-</div></div></div>
-                        <div class="col-4"><div class="p-2 bg-light rounded border"><div class="small fw-bold mb-1 text-dark">ไม้เสมอ (X)</div><div class="h5 fw-bold mb-0" id="kellyDraw">-</div></div></div>
-                        <div class="col-4"><div class="p-2 bg-light rounded border"><div class="small fw-bold mb-1 text-dark">ไม้เยือน (2)</div><div class="h5 fw-bold mb-0" id="kellyAway">-</div></div></div>
-                    </div>
-                </div>
 
                 <div class="row g-2">
                     <div class="col-md-6">
@@ -390,9 +292,6 @@
         let currentLeagueAvgGoals = 2.70;
         let fetchedMatchesCache = [];
 
-        // ==========================================
-        // 🔥 ระบบดึงข้อมูลจาก API
-        // ==========================================
         const API_BASE_URL = 'https://v3.football.api-sports.io';
 
         async function loadLiveMatches() {
@@ -460,6 +359,15 @@
             
             statusEl.innerHTML = '<span class="spinner-border spinner-border-sm text-primary"></span> กำลังดึงสถิติละเอียด...';
 
+            document.getElementById('h_shots').value = 0;
+            document.getElementById('a_shots').value = 0;
+            document.getElementById('h_sot').value = 0;
+            document.getElementById('a_sot').value = 0;
+            document.getElementById('red_home').value = 0;
+            document.getElementById('red_away').value = 0;
+            document.getElementById('poss_slider').value = 50;
+            updatePossession();
+
             document.getElementById('home_name').value = match.teams.home.name;
             document.getElementById('away_name').value = match.teams.away.name;
             document.getElementById('leagueInput').value = match.league.name;
@@ -515,16 +423,8 @@
                     document.getElementById('a_sot').value = getStat(awayStats, 'Shots on Goal');
                     document.getElementById('red_home').value = getStat(homeStats, 'Red Cards');
                     document.getElementById('red_away').value = getStat(awayStats, 'Red Cards');
-                    
-                    const hInside = getStat(homeStats, 'Shots insidebox');
-                    const aInside = getStat(awayStats, 'Shots insidebox');
-                    const hCorners = getStat(homeStats, 'Corner Kicks');
-                    const aCorners = getStat(awayStats, 'Corner Kicks');
-                    
-                    document.getElementById('h_dang').value = (hInside * 2) + hCorners + 5;
-                    document.getElementById('a_dang').value = (aInside * 2) + aCorners + 5;
                 }
-                statusEl.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> ดึงสถิติสำเร็จ! (ประเมินบุกอันตรายแล้ว)</span>`;
+                statusEl.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> ดึงสถิติสำเร็จ!</span>`;
                 document.getElementById('match_minute').scrollIntoView({behavior: "smooth", block: "center"});
                 
             } catch (e) {
@@ -532,9 +432,6 @@
             }
         }
 
-        // ==========================================
-        // 📊 ฐานข้อมูลลีก
-        // ==========================================
         const LEAGUE_CONSTANTS = {
             'premier league': { name: "พรีเมียร์ลีกอังกฤษ", goals: 3.24, mod: 1.20 },
             'championship': { name: "แชมเปี้ยนชิพ อังกฤษ", goals: 2.68, mod: 0.98 },
@@ -563,7 +460,7 @@
             'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98 }
         };
 
-        const XG_WEIGHTS = { SOT: 0.52, OFF_TARGET: 0.05, DANGEROUS: 0.016, POSSESSION: 0.0035 };
+        const XG_WEIGHTS = { SOT: 0.60, OFF_TARGET: 0.04, POSSESSION: 0.0035 };
         const RED_CARD_ATTACK_MULT = 0.72;
         const RED_CARD_DEFENSE_MULT = 1.25;
         const FIRST_HALF_RATIO = 0.45;
@@ -667,12 +564,6 @@
             const redAway = Math.max(0, parseInt(document.getElementById('red_away').value) || 0);
             const ahRate = parseFloat(document.getElementById('handicapSelect').value);
 
-            const oHome = parseFloat(document.getElementById('odds_home').value) || 1.0;
-            const oDraw = parseFloat(document.getElementById('odds_draw').value) || 1.0;
-            const oAway = parseFloat(document.getElementById('odds_away').value) || 1.0;
-            const oOver = parseFloat(document.getElementById('odds_over').value) || 1.0;
-            const oUnder = parseFloat(document.getElementById('odds_under').value) || 1.0;
-
             const sliderVal = parseFloat(document.getElementById('poss_slider').value);
             let hPoss = sliderVal; let aPoss = 100 - sliderVal;
 
@@ -680,8 +571,6 @@
             let aShotsRaw = Math.max(0, parseInt(document.getElementById('a_shots').value) || 0);
             let hSotRaw = Math.max(0, parseInt(document.getElementById('h_sot').value) || 0);
             let aSotRaw = Math.max(0, parseInt(document.getElementById('a_sot').value) || 0);
-            const hDang = Math.max(0, parseInt(document.getElementById('h_dang').value) || 0);
-            const aDang = Math.max(0, parseInt(document.getElementById('a_dang').value) || 0);
 
             if (remaining === 0) { alert('การแข่งขันจบลงแล้ว (ไม่มีเวลาทดเจ็บหรือต่อเวลาเหลือ)'); return; }
 
@@ -696,10 +585,9 @@
 
             const hShotXg = hSot * XG_WEIGHTS.SOT + Math.max(0, hShots - hSot) * XG_WEIGHTS.OFF_TARGET;
             const aShotXg = aSot * XG_WEIGHTS.SOT + Math.max(0, aShots - aSot) * XG_WEIGHTS.OFF_TARGET;
-            const hDangXg = hDang * XG_WEIGHTS.DANGEROUS, aDangXg = aDang * XG_WEIGHTS.DANGEROUS;
             const hPossXg = hPoss * XG_WEIGHTS.POSSESSION, aPossXg = aPoss * XG_WEIGHTS.POSSESSION;
 
-            const hAttack = hShotXg + hDangXg + hPossXg, aAttack = aShotXg + aDangXg + aPossXg;
+            const hAttack = hShotXg + hPossXg, aAttack = aShotXg + aPossXg;
             const totalAttack = hAttack + aAttack;
 
             if (totalAttack < 0.05) { alert('กรุณาระบุข้อมูลค่าสถิติทีมก่อนทำการประมวลผล'); return; }
@@ -708,11 +596,11 @@
             
             let tempoModifier = 1.0;
             let tempoText = "ปกติ";
-            let tempoBadgeClass = "bg-secondary text-white";
+            let tempoBadgeClass = "bg-secondary";
             let tempoIcon = "bi-speedometer2";
 
             if (minute >= 15) {
-                const expectedGoalsSoFar = (currentLeagueAvgGoals / totalMatchTime) * minute;
+                const expectedGoalsSoFar = Math.max(0.1, (currentLeagueAvgGoals / totalMatchTime) * minute);
                 const actualGoals = currentTotalGoals;
 
                 if (actualGoals > expectedGoalsSoFar) {
@@ -778,56 +666,55 @@
             probGrid.forEach(x => x.p /= total);
 
             let pHHome = 0, pDraw = 0, pAAway = 0;
-            let pAHHomeWin = 0, pAHAwayWin = 0;
+            let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
             let pFTOver15 = 0, pFTOver25 = 0, pFTOver35 = 0;
+
+            const calcAHOutcome = (finalH, finalA, handicap) => {
+                const net = finalH - finalA - handicap;
+                if (net > 0.001) return 1;
+                if (net < -0.001) return -1;
+                return 0;
+            };
 
             probGrid.forEach(x => {
                 const finalH = cH + x.h; const finalA = cA + x.a; const totalFTGoals = finalH + finalA;
+                
                 if (finalH > finalA) pHHome += x.p;
                 else if (finalH === finalA) pDraw += x.p;
                 else pAAway += x.p;
-                const netHScore = finalH - finalA - ahRate;
-                if (netHScore > 0) pAHHomeWin += x.p;
-                else if (netHScore < 0) pAHAwayWin += x.p;
-                else { pAHHomeWin += x.p * 0.5; pAHAwayWin += x.p * 0.5; }
+                
+                let ahOutcome = 0;
+                const absH = Math.abs(ahRate);
+                const frac = absH - Math.floor(absH);
+                
+                if (Math.abs(frac - 0.25) < 0.001 || Math.abs(frac - 0.75) < 0.001) {
+                    let h1, h2;
+                    if (Math.abs(frac - 0.25) < 0.001) {
+                        h1 = Math.floor(absH);
+                        h2 = Math.floor(absH) + 0.5;
+                    } else {
+                        h1 = Math.floor(absH) + 0.5;
+                        h2 = Math.ceil(absH);
+                    }
+                    if (ahRate < 0) { h1 = -h1; h2 = -h2; }
+                    const r1 = calcAHOutcome(finalH, finalA, h1);
+                    const r2 = calcAHOutcome(finalH, finalA, h2);
+                    ahOutcome = (r1 + r2) / 2;
+                } else {
+                    ahOutcome = calcAHOutcome(finalH, finalA, ahRate);
+                }
+
+                if (ahOutcome > 0.001) pAHHomeWin += x.p;
+                else if (ahOutcome < -0.001) pAHAwayWin += x.p;
+                else if (Math.abs(ahOutcome) < 0.001) pAHPush += x.p;
+                else if (ahOutcome === 0.5) { pAHHomeWin += x.p * 0.5; pAHPush += x.p * 0.5; }
+                else if (ahOutcome === -0.5) { pAHAwayWin += x.p * 0.5; pAHPush += x.p * 0.5; }
+
                 if (totalFTGoals > 1.5) pFTOver15 += x.p;
                 if (totalFTGoals > 2.5) pFTOver25 += x.p;
                 if (totalFTGoals > 3.5) pFTOver35 += x.p;
             });
 
-            const pFTUnder25 = 1 - pFTOver25;
-
-            const calcValueStatus = (prob, odds) => {
-                if (odds <= 1.0) return '<span class="text-muted">ไม่มีราคา</span>';
-                const edge = (odds * prob) - 1;
-                if (edge > 0.05) return `<span class="badge bg-success">เล่นได้ (Value +${(edge*100).toFixed(1)}%)</span>`;
-                return '<span class="badge bg-danger">ไม่คุ้ม (No Value)</span>';
-            };
-
-            document.getElementById('suggestOverProb').innerText = (pFTOver25 * 100).toFixed(1) + '%';
-            document.getElementById('suggestOverFair').innerText = pFTOver25 > 0 ? (1 / pFTOver25).toFixed(2) : '-';
-            document.getElementById('suggestOverValue').innerHTML = calcValueStatus(pFTOver25, oOver);
-
-            document.getElementById('suggestDrawProb').innerText = (pDraw * 100).toFixed(1) + '%';
-            document.getElementById('suggestDrawFair').innerText = pDraw > 0 ? (1 / pDraw).toFixed(2) : '-';
-            document.getElementById('suggestDrawValue').innerHTML = calcValueStatus(pDraw, oDraw);
-
-            document.getElementById('suggestUnderProb').innerText = (pFTUnder25 * 100).toFixed(1) + '%';
-            document.getElementById('suggestUnderFair').innerText = pFTUnder25 > 0 ? (1 / pFTUnder25).toFixed(2) : '-';
-            document.getElementById('suggestUnderValue').innerHTML = calcValueStatus(pFTUnder25, oUnder);
-
-            const calcKelly = (prob, odds) => {
-                if (odds <= 1.0) return '<span class="text-danger fw-bold">เรตผิดพลาด</span>';
-                const q = 1 - prob; const b = odds - 1;
-                const edge = (b * prob - q) / b; 
-                if (edge > 0) return `<span class="text-success fw-bold">+${(edge * 100).toFixed(1)}%</span>`;
-                return '<span class="text-danger fw-bold" style="font-size:0.75rem;">เสียเปรียบ (ข้าม)</span>';
-            };
-
-            document.getElementById('kellyHome').innerHTML = calcKelly(pHHome, oHome);
-            document.getElementById('kellyDraw').innerHTML = calcKelly(pDraw, oDraw);
-            document.getElementById('kellyAway').innerHTML = calcKelly(pAAway, oAway);
-            
             document.getElementById('ftProb1').innerText = (pHHome * 100).toFixed(1) + '%';
             document.getElementById('ftProbX').innerText = (pDraw * 100).toFixed(1) + '%';
             document.getElementById('ftProb2').innerText = (pAAway * 100).toFixed(1) + '%';
@@ -883,7 +770,8 @@
 
             const hShotAcc = hShots > 0 ? hSot / hShots : 0, aShotAcc = aShots > 0 ? aSot / aShots : 0;
             const possessionConsistency = 1 - Math.abs((hPoss / 100) - hRatio);
-            const confidence = Math.round((possessionConsistency * 0.40 + ((hShotAcc + aShotAcc) / 2) * 0.35 + Math.min(1, (hShots + aShots + hDang + aDang) / 45) * 0.25) * 100);
+            const confidence = Math.round((possessionConsistency * 0.40 + ((hShotAcc + aShotAcc) / 2) * 0.35 + Math.min(1, (hShots + aShots) / 30) * 0.25) * 100);
+            
             document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
             document.getElementById('displayMinute').innerText = minute;
             document.getElementById('displayRemaining').innerText = remaining;
