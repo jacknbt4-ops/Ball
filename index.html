@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v2.9 - Pro Analytics</title>
+    <title>⚽ JackAI Scanner v3.0 - Smart Tempo Analytics</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
@@ -48,8 +48,8 @@
 
     <nav class="navbar navbar-dark bg-dark px-3 py-2 shadow-sm border-bottom border-secondary">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-5 text-light">⚽ JackAI Scanner v2.9</span>
-            <span class="text-muted small d-none d-sm-block">Pro Analytics & Smart API</span>
+            <span class="navbar-brand mb-0 h1 fs-5 text-light">⚽ JackAI Scanner v3.0</span>
+            <span class="text-muted small d-none d-sm-block">Smart Tempo Analytics</span>
         </div>
     </nav>
 
@@ -77,7 +77,7 @@
                     <select id="liveMatchSelect" class="form-select form-select-sm" onchange="onSelectLiveMatch()" disabled>
                         <option value="">-- กดปุ่ม "โหลดคู่สด" เพื่อดึงรายชื่อ --</option>
                     </select>
-                    <div id="apiStatus" class="mt-1 text-muted" style="font-size:0.68rem;">พร้อมใช้งาน (ระบบจะดึงบุกอันตรายให้อัตโนมัติ)</div>
+                    <div id="apiStatus" class="mt-1 text-muted" style="font-size:0.68rem;">พร้อมใช้งาน (ดึงบุกอันตรายอัตโนมัติ)</div>
                 </div>
 
                 <div class="row g-2 mb-2">
@@ -167,9 +167,11 @@
                 <div class="card p-3 bg-dark text-white text-center position-relative border border-secondary">
                     <h4 class="fw-bold mb-1" id="resultTitle">ทีมเหย้า 0 - 0 ทีมเยือน</h4>
                     <div class="small text-warning">นาทีที่ <span id="displayMinute">45</span> (เหลือ <span id="displayRemaining">45</span> นาที)</div>
-                    <div class="d-flex justify-content-center gap-2 mt-2">
+                    <div class="d-flex justify-content-center gap-2 mt-2 flex-wrap">
                         <span class="badge bg-secondary" id="leagueInfluenceText">ลีกมาตรฐาน</span>
                         <span class="badge bg-info text-dark" id="confidenceBadge">Confidence: -</span>
+                        <!-- 🔥 Badge แสดงสถานะ Tempo -->
+                        <span class="badge bg-secondary" id="tempoBadge"><i class="bi bi-speedometer2"></i> Tempo: ปกติ</span>
                     </div>
                 </div>
 
@@ -275,7 +277,7 @@
         let fetchedMatchesCache = [];
 
         // ==========================================
-        // 🔥 ระบบดึงข้อมูลจาก API (Smart API v2.9)
+        // 🔥 ระบบดึงข้อมูลจาก API (Smart API v3.0)
         // ==========================================
         const API_BASE_URL = 'https://v3.football.api-sports.io';
 
@@ -380,7 +382,7 @@
                     document.getElementById('red_home').value = getStat(homeStats, 'Red Cards');
                     document.getElementById('red_away').value = getStat(awayStats, 'Red Cards');
                     
-                    // 🔥 [Smart API] คำนวณ Dangerous Attacks จาก (Shots insidebox * 2) + Corners + 5
+                    // Smart API: คำนวณ Dangerous Attacks
                     const hInside = getStat(homeStats, 'Shots insidebox');
                     const aInside = getStat(awayStats, 'Shots insidebox');
                     const hCorners = getStat(homeStats, 'Corner Kicks');
@@ -389,7 +391,7 @@
                     document.getElementById('h_dang').value = (hInside * 2) + hCorners + 5;
                     document.getElementById('a_dang').value = (aInside * 2) + aCorners + 5;
                 }
-                statusEl.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> ดึงสถิติสำเร็จ! (คำนวณ Dangerous Attacks ให้แล้ว)</span>`;
+                statusEl.innerHTML = `<span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> ดึงสถิติสำเร็จ! (ประเมินบุกอันตรายแล้ว)</span>`;
                 document.getElementById('match_minute').scrollIntoView({behavior: "smooth", block: "center"});
                 
             } catch (e) {
@@ -398,7 +400,7 @@
         }
 
         // ==========================================
-        // 📊 ฐานข้อมูลลีก (อัปเดต v2.9)
+        // 📊 ฐานข้อมูลลีก
         // ==========================================
         const LEAGUE_CONSTANTS = {
             'premier league': { name: "พรีเมียร์ลีกอังกฤษ", goals: 3.24, mod: 1.20 },
@@ -416,7 +418,6 @@
             'j3 league': { name: "เจลีก J3", goals: 2.50, mod: 0.95 },
             'เจลีก': { name: "เจลีก J1", goals: 2.65, mod: 0.98 },
             'k league': { name: "เคลีก เกาหลีใต้", goals: 2.55, mod: 0.94 },
-            // อัปเดตเพิ่มลีกที่คุณเจอ
             'liga de expansión mx': { name: "ลีกา เด เอ็กซ์แพนชั่น (เม็กซิโก)", goals: 2.60, mod: 0.95 },
             'liga mx': { name: "ลีกา เอ็มเอ็กซ์ (เม็กซิโก)", goals: 2.85, mod: 1.05 },
             'indian super league': { name: "อินเดีย ซูเปอร์ ลีก", goals: 2.80, mod: 1.05 },
@@ -549,23 +550,56 @@
 
             const hRatio = hAttack / totalAttack, aRatio = aAttack / totalAttack;
             
-            // 🔥 [NEW v2.9] คำนวณ Tempo Modifier (ความดุเดือด)
+            // 🔥 [CORE LOGIC] คำนวณ Tempo Modifier
             let tempoModifier = 1.0;
-            if (minute > 15) { 
-                const currentGoalRate = currentTotalGoals / minute; 
-                const normalGoalRate = (currentLeagueAvgGoals / 90);
-                
-                if (currentGoalRate > normalGoalRate) {
-                    tempoModifier = 1 + (currentGoalRate - normalGoalRate) * 20; 
-                    tempoModifier = Math.min(1.5, tempoModifier); 
-                } else if (currentTotalGoals === 0 && minute > 45) {
-                    tempoModifier = 0.85; 
+            let tempoText = "ปกติ";
+            let tempoBadgeClass = "bg-secondary";
+            let tempoIcon = "bi-speedometer2";
+
+            if (minute >= 15) {
+                const expectedGoalsSoFar = (currentLeagueAvgGoals / 90) * minute;
+                const actualGoals = currentTotalGoals;
+
+                if (actualGoals > expectedGoalsSoFar) {
+                    // เกมดุเดือด (ยิงมากกว่าค่าเฉลี่ย)
+                    const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
+                    tempoModifier = 1 + (diffRatio - 1) * 0.2; // บวกเพิ่ม
+                    tempoModifier = Math.min(1.5, tempoModifier); // สูงสุด 1.5 เท่า
+                    
+                    if (tempoModifier > 1.1) {
+                        tempoText = `🔥 ดุเดือด (x${tempoModifier.toFixed(2)})`;
+                        tempoBadgeClass = "bg-danger";
+                        tempoIcon = "bi-fire";
+                    }
+                } else if (actualGoals === 0 && minute > 30) {
+                    // เกมเนือย 0-0
+                    tempoModifier = 0.85; // ลดลง 15%
+                    tempoText = `🧊 เนือย (x${tempoModifier.toFixed(2)})`;
+                    tempoBadgeClass = "bg-primary";
+                    tempoIcon = "bi-snow";
+                } else if (actualGoals < expectedGoalsSoFar) {
+                    // เกมช้ากว่าปกติ
+                    const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
+                    tempoModifier = 1 - (1 - diffRatio) * 0.2;
+                    tempoModifier = Math.max(0.75, tempoModifier); // ต่ำสุด 0.75 เท่า
+                    
+                    if (tempoModifier < 0.9) {
+                        tempoText = `🐢 ช้า (x${tempoModifier.toFixed(2)})`;
+                        tempoBadgeClass = "bg-warning text-dark";
+                        tempoIcon = "bi-hourglass-split";
+                    }
                 }
             }
+
+            // อัปเดต UI Badge
+            const tempoEl = document.getElementById('tempoBadge');
+            tempoEl.className = `badge ${tempoBadgeClass}`;
+            tempoEl.innerHTML = `<i class="bi ${tempoIcon}"></i> Tempo: ${tempoText}`;
 
             const baseXgPerMin = (currentLeagueAvgGoals / 90) * currentLeagueModifier;
             const avgTw = avgTimeWeight(minute, remaining);
             
+            // นำ tempoModifier มาคูณกับ expectedGoals
             let expectedGoals = baseXgPerMin * remaining * avgTw * tempoModifier; 
             
             let xgH = expectedGoals * hRatio, xgA = expectedGoals * aRatio;
@@ -692,7 +726,8 @@
             document.getElementById('xgBreakdown').innerHTML = `<div class="d-flex justify-content-between border-bottom border-secondary pb-1 mb-1"><span>🏠 เหย้า xG: <strong>${xgH.toFixed(2)}</strong></span><span class="text-success">${hShotXg.toFixed(2)} (ยิง)</span></div><div class="d-flex justify-content-between"><span>✈️ เยือน xG: <strong>${xgA.toFixed(2)}</strong></span><span class="text-primary">${aShotXg.toFixed(2)} (ยิง)</span></div>`;
 
             const logTimestamp = new Date().toLocaleTimeString('th-TH');
-            const logEntryText = `[${logTimestamp}] ลีก: ${currentLeagueText} | ${homeName} (${cH}) vs (${cA}) ${awayName} (นาที ${minute})\n  - 1X2: เหย้า ${(pHHome*100).toFixed(1)}% | เสมอ ${(pDraw*100).toFixed(1)}% | เยือน ${(pAAway*100).toFixed(1)}%\n  - AH (${ahRate}): เหย้า ${(pAHHomeWin*100).toFixed(1)}% | เยือน ${(pAHAwayWin*100).toFixed(1)}%\n  - สูง 2.5: ${(pFTOver25*100).toFixed(1)}%\n----------------------------------------------------------------------------------------------------\n`;
+            // เพิ่มข้อมูล Tempo ลงใน Log
+            const logEntryText = `[${logTimestamp}] ลีก: ${currentLeagueText} | ${homeName} (${cH}) vs (${cA}) ${awayName} (นาที ${minute})\n  - Tempo: ${tempoText}\n  - 1X2: เหย้า ${(pHHome*100).toFixed(1)}% | เสมอ ${(pDraw*100).toFixed(1)}% | เยือน ${(pAAway*100).toFixed(1)}%\n  - AH (${ahRate}): เหย้า ${(pAHHomeWin*100).toFixed(1)}% | เยือน ${(pAHAwayWin*100).toFixed(1)}%\n  - สูง 2.5: ${(pFTOver25*100).toFixed(1)}%\n----------------------------------------------------------------------------------------------------\n`;
             globalLogString = logEntryText + globalLogString;
             document.getElementById('logArea').innerText = globalLogString;
 
