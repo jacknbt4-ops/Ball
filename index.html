@@ -3,122 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.2 - Manual Edition</title>
+    <title>⚽ JackAI Scanner v5.4 - Auto Strength Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
-        html, body {
-            margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
-        }
-        body { 
-            background-color: #f8f9fa; color: #212529; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, system-ui, -apple-system, Roboto; 
-            display: flex; flex-direction: column; 
-            font-size: 0.85rem; 
-        }
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+        body { background-color: #f8f9fa; color: #212529; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, system-ui, -apple-system, Roboto; display: flex; flex-direction: column; font-size: 0.85rem; }
         .navbar-custom { height: 50px; flex-shrink: 0; background-color: #ffffff; border-bottom: 1px solid #dee2e6; }
-        .main-container { 
-            flex: 1; padding: 10px; display: flex; gap: 10px; 
-            height: calc(100vh - 50px); box-sizing: border-box; overflow: hidden;
-        }
-        
-        .left-panel { width: 360px; min-width: 360px; height: 100%; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-right: 5px; }
+        .main-container { flex: 1; padding: 10px; display: flex; gap: 10px; height: calc(100vh - 50px); box-sizing: border-box; overflow: hidden; }
+        .left-panel { width: 400px; min-width: 400px; height: 100%; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-right: 5px; }
         .right-panel { flex: 1; height: 100%; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-right: 5px; }
-        
-        @media (max-width: 991.98px) { 
+        @media (max-width: 991.98px) {
             html, body { overflow: auto; height: auto; }
-            .main-container { flex-direction: column; height: auto; overflow: visible; } 
-            .left-panel, .right-panel { width: 100% !important; min-width: 100% !important; height: auto !important; overflow-y: visible !important; } 
+            .main-container { flex-direction: column; height: auto; overflow: visible; }
+            .left-panel, .right-panel { width: 100% !important; min-width: 100% !important; height: auto !important; overflow-y: visible !important; }
         }
-
         .card { background-color: #ffffff; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); color: #212529; }
         .card-body { padding: 12px; }
-        
-        .form-control-sm, .form-select-sm { 
-            padding: 4px 8px; 
-            font-size: 0.85rem; 
-            background-color: #ffffff; 
-            border: 1px solid #ced4da; 
-            color: #212529; 
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            border-radius: 6px;
-        }
-        
+        .form-control-sm, .form-select-sm { padding: 4px 8px; font-size: 0.85rem; background-color: #ffffff; border: 1px solid #ced4da; color: #212529; font-family: 'Segoe UI', Tahoma, sans-serif; border-radius: 6px; }
         .form-select-sm { font-weight: 600; }
-        
-        .stat-grid label { font-size: 0.75rem; margin-bottom: 2px; color: #6c757d; display: block; }
-        .stat-grid input { 
-            text-align: center; 
-            font-weight: 700; 
-            height: 32px; 
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            border-radius: 6px;
-            font-size: 0.95rem;
-        }
-        
+        .stat-grid label { font-size: 0.72rem; margin-bottom: 2px; color: #6c757d; display: block; }
+        .stat-grid input { text-align: center; font-weight: 700; height: 32px; font-family: 'Segoe UI', Tahoma, sans-serif; border-radius: 6px; font-size: 0.95rem; }
         .red-card-box { border: 1px solid #f5c2c7; background: #f8d7da; border-radius: 8px; padding: 4px 6px; }
-        .red-card-input { 
-            border-color: #dc3545 !important; 
-            font-weight: 700; 
-            color: #dc3545; 
-            height: 28px; 
-            text-align: center;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-        
+        .red-card-input { border-color: #dc3545 !important; font-weight: 700; color: #dc3545; height: 28px; text-align: center; font-family: 'Segoe UI', Tahoma, sans-serif; border-radius: 6px; font-size: 0.9rem; }
         .next-goal-card { border-radius: 6px; padding: 5px; text-align: center; border: 1px solid; }
         .ng-none { background: #e2e3e5; border-color: #d3d6d8; color: #383d41; }
         .ng-home { background: #d4edda; border-color: #c3e6cb; color: #155724; }
         .ng-away { background: #cce5ff; border-color: #b8daff; color: #004085; }
-        
         .fh-card { border-radius: 6px; padding: 5px; text-align: center; border: 1px solid; }
         .fh-home { background: #d4edda; border-color: #c3e6cb; color: #155724; }
         .fh-total { background: #fff3cd; border-color: #ffeeba; color: #856404; }
         .fh-away { background: #cce5ff; border-color: #b8daff; color: #004085; }
-        
         .score-box { border-radius: 8px; padding: 5px; text-align: center; color: white; }
         .bg-orange { background-color: #fd7e14 !important; }
         .text-orange { color: #fd7e14 !important; }
         .fw-extrabold { font-weight: 800; }
-        
         .warn-box { background: #fff3cd; border: 1px solid #ffecb5; border-radius: 4px; padding: 4px 8px; font-size: 0.75rem; color: #856404; }
         .xh-highlight { font-size: 0.7rem; background: #e9ecef; padding: 5px; border-radius: 6px; border: 1px solid #ced4da; color: #495057; }
-        
-        ::-webkit-scrollbar { width: 4px; height: 4px; } 
-        ::-webkit-scrollbar-track { background: transparent; } 
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #adb5bd; }
-        
-        /* ปรับแต่ง Slider ให้เหมือนรูป */
         input[type=range] { height: 8px; padding: 0; cursor: pointer; background-color: #e9ecef; border-radius: 5px; }
         input[type=range]::-webkit-slider-thumb { background: #0d6efd; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        
         .bg-dark { background-color: #f1f3f5 !important; color: #212529 !important; }
         .text-light { color: #212529 !important; }
         .border-secondary { border-color: #dee2e6 !important; }
         .badge.text-white { color: #ffffff !important; }
-        
-        /* ปรับแต่งปุ่มให้เหมือนรูป */
-        .btn-predict {
-            background-color: #dc3545;
-            color: white;
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            border: none;
-            box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
-            transition: all 0.2s;
-        }
+        .btn-predict { background-color: #dc3545; color: white; border-radius: 8px; padding: 10px; font-size: 1rem; font-weight: bold; border: none; box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3); transition: all 0.2s; }
         .btn-predict:hover { background-color: #c82333; color: white; }
+        .rating-box { border: 1px solid #cfe2ff; background: #e7f1ff; border-radius: 6px; padding: 4px 6px; }
+        .rating-box input { border-color: #0d6efd !important; font-weight: 700; color: #0d6efd; height: 26px; text-align: center; }
+        .calib-note { font-size: 0.65rem; color: #6c757d; font-style: italic; }
+        .auto-box { border: 1px dashed #fd7e14; background: #fff3cd; border-radius: 6px; padding: 6px; margin-bottom: 8px; }
+        .auto-label { font-size: 0.7rem; font-weight: bold; color: #d39e00; }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold"><i class="bi bi-globe2"></i> JackAI Scanner v5.2</span>
+            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold"><i class="bi bi-globe2"></i> JackAI Scanner v5.4 <span class="badge bg-success ms-1" style="font-size:0.55rem;">AUTO-STRENGTH</span></span>
         </div>
     </nav>
 
@@ -132,105 +76,90 @@
                     <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary" value="ทีมเยือน" placeholder="ทีมเยือน" style="border-width: 2px;"></div>
                 </div>
 
+                <!-- AUTO STRENGTH ESTIMATOR -->
+                <div class="auto-box">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="auto-label"><i class="bi bi-magic"></i> ประเมิน Strength อัตโนมัติ</span>
+                        <button class="btn btn-sm btn-warning py-0 px-2" style="font-size:0.65rem;" onclick="autoEstimateStrength()">คำนวณ</button>
+                    </div>
+                    <div class="row g-1">
+                        <div class="col-6">
+                            <label style="font-size:0.65rem; color:#6c757d;">ราคาต่อรอง AH (เหย้า)</label>
+                            <input type="number" id="auto_ah" class="form-control form-control-sm text-center" value="0" step="0.25" placeholder="เช่น -0.5, 0.75">
+                        </div>
+                        <div class="col-6">
+                            <label style="font-size:0.65rem; color:#6c757d;">น้ำหนักสถิติสด (%)</label>
+                            <input type="number" id="auto_live_weight" class="form-control form-control-sm text-center" value="30" min="0" max="100">
+                        </div>
+                    </div>
+                    <div class="mt-1" style="font-size:0.6rem; color:#856404;">
+                        *ระบบจะคำนวณ Strength จากราคา AH + สถิติการยิง/ครองบอลในเกม แล้วเติมใส่ช่อง Strength อัตโนมัติ
+                    </div>
+                </div>
+
+                <!-- Team Strength Prior (Elo-like 0-100) -->
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <label class="text-success fw-bold" style="font-size:0.68rem;">🏠 Strength เหย้า (0-100)</label>
+                        <div class="rating-box"><input type="number" id="home_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div>
+                    </div>
+                    <div class="col-6">
+                        <label class="text-primary fw-bold" style="font-size:0.68rem;">✈️ Strength เยือน (0-100)</label>
+                        <div class="rating-box"><input type="number" id="away_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div>
+                    </div>
+                </div>
+
                 <!-- ลีกและแฮนดิแคป -->
                 <div class="row g-2 mb-1">
                     <div class="col-7">
                         <select id="leagueInput" class="form-select form-select-sm text-info" onchange="handleLeagueInput()">
                             <option value="default">-- เลือกลีก --</option>
-                            
-                            <!-- ===== ยุโรป (Europe) ===== -->
                             <optgroup label="🏴󠁧󠁢󠁥󠁮󠁧󠁿 อังกฤษ (England)">
                                 <option value="premier league">พรีเมียร์ลีก (Premier League)</option>
                                 <option value="championship">แชมเปี้ยนชิพ (Championship)</option>
                             </optgroup>
-                            <optgroup label="🇪🇸 สเปน (Spain)">
-                                <option value="la liga">ลาลีกา (La Liga)</option>
-                            </optgroup>
+                            <optgroup label="🇪🇸 สเปน (Spain)"><option value="la liga">ลาลีกา (La Liga)</option></optgroup>
                             <optgroup label="🇩🇪 เยอรมนี (Germany)">
                                 <option value="bundesliga">บุนเดสลีกา (Bundesliga)</option>
                                 <option value="bundesliga 2">บุนเดสลีกา 2 (Bundesliga 2)</option>
                             </optgroup>
-                            <optgroup label="🇮🇹 อิตาลี (Italy)">
-                                <option value="serie a">เซเรียอา (Serie A)</option>
-                            </optgroup>
-                            <optgroup label="🇫🇷 ฝรั่งเศส (France)">
-                                <option value="ligue 1">ลีกเอิง (Ligue 1)</option>
-                            </optgroup>
-                            <optgroup label="🇳🇱 เนเธอร์แลนด์ (Netherlands)">
-                                <option value="eredivisie">เอเรดิวิซี (Eredivisie)</option>
-                            </optgroup>
-                            <optgroup label="🇵🇹 โปรตุเกส (Portugal)">
-                                <option value="primeira liga">ไพรม์ยร่าลีกา (Primeira Liga)</option>
-                            </optgroup>
-                            <optgroup label="🇧🇪 เบลเยียม (Belgium)">
-                                <option value="jupiler pro league">จูปิแลร์ โปรลีก (Jupiler Pro League)</option>
-                            </optgroup>
-                            <optgroup label="🇬🇷 กรีซ (Greece)">
-                                <option value="super league greece">ซูเปอร์ลีก กรีซ (Super League Greece)</option>
-                            </optgroup>
-                            <optgroup label="🇨🇭 สวิตเซอร์แลนด์ (Switzerland)">
-                                <option value="swiss super league">สวิส ซูเปอร์ลีก (Swiss Super League)</option>
-                            </optgroup>
-                            <optgroup label="🇦🇹 ออสเตรีย (Austria)">
-                                <option value="austrian bundesliga">ออสเตรีย บุนเดสลีกา (Austrian Bundesliga)</option>
-                            </optgroup>
+                            <optgroup label="🇮🇹 อิตาลี (Italy)"><option value="serie a">เซเรียอา (Serie A)</option></optgroup>
+                            <optgroup label="🇫🇷 ฝรั่งเศส (France)"><option value="ligue 1">ลีกเอิง (Ligue 1)</option></optgroup>
+                            <optgroup label="🇳🇱 เนเธอร์แลนด์ (Netherlands)"><option value="eredivisie">เอเรดิวิซี (Eredivisie)</option></optgroup>
+                            <optgroup label="🇵🇹 โปรตุเกส (Portugal)"><option value="primeira liga">ไพรม์ยร่าลีกา (Primeira Liga)</option></optgroup>
+                            <optgroup label="🇧🇪 เบลเยียม (Belgium)"><option value="jupiler pro league">จูปิแลร์ โปรลีก (Jupiler Pro League)</option></optgroup>
+                            <optgroup label="🇬🇷 กรีซ (Greece)"><option value="super league greece">ซูเปอร์ลีก กรีซ (Super League Greece)</option></optgroup>
+                            <optgroup label="🇨🇭 สวิตเซอร์แลนด์ (Switzerland)"><option value="swiss super league">สวิส ซูเปอร์ลีก (Swiss Super League)</option></optgroup>
+                            <optgroup label="🇦🇹 ออสเตรีย (Austria)"><option value="austrian bundesliga">ออสเตรีย บุนเดสลีกา (Austrian Bundesliga)</option></optgroup>
                             <optgroup label="🇵🇱 โปแลนด์ (Poland)">
                                 <option value="poland liga 3">โปแลนด์ ลีกา 3 (Poland Liga 3)</option>
                                 <option value="poland ekstraklasa">โปแลนด์ เอ๊กสแตร๊กลาซ่า (Poland Ekstraklasa)</option>
                             </optgroup>
-                            <optgroup label="🇦🇲 อาร์มีเนีย (Armenia)">
-                                <option value="armenia premier league">อาร์มีเนีย พรีเมียร์ ลีก (Armenia Premier League)</option>
-                            </optgroup>
-                            <optgroup label="🇺🇦 ยูเครน (Ukraine)">
-                                <option value="ukraine premier league">ยูเครน พรีเมียร์ ลีก (Ukraine Premier League)</option>
-                            </optgroup>
-                            <optgroup label="🇲🇰 นอร์ท มาซิโดเนีย (North Macedonia)">
-                                <option value="north macedonia first league">นอร์ท มาซิโดเนีย เฟิร์ส ลีก (North Macedonia First League)</option>
-                            </optgroup>
+                            <optgroup label="🇦🇲 อาร์มีเนีย (Armenia)"><option value="armenia premier league">อาร์มีเนีย พรีเมียร์ ลีก (Armenia Premier League)</option></optgroup>
+                            <optgroup label="🇺🇦 ยูเครน (Ukraine)"><option value="ukraine premier league">ยูเครน พรีเมียร์ ลีก (Ukraine Premier League)</option></optgroup>
+                            <optgroup label="🇲🇰 นอร์ท มาซิโดเนีย (North Macedonia)"><option value="north macedonia first league">นอร์ท มาซิโดเนีย เฟิร์ส ลีก (North Macedonia First League)</option></optgroup>
                             <optgroup label="🇷🇴 โรมาเนีย (Romania)">
                                 <option value="romania liga 3">โรมาเนีย ลีกา 3 (Romania Liga 3)</option>
                                 <option value="romania superliga">โรมาเนีย ซูเปอร์ลีกา (Romania Superliga)</option>
                             </optgroup>
-                            <optgroup label="🇸🇮 สโลวีเนีย (Slovenia)">
-                                <option value="slovenia division 2">สโลวีเนีย ดิวิชั่น 2 (Slovenia Division 2)</option>
-                            </optgroup>
+                            <optgroup label="🇸🇮 สโลวีเนีย (Slovenia)"><option value="slovenia division 2">สโลวีเนีย ดิวิชั่น 2 (Slovenia Division 2)</option></optgroup>
                             <optgroup label="🇭🇷 โครเอเชีย (Croatia)">
                                 <option value="croatia prva liga">โครเอเชีย พีอาร์วีเอ ลีก้า (Croatia Prva Liga)</option>
                                 <option value="croatia superliga">โครเอเชีย ซูเปอร์ลีกา (Croatia Superliga)</option>
                             </optgroup>
-                            <optgroup label="🇷🇺 รัสเซีย (Russia)">
-                                <option value="russia premier league">รัสเซีย พรีเมียร์ ลีก (Russia Premier League)</option>
-                            </optgroup>
-                            <optgroup label="🇹🇷 ตุรกี (Turkey)">
-                                <option value="turkish super lig">ตรุกี ซุปเปอร์ ลีก (Turkish Süper Lig)</option>
-                            </optgroup>
-                            <optgroup label="🇩🇰 เดนมาร์ก (Denmark)">
-                                <option value="denmark division 1">เดนมาร์ก ดิวิชั่น 1 (Denmark Division 1)</option>
-                            </optgroup>
-                            <optgroup label="🇨🇾 ไซปรัส (Cyprus)">
-                                <option value="cyprus division 1">ไซปรัส ดิวิชั่น 1 (Cyprus Division 1)</option>
-                            </optgroup>
-                            <optgroup label="🇨🇿 สาธารณรัฐเช็ก (Czech Republic)">
-                                <option value="czech national football league">เช็ก เนชั่นแนล ฟุตบอล ลีก (Czech National Football League)</option>
-                            </optgroup>
-                            <optgroup label="🇦🇿 อาร์เซอร์ไบจาน (Azerbaijan)">
-                                <option value="azerbaijan premier league">อาร์เซอร์ไบจัน พรีเมียร์ ลีก (Azerbaijan Premier League)</option>
-                            </optgroup>
-                            <optgroup label="🇺🇿 อุซเบกิสถาน (Uzbekistan)">
-                                <option value="uzbekistan super league">อุซเบกิสถาน ซุปเปอร์ ลีก (Uzbekistan Super League)</option>
-                            </optgroup>
-
-                            <!-- ===== เอเชีย (Asia) ===== -->
-                            <optgroup label="🇹🇭 ไทย (Thailand)">
-                                <option value="thai league">ไทยลีก (Thai League)</option>
-                            </optgroup>
+                            <optgroup label="🇷🇺 รัสเซีย (Russia)"><option value="russia premier league">รัสเซีย พรีเมียร์ ลีก (Russia Premier League)</option></optgroup>
+                            <optgroup label="🇹🇷 ตุรกี (Turkey)"><option value="turkish super lig">ตรุกี ซุปเปอร์ ลีก (Turkish Süper Lig)</option></optgroup>
+                            <optgroup label="🇩🇰 เดนมาร์ก (Denmark)"><option value="denmark division 1">เดนมาร์ก ดิวิชั่น 1 (Denmark Division 1)</option></optgroup>
+                            <optgroup label="🇨🇾 ไซปรัส (Cyprus)"><option value="cyprus division 1">ไซปรัส ดิวิชั่น 1 (Cyprus Division 1)</option></optgroup>
+                            <optgroup label="🇨🇿 สาธารณรัฐเช็ก (Czech Republic)"><option value="czech national football league">เช็ก เนชั่นแนล ฟุตบอล ลีก (Czech National Football League)</option></optgroup>
+                            <optgroup label="🇦🇿 อาร์เซอร์ไบจาน (Azerbaijan)"><option value="azerbaijan premier league">อาร์เซอร์ไบจัน พรีเมียร์ ลีก (Azerbaijan Premier League)</option></optgroup>
+                            <optgroup label="🇺🇿 อุซเบกิสถาน (Uzbekistan)"><option value="uzbekistan super league">อุซเบกิสถาน ซุปเปอร์ ลีก (Uzbekistan Super League)</option></optgroup>
+                            <optgroup label="🇹🇭 ไทย (Thailand)"><option value="thai league">ไทยลีก (Thai League)</option></optgroup>
                             <optgroup label="🇯🇵 ญี่ปุ่น (Japan)">
                                 <option value="j1 league">เจลีก J1 (J1 League)</option>
                                 <option value="j2 league">เจลีก J2 (J2 League)</option>
                             </optgroup>
-                            <optgroup label="🇰🇷 เกาหลีใต้ (South Korea)">
-                                <option value="k league">เคลีก (K League)</option>
-                            </optgroup>
+                            <optgroup label="🇰🇷 เกาหลีใต้ (South Korea)"><option value="k league">เคลีก (K League)</option></optgroup>
                             <optgroup label="🇮🇳 อินเดีย (India)">
                                 <option value="indian super league">อินเดีย ซูเปอร์ ลีก (Indian Super League)</option>
                                 <option value="india football league">อินเดีย ฟุตบอล ลีก (India Football League)</option>
@@ -243,66 +172,24 @@
                                 <option value="saudi division 2">ซาอุฯ ดิวิชั่น 2 (Saudi Division 2)</option>
                                 <option value="saudi division 1">ซาอุดิ อาระเบีย ดิวิชั่น 1 (Saudi Division 1)</option>
                             </optgroup>
-                            <optgroup label="🇦🇪 สหรัฐอาหรับเอมิเรตส์ (UAE)">
-                                <option value="uae division 1">ยูเออี ดิวิชั่น 1 (UAE Division 1)</option>
-                            </optgroup>
-                            <optgroup label="🇶🇦 กาตาร์ (Qatar)">
-                                <option value="qatar stars league">กาตาร์ สตาร์ ลีก (Qatar Stars League)</option>
-                            </optgroup>
-                            <optgroup label="🇰🇼 คูเวต (Kuwait)">
-                                <option value="kuwait premier league">คูเวต พรีเมียร์ ลีก (Kuwait Premier League)</option>
-                            </optgroup>
-                            <optgroup label="🇻🇳 เวียดนาม (Vietnam)">
-                                <option value="vietnam league 1">เวียดนาม ลีก 1 (Vietnam League 1)</option>
-                            </optgroup>
-                            <optgroup label="🇮🇩 อินโดนีเซีย (Indonesia)">
-                                <option value="indonesia super league">อินโดนีเซีย ซูเปอร์ ลีก (Indonesia Super League)</option>
-                            </optgroup>
-
-                            <!-- ===== อเมริกาใต้ (South America) ===== -->
-                            <optgroup label="🇧🇴 โบลิเวีย (Bolivia)">
-                                <option value="bolivia primera division">ดิวิชั่น 1 โบลิเวีย (Bolivia Primera División)</option>
-                            </optgroup>
-                            <optgroup label="🇨🇱 ชิลี (Chile)">
-                                <option value="chile primera division">ปริมารา ดิวิชั่น ชิลี (Chile Primera División)</option>
-                            </optgroup>
-                            <optgroup label="🇵🇪 เปรู (Peru)">
-                                <option value="peru liga 1">ลีกา 1 เปรู (Peru Liga 1)</option>
-                            </optgroup>
-                            <optgroup label="🇪🇨 เอกวาดอร์ (Ecuador)">
-                                <option value="ecuador liga pro">ลีกาโปร เอกวาดอร์ (Ecuador LigaPro)</option>
-                            </optgroup>
-                            <optgroup label="🇧🇷 บราซิล (Brazil)">
-                                <option value="brazil serie a">บราซิล ซีรี่ส์ เอ (Brasileirão Série A)</option>
-                            </optgroup>
-                            <optgroup label="🇺🇾 อุรุกวัย (Uruguay)">
-                                <option value="uruguay primera division">ปริมารา ดิวิชั่น อุรุกวัย (Uruguay Primera División)</option>
-                            </optgroup>
-                            <optgroup label="🇻🇪 เวเนซุเอลา (Venezuela)">
-                                <option value="venezuela primera division">ปริมารา ดิวิชั่น เวเนซุเอลา (Venezuela Primera División)</option>
-                            </optgroup>
-                            <optgroup label="🇵🇾 ปารากวัย (Paraguay)">
-                                <option value="paraguay primera division">ปริมารา ดิวิชั่น ปารากวัย (Paraguay Primera División)</option>
-                            </optgroup>
-                            <optgroup label="🇨🇴 โคลอมเบีย (Colombia)">
-                                <option value="colombia primera a">ปริมารา เอ โคลอมเบีย (Categoría Primera A)</option>
-                            </optgroup>
-                            <optgroup label="🇦🇷 อาร์เจนตินา (Argentina)">
-                                <option value="argentina liga profesional">ลีกา โปรเฟสชันนัล อาร์เจนตินา (Liga Profesional)</option>
-                            </optgroup>
-
-                            <!-- ===== อเมริกาเหนือ / แอฟริกา / อื่นๆ ===== -->
-                            <optgroup label="🇺🇸 สหรัฐอเมริกา (USA)">
-                                <option value="mls">เมเจอร์ลีกซอกเกอร์ (MLS)</option>
-                            </optgroup>
-                            <optgroup label="🇲🇦 โมร็อกโก (Morocco)">
-                                <option value="morocco botola pro">โมรอคโค โบโตลา โปร (Morocco Botola Pro)</option>
-                            </optgroup>
-                            <optgroup label="🇪🇬 อียิปต์ (Egypt)">
-                                <option value="egypt cup">อียิปต์ คัพ (Egypt Cup)</option>
-                            </optgroup>
-
-                            <!-- ===== ลีกอื่นๆ ===== -->
+                            <optgroup label="🇦🇪 สหรัฐอาหรับเอมิเรตส์ (UAE)"><option value="uae division 1">ยูเออี ดิวิชั่น 1 (UAE Division 1)</option></optgroup>
+                            <optgroup label="🇶🇦 กาตาร์ (Qatar)"><option value="qatar stars league">กาตาร์ สตาร์ ลีก (Qatar Stars League)</option></optgroup>
+                            <optgroup label="🇰🇼 คูเวต (Kuwait)"><option value="kuwait premier league">คูเวต พรีเมียร์ ลีก (Kuwait Premier League)</option></optgroup>
+                            <optgroup label="🇻🇳 เวียดนาม (Vietnam)"><option value="vietnam league 1">เวียดนาม ลีก 1 (Vietnam League 1)</option></optgroup>
+                            <optgroup label="🇮🇩 อินโดนีเซีย (Indonesia)"><option value="indonesia super league">อินโดนีเซีย ซูเปอร์ ลีก (Indonesia Super League)</option></optgroup>
+                            <optgroup label="🇧🇴 โบลิเวีย (Bolivia)"><option value="bolivia primera division">ดิวิชั่น 1 โบลิเวีย (Bolivia Primera División)</option></optgroup>
+                            <optgroup label="🇨🇱 ชิลี (Chile)"><option value="chile primera division">ปริมารา ดิวิชั่น ชิลี (Chile Primera División)</option></optgroup>
+                            <optgroup label="🇵🇪 เปรู (Peru)"><option value="peru liga 1">ลีกา 1 เปรู (Peru Liga 1)</option></optgroup>
+                            <optgroup label="🇪🇨 เอกวาดอร์ (Ecuador)"><option value="ecuador liga pro">ลีกาโปร เอกวาดอร์ (Ecuador LigaPro)</option></optgroup>
+                            <optgroup label="🇧🇷 บราซิล (Brazil)"><option value="brazil serie a">บราซิล ซีรี่ส์ เอ (Brasileirão Série A)</option></optgroup>
+                            <optgroup label="🇺🇾 อุรุกวัย (Uruguay)"><option value="uruguay primera division">ปริมารา ดิวิชั่น อุรุกวัย (Uruguay Primera División)</option></optgroup>
+                            <optgroup label="🇻🇪 เวเนซุเอลา (Venezuela)"><option value="venezuela primera division">ปริมารา ดิวิชั่น เวเนซุเอลา (Venezuela Primera División)</option></optgroup>
+                            <optgroup label="🇵🇾 ปารากวัย (Paraguay)"><option value="paraguay primera division">ปริมารา ดิวิชั่น ปารากวัย (Paraguay Primera División)</option></optgroup>
+                            <optgroup label="🇨🇴 โคลอมเบีย (Colombia)"><option value="colombia primera a">ปริมารา เอ โคลอมเบีย (Categoría Primera A)</option></optgroup>
+                            <optgroup label="🇦🇷 อาร์เจนตินา (Argentina)"><option value="argentina liga profesional">ลีกา โปรเฟสชันนัล อาร์เจนตินา (Liga Profesional)</option></optgroup>
+                            <optgroup label="🇺🇸 สหรัฐอเมริกา (USA)"><option value="mls">เมเจอร์ลีกซอกเกอร์ (MLS)</option></optgroup>
+                            <optgroup label="🇲🇦 โมร็อกโก (Morocco)"><option value="morocco botola pro">โมรอคโค โบโตลา โปร (Morocco Botola Pro)</option></optgroup>
+                            <optgroup label="🇪🇬 อียิปต์ (Egypt)"><option value="egypt cup">อียิปต์ คัพ (Egypt Cup)</option></optgroup>
                             <optgroup label="🌎 ลีกอื่นๆ (Other)">
                                 <option value="uefa europa">ยูฟ่า ยูโรปา ลีก</option>
                                 <option value="uefa conference">ยูฟ่า คอนเฟอเรนซ์</option>
@@ -344,7 +231,7 @@
                         </select>
                     </div></div>
                 </div>
-                
+
                 <!-- แถวที่ 2: สกอร์เหย้า, สกอร์เยือน, ใบแดง -->
                 <div class="row g-2 mb-3">
                     <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เหย้า</label><input type="number" id="current_home_score" class="form-control form-control-sm text-success" value="0" min="0"></div></div>
@@ -366,13 +253,14 @@
                     <input type="range" class="form-range" id="poss_slider" min="0" max="100" value="50" oninput="updatePossession()">
                 </div>
 
-                <!-- สถิติการยิง -->
+                <!-- สถิติการยิง + Big Chances -->
                 <div class="row g-2 mb-3">
                     <div class="col-6 border-end">
                         <div class="text-success fw-bold text-center mb-2 pb-1 border-bottom" style="font-size: 0.8rem;">🏠 เหย้า</div>
                         <div class="stat-grid d-flex flex-column gap-2">
                             <div><label>ยิงทั้งหมด</label><input type="number" id="h_shots" class="form-control form-control-sm" value="0" min="0"></div>
                             <div><label class="text-danger fw-bold">ยิงตรงกรอบ</label><input type="number" id="h_sot" class="form-control form-control-sm border-danger" value="0" min="0" style="border-width: 2px;"></div>
+                            <div><label class="text-warning fw-bold">Big Chances</label><input type="number" id="h_big" class="form-control form-control-sm border-warning" value="0" min="0" style="border-width: 2px;"></div>
                         </div>
                     </div>
                     <div class="col-6">
@@ -380,11 +268,11 @@
                         <div class="stat-grid d-flex flex-column gap-2">
                             <div><label>ยิงทั้งหมด</label><input type="number" id="a_shots" class="form-control form-control-sm" value="0" min="0"></div>
                             <div><label class="text-danger fw-bold">ยิงตรงกรอบ</label><input type="number" id="a_sot" class="form-control form-control-sm border-danger" value="0" min="0" style="border-width: 2px;"></div>
+                            <div><label class="text-warning fw-bold">Big Chances</label><input type="number" id="a_big" class="form-control form-control-sm border-warning" value="0" min="0" style="border-width: 2px;"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- ปุ่มประมวลผล -->
                 <button type="button" class="btn btn-predict w-100 mb-0 mt-2" onclick="predictMatch()">
                     <i class="bi bi-cpu"></i> ประมวลผลคาดการณ์
                 </button>
@@ -395,7 +283,6 @@
         <!-- ฝั่งขวา: แสดงผล -->
         <div class="right-panel">
             <div id="resultsArea" class="d-flex flex-column gap-2 h-100 d-none">
-                <!-- Header Card -->
                 <div class="card p-2 bg-white text-dark text-center position-relative border">
                     <h5 class="fw-bold mb-0" id="resultTitle" style="font-size: 1.1rem;">ทีมเหย้า 0 - 0 ทีมเยือน</h5>
                     <div class="text-warning mb-1" style="font-size: 0.75rem;">นาทีที่ <span id="displayMinute">45</span> (เหลือ <span id="displayRemaining">45</span> นาที)</div>
@@ -403,6 +290,7 @@
                         <span class="badge bg-secondary" id="leagueInfluenceText" style="font-size: 0.65rem;">ลีกมาตรฐาน</span>
                         <span class="badge bg-info text-dark" id="confidenceBadge" style="font-size: 0.65rem;">Confidence: -</span>
                         <span class="badge bg-secondary" id="tempoBadge" style="font-size: 0.65rem;"><i class="bi bi-speedometer2"></i> Tempo: ปกติ</span>
+                        <span class="badge bg-success" id="dataQualityBadge" style="font-size: 0.65rem;">Data: -</span>
                     </div>
                 </div>
 
@@ -481,8 +369,9 @@
                     </div>
                 </div>
                 <div class="xh-highlight text-muted mb-2" id="xgBreakdown">-</div>
+                <div class="calib-note mb-2 px-1" id="calibNote"></div>
             </div>
-            
+
             <div id="emptyState" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted card border p-5 bg-white">
                 <i class="bi bi-cpu-fill text-secondary mb-3" style="font-size: 4rem; opacity: 0.3;"></i>
                 <h6 class="text-dark">กรอกข้อมูลสถิติ และเลือกลีก แล้วกดประมวลผล</h6>
@@ -491,573 +380,634 @@
         </div>
     </div>
 
-    <script>
-        // [สคริปต์ JavaScript ทั้งหมดยังคงเหมือนเดิมทุกประการ]
-        let currentLeagueModifier = 1.0;
-        let currentLeagueText = "ลีกมาตรฐาน";
-        let currentLeagueAvgGoals = 2.70;
+<script>
+/* ============================================================
+   JackAI Scanner v5.4 — Auto Strength Edition
+   เพิ่มระบบประเมิน Strength อัตโนมัติจาก:
+   1) ราคาต่อรอง Asian Handicap (Pre-match Strength Base)
+   2) สถิติสดในเกม (Shots, SOT, Possession, Score) เป็น Dynamic Adjustment
+   ============================================================ */
 
-        const LEAGUE_CONSTANTS = {
-            'premier league': { name: "พรีเมียร์ลีกอังกฤษ", goals: 3.24, mod: 1.20 },
-            'championship': { name: "แชมเปี้ยนชิพ อังกฤษ", goals: 2.68, mod: 0.98 },
-            'la liga': { name: "ลาลีกา สเปน", goals: 2.58, mod: 0.95 },
-            'bundesliga': { name: "บุนเดสลีกา เยอรมัน", goals: 3.42, mod: 1.25 },
-            'bundesliga 2': { name: "บุนเดสลีกา 2 เยอรมัน", goals: 2.95, mod: 1.10 },
-            'serie a': { name: "เซเรียอา อิตาลี", goals: 2.62, mod: 0.96 },
-            'ligue 1': { name: "ลีกเอิง ฝรั่งเศส", goals: 2.70, mod: 1.00 },
-            'eredivisie': { name: "เอเรดิวิซี เนเธอร์แลนด์", goals: 3.15, mod: 1.15 },
-            'primeira liga': { name: "ไพรม์ยร่าลีกา โปรตุเกส", goals: 2.62, mod: 0.97 },
-            'jupiler pro league': { name: "จูปิแลร์ โปรลีก เบลเยียม", goals: 2.85, mod: 1.05 },
-            'super league greece': { name: "ซูเปอร์ลีก กรีซ", goals: 2.35, mod: 0.87 },
-            'swiss super league': { name: "สวิส ซูเปอร์ลีก", goals: 3.05, mod: 1.13 },
-            'austrian bundesliga': { name: "ออสเตรีย บุนเดสลีกา", goals: 2.95, mod: 1.09 },
-            'poland liga 3': { name: "โปแลนด์ ลีกา 3", goals: 2.70, mod: 1.00 },
-            'poland ekstraklasa': { name: "โปแลนด์ เอ๊กสแตร๊กลาซ่า", goals: 2.65, mod: 0.98 },
-            'armenia premier league': { name: "อาร์มีเนีย พรีเมียร์ ลีก", goals: 2.50, mod: 0.95 },
-            'ukraine premier league': { name: "ยูเครน พรีเมียร์ ลีก", goals: 2.45, mod: 0.92 },
-            'north macedonia first league': { name: "นอร์ท มาซิโดเนีย เฟิร์ส ลีก", goals: 2.60, mod: 0.98 },
-            'romania liga 3': { name: "โรมาเนีย ลีกา 3", goals: 2.65, mod: 1.00 },
-            'romania superliga': { name: "โรมาเนีย ซูเปอร์ลีกา", goals: 2.55, mod: 0.95 },
-            'slovenia division 2': { name: "สโลวีเนีย ดิวิชั่น 2", goals: 2.80, mod: 1.05 },
-            'croatia prva liga': { name: "โครเอเชีย พีอาร์วีเอ ลีก้า", goals: 2.55, mod: 0.95 },
-            'croatia superliga': { name: "โครเอเชีย ซูเปอร์ลีกา", goals: 2.65, mod: 1.00 },
-            'russia premier league': { name: "รัสเซีย พรีเมียร์ ลีก", goals: 2.60, mod: 0.98 },
-            'turkish super lig': { name: "ตรุกี ซูเปอร์ ลีก", goals: 2.90, mod: 1.08 },
-            'denmark division 1': { name: "เดนมาร์ก ดิวิชั่น 1", goals: 2.75, mod: 1.02 },
-            'cyprus division 1': { name: "ไซปรัส ดิวิชั่น 1", goals: 2.50, mod: 0.95 },
-            'czech national football league': { name: "เช็ก เนชั่นแนล ฟุตบอล ลีก", goals: 2.70, mod: 1.00 },
-            'azerbaijan premier league': { name: "อาร์เซอร์ไบจัน พรีเมียร์ ลีก", goals: 2.40, mod: 0.92 },
-            'uzbekistan super league': { name: "อุซเบกิสถาน ซุปเปอร์ ลีก", goals: 2.75, mod: 1.02 },
-            'thai league': { name: "ไทยลีก", goals: 2.95, mod: 1.10 },
-            'j1 league': { name: "เจลีก J1", goals: 2.65, mod: 0.98 },
-            'j2 league': { name: "เจลีก J2", goals: 2.45, mod: 0.92 },
-            'k league': { name: "เคลีก เกาหลีใต้", goals: 2.55, mod: 0.94 },
-            'indian super league': { name: "อินเดีย ซูเปอร์ ลีก", goals: 2.85, mod: 1.05 },
-            'india football league': { name: "อินเดีย ฟุตบอล ลีก", goals: 2.75, mod: 1.02 },
-            'israel liga alif': { name: "อิสราเอล ลีกา อลีฟ", goals: 2.40, mod: 0.92 },
-            'israel liga leumit': { name: "อิสราเอล ลีกา ลีมิต", goals: 2.50, mod: 0.95 },
-            'saudi division 2': { name: "ซาอุฯ ดิวิชั่น 2", goals: 2.60, mod: 1.00 },
-            'saudi division 1': { name: "ซาอุดิ อาระเบีย ดิวิชั่น 1", goals: 2.70, mod: 1.02 },
-            'uae division 1': { name: "ยูเออี ดิวิชั่น 1", goals: 3.10, mod: 1.15 },
-            'qatar stars league': { name: "กาตาร์ สตาร์ ลีก", goals: 3.10, mod: 1.15 },
-            'kuwait premier league': { name: "คูเวต พรีเมียร์ ลีก", goals: 2.85, mod: 1.05 },
-            'vietnam league 1': { name: "เวียดนาม ลีก 1", goals: 2.35, mod: 0.88 },
-            'indonesia super league': { name: "อินโดนีเซีย ซูเปอร์ ลีก", goals: 2.80, mod: 1.08 },
-            'bolivia primera division': { name: "โบลิเวีย ปริมารา ดิวิชั่น", goals: 2.97, mod: 1.10 },
-            'chile primera division': { name: "ชิลี ปริมารา ดิวิชั่น", goals: 2.76, mod: 1.02 },
-            'peru liga 1': { name: "เปรู ลีกา 1", goals: 2.65, mod: 0.98 },
-            'ecuador liga pro': { name: "เอกวาดอร์ ลีกาโปร", goals: 2.62, mod: 0.97 },
-            'brazil serie a': { name: "บราซิล ซีรี่ส์ เอ", goals: 2.52, mod: 0.93 },
-            'uruguay primera division': { name: "อุรุกวัย ปริมารา ดิวิชั่น", goals: 2.43, mod: 0.90 },
-            'venezuela primera division': { name: "เวเนซุเอลา ปริมารา ดิวิชั่น", goals: 2.41, mod: 0.89 },
-            'paraguay primera division': { name: "ปารากวัย ปริมารา ดิวิชั่น", goals: 2.33, mod: 0.86 },
-            'colombia primera a': { name: "โคลอมเบีย ปริมารา เอ", goals: 2.16, mod: 0.80 },
-            'argentina liga profesional': { name: "อาร์เจนตินา ลีกา โปรเฟสชันนัล", goals: 1.94, mod: 0.72 },
-            'mls': { name: "เมเจอร์ลีกซอกเกอร์ (MLS)", goals: 3.12, mod: 1.14 },
-            'morocco botola pro': { name: "โมรอคโค โบโตลา โปร", goals: 2.20, mod: 0.85 },
-            'egypt cup': { name: "อียิปต์ คัพ", goals: 2.30, mod: 0.85 },
-            'uefa europa': { name: "ยูฟ่า ยูโรปา ลีก", goals: 2.80, mod: 1.00 },
-            'uefa conference': { name: "ยูฟ่า คอนเฟอเรนซ์", goals: 2.75, mod: 1.00 },
-            'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98 }
-        };
+let currentLeagueModifier = 1.0;
+let currentLeagueText = "ลีกมาตรฐาน";
+let currentLeagueAvgGoals = 2.70;
+let currentLeagueRho = -0.06;
+let currentLeagueFHShare = 0.45;
 
-        const XG_WEIGHTS = { SOT: 0.60, OFF_TARGET: 0.04, POSSESSION: 0.0035 };
-        const RED_CARD_ATTACK_MULT = 0.72;
-        const RED_CARD_DEFENSE_MULT = 1.25;
-        const FIRST_HALF_RATIO = 0.45;
-        const MAX_GOALS_GRID = 8;
-        const MAX_FH_GOALS_GRID = 5;
+const LEAGUE_CONSTANTS = {
+    'premier league': { name: "พรีเมียร์ลีกอังกฤษ", goals: 3.24, mod: 1.20, rho: -0.05, fh: 0.46 },
+    'championship': { name: "แชมเปี้ยนชิพ อังกฤษ", goals: 2.68, mod: 0.98, rho: -0.07, fh: 0.45 },
+    'la liga': { name: "ลาลีกา สเปน", goals: 2.58, mod: 0.95, rho: -0.09, fh: 0.44 },
+    'bundesliga': { name: "บุนเดสลีกา เยอรมัน", goals: 3.42, mod: 1.25, rho: -0.04, fh: 0.47 },
+    'bundesliga 2': { name: "บุนเดสลีกา 2 เยอรมัน", goals: 2.95, mod: 1.10, rho: -0.06, fh: 0.46 },
+    'serie a': { name: "เซเรียอา อิตาลี", goals: 2.62, mod: 0.96, rho: -0.09, fh: 0.44 },
+    'ligue 1': { name: "ลีกเอิง ฝรั่งเศส", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.44 },
+    'eredivisie': { name: "เอเรดิวิซี เนเธอร์แลนด์", goals: 3.15, mod: 1.15, rho: -0.05, fh: 0.46 },
+    'primeira liga': { name: "ไพรม์ยร่าลีกา โปรตุเกส", goals: 2.62, mod: 0.97, rho: -0.09, fh: 0.43 },
+    'jupiler pro league': { name: "จูปิแลร์ โปรลีก เบลเยียม", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
+    'super league greece': { name: "ซูเปอร์ลีก กรีซ", goals: 2.35, mod: 0.87, rho: -0.10, fh: 0.42 },
+    'swiss super league': { name: "สวิส ซูเปอร์ลีก", goals: 3.05, mod: 1.13, rho: -0.05, fh: 0.46 },
+    'austrian bundesliga': { name: "ออสเตรีย บุนเดสลีกา", goals: 2.95, mod: 1.09, rho: -0.06, fh: 0.45 },
+    'poland liga 3': { name: "โปแลนด์ ลีกา 3", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.44 },
+    'poland ekstraklasa': { name: "โปแลนด์ เอ๊กสแตร๊กลาซ่า", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
+    'armenia premier league': { name: "อาร์มีเนีย พรีเมียร์ ลีก", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.43 },
+    'ukraine premier league': { name: "ยูเครน พรีเมียร์ ลีก", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
+    'north macedonia first league': { name: "นอร์ท มาซิโดเนีย เฟิร์ส ลีก", goals: 2.60, mod: 0.98, rho: -0.09, fh: 0.43 },
+    'romania liga 3': { name: "โรมาเนีย ลีกา 3", goals: 2.65, mod: 1.00, rho: -0.08, fh: 0.44 },
+    'romania superliga': { name: "โรมาเนีย ซูเปอร์ลีกา", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.43 },
+    'slovenia division 2': { name: "สโลวีเนีย ดิวิชั่น 2", goals: 2.80, mod: 1.05, rho: -0.07, fh: 0.45 },
+    'croatia prva liga': { name: "โครเอเชีย พีอาร์วีเอ ลีก้า", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.43 },
+    'croatia superliga': { name: "โครเอเชีย ซูเปอร์ลีกา", goals: 2.65, mod: 1.00, rho: -0.08, fh: 0.44 },
+    'russia premier league': { name: "รัสเซีย พรีเมียร์ ลีก", goals: 2.60, mod: 0.98, rho: -0.09, fh: 0.43 },
+    'turkish super lig': { name: "ตรุกี ซุปเปอร์ ลีก", goals: 2.90, mod: 1.08, rho: -0.06, fh: 0.45 },
+    'denmark division 1': { name: "เดนมาร์ก ดิวิชั่น 1", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
+    'cyprus division 1': { name: "ไซปรัส ดิวิชั่น 1", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.43 },
+    'czech national football league': { name: "เช็ก เนชั่นแนล ฟุตบอล ลีก", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.44 },
+    'azerbaijan premier league': { name: "อาร์เซอร์ไบจัน พรีเมียร์ ลีก", goals: 2.40, mod: 0.92, rho: -0.10, fh: 0.42 },
+    'uzbekistan super league': { name: "อุซเบกิสถาน ซุปเปอร์ ลีก", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
+    'thai league': { name: "ไทยลีก", goals: 2.95, mod: 1.10, rho: -0.06, fh: 0.46 },
+    'j1 league': { name: "เจลีก J1", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
+    'j2 league': { name: "เจลีก J2", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
+    'k league': { name: "เคลีก เกาหลีใต้", goals: 2.55, mod: 0.94, rho: -0.09, fh: 0.43 },
+    'indian super league': { name: "อินเดีย ซูเปอร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
+    'india football league': { name: "อินเดีย ฟุตบอล ลีก", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
+    'israel liga alif': { name: "อิสราเอล ลีกา อลีฟ", goals: 2.40, mod: 0.92, rho: -0.10, fh: 0.42 },
+    'israel liga leumit': { name: "อิสราเอล ลีกา ลีมิต", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.43 },
+    'saudi division 2': { name: "ซาอุฯ ดิวิชั่น 2", goals: 2.60, mod: 1.00, rho: -0.08, fh: 0.44 },
+    'saudi division 1': { name: "ซาอุดิ อาระเบีย ดิวิชั่น 1", goals: 2.70, mod: 1.02, rho: -0.07, fh: 0.45 },
+    'uae division 1': { name: "ยูเออี ดิวิชั่น 1", goals: 3.10, mod: 1.15, rho: -0.05, fh: 0.46 },
+    'qatar stars league': { name: "กาตาร์ สตาร์ ลีก", goals: 3.10, mod: 1.15, rho: -0.05, fh: 0.46 },
+    'kuwait premier league': { name: "คูเวต พรีเมียร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
+    'vietnam league 1': { name: "เวียดนาม ลีก 1", goals: 2.35, mod: 0.88, rho: -0.10, fh: 0.42 },
+    'indonesia super league': { name: "อินโดนีเซีย ซูเปอร์ ลีก", goals: 2.80, mod: 1.08, rho: -0.06, fh: 0.45 },
+    'bolivia primera division': { name: "โบลิเวีย ปริมารา ดิวิชั่น", goals: 2.97, mod: 1.10, rho: -0.06, fh: 0.45 },
+    'chile primera division': { name: "ชิลี ปริมารา ดิวิชั่น", goals: 2.76, mod: 1.02, rho: -0.07, fh: 0.45 },
+    'peru liga 1': { name: "เปรู ลีกา 1", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
+    'ecuador liga pro': { name: "เอกวาดอร์ ลีกาโปร", goals: 2.62, mod: 0.97, rho: -0.08, fh: 0.44 },
+    'brazil serie a': { name: "บราซิล ซีรี่ส์ เอ", goals: 2.52, mod: 0.93, rho: -0.09, fh: 0.43 },
+    'uruguay primera division': { name: "อุรุกวัย ปริมารา ดิวิชั่น", goals: 2.43, mod: 0.90, rho: -0.10, fh: 0.42 },
+    'venezuela primera division': { name: "เวเนซุเอลา ปริมารา ดิวิชั่น", goals: 2.41, mod: 0.89, rho: -0.10, fh: 0.42 },
+    'paraguay primera division': { name: "ปารากวัย ปริมารา ดิวิชั่น", goals: 2.33, mod: 0.86, rho: -0.11, fh: 0.41 },
+    'colombia primera a': { name: "โคลอมเบีย ปริมารา เอ", goals: 2.16, mod: 0.80, rho: -0.12, fh: 0.40 },
+    'argentina liga profesional': { name: "อาร์เจนตินา ลีกา โปรเฟสชันนัล", goals: 1.94, mod: 0.72, rho: -0.13, fh: 0.39 },
+    'mls': { name: "เมเจอร์ลีกซอกเกอร์ (MLS)", goals: 3.12, mod: 1.14, rho: -0.05, fh: 0.46 },
+    'morocco botola pro': { name: "โมรอคโค โบโตลา โปร", goals: 2.20, mod: 0.85, rho: -0.11, fh: 0.41 },
+    'egypt cup': { name: "อียิปต์ คัพ", goals: 2.30, mod: 0.85, rho: -0.11, fh: 0.41 },
+    'uefa europa': { name: "ยูฟ่า ยูโรปา ลีก", goals: 2.80, mod: 1.00, rho: -0.07, fh: 0.45 },
+    'uefa conference': { name: "ยูฟ่า คอนเฟอเรนซ์", goals: 2.75, mod: 1.00, rho: -0.07, fh: 0.45 },
+    'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
+};
 
-        function updatePossession() {
-            const val = document.getElementById('poss_slider').value;
-            document.getElementById('h_poss_label').innerText = val;
-            document.getElementById('a_poss_label').innerText = 100 - val;
-        }
+/* xG Model v5.4 */
+const XG_WEIGHTS = {
+    SOT_BASE: 0.30,
+    OFF_TARGET: 0.035,
+    BIG_CHANCE: 0.45,
+    SOT_NON_BIG: 0.22
+};
 
-        function handleLeagueInput() {
-            const input = document.getElementById('leagueInput').value;
-            const resultEl = document.getElementById('leagueResult');
-            
-            if (input === 'default' || !LEAGUE_CONSTANTS[input]) {
-                currentLeagueModifier = 1.0; currentLeagueAvgGoals = 2.70; currentLeagueText = "ลีกมาตรฐาน";
-                resultEl.innerHTML = '<span class="text-muted" style="font-size: 0.65rem;">ระบบจะใช้ค่ากลาง (2.70 ประตู/เกม)</span>';
-            } else {
-                const value = LEAGUE_CONSTANTS[input];
-                currentLeagueModifier = value.mod;
-                currentLeagueAvgGoals = value.goals;
-                currentLeagueText = value.name;
-                resultEl.innerHTML = `<span class="text-info fw-bold"><i class="bi bi-check-circle-fill"></i> ${value.name} (เฉลี่ย ${value.goals} ประตู/เกม)</span>`;
-            }
-        }
+const STRENGTH_SENSITIVITY = 0.0065;
+const RED_CARD_ATTACK_MULT = 0.78;
+const RED_CARD_DEFENSE_MULT = 1.18;
+const TEMPO_MIN = 0.85, TEMPO_MAX = 1.30;
+const MAX_GOALS_GRID = 9;
+const MAX_FH_GOALS_GRID = 6;
 
-        function factorial(n) { if (n <= 1) return 1; let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
-        function poisson(lambda, k) { return Math.exp(-lambda) * Math.pow(lambda, k) / factorial(k); }
+function updatePossession() {
+    const val = document.getElementById('poss_slider').value;
+    document.getElementById('h_poss_label').innerText = val;
+    document.getElementById('a_poss_label').innerText = 100 - val;
+}
+
+function handleLeagueInput() {
+    const input = document.getElementById('leagueInput').value;
+    const resultEl = document.getElementById('leagueResult');
+    if (input === 'default' || !LEAGUE_CONSTANTS[input]) {
+        currentLeagueModifier = 1.0; currentLeagueAvgGoals = 2.70;
+        currentLeagueText = "ลีกมาตรฐาน"; currentLeagueRho = -0.08;
+        currentLeagueFHShare = 0.44;
+        resultEl.innerHTML = '<span class="text-muted" style="font-size: 0.65rem;">ระบบจะใช้ค่ากลาง (2.70 ประตู/เกม, ρ=-0.08)</span>';
+    } else {
+        const v = LEAGUE_CONSTANTS[input];
+        currentLeagueModifier = v.mod;
+        currentLeagueAvgGoals = v.goals;
+        currentLeagueText = v.name;
+        currentLeagueRho = v.rho;
+        currentLeagueFHShare = v.fh;
+        resultEl.innerHTML = `<span class="text-info fw-bold"><i class="bi bi-check-circle-fill"></i> ${v.name} (${v.goals} ประตู/เกม, ρ=${v.rho}, ครึ่งแรก ${(v.fh*100).toFixed(0)}%)</span>`;
+    }
+}
+
+function factorial(n) { if (n <= 1) return 1; let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
+function poisson(lambda, k) { return Math.exp(-lambda) * Math.pow(lambda, k) / factorial(k); }
+
+function dixonColesTau(h, a, lH, lA, rho) {
+    let tau = 1;
+    if (h === 0 && a === 0) tau = 1 - lH * lA * rho;
+    else if (h === 0 && a === 1) tau = 1 + lH * rho;
+    else if (h === 1 && a === 0) tau = 1 + lA * rho;
+    else if (h === 1 && a === 1) tau = 1 - rho;
+    return Math.max(0.01, tau);
+}
+
+function timeWeight(minute, totalMatchTime) {
+    return 0.88 + 0.32 * Math.pow(minute / totalMatchTime, 1.4);
+}
+function avgTimeWeight(minute, remaining, totalMatchTime) {
+    if (remaining <= 0) return 1;
+    let sum = 0;
+    for (let i = 0; i < 10; i++) sum += timeWeight(minute + (remaining * i / 10), totalMatchTime);
+    return sum / 10;
+}
+
+function pickColor(pct) {
+    if (pct >= 65) return { bar: 'bg-success', text: 'text-success' };
+    if (pct >= 35) return { bar: 'bg-warning', text: 'text-warning' };
+    if (pct >= 15) return { bar: 'bg-orange',  text: 'text-orange' };
+    return { bar: 'bg-danger', text: 'text-danger' };
+}
+
+function showCalcError(msg) {
+    document.getElementById('calcErrorText').innerText = msg;
+    document.getElementById('calcError').classList.remove('d-none');
+}
+function clearCalcError() { document.getElementById('calcError').classList.add('d-none'); }
+
+const STORAGE_KEY = 'jackai_inputs_v3';
+const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueInput','handicapSelect','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','poss_slider','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
+
+function saveInputs() {
+    const data = {};
+    INPUT_IDS.forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value; });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+}
+function restoreInputs() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        INPUT_IDS.forEach(id => { if (data[id] !== undefined && document.getElementById(id)) document.getElementById(id).value = data[id]; });
+        updatePossession();
+        handleLeagueInput();
+    } catch (e) {}
+}
+document.addEventListener('DOMContentLoaded', restoreInputs);
+
+function calculateRemaining(minute, i1, i2, format) {
+    const half1_end = 45 + i1;
+    const half2_end = 90 + i1 + i2;
+    const et1_end = 105 + i1 + i2;
+    const et2_end = 120 + i1 + i2;
+    let remaining = 0;
+    if (format === "90") {
+        if (minute <= half1_end) remaining = (half1_end - minute) + (45 + i2);
+        else if (minute <= half2_end) remaining = half2_end - minute;
+    } else {
+        if (minute <= half1_end) remaining = (half1_end - minute) + (45 + i2) + 30;
+        else if (minute <= half2_end) remaining = (half2_end - minute) + 30;
+        else if (minute <= et1_end) remaining = (et1_end - minute) + (15 + i2);
+        else if (minute <= et2_end) remaining = et2_end - minute;
+    }
+    return { remaining, half1_end, half2_end, et1_end, et2_end };
+}
+
+function getTotalMatchTime(format, i1, i2) {
+    return (format === "90") ? (90 + i1 + i2) : (120 + i1 + i2);
+}
+
+function calcAHOutcome(finalH, finalA, handicap) {
+    const net = finalH - finalA - handicap;
+    if (net > 0.001) return 1;
+    if (net < -0.001) return -1;
+    return 0;
+}
+
+function getAHParts(ahRate) {
+    const absH = Math.abs(ahRate);
+    const frac = absH - Math.floor(absH);
+    const isQuarter = Math.abs(frac - 0.25) < 0.001 || Math.abs(frac - 0.75) < 0.001;
+    if (!isQuarter) return { isQuarter: false, parts: [ahRate] };
+    let h1, h2;
+    if (Math.abs(frac - 0.25) < 0.001) { h1 = Math.floor(absH); h2 = Math.floor(absH) + 0.5; }
+    else { h1 = Math.floor(absH) + 0.5; h2 = Math.ceil(absH); }
+    if (ahRate < 0) { h1 = -h1; h2 = -h2; }
+    return { isQuarter: true, parts: [h1, h2] };
+}
+
+function calcShotXg(sot, big, shots) {
+    big = Math.min(big, sot);
+    const sotNonBig = Math.max(0, sot - big);
+    const offTarget = Math.max(0, shots - sot);
+    const xg = big * XG_WEIGHTS.BIG_CHANCE + sotNonBig * XG_WEIGHTS.SOT_NON_BIG + offTarget * XG_WEIGHTS.OFF_TARGET;
+    return { xg, sotNonBig, offTarget };
+}
+
+function strengthToAttackMult(strength) {
+    return Math.pow(1 + STRENGTH_SENSITIVITY, (strength - 70));
+}
+
+/* ============================================================
+   AUTO STRENGTH ESTIMATOR v1.0
+   แปลงราคา AH → Strength Base
+   ปรับด้วยสถิติสด → Strength Adjusted
+   ============================================================ */
+function autoEstimateStrength() {
+    // 1) อ่านราคา AH (เหย้า)
+    const ah = parseFloat(document.getElementById('auto_ah').value) || 0;
+    // AH < 0 หมายถึงเหย้าต่อ (เหย้าแข็งกว่า)
+    // AH > 0 หมายถึงเยือนต่อ (เยือนแข็งกว่า)
+    
+    // Base: ถ้า AH = 0 → 70/70, AH = -1 → 85/55, AH = +1 → 55/85
+    // ใช้ scale: 1 ลูกต่อ ≈ ±15 strength points
+    const ahImpact = -ah * 15; // ถ้าเหย้าต่อ (ah<0) → impact > 0
+    let homeBase = Math.max(20, Math.min(95, 70 + ahImpact));
+    let awayBase = Math.max(20, Math.min(95, 70 - ahImpact));
+    
+    // 2) อ่านสถิติสด
+    const minute = Math.min(120, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
+    const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
+    const cA = Math.max(0, parseInt(document.getElementById('current_away_score').value, 10) || 0);
+    const hShots = Math.max(0, parseInt(document.getElementById('h_shots').value, 10) || 0);
+    const aShots = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
+    const hSot = Math.max(0, parseInt(document.getElementById('h_sot').value, 10) || 0);
+    const aSot = Math.max(0, parseInt(document.getElementById('a_sot').value, 10) || 0);
+    const hPoss = parseFloat(document.getElementById('poss_slider').value) || 50;
+    const aPoss = 100 - hPoss;
+    
+    // Live Adjustment (คำนวณเฉพาะเมื่อ minute > 0)
+    let liveAdjHome = 0, liveAdjAway = 0;
+    if (minute > 0) {
+        // 2.1) ผลต่างสกอร์
+        const scoreDiff = cH - cA;
+        liveAdjHome += scoreDiff * 2.0;
+        liveAdjAway -= scoreDiff * 2.0;
         
-        function dixonColesTau(h, a, lH, lA, rho) {
-            let tau = 1;
-            if (h === 0 && a === 0) tau = 1 - lH * lA * rho;
-            else if (h === 0 && a === 1) tau = 1 + lH * rho;
-            else if (h === 1 && a === 0) tau = 1 + lA * rho;
-            else if (h === 1 && a === 1) tau = 1 - rho;
-            return Math.max(0.01, tau);
-        }
+        // 2.2) ผลต่างการยิง (ถ้าเหย้ายิงเยอะกว่า ให้บวกเหย้า)
+        const shotDiff = hShots - aShots;
+        liveAdjHome += shotDiff * 0.5;
+        liveAdjAway -= shotDiff * 0.5;
         
-        function timeWeight(minute, totalMatchTime) { 
-            return 0.88 + 0.32 * Math.pow(minute / totalMatchTime, 1.4); 
-        }
-        function avgTimeWeight(minute, remaining, totalMatchTime) {
-            if (remaining <= 0) return 1;
-            let sum = 0;
-            for (let i = 0; i < 10; i++) sum += timeWeight(minute + (remaining * i / 10), totalMatchTime);
-            return sum / 10;
-        }
+        // 2.3) ผลต่าง SOT
+        const sotDiff = hSot - aSot;
+        liveAdjHome += sotDiff * 0.8;
+        liveAdjAway -= sotDiff * 0.8;
         
-        function pickColor(pct) {
-            if (pct >= 65) return { bar: 'bg-success', text: 'text-success' };
-            if (pct >= 35) return { bar: 'bg-warning', text: 'text-warning' };
-            if (pct >= 15) return { bar: 'bg-orange',  text: 'text-orange' };
-            return { bar: 'bg-danger', text: 'text-danger' };
-        }
+        // 2.4) ผลต่างการครองบอล (weight น้อย)
+        const possDiff = hPoss - aPoss;
+        liveAdjHome += possDiff * 0.1;
+        liveAdjAway -= possDiff * 0.1;
+    }
+    
+    // 3) ผสม Base + Live ตาม weight ที่ผู้ใช้กำหนด
+    const liveWeight = Math.min(100, Math.max(0, parseFloat(document.getElementById('auto_live_weight').value) || 30)) / 100;
+    const baseWeight = 1 - liveWeight;
+    
+    const finalHome = Math.max(20, Math.min(95, homeBase * baseWeight + (homeBase + liveAdjHome) * liveWeight));
+    const finalAway = Math.max(20, Math.min(95, awayBase * baseWeight + (awayBase + liveAdjAway) * liveWeight));
+    
+    // 4) เขียนค่าลงช่อง Strength
+    document.getElementById('home_strength').value = Math.round(finalHome);
+    document.getElementById('away_strength').value = Math.round(finalAway);
+    
+    // 5) แสดงข้อความยืนยัน
+    const msg = `Strength ที่ประเมินได้:\n🏠 เหย้า: ${Math.round(finalHome)} (Base ${homeBase.toFixed(0)} + Live ${liveAdjHome > 0 ? '+' : ''}${liveAdjHome.toFixed(1)})\n✈️ เยือน: ${Math.round(finalAway)} (Base ${awayBase.toFixed(0)} + Live ${liveAdjAway > 0 ? '+' : ''}${liveAdjAway.toFixed(1)})`;
+    alert(msg);
+}
 
-        function showCalcError(msg) {
-            document.getElementById('calcErrorText').innerText = msg;
-            document.getElementById('calcError').classList.remove('d-none');
-        }
-        function clearCalcError() {
-            document.getElementById('calcError').classList.add('d-none');
-        }
+function predictMatch() {
+    clearCalcError();
 
-        const STORAGE_KEY = 'jackai_inputs_v1';
-        const INPUT_IDS = ['home_name','away_name','leagueInput','handicapSelect','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','poss_slider','h_shots','h_sot','a_shots','a_sot'];
-        
-        function saveInputs() {
-            const data = {};
-            INPUT_IDS.forEach(id => { data[id] = document.getElementById(id).value; });
-            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
-        }
-        
-        function restoreInputs() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) return;
-                const data = JSON.parse(raw);
-                INPUT_IDS.forEach(id => { 
-                    if (data[id] !== undefined && document.getElementById(id)) {
-                        document.getElementById(id).value = data[id];
-                    }
-                });
-                updatePossession();
-                handleLeagueInput();
-            } catch (e) {}
-        }
-        document.addEventListener('DOMContentLoaded', restoreInputs);
+    const homeName = document.getElementById('home_name').value.trim() || 'ทีมเหย้า';
+    const awayName = document.getElementById('away_name').value.trim() || 'ทีมเยือน';
+    const homeStrength = Math.min(100, Math.max(0, parseFloat(document.getElementById('home_strength').value) || 70));
+    const awayStrength = Math.min(100, Math.max(0, parseFloat(document.getElementById('away_strength').value) || 70));
 
-        function calculateRemaining(minute, i1, i2, format) {
-            const half1_end = 45 + i1;
-            const half2_end = 90 + i1 + i2;
-            const et1_end = 105 + i1 + i2;
-            const et2_end = 120 + i1 + i2;
-            let remaining = 0;
-            
-            if (format === "90") {
-                if (minute <= half1_end) {
-                    remaining = (half1_end - minute) + (45 + i2);
-                } else if (minute <= half2_end) {
-                    remaining = half2_end - minute;
-                }
-            } else {
-                if (minute <= half1_end) {
-                    remaining = (half1_end - minute) + (45 + i2) + 30;
-                } else if (minute <= half2_end) {
-                    remaining = (half2_end - minute) + 30;
-                } else if (minute <= et1_end) {
-                    remaining = (et1_end - minute) + (15 + i2);
-                } else if (minute <= et2_end) {
-                    remaining = et2_end - minute;
-                }
-            }
-            return { remaining, half1_end, half2_end, et1_end, et2_end };
-        }
+    const minute = Math.min(120, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
+    const i1 = Math.max(0, parseInt(document.getElementById('injury_1').value, 10) || 0);
+    const i2 = Math.max(0, parseInt(document.getElementById('injury_2').value, 10) || 0);
+    const format = document.getElementById('match_format').value;
 
-        function getTotalMatchTime(format, i1, i2) {
-            return (format === "90") ? (90 + i1 + i2) : (120 + i1 + i2);
-        }
+    const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
+    const cA = Math.max(0, parseInt(document.getElementById('current_away_score').value, 10) || 0);
+    const currentTotalGoals = cH + cA;
 
-        function calcAHOutcome(finalH, finalA, handicap) {
-            const net = finalH - finalA - handicap;
-            if (net > 0.001) return 1;
-            if (net < -0.001) return -1;
-            return 0;
-        }
+    const redHome = Math.min(5, Math.max(0, parseInt(document.getElementById('red_home').value, 10) || 0));
+    const redAway = Math.min(5, Math.max(0, parseInt(document.getElementById('red_away').value, 10) || 0));
+    const ahRate = parseFloat(document.getElementById('handicapSelect').value) || 0;
 
-        function getAHParts(ahRate) {
-            const absH = Math.abs(ahRate);
-            const frac = absH - Math.floor(absH);
-            const isQuarter = Math.abs(frac - 0.25) < 0.001 || Math.abs(frac - 0.75) < 0.001;
-            
-            if (!isQuarter) return { isQuarter: false, parts: [ahRate] };
-            
-            let h1, h2;
-            if (Math.abs(frac - 0.25) < 0.001) {
-                h1 = Math.floor(absH);
-                h2 = Math.floor(absH) + 0.5;
-            } else {
-                h1 = Math.floor(absH) + 0.5;
-                h2 = Math.ceil(absH);
-            }
-            if (ahRate < 0) { h1 = -h1; h2 = -h2; }
-            return { isQuarter: true, parts: [h1, h2] };
-        }
+    const sliderVal = parseFloat(document.getElementById('poss_slider').value) || 50;
+    const hPoss = sliderVal;
+    const aPoss = 100 - sliderVal;
 
-        function predictMatch() {
-            clearCalcError();
-            
-            const homeName = document.getElementById('home_name').value.trim() || 'ทีมเหย้า';
-            const awayName = document.getElementById('away_name').value.trim() || 'ทีมเยือน';
-            
-            const minute = Math.min(120, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
-            const i1 = Math.max(0, parseInt(document.getElementById('injury_1').value, 10) || 0);
-            const i2 = Math.max(0, parseInt(document.getElementById('injury_2').value, 10) || 0);
-            const format = document.getElementById('match_format').value;
-            
-            const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
-            const cA = Math.max(0, parseInt(document.getElementById('current_away_score').value, 10) || 0);
-            const currentTotalGoals = cH + cA;
-            
-            const redHome = Math.min(5, Math.max(0, parseInt(document.getElementById('red_home').value, 10) || 0));
-            const redAway = Math.min(5, Math.max(0, parseInt(document.getElementById('red_away').value, 10) || 0));
-            const ahRate = parseFloat(document.getElementById('handicapSelect').value) || 0;
-            
-            const sliderVal = parseFloat(document.getElementById('poss_slider').value) || 50;
-            const hPoss = sliderVal;
-            const aPoss = 100 - sliderVal;
-            
-            let hShotsRaw = Math.max(0, parseInt(document.getElementById('h_shots').value, 10) || 0);
-            let aShotsRaw = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
-            let hSotRaw = Math.max(0, parseInt(document.getElementById('h_sot').value, 10) || 0);
-            let aSotRaw = Math.max(0, parseInt(document.getElementById('a_sot').value, 10) || 0);
-            
-            const totalMatchTime = getTotalMatchTime(format, i1, i2);
-            const timeData = calculateRemaining(minute, i1, i2, format);
-            const remaining = timeData.remaining;
-            const half1_end = timeData.half1_end;
-            
-            if (remaining === 0) { 
-                showCalcError('การแข่งขันจบลงแล้ว (ไม่มีเวลาทดเจ็บหรือต่อเวลาเหลือ)'); 
-                return; 
-            }
-            
-            let inputWarnings = [];
-            if (hSotRaw > hShotsRaw) { 
-                inputWarnings.push(`SOT เหย้า (${hSotRaw}) > ยิงทั้งหมด (${hShotsRaw}) — ปรับให้เท่ากัน`); 
-                hSotRaw = hShotsRaw; 
-            }
-            if (aSotRaw > aShotsRaw) { 
-                inputWarnings.push(`SOT เยือน (${aSotRaw}) > ยิงทั้งหมด (${aShotsRaw}) — ปรับให้เท่ากัน`); 
-                aSotRaw = aShotsRaw; 
-            }
-            
-            const hSot = hSotRaw, aSot = aSotRaw, hShots = hShotsRaw, aShots = aShotsRaw;
-            
-            if (hShots + aShots === 0) { 
-                showCalcError('กรุณาระบุจำนวนการยิงอย่างน้อย 1 ฝั่งก่อนทำการประมวลผล'); 
-                return; 
-            }
-            
-            document.getElementById('emptyState').classList.add('d-none');
-            document.getElementById('resultsArea').classList.remove('d-none');
-            document.getElementById('resultsArea').classList.add('d-flex');
-            
-            const warnBox = document.getElementById('inputWarning');
-            if (inputWarnings.length > 0) { 
-                document.getElementById('inputWarningText').innerText = inputWarnings.join(' | '); 
-                warnBox.classList.remove('d-none'); 
-            } else { 
-                warnBox.classList.add('d-none'); 
-            }
-            
-            const hShotXg = hSot * XG_WEIGHTS.SOT + Math.max(0, hShots - hSot) * XG_WEIGHTS.OFF_TARGET;
-            const aShotXg = aSot * XG_WEIGHTS.SOT + Math.max(0, aShots - aSot) * XG_WEIGHTS.OFF_TARGET;
-            const hPossXg = hPoss * XG_WEIGHTS.POSSESSION;
-            const aPossXg = aPoss * XG_WEIGHTS.POSSESSION;
-            
-            const hAttack = hShotXg + hPossXg;
-            const aAttack = aShotXg + aPossXg;
-            const totalAttack = hAttack + aAttack;
-            
-            const hRatio = totalAttack > 0 ? hAttack / totalAttack : 0.5;
-            const aRatio = 1 - hRatio;
-            
-            let tempoModifier = 1.0;
-            let tempoText = "ปกติ";
-            let tempoBadgeClass = "bg-secondary";
-            let tempoIcon = "bi-speedometer2";
-            
-            if (minute >= 15) {
-                const expectedGoalsSoFar = Math.max(0.1, (currentLeagueAvgGoals / totalMatchTime) * minute);
-                const actualGoals = currentTotalGoals;
-                
-                if (actualGoals > expectedGoalsSoFar) {
-                    const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
-                    tempoModifier = Math.min(1.5, 1 + (diffRatio - 1) * 0.2);
-                    if (tempoModifier > 1.1) {
-                        tempoText = `🔥 ดุเดือด (x${tempoModifier.toFixed(2)})`;
-                        tempoBadgeClass = "bg-danger text-white";
-                        tempoIcon = "bi-fire";
-                    }
-                } else if (actualGoals === 0 && minute > 30) {
-                    tempoModifier = 0.85;
-                    tempoText = `🧊 เนือย (x${tempoModifier.toFixed(2)})`;
-                    tempoBadgeClass = "bg-primary text-white";
-                    tempoIcon = "bi-snow";
-                } else if (actualGoals < expectedGoalsSoFar) {
-                    const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
-                    tempoModifier = Math.max(0.75, 1 - (1 - diffRatio) * 0.2);
-                    if (tempoModifier < 0.9) {
-                        tempoText = `🐢 ช้า (x${tempoModifier.toFixed(2)})`;
-                        tempoBadgeClass = "bg-warning text-dark";
-                        tempoIcon = "bi-hourglass-split";
-                    }
-                }
-            }
-            
-            const tempoEl = document.getElementById('tempoBadge');
-            tempoEl.className = `badge ${tempoBadgeClass}`;
-            tempoEl.innerHTML = `<i class="bi ${tempoIcon}"></i> Tempo: ${tempoText}`;
-            
-            const baseXgPerMin = (currentLeagueAvgGoals / 90) * currentLeagueModifier;
-            const avgTw = avgTimeWeight(minute, remaining, totalMatchTime);
-            const expectedGoals = baseXgPerMin * remaining * avgTw * tempoModifier;
-            
-            let xgH = expectedGoals * hRatio;
-            let xgA = expectedGoals * aRatio;
-            
-            const diff = cH - cA;
-            let hStateMod = 1.05, aStateMod = 1.0;
-            if (diff > 0) { 
-                hStateMod *= (1 - 0.22 * Math.min(2, diff)); 
-                aStateMod *= (1 + 0.28 * Math.min(2, diff)); 
-            } else if (diff < 0) { 
-                aStateMod *= (1 - 0.22 * Math.min(2, -diff)); 
-                hStateMod *= (1 + 0.28 * Math.min(2, -diff)); 
-            }
-            xgH *= hStateMod; xgA *= aStateMod;
-            
-            const rcAttackHome = Math.pow(RED_CARD_ATTACK_MULT, redHome);
-            const rcDefenseHome = Math.pow(RED_CARD_DEFENSE_MULT, redHome);
-            const rcAttackAway = Math.pow(RED_CARD_ATTACK_MULT, redAway);
-            const rcDefenseAway = Math.pow(RED_CARD_DEFENSE_MULT, redAway);
-            
-            const xgHBeforeRed = xgH, xgABeforeRed = xgA;
-            xgH = xgH * rcAttackHome * rcDefenseAway;
-            xgA = xgA * rcAttackAway * rcDefenseHome;
-            
-            const rho = -0.06;
-            let probGrid = [], total = 0;
-            for (let h = 0; h <= MAX_GOALS_GRID; h++) {
-                for (let a = 0; a <= MAX_GOALS_GRID; a++) {
-                    const p = poisson(xgH, h) * poisson(xgA, a) * dixonColesTau(h, a, xgH, xgA, rho);
-                    probGrid.push({ h, a, p });
-                    total += p;
-                }
-            }
-            probGrid.forEach(x => x.p /= total);
-            
-            let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
-            let pFTOver15 = 0, pFTOver25 = 0, pFTOver35 = 0;
-            let pFTOver45 = 0, pFTOver55 = 0, pFTOver65 = 0;
-            
-            const ahParts = getAHParts(ahRate);
-            
-            probGrid.forEach(x => {
-                const finalH = cH + x.h;
-                const finalA = cA + x.a;
-                const totalFTGoals = finalH + finalA;
-                
-                let ahOutcome;
-                if (ahParts.isQuarter) {
-                    const r1 = calcAHOutcome(finalH, finalA, ahParts.parts[0]);
-                    const r2 = calcAHOutcome(finalH, finalA, ahParts.parts[1]);
-                    ahOutcome = (r1 + r2) / 2;
-                } else {
-                    ahOutcome = calcAHOutcome(finalH, finalA, ahRate);
-                }
-                
-                if (ahOutcome === 0.5) { 
-                    pAHHomeWin += x.p * 0.5; 
-                } else if (ahOutcome === -0.5) { 
-                    pAHAwayWin += x.p * 0.5; 
-                } else if (ahOutcome > 0.001) { 
-                    pAHHomeWin += x.p; 
-                } else if (ahOutcome < -0.001) { 
-                    pAHAwayWin += x.p; 
-                } else { 
-                    pAHPush += x.p; 
-                }
-                
-                if (totalFTGoals > 1.5) pFTOver15 += x.p;
-                if (totalFTGoals > 2.5) pFTOver25 += x.p;
-                if (totalFTGoals > 3.5) pFTOver35 += x.p;
-                if (totalFTGoals > 4.5) pFTOver45 += x.p;
-                if (totalFTGoals > 5.5) pFTOver55 += x.p;
-                if (totalFTGoals > 6.5) pFTOver65 += x.p;
-            });
-            
-            document.getElementById('ahCurrentRate').innerText = ahRate === 0 
-                ? "เสมอ (0.0)" 
-                : (ahRate < 0 ? `เยือนต่อ ${Math.abs(ahRate).toFixed(2)}` : `เหย้าต่อ ${ahRate.toFixed(2)}`);
-            document.getElementById('ahHomeProb').innerText = (pAHHomeWin * 100).toFixed(1) + '%';
-            document.getElementById('ahAwayProb').innerText = (pAHAwayWin * 100).toFixed(1) + '%';
-            document.getElementById('ahPushProb').innerText = (pAHPush * 100).toFixed(1) + '%';
-            
-            const setFtRow = (id, barId, val, actualTrigger) => {
-                const finalVal = actualTrigger ? 100.0 : val * 100;
-                const el = document.getElementById(id);
-                const c = pickColor(finalVal);
-                el.innerText = finalVal.toFixed(1) + '%';
-                el.className = 'fw-bold ' + c.text;
-                const bar = document.getElementById(barId);
-                bar.style.width = finalVal + '%';
-                bar.className = 'progress-bar ' + c.bar;
-            };
-            setFtRow('ftOver15', 'ftOver15Bar', pFTOver15, currentTotalGoals > 1.5);
-            setFtRow('ftOver25', 'ftOver25Bar', pFTOver25, currentTotalGoals > 2.5);
-            setFtRow('ftOver35', 'ftOver35Bar', pFTOver35, currentTotalGoals > 3.5);
-            setFtRow('ftOver45', 'ftOver45Bar', pFTOver45, currentTotalGoals > 4.5);
-            setFtRow('ftOver55', 'ftOver55Bar', pFTOver55, currentTotalGoals > 5.5);
-            setFtRow('ftOver65', 'ftOver65Bar', pFTOver65, currentTotalGoals > 6.5);
-            
-            const totalXg = xgH + xgA;
-            const pNone = Math.exp(-totalXg);
-            const pHomeNext = totalXg > 0 ? (xgH / totalXg) * (1 - pNone) : 0;
-            const pAwayNext = totalXg > 0 ? (xgA / totalXg) * (1 - pNone) : 0;
-            document.getElementById('probNone').innerText = (pNone * 100).toFixed(1) + '%';
-            document.getElementById('probHome').innerText = (pHomeNext * 100).toFixed(1) + '%';
-            document.getElementById('probAway').innerText = (pAwayNext * 100).toFixed(1) + '%';
-            
-            let fhOver05 = 0, fhOver15 = 0, fhOver25 = 0, fhOver35 = 0;
-            if (minute >= 45) {
-                fhOver05 = currentTotalGoals > 0.5 ? 100 : 0;
-                fhOver15 = currentTotalGoals > 1.5 ? 100 : 0;
-                fhOver25 = currentTotalGoals > 2.5 ? 100 : 0;
-                fhOver35 = currentTotalGoals > 3.5 ? 100 : 0;
-                document.getElementById('fhProbHome').innerText = cH > cA ? '✅' : '❌';
-                document.getElementById('fhProbTotal').innerText = cH === cA ? '✅' : '❌';
-                document.getElementById('fhProbAway').innerText = cA > cH ? '✅' : '❌';
-            } else {
-                const fhTimeRatio = remaining > 0 
-                    ? Math.max(0, Math.min(1, (half1_end - minute) / remaining)) 
-                    : 0;
-                const fhXgHome = xgH * FIRST_HALF_RATIO * fhTimeRatio;
-                const fhXgAway = xgA * FIRST_HALF_RATIO * fhTimeRatio;
-                
-                let fhGrid = [], fhTotal = 0;
-                for (let h = 0; h <= MAX_FH_GOALS_GRID; h++) {
-                    for (let a = 0; a <= MAX_FH_GOALS_GRID; a++) {
-                        const p = poisson(fhXgHome, h) * poisson(fhXgAway, a) * dixonColesTau(h, a, fhXgHome, fhXgAway, rho);
-                        fhGrid.push({ h, a, p });
-                        fhTotal += p;
-                    }
-                }
-                if (fhTotal > 0) fhGrid.forEach(x => x.p /= fhTotal);
-                
-                let pFHWin = 0, pFHDraw = 0, pFHLose = 0;
-                fhGrid.forEach(s => {
-                    if (s.h > s.a) pFHWin += s.p;
-                    else if (s.h === s.a) pFHDraw += s.p;
-                    else pFHLose += s.p;
-                });
-                
-                document.getElementById('fhProbHome').innerText = (pFHWin * 100).toFixed(1) + '%';
-                document.getElementById('fhProbTotal').innerText = (pFHDraw * 100).toFixed(1) + '%';
-                document.getElementById('fhProbAway').innerText = (pFHLose * 100).toFixed(1) + '%';
-                
-                let fhOver05Calc = 0, fhOver15Calc = 0, fhOver25Calc = 0, fhOver35Calc = 0;
-                fhGrid.forEach(s => {
-                    const totalG = s.h + s.a + currentTotalGoals;
-                    if (totalG > 0.5) fhOver05Calc += s.p;
-                    if (totalG > 1.5) fhOver15Calc += s.p;
-                    if (totalG > 2.5) fhOver25Calc += s.p;
-                    if (totalG > 3.5) fhOver35Calc += s.p;
-                });
-                fhOver05 = fhOver05Calc * 100;
-                fhOver15 = fhOver15Calc * 100;
-                fhOver25 = fhOver25Calc * 100;
-                fhOver35 = fhOver35Calc * 100;
-            }
-            
-            const setFhRow = (id, barId, val) => {
-                const el = document.getElementById(id);
-                const c = pickColor(val);
-                el.innerText = val.toFixed(1) + '%';
-                el.className = 'fw-bold ' + c.text;
-                const bar = document.getElementById(barId);
-                bar.style.width = val + '%';
-                bar.className = 'progress-bar ' + c.bar;
-            };
-            setFhRow('fhOver05', 'fhOver05Bar', fhOver05);
-            setFhRow('fhOver15', 'fhOver15Bar', fhOver15);
-            setFhRow('fhOver25', 'fhOver25Bar', fhOver25);
-            setFhRow('fhOver35', 'fhOver35Bar', fhOver35);
-            
-            const top3Raw = probGrid
-                .map(x => ({ score: `${cH + x.h}-${cA + x.a}`, prob: x.p }))
-                .sort((a, b) => b.prob - a.prob)
-                .slice(0, 3);
-            const top3Sum = Math.max(0.0001, top3Raw.reduce((sum, item) => sum + item.prob, 0));
-            const finalScores = top3Raw.map(x => ({ score: x.score, prob: (x.prob / top3Sum) * 100 }));
-            
-            const scoreContainer = document.getElementById('topScoresContainer');
-            const colors = ['bg-success text-white', 'bg-warning text-dark', 'bg-secondary text-white'];
-            const icons = ['🥇', '🥈', '🥉'];
-            scoreContainer.innerHTML = finalScores.map((item, i) => 
-                `<div class="col-4"><div class="score-box ${colors[i]} shadow-sm">
-                    <div class="fw-bold mb-0" style="font-size: 0.75rem;">${icons[i]}</div>
-                    <div class="fw-extrabold mb-0" style="font-size: 1.1rem;">${item.score}</div>
-                    <div class="fw-bold" style="font-size: 0.7rem;">${item.prob.toFixed(1)}%</div>
-                </div></div>`
-            ).join('');
-            
-            const hShotAcc = hShots > 0 ? hSot / hShots : 0;
-            const aShotAcc = aShots > 0 ? aSot / aShots : 0;
-            const possessionConsistency = Math.max(0, Math.min(1, 1 - Math.abs((hPoss / 100) - hRatio)));
-            const shotConsistency = (hShotAcc + aShotAcc) / 2;
-            const sampleSizeScore = Math.min(1, (hShots + aShots) / 30);
-            const rawConfidence = (possessionConsistency * 0.40 + shotConsistency * 0.35 + sampleSizeScore * 0.25) * 100;
-            const confidence = Math.round(Math.max(0, Math.min(100, rawConfidence)));
-            
-            document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
-            document.getElementById('displayMinute').innerText = minute;
-            document.getElementById('displayRemaining').innerText = remaining;
-            document.getElementById('confidenceBadge').innerText = `Confidence: ${confidence}%`;
-            document.getElementById('leagueInfluenceText').innerText = currentLeagueText;
-            
-            const rcArea = document.getElementById('redCardImpactArea');
-            if (redHome > 0 || redAway > 0) {
-                let parts = [];
-                if (redHome > 0) parts.push(`เหย้า ${redHome} ใบ`);
-                if (redAway > 0) parts.push(`เยือน ${redAway} ใบ`);
-                document.getElementById('redImpactText').innerHTML = 
-                    parts.join(' | ') + ` (xG: ${xgHBeforeRed.toFixed(2)}→${xgH.toFixed(2)} vs ${xgABeforeRed.toFixed(2)}→${xgA.toFixed(2)})`;
-                rcArea.classList.remove('d-none');
-            } else {
-                rcArea.classList.add('d-none');
-            }
-            
-            document.getElementById('xgBreakdown').innerHTML = 
-                `<div class="d-flex justify-content-between border-bottom pb-1 mb-1">
-                    <span>🏠 เหย้า xG: <strong>${xgH.toFixed(2)}</strong></span>
-                    <span class="text-success">${hShotXg.toFixed(2)} (ยิง)</span>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <span>✈️ เยือน xG: <strong>${xgA.toFixed(2)}</strong></span>
-                    <span class="text-primary">${aShotXg.toFixed(2)} (ยิง)</span>
-                </div>`;
-            
-            if (window.innerWidth < 992) {
-                document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+    let hShotsRaw = Math.max(0, parseInt(document.getElementById('h_shots').value, 10) || 0);
+    let aShotsRaw = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
+    let hSotRaw = Math.max(0, parseInt(document.getElementById('h_sot').value, 10) || 0);
+    let aSotRaw = Math.max(0, parseInt(document.getElementById('a_sot').value, 10) || 0);
+    let hBigRaw = Math.max(0, parseInt(document.getElementById('h_big').value, 10) || 0);
+    let aBigRaw = Math.max(0, parseInt(document.getElementById('a_big').value, 10) || 0);
+
+    const totalMatchTime = getTotalMatchTime(format, i1, i2);
+    const timeData = calculateRemaining(minute, i1, i2, format);
+    const remaining = timeData.remaining;
+    const half1_end = timeData.half1_end;
+
+    if (remaining === 0) { showCalcError('การแข่งขันจบลงแล้ว (ไม่มีเวลาทดเจ็บหรือต่อเวลาเหลือ)'); return; }
+
+    let inputWarnings = [];
+    if (hSotRaw > hShotsRaw) { inputWarnings.push(`SOT เหย้า (${hSotRaw}) > ยิงทั้งหมด — ปรับให้เท่ากัน`); hSotRaw = hShotsRaw; }
+    if (aSotRaw > aShotsRaw) { inputWarnings.push(`SOT เยือน (${aSotRaw}) > ยิงทั้งหมด — ปรับให้เท่ากัน`); aSotRaw = aShotsRaw; }
+    if (hBigRaw > hSotRaw) { inputWarnings.push(`Big Chance เหย้า (${hBigRaw}) > SOT — ปรับให้เท่ากัน`); hBigRaw = hSotRaw; }
+    if (aBigRaw > aSotRaw) { inputWarnings.push(`Big Chance เยือน (${aBigRaw}) > SOT — ปรับให้เท่ากัน`); aBigRaw = aSotRaw; }
+
+    const hSot = hSotRaw, aSot = aSotRaw, hShots = hShotsRaw, aShots = aShotsRaw;
+    const hBig = hBigRaw, aBig = aBigRaw;
+
+    if (hShots + aShots === 0) { showCalcError('กรุณาระบุจำนวนการยิงอย่างน้อย 1 ฝั่งก่อนทำการประมวลผล'); return; }
+
+    document.getElementById('emptyState').classList.add('d-none');
+    document.getElementById('resultsArea').classList.remove('d-none');
+    document.getElementById('resultsArea').classList.add('d-flex');
+
+    const warnBox = document.getElementById('inputWarning');
+    if (inputWarnings.length > 0) { document.getElementById('inputWarningText').innerText = inputWarnings.join(' | '); warnBox.classList.remove('d-none'); }
+    else warnBox.classList.add('d-none');
+
+    /* ---------- xG Model ---------- */
+    const hShot = calcShotXg(hSot, hBig, hShots);
+    const aShot = calcShotXg(aSot, aBig, aShots);
+
+    const hStrMult = strengthToAttackMult(homeStrength);
+    const aStrMult = strengthToAttackMult(awayStrength);
+
+    const possTilt = (hPoss - aPoss) / 100;
+    const hPossMult = 1 + 0.08 * possTilt;
+    const aPossMult = 1 - 0.08 * possTilt;
+
+    const hAttack = hShot.xg * hStrMult * hPossMult;
+    const aAttack = aShot.xg * aStrMult * aPossMult;
+    const totalAttack = hAttack + aAttack;
+
+    const hRatio = totalAttack > 0 ? hAttack / totalAttack : 0.5;
+    const aRatio = 1 - hRatio;
+
+    /* ---------- Tempo modifier ---------- */
+    let tempoModifier = 1.0;
+    let tempoText = "ปกติ";
+    let tempoBadgeClass = "bg-secondary";
+    let tempoIcon = "bi-speedometer2";
+
+    if (minute >= 15) {
+        const expectedGoalsSoFar = Math.max(0.1, (currentLeagueAvgGoals / totalMatchTime) * minute);
+        const actualGoals = currentTotalGoals;
+        if (actualGoals > expectedGoalsSoFar) {
+            const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
+            tempoModifier = Math.min(TEMPO_MAX, 1 + (diffRatio - 1) * 0.15);
+            if (tempoModifier > 1.08) { tempoText = `🔥 ดุเดือด (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-danger text-white"; tempoIcon = "bi-fire"; }
+        } else if (actualGoals === 0 && minute > 30) {
+            tempoModifier = 0.90;
+            tempoText = `🧊 เนือย (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-primary text-white"; tempoIcon = "bi-snow";
+        } else if (actualGoals < expectedGoalsSoFar) {
+            const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
+            tempoModifier = Math.max(TEMPO_MIN, 1 - (1 - diffRatio) * 0.15);
+            if (tempoModifier < 0.92) { tempoText = `🐢 ช้า (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-warning text-dark"; tempoIcon = "bi-hourglass-split"; }
+        }
+    }
+    const tempoEl = document.getElementById('tempoBadge');
+    tempoEl.className = `badge ${tempoBadgeClass}`;
+    tempoEl.innerHTML = `<i class="bi ${tempoIcon}"></i> Tempo: ${tempoText}`;
+
+    /* ---------- Expected goals ---------- */
+    const baseXgPerMin = (currentLeagueAvgGoals / 90) * currentLeagueModifier;
+    const avgTw = avgTimeWeight(minute, remaining, totalMatchTime);
+    const expectedGoals = baseXgPerMin * remaining * avgTw * tempoModifier;
+
+    let xgH = expectedGoals * hRatio;
+    let xgA = expectedGoals * aRatio;
+
+    /* ---------- Game state ---------- */
+    const diff = cH - cA;
+    let hStateMod = 1.0, aStateMod = 1.0;
+    if (diff > 0) {
+        hStateMod *= (1 - 0.15 * Math.min(2, diff));
+        aStateMod *= (1 + 0.18 * Math.min(2, diff));
+    } else if (diff < 0) {
+        aStateMod *= (1 - 0.15 * Math.min(2, -diff));
+        hStateMod *= (1 + 0.18 * Math.min(2, -diff));
+    }
+    xgH *= hStateMod; xgA *= aStateMod;
+
+    /* ---------- Red card ---------- */
+    const rcAttackHome = Math.pow(RED_CARD_ATTACK_MULT, redHome);
+    const rcDefenseHome = Math.pow(RED_CARD_DEFENSE_MULT, redHome);
+    const rcAttackAway = Math.pow(RED_CARD_ATTACK_MULT, redAway);
+    const rcDefenseAway = Math.pow(RED_CARD_DEFENSE_MULT, redAway);
+    const xgHBeforeRed = xgH, xgABeforeRed = xgA;
+    xgH = xgH * rcAttackHome * rcDefenseAway;
+    xgA = xgA * rcAttackAway * rcDefenseHome;
+
+    /* ---------- Dixon-Coles grid ---------- */
+    const rho = currentLeagueRho;
+    let probGrid = [], total = 0;
+    for (let h = 0; h <= MAX_GOALS_GRID; h++) {
+        for (let a = 0; a <= MAX_GOALS_GRID; a++) {
+            const p = poisson(xgH, h) * poisson(xgA, a) * dixonColesTau(h, a, xgH, xgA, rho);
+            probGrid.push({ h, a, p });
+            total += p;
+        }
+    }
+    probGrid.forEach(x => x.p /= total);
+
+    let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
+    let pFTOver15 = 0, pFTOver25 = 0, pFTOver35 = 0;
+    let pFTOver45 = 0, pFTOver55 = 0, pFTOver65 = 0;
+
+    const ahParts = getAHParts(ahRate);
+    probGrid.forEach(x => {
+        const finalH = cH + x.h;
+        const finalA = cA + x.a;
+        const totalFTGoals = finalH + finalA;
+        let ahOutcome;
+        if (ahParts.isQuarter) {
+            const r1 = calcAHOutcome(finalH, finalA, ahParts.parts[0]);
+            const r2 = calcAHOutcome(finalH, finalA, ahParts.parts[1]);
+            ahOutcome = (r1 + r2) / 2;
+        } else ahOutcome = calcAHOutcome(finalH, finalA, ahRate);
+
+        if (ahOutcome === 0.5) pAHHomeWin += x.p * 0.5;
+        else if (ahOutcome === -0.5) pAHAwayWin += x.p * 0.5;
+        else if (ahOutcome > 0.001) pAHHomeWin += x.p;
+        else if (ahOutcome < -0.001) pAHAwayWin += x.p;
+        else pAHPush += x.p;
+
+        if (totalFTGoals > 1.5) pFTOver15 += x.p;
+        if (totalFTGoals > 2.5) pFTOver25 += x.p;
+        if (totalFTGoals > 3.5) pFTOver35 += x.p;
+        if (totalFTGoals > 4.5) pFTOver45 += x.p;
+        if (totalFTGoals > 5.5) pFTOver55 += x.p;
+        if (totalFTGoals > 6.5) pFTOver65 += x.p;
+    });
+
+    document.getElementById('ahCurrentRate').innerText = ahRate === 0
+        ? "เสมอ (0.0)"
+        : (ahRate < 0 ? `เยือนต่อ ${Math.abs(ahRate).toFixed(2)}` : `เหย้าต่อ ${ahRate.toFixed(2)}`);
+    document.getElementById('ahHomeProb').innerText = (pAHHomeWin * 100).toFixed(1) + '%';
+    document.getElementById('ahAwayProb').innerText = (pAHAwayWin * 100).toFixed(1) + '%';
+    document.getElementById('ahPushProb').innerText = (pAHPush * 100).toFixed(1) + '%';
+
+    const setFtRow = (id, barId, val, actualTrigger) => {
+        const finalVal = actualTrigger ? 100.0 : val * 100;
+        const el = document.getElementById(id);
+        const c = pickColor(finalVal);
+        el.innerText = finalVal.toFixed(1) + '%';
+        el.className = 'fw-bold ' + c.text;
+        const bar = document.getElementById(barId);
+        bar.style.width = finalVal + '%';
+        bar.className = 'progress-bar ' + c.bar;
+    };
+    setFtRow('ftOver15', 'ftOver15Bar', pFTOver15, currentTotalGoals > 1.5);
+    setFtRow('ftOver25', 'ftOver25Bar', pFTOver25, currentTotalGoals > 2.5);
+    setFtRow('ftOver35', 'ftOver35Bar', pFTOver35, currentTotalGoals > 3.5);
+    setFtRow('ftOver45', 'ftOver45Bar', pFTOver45, currentTotalGoals > 4.5);
+    setFtRow('ftOver55', 'ftOver55Bar', pFTOver55, currentTotalGoals > 5.5);
+    setFtRow('ftOver65', 'ftOver65Bar', pFTOver65, currentTotalGoals > 6.5);
+
+    const totalXg = xgH + xgA;
+    const pNone = Math.exp(-totalXg);
+    const pHomeNext = totalXg > 0 ? (xgH / totalXg) * (1 - pNone) : 0;
+    const pAwayNext = totalXg > 0 ? (xgA / totalXg) * (1 - pNone) : 0;
+    document.getElementById('probNone').innerText = (pNone * 100).toFixed(1) + '%';
+    document.getElementById('probHome').innerText = (pHomeNext * 100).toFixed(1) + '%';
+    document.getElementById('probAway').innerText = (pAwayNext * 100).toFixed(1) + '%';
+
+    let fhOver05 = 0, fhOver15 = 0, fhOver25 = 0, fhOver35 = 0;
+    if (minute >= 45) {
+        fhOver05 = currentTotalGoals > 0.5 ? 100 : 0;
+        fhOver15 = currentTotalGoals > 1.5 ? 100 : 0;
+        fhOver25 = currentTotalGoals > 2.5 ? 100 : 0;
+        fhOver35 = currentTotalGoals > 3.5 ? 100 : 0;
+        document.getElementById('fhProbHome').innerText = cH > cA ? '✅' : '❌';
+        document.getElementById('fhProbTotal').innerText = cH === cA ? '✅' : '❌';
+        document.getElementById('fhProbAway').innerText = cA > cH ? '✅' : '❌';
+    } else {
+        const fhTimeRatio = remaining > 0 ? Math.max(0, Math.min(1, (half1_end - minute) / remaining)) : 0;
+        const fhXgHome = xgH * currentLeagueFHShare * fhTimeRatio;
+        const fhXgAway = xgA * currentLeagueFHShare * fhTimeRatio;
+
+        let fhGrid = [], fhTotal = 0;
+        for (let h = 0; h <= MAX_FH_GOALS_GRID; h++) {
+            for (let a = 0; a <= MAX_FH_GOALS_GRID; a++) {
+                const p = poisson(fhXgHome, h) * poisson(fhXgAway, a) * dixonColesTau(h, a, fhXgHome, fhXgAway, rho);
+                fhGrid.push({ h, a, p });
+                fhTotal += p;
             }
         }
-    </script>
+        if (fhTotal > 0) fhGrid.forEach(x => x.p /= fhTotal);
+
+        let pFHWin = 0, pFHDraw = 0, pFHLose = 0;
+        fhGrid.forEach(s => {
+            if (s.h > s.a) pFHWin += s.p;
+            else if (s.h === s.a) pFHDraw += s.p;
+            else pFHLose += s.p;
+        });
+        document.getElementById('fhProbHome').innerText = (pFHWin * 100).toFixed(1) + '%';
+        document.getElementById('fhProbTotal').innerText = (pFHDraw * 100).toFixed(1) + '%';
+        document.getElementById('fhProbAway').innerText = (pFHLose * 100).toFixed(1) + '%';
+
+        let fhOver05Calc = 0, fhOver15Calc = 0, fhOver25Calc = 0, fhOver35Calc = 0;
+        fhGrid.forEach(s => {
+            const totalG = s.h + s.a + currentTotalGoals;
+            if (totalG > 0.5) fhOver05Calc += s.p;
+            if (totalG > 1.5) fhOver15Calc += s.p;
+            if (totalG > 2.5) fhOver25Calc += s.p;
+            if (totalG > 3.5) fhOver35Calc += s.p;
+        });
+        fhOver05 = fhOver05Calc * 100;
+        fhOver15 = fhOver15Calc * 100;
+        fhOver25 = fhOver25Calc * 100;
+        fhOver35 = fhOver35Calc * 100;
+    }
+
+    const setFhRow = (id, barId, val) => {
+        const el = document.getElementById(id);
+        const c = pickColor(val);
+        el.innerText = val.toFixed(1) + '%';
+        el.className = 'fw-bold ' + c.text;
+        const bar = document.getElementById(barId);
+        bar.style.width = val + '%';
+        bar.className = 'progress-bar ' + c.bar;
+    };
+    setFhRow('fhOver05', 'fhOver05Bar', fhOver05);
+    setFhRow('fhOver15', 'fhOver15Bar', fhOver15);
+    setFhRow('fhOver25', 'fhOver25Bar', fhOver25);
+    setFhRow('fhOver35', 'fhOver35Bar', fhOver35);
+
+    const top3Raw = probGrid.map(x => ({ score: `${cH + x.h}-${cA + x.a}`, prob: x.p }))
+        .sort((a, b) => b.prob - a.prob).slice(0, 3);
+    const top3Sum = Math.max(0.0001, top3Raw.reduce((sum, item) => sum + item.prob, 0));
+    const finalScores = top3Raw.map(x => ({ score: x.score, prob: (x.prob / top3Sum) * 100 }));
+
+    const scoreContainer = document.getElementById('topScoresContainer');
+    const colors = ['bg-success text-white', 'bg-warning text-dark', 'bg-secondary text-white'];
+    const icons = ['🥇', '🥈', '🥉'];
+    scoreContainer.innerHTML = finalScores.map((item, i) =>
+        `<div class="col-4"><div class="score-box ${colors[i]} shadow-sm">
+            <div class="fw-bold mb-0" style="font-size: 0.75rem;">${icons[i]}</div>
+            <div class="fw-extrabold mb-0" style="font-size: 1.1rem;">${item.score}</div>
+            <div class="fw-bold" style="font-size: 0.7rem;">${item.prob.toFixed(1)}%</div>
+        </div></div>`
+    ).join('');
+
+    /* ---------- Data Quality & Confidence ---------- */
+    const hShotAcc = hShots > 0 ? hSot / hShots : 0;
+    const aShotAcc = aShots > 0 ? aSot / aShots : 0;
+    const possessionConsistency = Math.max(0, Math.min(1, 1 - Math.abs((hPoss / 100) - hRatio)));
+    const shotConsistency = (hShotAcc + aShotAcc) / 2;
+    const sampleSizeScore = Math.min(1, (hShots + aShots) / 30);
+    const hasBigData = (hBig + aBig) > 0;
+    const dataQualityScore = hasBigData ? 1.0 : 0.75;
+
+    const rawConfidence = (possessionConsistency * 0.20 + shotConsistency * 0.35 + sampleSizeScore * 0.45) * dataQualityScore * 100;
+    const confidence = Math.round(Math.max(0, Math.min(100, rawConfidence)));
+
+    document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
+    document.getElementById('displayMinute').innerText = minute;
+    document.getElementById('displayRemaining').innerText = remaining;
+    document.getElementById('confidenceBadge').innerText = `Confidence: ${confidence}%`;
+    document.getElementById('leagueInfluenceText').innerText = currentLeagueText;
+
+    const dqEl = document.getElementById('dataQualityBadge');
+    if (hasBigData) { dqEl.className = 'badge bg-success'; dqEl.innerText = 'Data: High (มี Big Chances)'; }
+    else { dqEl.className = 'badge bg-warning text-dark'; dqEl.innerText = 'Data: Medium (ไม่มี Big Chances)'; }
+
+    const rcArea = document.getElementById('redCardImpactArea');
+    if (redHome > 0 || redAway > 0) {
+        let parts = [];
+        if (redHome > 0) parts.push(`เหย้า ${redHome} ใบ`);
+        if (redAway > 0) parts.push(`เยือน ${redAway} ใบ`);
+        document.getElementById('redImpactText').innerHTML = parts.join(' | ') +
+            ` (xG: ${xgHBeforeRed.toFixed(2)}→${xgH.toFixed(2)} vs ${xgABeforeRed.toFixed(2)}→${xgA.toFixed(2)})`;
+        rcArea.classList.remove('d-none');
+    } else rcArea.classList.add('d-none');
+
+    document.getElementById('xgBreakdown').innerHTML =
+        `<div class="d-flex justify-content-between border-bottom pb-1 mb-1">
+            <span>🏠 เหย้า xG: <strong>${xgH.toFixed(2)}</strong></span>
+            <span class="text-success">${hShot.xg.toFixed(2)} (ยิง) × str ${hStrMult.toFixed(2)}</span>
+        </div>
+        <div class="d-flex justify-content-between">
+            <span>✈️ เยือน xG: <strong>${xgA.toFixed(2)}</strong></span>
+            <span class="text-primary">${aShot.xg.toFixed(2)} (ยิง) × str ${aStrMult.toFixed(2)}</span>
+        </div>`;
+
+    const calibNote = document.getElementById('calibNote');
+    let note = `⚙️ v5.4: Strength ประเมินจากราคา AH + สถิติสด. xG = BigChance×0.45 + SOT(ไม่ big)×0.22 + offTarget×0.035. ρ=${rho}. `;
+    if (!hasBigData) note += '⚠️ ไม่มี Big Chances → xG อาจคลาดเคลื่อน ±10–15%';
+    calibNote.innerText = note;
+
+    saveInputs();
+
+    if (window.innerWidth < 992) document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
 </body>
 </html>
