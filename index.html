@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.4 - Auto Strength Edition</title>
+    <title>⚽ JackAI Scanner v5.5 - Clean Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
@@ -11,7 +11,7 @@
         body { background-color: #f8f9fa; color: #212529; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, system-ui, -apple-system, Roboto; display: flex; flex-direction: column; font-size: 0.85rem; }
         .navbar-custom { height: 50px; flex-shrink: 0; background-color: #ffffff; border-bottom: 1px solid #dee2e6; }
         .main-container { flex: 1; padding: 10px; display: flex; gap: 10px; height: calc(100vh - 50px); box-sizing: border-box; overflow: hidden; }
-        .left-panel { width: 400px; min-width: 400px; height: 100%; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-right: 5px; }
+        .left-panel { width: 380px; min-width: 380px; height: 100%; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-right: 5px; }
         .right-panel { flex: 1; height: 100%; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; padding-right: 5px; }
         @media (max-width: 991.98px) {
             html, body { overflow: auto; height: auto; }
@@ -44,8 +44,6 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #adb5bd; }
-        input[type=range] { height: 8px; padding: 0; cursor: pointer; background-color: #e9ecef; border-radius: 5px; }
-        input[type=range]::-webkit-slider-thumb { background: #0d6efd; width: 20px; height: 20px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
         .bg-dark { background-color: #f1f3f5 !important; color: #212529 !important; }
         .text-light { color: #212529 !important; }
         .border-secondary { border-color: #dee2e6 !important; }
@@ -62,7 +60,7 @@
 <body>
     <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold"><i class="bi bi-globe2"></i> JackAI Scanner v5.4 <span class="badge bg-success ms-1" style="font-size:0.55rem;">AUTO-STRENGTH</span></span>
+            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold"><i class="bi bi-globe2"></i> JackAI Scanner v5.5 <span class="badge bg-success ms-1" style="font-size:0.55rem;">CLEAN EDITION</span></span>
         </div>
     </nav>
 
@@ -93,7 +91,7 @@
                         </div>
                     </div>
                     <div class="mt-1" style="font-size:0.6rem; color:#856404;">
-                        *ระบบจะคำนวณ Strength จากราคา AH + สถิติการยิง/ครองบอลในเกม แล้วเติมใส่ช่อง Strength อัตโนมัติ
+                        *ระบบจะคำนวณ Strength จากราคา AH + สถิติการยิง/สกอร์ในเกม แล้วเติมใส่ช่อง Strength อัตโนมัติ
                     </div>
                 </div>
 
@@ -244,15 +242,6 @@
                     </div>
                 </div>
 
-                <!-- Slider การครองบอล -->
-                <div class="mb-3 p-2 bg-light rounded border">
-                    <div class="d-flex justify-content-between align-items-center mb-1 px-1">
-                        <span class="fw-bold text-success" style="font-size: 0.75rem;">🏠 เหย้า: <span id="h_poss_label">50</span>%</span>
-                        <span class="fw-bold text-primary" style="font-size: 0.75rem;">✈️ เยือน: <span id="a_poss_label">50</span>%</span>
-                    </div>
-                    <input type="range" class="form-range" id="poss_slider" min="0" max="100" value="50" oninput="updatePossession()">
-                </div>
-
                 <!-- สถิติการยิง + Big Chances -->
                 <div class="row g-2 mb-3">
                     <div class="col-6 border-end">
@@ -382,10 +371,9 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.4 — Auto Strength Edition
-   เพิ่มระบบประเมิน Strength อัตโนมัติจาก:
-   1) ราคาต่อรอง Asian Handicap (Pre-match Strength Base)
-   2) สถิติสดในเกม (Shots, SOT, Possession, Score) เป็น Dynamic Adjustment
+   JackAI Scanner v5.5 — Clean Edition
+   - ลบ Slider การครองบอลออก
+   - ปรับสูตร xG ให้ใช้แค่ สกอร์ + การยิง + Big Chances + Strength
    ============================================================ */
 
 let currentLeagueModifier = 1.0;
@@ -458,7 +446,7 @@ const LEAGUE_CONSTANTS = {
     'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
 };
 
-/* xG Model v5.4 */
+/* xG Model v5.5 */
 const XG_WEIGHTS = {
     SOT_BASE: 0.30,
     OFF_TARGET: 0.035,
@@ -472,12 +460,6 @@ const RED_CARD_DEFENSE_MULT = 1.18;
 const TEMPO_MIN = 0.85, TEMPO_MAX = 1.30;
 const MAX_GOALS_GRID = 9;
 const MAX_FH_GOALS_GRID = 6;
-
-function updatePossession() {
-    const val = document.getElementById('poss_slider').value;
-    document.getElementById('h_poss_label').innerText = val;
-    document.getElementById('a_poss_label').innerText = 100 - val;
-}
 
 function handleLeagueInput() {
     const input = document.getElementById('leagueInput').value;
@@ -533,8 +515,8 @@ function showCalcError(msg) {
 }
 function clearCalcError() { document.getElementById('calcError').classList.add('d-none'); }
 
-const STORAGE_KEY = 'jackai_inputs_v3';
-const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueInput','handicapSelect','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','poss_slider','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
+const STORAGE_KEY = 'jackai_inputs_v4';
+const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueInput','handicapSelect','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
 
 function saveInputs() {
     const data = {};
@@ -547,7 +529,6 @@ function restoreInputs() {
         if (!raw) return;
         const data = JSON.parse(raw);
         INPUT_IDS.forEach(id => { if (data[id] !== undefined && document.getElementById(id)) document.getElementById(id).value = data[id]; });
-        updatePossession();
         handleLeagueInput();
     } catch (e) {}
 }
@@ -607,23 +588,14 @@ function strengthToAttackMult(strength) {
 }
 
 /* ============================================================
-   AUTO STRENGTH ESTIMATOR v1.0
-   แปลงราคา AH → Strength Base
-   ปรับด้วยสถิติสด → Strength Adjusted
+   AUTO STRENGTH ESTIMATOR v1.1 (No Possession)
    ============================================================ */
 function autoEstimateStrength() {
-    // 1) อ่านราคา AH (เหย้า)
     const ah = parseFloat(document.getElementById('auto_ah').value) || 0;
-    // AH < 0 หมายถึงเหย้าต่อ (เหย้าแข็งกว่า)
-    // AH > 0 หมายถึงเยือนต่อ (เยือนแข็งกว่า)
-    
-    // Base: ถ้า AH = 0 → 70/70, AH = -1 → 85/55, AH = +1 → 55/85
-    // ใช้ scale: 1 ลูกต่อ ≈ ±15 strength points
-    const ahImpact = -ah * 15; // ถ้าเหย้าต่อ (ah<0) → impact > 0
+    const ahImpact = -ah * 15;
     let homeBase = Math.max(20, Math.min(95, 70 + ahImpact));
     let awayBase = Math.max(20, Math.min(95, 70 - ahImpact));
     
-    // 2) อ่านสถิติสด
     const minute = Math.min(120, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
     const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
     const cA = Math.max(0, parseInt(document.getElementById('current_away_score').value, 10) || 0);
@@ -631,45 +603,31 @@ function autoEstimateStrength() {
     const aShots = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
     const hSot = Math.max(0, parseInt(document.getElementById('h_sot').value, 10) || 0);
     const aSot = Math.max(0, parseInt(document.getElementById('a_sot').value, 10) || 0);
-    const hPoss = parseFloat(document.getElementById('poss_slider').value) || 50;
-    const aPoss = 100 - hPoss;
     
-    // Live Adjustment (คำนวณเฉพาะเมื่อ minute > 0)
     let liveAdjHome = 0, liveAdjAway = 0;
     if (minute > 0) {
-        // 2.1) ผลต่างสกอร์
         const scoreDiff = cH - cA;
         liveAdjHome += scoreDiff * 2.0;
         liveAdjAway -= scoreDiff * 2.0;
         
-        // 2.2) ผลต่างการยิง (ถ้าเหย้ายิงเยอะกว่า ให้บวกเหย้า)
         const shotDiff = hShots - aShots;
         liveAdjHome += shotDiff * 0.5;
         liveAdjAway -= shotDiff * 0.5;
         
-        // 2.3) ผลต่าง SOT
         const sotDiff = hSot - aSot;
         liveAdjHome += sotDiff * 0.8;
         liveAdjAway -= sotDiff * 0.8;
-        
-        // 2.4) ผลต่างการครองบอล (weight น้อย)
-        const possDiff = hPoss - aPoss;
-        liveAdjHome += possDiff * 0.1;
-        liveAdjAway -= possDiff * 0.1;
     }
     
-    // 3) ผสม Base + Live ตาม weight ที่ผู้ใช้กำหนด
     const liveWeight = Math.min(100, Math.max(0, parseFloat(document.getElementById('auto_live_weight').value) || 30)) / 100;
     const baseWeight = 1 - liveWeight;
     
     const finalHome = Math.max(20, Math.min(95, homeBase * baseWeight + (homeBase + liveAdjHome) * liveWeight));
     const finalAway = Math.max(20, Math.min(95, awayBase * baseWeight + (awayBase + liveAdjAway) * liveWeight));
     
-    // 4) เขียนค่าลงช่อง Strength
     document.getElementById('home_strength').value = Math.round(finalHome);
     document.getElementById('away_strength').value = Math.round(finalAway);
     
-    // 5) แสดงข้อความยืนยัน
     const msg = `Strength ที่ประเมินได้:\n🏠 เหย้า: ${Math.round(finalHome)} (Base ${homeBase.toFixed(0)} + Live ${liveAdjHome > 0 ? '+' : ''}${liveAdjHome.toFixed(1)})\n✈️ เยือน: ${Math.round(finalAway)} (Base ${awayBase.toFixed(0)} + Live ${liveAdjAway > 0 ? '+' : ''}${liveAdjAway.toFixed(1)})`;
     alert(msg);
 }
@@ -694,10 +652,6 @@ function predictMatch() {
     const redHome = Math.min(5, Math.max(0, parseInt(document.getElementById('red_home').value, 10) || 0));
     const redAway = Math.min(5, Math.max(0, parseInt(document.getElementById('red_away').value, 10) || 0));
     const ahRate = parseFloat(document.getElementById('handicapSelect').value) || 0;
-
-    const sliderVal = parseFloat(document.getElementById('poss_slider').value) || 50;
-    const hPoss = sliderVal;
-    const aPoss = 100 - sliderVal;
 
     let hShotsRaw = Math.max(0, parseInt(document.getElementById('h_shots').value, 10) || 0);
     let aShotsRaw = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
@@ -732,25 +686,19 @@ function predictMatch() {
     if (inputWarnings.length > 0) { document.getElementById('inputWarningText').innerText = inputWarnings.join(' | '); warnBox.classList.remove('d-none'); }
     else warnBox.classList.add('d-none');
 
-    /* ---------- xG Model ---------- */
     const hShot = calcShotXg(hSot, hBig, hShots);
     const aShot = calcShotXg(aSot, aBig, aShots);
 
     const hStrMult = strengthToAttackMult(homeStrength);
     const aStrMult = strengthToAttackMult(awayStrength);
 
-    const possTilt = (hPoss - aPoss) / 100;
-    const hPossMult = 1 + 0.08 * possTilt;
-    const aPossMult = 1 - 0.08 * possTilt;
-
-    const hAttack = hShot.xg * hStrMult * hPossMult;
-    const aAttack = aShot.xg * aStrMult * aPossMult;
+    const hAttack = hShot.xg * hStrMult;
+    const aAttack = aShot.xg * aStrMult;
     const totalAttack = hAttack + aAttack;
 
     const hRatio = totalAttack > 0 ? hAttack / totalAttack : 0.5;
     const aRatio = 1 - hRatio;
 
-    /* ---------- Tempo modifier ---------- */
     let tempoModifier = 1.0;
     let tempoText = "ปกติ";
     let tempoBadgeClass = "bg-secondary";
@@ -776,7 +724,6 @@ function predictMatch() {
     tempoEl.className = `badge ${tempoBadgeClass}`;
     tempoEl.innerHTML = `<i class="bi ${tempoIcon}"></i> Tempo: ${tempoText}`;
 
-    /* ---------- Expected goals ---------- */
     const baseXgPerMin = (currentLeagueAvgGoals / 90) * currentLeagueModifier;
     const avgTw = avgTimeWeight(minute, remaining, totalMatchTime);
     const expectedGoals = baseXgPerMin * remaining * avgTw * tempoModifier;
@@ -784,7 +731,6 @@ function predictMatch() {
     let xgH = expectedGoals * hRatio;
     let xgA = expectedGoals * aRatio;
 
-    /* ---------- Game state ---------- */
     const diff = cH - cA;
     let hStateMod = 1.0, aStateMod = 1.0;
     if (diff > 0) {
@@ -796,7 +742,6 @@ function predictMatch() {
     }
     xgH *= hStateMod; xgA *= aStateMod;
 
-    /* ---------- Red card ---------- */
     const rcAttackHome = Math.pow(RED_CARD_ATTACK_MULT, redHome);
     const rcDefenseHome = Math.pow(RED_CARD_DEFENSE_MULT, redHome);
     const rcAttackAway = Math.pow(RED_CARD_ATTACK_MULT, redAway);
@@ -805,7 +750,6 @@ function predictMatch() {
     xgH = xgH * rcAttackHome * rcDefenseAway;
     xgA = xgA * rcAttackAway * rcDefenseHome;
 
-    /* ---------- Dixon-Coles grid ---------- */
     const rho = currentLeagueRho;
     let probGrid = [], total = 0;
     for (let h = 0; h <= MAX_GOALS_GRID; h++) {
@@ -957,16 +901,14 @@ function predictMatch() {
         </div></div>`
     ).join('');
 
-    /* ---------- Data Quality & Confidence ---------- */
     const hShotAcc = hShots > 0 ? hSot / hShots : 0;
     const aShotAcc = aShots > 0 ? aSot / aShots : 0;
-    const possessionConsistency = Math.max(0, Math.min(1, 1 - Math.abs((hPoss / 100) - hRatio)));
     const shotConsistency = (hShotAcc + aShotAcc) / 2;
     const sampleSizeScore = Math.min(1, (hShots + aShots) / 30);
     const hasBigData = (hBig + aBig) > 0;
     const dataQualityScore = hasBigData ? 1.0 : 0.75;
 
-    const rawConfidence = (possessionConsistency * 0.20 + shotConsistency * 0.35 + sampleSizeScore * 0.45) * dataQualityScore * 100;
+    const rawConfidence = (shotConsistency * 0.40 + sampleSizeScore * 0.60) * dataQualityScore * 100;
     const confidence = Math.round(Math.max(0, Math.min(100, rawConfidence)));
 
     document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
@@ -1000,7 +942,7 @@ function predictMatch() {
         </div>`;
 
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.4: Strength ประเมินจากราคา AH + สถิติสด. xG = BigChance×0.45 + SOT(ไม่ big)×0.22 + offTarget×0.035. ρ=${rho}. `;
+    let note = `⚙️ v5.5: Strength ประเมินจาก AH + สถิติสด. xG = BigChance×0.45 + SOT(ไม่ big)×0.22 + offTarget×0.035. ρ=${rho}. `;
     if (!hasBigData) note += '⚠️ ไม่มี Big Chances → xG อาจคลาดเคลื่อน ±10–15%';
     calibNote.innerText = note;
 
