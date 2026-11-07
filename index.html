@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.8.1 - Production Fix</title>
+    <title>⚽ JackAI Scanner v5.8.1 - Production Fix (Swapped Layout)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
@@ -330,18 +330,8 @@
                     <div class="row g-1 text-center" id="topScoresContainer"></div>
                 </div>
 
-                <!-- Next Goal & 1st Half Structure -->
+                <!-- 1st Half & Next Goal (สลับข้าง: ครึ่งแรกซ้าย, ประตูถัดไปขวา) -->
                 <div class="row g-2">
-                    <div class="col-md-6">
-                        <div class="card p-2 h-100">
-                            <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size: 0.8rem;">⚽ ประตูถัดไป</h6>
-                            <div class="row g-1 text-center">
-                                <div class="col-4"><div class="next-goal-card ng-none"><div class="fw-bold" style="font-size: 0.7rem;">ไม่มี</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probNone">0%</div></div></div>
-                                <div class="col-4"><div class="next-goal-card ng-home"><div class="fw-bold" style="font-size: 0.7rem;">เหย้า</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probHome">0%</div></div></div>
-                                <div class="col-4"><div class="next-goal-card ng-away"><div class="fw-bold" style="font-size: 0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probAway">0%</div></div></div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-md-6">
                         <div class="card p-2 h-100">
                             <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size: 0.8rem;">ครึ่งแรก 45 นาที</h6>
@@ -349,6 +339,16 @@
                                 <div class="col-4"><div class="fh-card fh-home"><div class="fw-bold" style="font-size: 0.7rem;">เหย้า</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="fhProbHome">0%</div></div></div>
                                 <div class="col-4"><div class="fh-card fh-total"><div class="fw-bold" style="font-size: 0.7rem;">เสมอ</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="fhProbTotal">0%</div></div></div>
                                 <div class="col-4"><div class="fh-card fh-away"><div class="fw-bold" style="font-size: 0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="fhProbAway">0%</div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card p-2 h-100">
+                            <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size: 0.8rem;">⚽ ประตูถัดไป</h6>
+                            <div class="row g-1 text-center">
+                                <div class="col-4"><div class="next-goal-card ng-none"><div class="fw-bold" style="font-size: 0.7rem;">ไม่มี</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probNone">0%</div></div></div>
+                                <div class="col-4"><div class="next-goal-card ng-home"><div class="fw-bold" style="font-size: 0.7rem;">เหย้า</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probHome">0%</div></div></div>
+                                <div class="col-4"><div class="next-goal-card ng-away"><div class="fw-bold" style="font-size: 0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probAway">0%</div></div></div>
                             </div>
                         </div>
                     </div>
@@ -396,13 +396,12 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.8.1 — Production Fix
-   เปลี่ยนจาก v5.8 (Clean Edition)
+   JackAI Scanner v5.8.1 — Production Fix (Swapped Layout)
    - Fix #1: calcAHOutcome ใช้ EPS tolerance แทน === 0.5
    - Fix #2: pAHPush บวกครึ่งที่หายไปเมื่อ quarter-ball push
    - Fix #3: fhTimeRatio ใช้ half1_end แทน 45 + fhTotalSpan
    - Fix #4: timeWeight clamp ratio [0,1] + avgTimeWeight clamp minute
-   - เพิ่ม: logFactorial, save on input, reset button, inline autoResult
+   - Layout: สลับ ครึ่งแรก (ซ้าย) ↔ ประตูถัดไป (ขวา)
    ============================================================ */
 
 let currentLeagueModifier = 1.0;
