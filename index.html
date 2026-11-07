@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.8 - Clean Edition (FT Over 0.5 Added)</title>
+    <title>⚽ JackAI Scanner v5.8.1 - Production Fix</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
@@ -60,7 +60,7 @@
 <body>
     <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold"><i class="bi bi-globe2"></i> JackAI Scanner v5.8 <span class="badge bg-success ms-1" style="font-size:0.55rem;">CLEAN EDITION</span></span>
+            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold"><i class="bi bi-globe2"></i> JackAI Scanner v5.8.1 <span class="badge bg-success ms-1" style="font-size:0.55rem;">PRODUCTION FIX</span></span>
         </div>
     </nav>
 
@@ -90,6 +90,7 @@
                             <input type="number" id="auto_live_weight" class="form-control form-control-sm text-center" value="30" min="0" max="100">
                         </div>
                     </div>
+                    <div id="autoResult" class="mt-1" style="font-size:0.65rem; color:#856404; display:none;"></div>
                     <div class="mt-1" style="font-size:0.6rem; color:#856404;">
                         *ระบบจะคำนวณ Strength จากราคา AH + สถิติการยิง/สกอร์ในเกม แล้วเติมใส่ช่อง Strength อัตโนมัติ
                     </div>
@@ -285,6 +286,9 @@
                 <button type="button" class="btn btn-predict w-100 mb-0 mt-2" onclick="predictMatch()">
                     <i class="bi bi-cpu"></i> ประมวลผลคาดการณ์
                 </button>
+                <button type="button" class="btn btn-outline-secondary w-100 mt-2 py-1" style="font-size:0.75rem;" onclick="resetInputs()">
+                    <i class="bi bi-arrow-counterclockwise"></i> รีเซ็ตข้อมูล
+                </button>
                 <div id="calcError" class="alert alert-danger py-1 mb-0 d-none mt-2" style="font-size: 0.75rem;"><strong>⚠️ ไม่สามารถคำนวณได้:</strong> <span id="calcErrorText"></span></div>
             </div>
         </div>
@@ -367,7 +371,6 @@
                         <div class="card p-2 h-100">
                             <h6 class="fw-bold text-secondary mb-2" style="font-size: 0.8rem;">โอกาสเกิดประตูเต็มเวลา</h6>
                             <div class="row g-2">
-                                <!-- ปรับให้เป็น 3 คอลัมน์เพื่อให้แสดง 7 ช่องได้สวยงาม -->
                                 <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 0.5</span><span id="ftOver05">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver05Bar" style="width: 0%"></div></div></div>
                                 <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 1.5</span><span id="ftOver15">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver15Bar" style="width: 0%"></div></div></div>
                                 <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 2.5</span><span id="ftOver25">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver25Bar" style="width: 0%"></div></div></div>
@@ -393,7 +396,13 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.8 — Clean Edition (FT Over 0.5 Added)
+   JackAI Scanner v5.8.1 — Production Fix
+   เปลี่ยนจาก v5.8 (Clean Edition)
+   - Fix #1: calcAHOutcome ใช้ EPS tolerance แทน === 0.5
+   - Fix #2: pAHPush บวกครึ่งที่หายไปเมื่อ quarter-ball push
+   - Fix #3: fhTimeRatio ใช้ half1_end แทน 45 + fhTotalSpan
+   - Fix #4: timeWeight clamp ratio [0,1] + avgTimeWeight clamp minute
+   - เพิ่ม: logFactorial, save on input, reset button, inline autoResult
    ============================================================ */
 
 let currentLeagueModifier = 1.0;
@@ -478,7 +487,7 @@ const LEAGUE_CONSTANTS = {
     'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
 };
 
-/* xG Model v5.8 */
+/* xG Model v5.8.1 */
 const XG_WEIGHTS = {
     SOT_BASE: 0.30,
     OFF_TARGET: 0.035,
@@ -492,6 +501,7 @@ const RED_CARD_DEFENSE_MULT = 1.18;
 const TEMPO_MIN = 0.85, TEMPO_MAX = 1.30;
 const MAX_GOALS_GRID = 9;
 const MAX_FH_GOALS_GRID = 6;
+const EPS = 0.001;
 
 function handleLeagueInput() {
     const input = document.getElementById('leagueInput').value;
@@ -513,7 +523,14 @@ function handleLeagueInput() {
 }
 
 function factorial(n) { if (n <= 1) return 1; let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
-function poisson(lambda, k) { return Math.exp(-lambda) * Math.pow(lambda, k) / factorial(k); }
+function logFactorial(n) { if (n <= 1) return 0; let s = 0; for (let i = 2; i <= n; i++) s += Math.log(i); return s; }
+function poisson(lambda, k) {
+    if (lambda <= 0) return k === 0 ? 1 : 0;
+    if (lambda < 30) {
+        return Math.exp(-lambda) * Math.pow(lambda, k) / factorial(k);
+    }
+    return Math.exp(-lambda + k * Math.log(lambda) - logFactorial(k));
+}
 
 function dixonColesTau(h, a, lH, lA, rho) {
     let tau = 1;
@@ -524,13 +541,18 @@ function dixonColesTau(h, a, lH, lA, rho) {
     return Math.max(0.01, tau);
 }
 
+/* Fix #4: clamp ratio ให้อยู่ใน [0,1] */
 function timeWeight(minute, totalMatchTime) {
-    return 0.88 + 0.32 * Math.pow(minute / totalMatchTime, 1.4);
+    const ratio = Math.min(1, Math.max(0, minute / totalMatchTime));
+    return 0.88 + 0.32 * Math.pow(ratio, 1.4);
 }
 function avgTimeWeight(minute, remaining, totalMatchTime) {
     if (remaining <= 0) return 1;
     let sum = 0;
-    for (let i = 0; i < 10; i++) sum += timeWeight(minute + (remaining * i / 10), totalMatchTime);
+    for (let i = 0; i < 10; i++) {
+        const m = Math.min(minute + (remaining * i / 10), totalMatchTime);
+        sum += timeWeight(m, totalMatchTime);
+    }
     return sum / 10;
 }
 
@@ -547,7 +569,7 @@ function showCalcError(msg) {
 }
 function clearCalcError() { document.getElementById('calcError').classList.add('d-none'); }
 
-const STORAGE_KEY = 'jackai_inputs_v7';
+const STORAGE_KEY = 'jackai_inputs_v8';
 const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueInput','handicapSelect','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
 
 function saveInputs() {
@@ -561,10 +583,23 @@ function restoreInputs() {
         if (!raw) return;
         const data = JSON.parse(raw);
         INPUT_IDS.forEach(id => { if (data[id] !== undefined && document.getElementById(id)) document.getElementById(id).value = data[id]; });
-        handleLeagueInput();
     } catch (e) {}
 }
-document.addEventListener('DOMContentLoaded', restoreInputs);
+function resetInputs() {
+    if (!confirm('ล้างข้อมูลทั้งหมดและโหลดค่าเริ่มต้นใหม่?')) return;
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    location.reload();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    restoreInputs();
+    handleLeagueInput();
+    // save on change ทุก input
+    INPUT_IDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', saveInputs);
+    });
+});
 
 function calculateRemaining(minute, i1, i2, format) {
     const half1_end = 45 + i1;
@@ -590,18 +625,18 @@ function getTotalMatchTime(format, i1, i2) {
 
 function calcAHOutcome(finalH, finalA, handicap) {
     const net = finalH - finalA - handicap;
-    if (net > 0.001) return 1;
-    if (net < -0.001) return -1;
+    if (net > EPS) return 1;
+    if (net < -EPS) return -1;
     return 0;
 }
 
 function getAHParts(ahRate) {
     const absH = Math.abs(ahRate);
     const frac = absH - Math.floor(absH);
-    const isQuarter = Math.abs(frac - 0.25) < 0.001 || Math.abs(frac - 0.75) < 0.001;
+    const isQuarter = Math.abs(frac - 0.25) < EPS || Math.abs(frac - 0.75) < EPS;
     if (!isQuarter) return { isQuarter: false, parts: [ahRate] };
     let h1, h2;
-    if (Math.abs(frac - 0.25) < 0.001) { h1 = Math.floor(absH); h2 = Math.floor(absH) + 0.5; }
+    if (Math.abs(frac - 0.25) < EPS) { h1 = Math.floor(absH); h2 = Math.floor(absH) + 0.5; }
     else { h1 = Math.floor(absH) + 0.5; h2 = Math.ceil(absH); }
     if (ahRate < 0) { h1 = -h1; h2 = -h2; }
     return { isQuarter: true, parts: [h1, h2] };
@@ -620,7 +655,7 @@ function strengthToAttackMult(strength) {
 }
 
 /* ============================================================
-   AUTO STRENGTH ESTIMATOR
+   AUTO STRENGTH ESTIMATOR (inline result แทน alert)
    ============================================================ */
 function autoEstimateStrength() {
     const ah = parseFloat(document.getElementById('auto_ah').value) || 0;
@@ -641,11 +676,9 @@ function autoEstimateStrength() {
         const scoreDiff = cH - cA;
         liveAdjHome += scoreDiff * 2.0;
         liveAdjAway -= scoreDiff * 2.0;
-        
         const shotDiff = hShots - aShots;
         liveAdjHome += shotDiff * 0.5;
         liveAdjAway -= shotDiff * 0.5;
-        
         const sotDiff = hSot - aSot;
         liveAdjHome += sotDiff * 0.8;
         liveAdjAway -= sotDiff * 0.8;
@@ -660,8 +693,10 @@ function autoEstimateStrength() {
     document.getElementById('home_strength').value = Math.round(finalHome);
     document.getElementById('away_strength').value = Math.round(finalAway);
     
-    const msg = `Strength ที่ประเมินได้:\n🏠 เหย้า: ${Math.round(finalHome)} (Base ${homeBase.toFixed(0)} + Live ${liveAdjHome > 0 ? '+' : ''}${liveAdjHome.toFixed(1)})\n✈️ เยือน: ${Math.round(finalAway)} (Base ${awayBase.toFixed(0)} + Live ${liveAdjAway > 0 ? '+' : ''}${liveAdjAway.toFixed(1)})`;
-    alert(msg);
+    const el = document.getElementById('autoResult');
+    el.style.display = 'block';
+    el.innerHTML = `🏠 <strong>${Math.round(finalHome)}</strong> (Base ${homeBase.toFixed(0)} ${liveAdjHome>=0?'+':''}${liveAdjHome.toFixed(1)} Live) &nbsp;|&nbsp; ✈️ <strong>${Math.round(finalAway)}</strong> (Base ${awayBase.toFixed(0)} ${liveAdjAway>=0?'+':''}${liveAdjAway.toFixed(1)} Live)`;
+    saveInputs();
 }
 
 function predictMatch() {
@@ -737,7 +772,8 @@ function predictMatch() {
     let tempoIcon = "bi-speedometer2";
 
     if (minute >= 15) {
-        const expectedGoalsSoFar = Math.max(0.1, (currentLeagueAvgGoals / totalMatchTime) * minute);
+        const effectiveMinute = Math.min(minute, totalMatchTime);
+        const expectedGoalsSoFar = Math.max(0.1, (currentLeagueAvgGoals / totalMatchTime) * effectiveMinute);
         const actualGoals = currentTotalGoals;
         if (actualGoals > expectedGoalsSoFar) {
             const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
@@ -802,18 +838,30 @@ function predictMatch() {
         const finalH = cH + x.h;
         const finalA = cA + x.a;
         const totalFTGoals = finalH + finalA;
+
         let ahOutcome;
         if (ahParts.isQuarter) {
             const r1 = calcAHOutcome(finalH, finalA, ahParts.parts[0]);
             const r2 = calcAHOutcome(finalH, finalA, ahParts.parts[1]);
             ahOutcome = (r1 + r2) / 2;
-        } else ahOutcome = calcAHOutcome(finalH, finalA, ahRate);
+        } else {
+            ahOutcome = calcAHOutcome(finalH, finalA, ahRate);
+        }
 
-        if (ahOutcome === 0.5) pAHHomeWin += x.p * 0.5;
-        else if (ahOutcome === -0.5) pAHAwayWin += x.p * 0.5;
-        else if (ahOutcome > 0.001) pAHHomeWin += x.p;
-        else if (ahOutcome < -0.001) pAHAwayWin += x.p;
-        else pAHPush += x.p;
+        // Fix #1 + #2: ใช้ EPS tolerance + บวก push ครึ่งที่หายไป
+        if (Math.abs(ahOutcome - 0.5) < EPS) {
+            pAHHomeWin += x.p * 0.5;
+            pAHPush    += x.p * 0.5;
+        } else if (Math.abs(ahOutcome + 0.5) < EPS) {
+            pAHAwayWin += x.p * 0.5;
+            pAHPush    += x.p * 0.5;
+        } else if (ahOutcome > EPS) {
+            pAHHomeWin += x.p;
+        } else if (ahOutcome < -EPS) {
+            pAHAwayWin += x.p;
+        } else {
+            pAHPush += x.p;
+        }
 
         if (totalFTGoals > 0.5) pFTOver05 += x.p;
         if (totalFTGoals > 1.5) pFTOver15 += x.p;
@@ -858,8 +906,10 @@ function predictMatch() {
     document.getElementById('probHome').innerText = (pHomeNext * 100).toFixed(1) + '%';
     document.getElementById('probAway').innerText = (pAwayNext * 100).toFixed(1) + '%';
 
+    // Fix #3: ใช้ half1_end แทน 45 (แก้บั๊กทดเจ็บครึ่งแรก)
     let fhOver05 = 0, fhOver15 = 0, fhOver25 = 0, fhOver35 = 0;
-    if (minute >= 45) {
+    if (minute >= half1_end) {
+        // ครึ่งแรกจบแล้ว — ใช้สกอร์จริง
         fhOver05 = currentTotalGoals > 0.5 ? 100 : 0;
         fhOver15 = currentTotalGoals > 1.5 ? 100 : 0;
         fhOver25 = currentTotalGoals > 2.5 ? 100 : 0;
@@ -868,7 +918,14 @@ function predictMatch() {
         document.getElementById('fhProbTotal').innerText = cH === cA ? '✅' : '❌';
         document.getElementById('fhProbAway').innerText = cA > cH ? '✅' : '❌';
     } else {
-        const fhTimeRatio = remaining > 0 ? Math.max(0, Math.min(1, (half1_end - minute) / remaining)) : 0;
+        // ยังอยู่ในครึ่งแรก (รวมทดเจ็บ)
+        const fhRemaining = Math.max(0, half1_end - minute);
+        const secondHalfTotal = 45 + i2;
+        const fhTotalSpan = fhRemaining + secondHalfTotal;
+        const fhTimeRatio = fhTotalSpan > 0
+            ? Math.max(0, Math.min(1, fhRemaining / fhTotalSpan))
+            : 0;
+
         const fhXgHome = xgH * currentLeagueFHShare * fhTimeRatio;
         const fhXgAway = xgA * currentLeagueFHShare * fhTimeRatio;
 
@@ -977,7 +1034,7 @@ function predictMatch() {
         </div>`;
 
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.8: Strength ประเมินจาก AH + สถิติสด. xG = BigChance×0.45 + SOT(ไม่ big)×0.22 + offTarget×0.035. ρ=${rho}. `;
+    let note = `⚙️ v5.8.1 (Production Fix): AH ใช้ tolerance EPS=0.001, quarter-ball push นับครบ, ครึ่งแรกใช้ half1_end=${half1_end}, timeWeight clamp [0,1]. xG = BigChance×0.45 + SOT(ไม่ big)×0.22 + offTarget×0.035. ρ=${rho}. `;
     if (!hasBigData) note += '⚠️ ไม่มี Big Chances → xG อาจคลาดเคลื่อน ±10–15%';
     calibNote.innerText = note;
 
