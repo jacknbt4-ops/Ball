@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.1 - Manual Edition</title>
+    <title>⚽ JackAI Scanner v5.2 - Manual Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
@@ -54,6 +54,7 @@
         .score-box { border-radius: 8px; padding: 5px; text-align: center; color: white; }
         .bg-orange { background-color: #fd7e14 !important; }
         .text-orange { color: #fd7e14 !important; }
+        .fw-extrabold { font-weight: 800; }
         
         .warn-box { background: #fff3cd; border: 1px solid #ffecb5; border-radius: 4px; padding: 4px 8px; font-size: 0.75rem; color: #856404; }
         .xh-highlight { font-size: 0.7rem; background: #e9ecef; padding: 5px; border-radius: 6px; border: 1px solid #ced4da; color: #495057; }
@@ -73,7 +74,7 @@
 <body>
     <nav class="navbar navbar-light bg-white px-3 shadow-sm border-bottom navbar-custom">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">⚽ JackAI Scanner v5.1</span>
+            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">⚽ JackAI Scanner v5.2</span>
             <span class="text-muted d-none d-sm-block" style="font-size: 0.75rem;">Manual Entry Edition</span>
         </div>
     </nav>
@@ -114,7 +115,6 @@
                             </optgroup>
                             <optgroup label="🇹🇭 ไทย (Thailand)">
                                 <option value="thai league">ไทยลีก (Thai League)</option>
-                                <option value="thailand league 1">ไทยแลนด์ ลีก 1 (Thailand League 1)</option>
                             </optgroup>
                             <optgroup label="🇯🇵 ญี่ปุ่น (Japan)">
                                 <option value="j1 league">เจลีก J1 (J1 League)</option>
@@ -285,6 +285,7 @@
                 </div>
 
                 <button type="button" class="btn btn-danger w-100 fw-bold shadow-sm rounded-pill mb-0 btn-sm" onclick="predictMatch()">🔮 ประมวลผลคาดการณ์</button>
+                <div id="calcError" class="alert alert-danger py-1 mb-0 d-none mt-2" style="font-size: 0.75rem;"><strong>⚠️ ไม่สามารถคำนวณได้:</strong> <span id="calcErrorText"></span></div>
             </div>
         </div>
 
@@ -316,6 +317,7 @@
                         <div class="col-6"><div class="p-1 rounded bg-success-subtle border border-success"><div class="text-success fw-bold" style="font-size: 0.7rem;">เหย้าชนะราคา</div><div class="fw-bold text-success mb-0" style="font-size: 1rem;" id="ahHomeProb">0%</div></div></div>
                         <div class="col-6"><div class="p-1 rounded bg-primary-subtle border border-primary"><div class="text-primary fw-bold" style="font-size: 0.7rem;">เยือนชนะราคา</div><div class="fw-bold text-primary mb-0" style="font-size: 1rem;" id="ahAwayProb">0%</div></div></div>
                     </div>
+                    <div class="text-center text-muted mt-1" style="font-size: 0.65rem;">เสมอราคา (Push): <span id="ahPushProb" class="fw-bold">0%</span></div>
                 </div>
 
                 <!-- Top 3 Scores -->
@@ -403,7 +405,6 @@
             'mls': { name: "เมเจอร์ลีกซอกเกอร์ (MLS)", goals: 3.12, mod: 1.14 },
             
             'thai league': { name: "ไทยลีก", goals: 2.95, mod: 1.10 },
-            'thailand league 1': { name: "ไทยแลนด์ ลีก 1", goals: 2.95, mod: 1.10 },
             
             'j1 league': { name: "เจลีก J1", goals: 2.65, mod: 0.98 },
             'j2 league': { name: "เจลีก J2", goals: 2.45, mod: 0.92 },
@@ -505,7 +506,37 @@
             return { bar: 'bg-danger', text: 'text-danger' };
         }
 
+        function showCalcError(msg) {
+            const box = document.getElementById('calcError');
+            document.getElementById('calcErrorText').innerText = msg;
+            box.classList.remove('d-none');
+        }
+        function clearCalcError() {
+            document.getElementById('calcError').classList.add('d-none');
+        }
+
+        const STORAGE_KEY = 'jackai_inputs_v1';
+        const INPUT_IDS = ['home_name','away_name','leagueInput','handicapSelect','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','poss_slider','h_shots','h_sot','a_shots','a_sot'];
+        function saveInputs() {
+            const data = {};
+            INPUT_IDS.forEach(id => { data[id] = document.getElementById(id).value; });
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+        }
+        function restoreInputs() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                const data = JSON.parse(raw);
+                INPUT_IDS.forEach(id => { if (data[id] !== undefined) document.getElementById(id).value = data[id]; });
+                updatePossession();
+                handleLeagueInput();
+            } catch (e) {}
+        }
+        document.addEventListener('DOMContentLoaded', restoreInputs);
+
         function predictMatch() {
+            clearCalcError();
+            saveInputs();
             document.getElementById('emptyState').classList.add('d-none');
             document.getElementById('resultsArea').classList.remove('d-none');
             document.getElementById('resultsArea').classList.add('d-flex');
@@ -555,7 +586,7 @@
             let hSotRaw = Math.max(0, parseInt(document.getElementById('h_sot').value) || 0);
             let aSotRaw = Math.max(0, parseInt(document.getElementById('a_sot').value) || 0);
 
-            if (remaining === 0) { alert('การแข่งขันจบลงแล้ว (ไม่มีเวลาทดเจ็บหรือต่อเวลาเหลือ)'); return; }
+            if (remaining === 0) { showCalcError('การแข่งขันจบลงแล้ว (ไม่มีเวลาทดเจ็บหรือต่อเวลาเหลือ)'); return; }
 
             let inputWarnings = [];
             if (hSotRaw > hShotsRaw) { inputWarnings.push(`SOT เหย้า > ยิงทั้งหมด`); hSotRaw = hShotsRaw; }
@@ -573,7 +604,7 @@
             const hAttack = hShotXg + hPossXg, aAttack = aShotXg + aPossXg;
             const totalAttack = hAttack + aAttack;
 
-            if (totalAttack < 0.05) { alert('กรุณาระบุข้อมูลค่าสถิติทีม (การยิง/ครองบอล) ก่อนทำการประมวลผล'); return; }
+            if (hShots + aShots === 0) { showCalcError('กรุณาระบุจำนวนการยิงอย่างน้อย 1 ฝั่งก่อนทำการประมวลผล'); return; }
 
             const hRatio = hAttack / totalAttack, aRatio = aAttack / totalAttack;
             
@@ -640,8 +671,8 @@
 
             const rho = -0.06;
             let probGrid = [], total = 0;
-            for (let h = 0; h <= 6; h++) {
-                for (let a = 0; a <= 6; a++) {
+            for (let h = 0; h <= 8; h++) {
+                for (let a = 0; a <= 8; a++) {
                     const p = poisson(xgH, h) * poisson(xgA, a) * dixonColesTau(h, a, xgH, xgA, rho);
                     probGrid.push({ h, a, p }); total += p;
                 }
@@ -683,11 +714,11 @@
                     ahOutcome = calcAHOutcome(finalH, finalA, ahRate);
                 }
 
-                if (ahOutcome > 0.001) pAHHomeWin += x.p;
-                else if (ahOutcome < -0.001) pAHAwayWin += x.p;
-                else if (Math.abs(ahOutcome) < 0.001) pAHPush += x.p;
-                else if (ahOutcome === 0.5) { pAHHomeWin += x.p * 0.5; pAHPush += x.p * 0.5; }
+                if (ahOutcome === 0.5) { pAHHomeWin += x.p * 0.5; pAHPush += x.p * 0.5; }
                 else if (ahOutcome === -0.5) { pAHAwayWin += x.p * 0.5; pAHPush += x.p * 0.5; }
+                else if (ahOutcome > 0.001) pAHHomeWin += x.p;
+                else if (ahOutcome < -0.001) pAHAwayWin += x.p;
+                else pAHPush += x.p;
 
                 if (totalFTGoals > 1.5) pFTOver15 += x.p;
                 if (totalFTGoals > 2.5) pFTOver25 += x.p;
@@ -697,9 +728,10 @@
                 if (totalFTGoals > 6.5) pFTOver65 += x.p;
             });
 
-            document.getElementById('ahCurrentRate').innerText = ahRate === 0 ? "เสมอ (0.0)" : (ahRate < 0 ? `เยือนต่อ +${Math.abs(ahRate).toFixed(2)}` : `เหย้าต่อ -${ahRate.toFixed(2)}`);
+            document.getElementById('ahCurrentRate').innerText = ahRate === 0 ? "เสมอ (0.0)" : (ahRate < 0 ? `เยือนต่อ ${ahRate.toFixed(2)}` : `เหย้าต่อ -${ahRate.toFixed(2)}`);
             document.getElementById('ahHomeProb').innerText = (pAHHomeWin * 100).toFixed(1) + '%';
             document.getElementById('ahAwayProb').innerText = (pAHAwayWin * 100).toFixed(1) + '%';
+            document.getElementById('ahPushProb').innerText = (pAHPush * 100).toFixed(1) + '%';
 
             const setFtRow = (id, barId, val, actualTrigger) => {
                 const finalVal = actualTrigger ? 100.0 : val * 100;
@@ -728,8 +760,9 @@
                 document.getElementById('fhProbTotal').innerText = cH === cA ? '✅' : '❌'; 
                 document.getElementById('fhProbAway').innerText = cA > cH ? '✅' : '❌';
             } else {
-                const fhXgHome = xgH * FIRST_HALF_RATIO * (remaining > 0 ? Math.max(0, 45 - minute) / remaining : 0);
-                const fhXgAway = xgA * FIRST_HALF_RATIO * (remaining > 0 ? Math.max(0, 45 - minute) / remaining : 0);
+                const fhTimeRatio = remaining > 0 ? Math.max(0, half1_end - minute) / remaining : 0;
+                const fhXgHome = xgH * FIRST_HALF_RATIO * fhTimeRatio;
+                const fhXgAway = xgA * FIRST_HALF_RATIO * fhTimeRatio;
                 let fhGrid = [], fhTotal = 0;
                 for (let h = 0; h <= 5; h++) { for (let a = 0; a <= 5; a++) { const p = poisson(fhXgHome, h) * poisson(fhXgAway, a) * dixonColesTau(h, a, fhXgHome, fhXgAway, -0.06); fhGrid.push({ h, a, p }); fhTotal += p; } }
                 fhGrid.forEach(x => x.p /= fhTotal);
