@@ -346,8 +346,9 @@
                         <div class="card p-2 h-100">
                             <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size: 0.8rem;">⚽ ประตูถัดไป</h6>
                             <div class="row g-1 text-center">
-                                <div class="col-4"><div class="next-goal-card ng-none"><div class="fw-bold" style="font-size: 0.7rem;">ไม่มี</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probNone">0%</div></div></div>
+                                <!-- สลับให้ เหย้า มาก่อน ไม่มี -->
                                 <div class="col-4"><div class="next-goal-card ng-home"><div class="fw-bold" style="font-size: 0.7rem;">เหย้า</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probHome">0%</div></div></div>
+                                <div class="col-4"><div class="next-goal-card ng-none"><div class="fw-bold" style="font-size: 0.7rem;">ไม่มี</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probNone">0%</div></div></div>
                                 <div class="col-4"><div class="next-goal-card ng-away"><div class="fw-bold" style="font-size: 0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probAway">0%</div></div></div>
                             </div>
                         </div>
@@ -901,8 +902,10 @@ function predictMatch() {
     const pNone = Math.exp(-totalXg);
     const pHomeNext = totalXg > 0 ? (xgH / totalXg) * (1 - pNone) : 0;
     const pAwayNext = totalXg > 0 ? (xgA / totalXg) * (1 - pNone) : 0;
-    document.getElementById('probNone').innerText = (pNone * 100).toFixed(1) + '%';
+    
+    // อัปเดตค่าตามลำดับ HTML ใหม่ (เหย้า -> ไม่มี -> เยือน)
     document.getElementById('probHome').innerText = (pHomeNext * 100).toFixed(1) + '%';
+    document.getElementById('probNone').innerText = (pNone * 100).toFixed(1) + '%';
     document.getElementById('probAway').innerText = (pAwayNext * 100).toFixed(1) + '%';
 
     // Fix #3: ใช้ half1_end แทน 45 (แก้บั๊กทดเจ็บครึ่งแรก)
