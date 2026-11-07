@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.7 - Clean Edition (Asia Added)</title>
+    <title>⚽ JackAI Scanner v5.8 - Clean Edition (FT Over 0.5 Added)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
@@ -60,7 +60,7 @@
 <body>
     <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold"><i class="bi bi-globe2"></i> JackAI Scanner v5.7 <span class="badge bg-success ms-1" style="font-size:0.55rem;">CLEAN EDITION</span></span>
+            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold"><i class="bi bi-globe2"></i> JackAI Scanner v5.8 <span class="badge bg-success ms-1" style="font-size:0.55rem;">CLEAN EDITION</span></span>
         </div>
     </nav>
 
@@ -367,12 +367,14 @@
                         <div class="card p-2 h-100">
                             <h6 class="fw-bold text-secondary mb-2" style="font-size: 0.8rem;">โอกาสเกิดประตูเต็มเวลา</h6>
                             <div class="row g-2">
-                                <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 1.5</span><span id="ftOver15">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver15Bar" style="width: 0%"></div></div></div>
-                                <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 2.5</span><span id="ftOver25">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver25Bar" style="width: 0%"></div></div></div>
-                                <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 3.5</span><span id="ftOver35">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver35Bar" style="width: 0%"></div></div></div>
-                                <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 4.5</span><span id="ftOver45">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver45Bar" style="width: 0%"></div></div></div>
-                                <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 5.5</span><span id="ftOver55">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver55Bar" style="width: 0%"></div></div></div>
-                                <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 6.5</span><span id="ftOver65">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver65Bar" style="width: 0%"></div></div></div>
+                                <!-- ปรับให้เป็น 3 คอลัมน์เพื่อให้แสดง 7 ช่องได้สวยงาม -->
+                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 0.5</span><span id="ftOver05">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver05Bar" style="width: 0%"></div></div></div>
+                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 1.5</span><span id="ftOver15">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver15Bar" style="width: 0%"></div></div></div>
+                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 2.5</span><span id="ftOver25">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver25Bar" style="width: 0%"></div></div></div>
+                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 3.5</span><span id="ftOver35">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver35Bar" style="width: 0%"></div></div></div>
+                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 4.5</span><span id="ftOver45">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver45Bar" style="width: 0%"></div></div></div>
+                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 5.5</span><span id="ftOver55">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver55Bar" style="width: 0%"></div></div></div>
+                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 6.5</span><span id="ftOver65">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver65Bar" style="width: 0%"></div></div></div>
                             </div>
                         </div>
                     </div>
@@ -391,7 +393,7 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.7 — Clean Edition (Asia Added)
+   JackAI Scanner v5.8 — Clean Edition (FT Over 0.5 Added)
    ============================================================ */
 
 let currentLeagueModifier = 1.0;
@@ -476,7 +478,7 @@ const LEAGUE_CONSTANTS = {
     'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
 };
 
-/* xG Model v5.7 */
+/* xG Model v5.8 */
 const XG_WEIGHTS = {
     SOT_BASE: 0.30,
     OFF_TARGET: 0.035,
@@ -545,7 +547,7 @@ function showCalcError(msg) {
 }
 function clearCalcError() { document.getElementById('calcError').classList.add('d-none'); }
 
-const STORAGE_KEY = 'jackai_inputs_v6';
+const STORAGE_KEY = 'jackai_inputs_v7';
 const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueInput','handicapSelect','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
 
 function saveInputs() {
@@ -792,7 +794,7 @@ function predictMatch() {
     probGrid.forEach(x => x.p /= total);
 
     let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
-    let pFTOver15 = 0, pFTOver25 = 0, pFTOver35 = 0;
+    let pFTOver05 = 0, pFTOver15 = 0, pFTOver25 = 0, pFTOver35 = 0;
     let pFTOver45 = 0, pFTOver55 = 0, pFTOver65 = 0;
 
     const ahParts = getAHParts(ahRate);
@@ -813,6 +815,7 @@ function predictMatch() {
         else if (ahOutcome < -0.001) pAHAwayWin += x.p;
         else pAHPush += x.p;
 
+        if (totalFTGoals > 0.5) pFTOver05 += x.p;
         if (totalFTGoals > 1.5) pFTOver15 += x.p;
         if (totalFTGoals > 2.5) pFTOver25 += x.p;
         if (totalFTGoals > 3.5) pFTOver35 += x.p;
@@ -838,6 +841,8 @@ function predictMatch() {
         bar.style.width = finalVal + '%';
         bar.className = 'progress-bar ' + c.bar;
     };
+    
+    setFtRow('ftOver05', 'ftOver05Bar', pFTOver05, currentTotalGoals > 0.5);
     setFtRow('ftOver15', 'ftOver15Bar', pFTOver15, currentTotalGoals > 1.5);
     setFtRow('ftOver25', 'ftOver25Bar', pFTOver25, currentTotalGoals > 2.5);
     setFtRow('ftOver35', 'ftOver35Bar', pFTOver35, currentTotalGoals > 3.5);
@@ -972,7 +977,7 @@ function predictMatch() {
         </div>`;
 
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.7: Strength ประเมินจาก AH + สถิติสด. xG = BigChance×0.45 + SOT(ไม่ big)×0.22 + offTarget×0.035. ρ=${rho}. `;
+    let note = `⚙️ v5.8: Strength ประเมินจาก AH + สถิติสด. xG = BigChance×0.45 + SOT(ไม่ big)×0.22 + offTarget×0.035. ρ=${rho}. `;
     if (!hasBigData) note += '⚠️ ไม่มี Big Chances → xG อาจคลาดเคลื่อน ±10–15%';
     calibNote.innerText = note;
 
