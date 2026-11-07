@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.5 - Clean Edition</title>
+    <title>⚽ JackAI Scanner v5.7 - Clean Edition (Asia Added)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
@@ -60,7 +60,7 @@
 <body>
     <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold"><i class="bi bi-globe2"></i> JackAI Scanner v5.5 <span class="badge bg-success ms-1" style="font-size:0.55rem;">CLEAN EDITION</span></span>
+            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold"><i class="bi bi-globe2"></i> JackAI Scanner v5.7 <span class="badge bg-success ms-1" style="font-size:0.55rem;">CLEAN EDITION</span></span>
         </div>
     </nav>
 
@@ -112,6 +112,8 @@
                     <div class="col-7">
                         <select id="leagueInput" class="form-select form-select-sm text-info" onchange="handleLeagueInput()">
                             <option value="default">-- เลือกลีก --</option>
+                            
+                            <!-- ===== ยุโรป (Europe) ===== -->
                             <optgroup label="🏴󠁧󠁢󠁥󠁮󠁧󠁿 อังกฤษ (England)">
                                 <option value="premier league">พรีเมียร์ลีก (Premier League)</option>
                                 <option value="championship">แชมเปี้ยนชิพ (Championship)</option>
@@ -152,12 +154,20 @@
                             <optgroup label="🇨🇿 สาธารณรัฐเช็ก (Czech Republic)"><option value="czech national football league">เช็ก เนชั่นแนล ฟุตบอล ลีก (Czech National Football League)</option></optgroup>
                             <optgroup label="🇦🇿 อาร์เซอร์ไบจาน (Azerbaijan)"><option value="azerbaijan premier league">อาร์เซอร์ไบจัน พรีเมียร์ ลีก (Azerbaijan Premier League)</option></optgroup>
                             <optgroup label="🇺🇿 อุซเบกิสถาน (Uzbekistan)"><option value="uzbekistan super league">อุซเบกิสถาน ซุปเปอร์ ลีก (Uzbekistan Super League)</option></optgroup>
+
+                            <!-- ===== เอเชีย (Asia) ===== -->
                             <optgroup label="🇹🇭 ไทย (Thailand)"><option value="thai league">ไทยลีก (Thai League)</option></optgroup>
                             <optgroup label="🇯🇵 ญี่ปุ่น (Japan)">
                                 <option value="j1 league">เจลีก J1 (J1 League)</option>
                                 <option value="j2 league">เจลีก J2 (J2 League)</option>
                             </optgroup>
-                            <optgroup label="🇰🇷 เกาหลีใต้ (South Korea)"><option value="k league">เคลีก (K League)</option></optgroup>
+                            <optgroup label="🇰🇷 เกาหลีใต้ (South Korea)">
+                                <option value="k league 1">เคลีก 1 (K League 1)</option>
+                                <option value="k league 2">เคลีก 2 (K League 2)</option>
+                            </optgroup>
+                            <optgroup label="🇨🇳 จีน (China)">
+                                <option value="china league 1">ไชน่า ลีก 1 (China League One)</option>
+                            </optgroup>
                             <optgroup label="🇮🇳 อินเดีย (India)">
                                 <option value="indian super league">อินเดีย ซูเปอร์ ลีก (Indian Super League)</option>
                                 <option value="india football league">อินเดีย ฟุตบอล ลีก (India Football League)</option>
@@ -175,6 +185,8 @@
                             <optgroup label="🇰🇼 คูเวต (Kuwait)"><option value="kuwait premier league">คูเวต พรีเมียร์ ลีก (Kuwait Premier League)</option></optgroup>
                             <optgroup label="🇻🇳 เวียดนาม (Vietnam)"><option value="vietnam league 1">เวียดนาม ลีก 1 (Vietnam League 1)</option></optgroup>
                             <optgroup label="🇮🇩 อินโดนีเซีย (Indonesia)"><option value="indonesia super league">อินโดนีเซีย ซูเปอร์ ลีก (Indonesia Super League)</option></optgroup>
+
+                            <!-- ===== อเมริกาใต้ (South America) ===== -->
                             <optgroup label="🇧🇴 โบลิเวีย (Bolivia)"><option value="bolivia primera division">ดิวิชั่น 1 โบลิเวีย (Bolivia Primera División)</option></optgroup>
                             <optgroup label="🇨🇱 ชิลี (Chile)"><option value="chile primera division">ปริมารา ดิวิชั่น ชิลี (Chile Primera División)</option></optgroup>
                             <optgroup label="🇵🇪 เปรู (Peru)"><option value="peru liga 1">ลีกา 1 เปรู (Peru Liga 1)</option></optgroup>
@@ -185,9 +197,17 @@
                             <optgroup label="🇵🇾 ปารากวัย (Paraguay)"><option value="paraguay primera division">ปริมารา ดิวิชั่น ปารากวัย (Paraguay Primera División)</option></optgroup>
                             <optgroup label="🇨🇴 โคลอมเบีย (Colombia)"><option value="colombia primera a">ปริมารา เอ โคลอมเบีย (Categoría Primera A)</option></optgroup>
                             <optgroup label="🇦🇷 อาร์เจนตินา (Argentina)"><option value="argentina liga profesional">ลีกา โปรเฟสชันนัล อาร์เจนตินา (Liga Profesional)</option></optgroup>
+
+                            <!-- ===== อเมริกาเหนือ / แอฟริกา / โอเชียเนีย ===== -->
                             <optgroup label="🇺🇸 สหรัฐอเมริกา (USA)"><option value="mls">เมเจอร์ลีกซอกเกอร์ (MLS)</option></optgroup>
+                            <optgroup label="🇦🇺 ออสเตรเลีย (Australia)">
+                                <option value="a league">เอ-ลีก (A-League)</option>
+                                <option value="australia championship">ออสเตรเลีย แชมเปี้ยนชิพ (Australia Championship)</option>
+                            </optgroup>
                             <optgroup label="🇲🇦 โมร็อกโก (Morocco)"><option value="morocco botola pro">โมรอคโค โบโตลา โปร (Morocco Botola Pro)</option></optgroup>
                             <optgroup label="🇪🇬 อียิปต์ (Egypt)"><option value="egypt cup">อียิปต์ คัพ (Egypt Cup)</option></optgroup>
+
+                            <!-- ===== ลีกอื่นๆ ===== -->
                             <optgroup label="🌎 ลีกอื่นๆ (Other)">
                                 <option value="uefa europa">ยูฟ่า ยูโรปา ลีก</option>
                                 <option value="uefa conference">ยูฟ่า คอนเฟอเรนซ์</option>
@@ -371,9 +391,7 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.5 — Clean Edition
-   - ลบ Slider การครองบอลออก
-   - ปรับสูตร xG ให้ใช้แค่ สกอร์ + การยิง + Big Chances + Strength
+   JackAI Scanner v5.7 — Clean Edition (Asia Added)
    ============================================================ */
 
 let currentLeagueModifier = 1.0;
@@ -413,10 +431,14 @@ const LEAGUE_CONSTANTS = {
     'czech national football league': { name: "เช็ก เนชั่นแนล ฟุตบอล ลีก", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.44 },
     'azerbaijan premier league': { name: "อาร์เซอร์ไบจัน พรีเมียร์ ลีก", goals: 2.40, mod: 0.92, rho: -0.10, fh: 0.42 },
     'uzbekistan super league': { name: "อุซเบกิสถาน ซุปเปอร์ ลีก", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
+    
+    // ลีกเอเชีย
     'thai league': { name: "ไทยลีก", goals: 2.95, mod: 1.10, rho: -0.06, fh: 0.46 },
     'j1 league': { name: "เจลีก J1", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
     'j2 league': { name: "เจลีก J2", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
-    'k league': { name: "เคลีก เกาหลีใต้", goals: 2.55, mod: 0.94, rho: -0.09, fh: 0.43 },
+    'k league 1': { name: "เคลีก 1 เกาหลีใต้", goals: 2.55, mod: 0.94, rho: -0.09, fh: 0.43 },
+    'k league 2': { name: "เคลีก 2 เกาหลีใต้", goals: 2.40, mod: 0.90, rho: -0.10, fh: 0.42 },
+    'china league 1': { name: "ไชน่า ลีก 1", goals: 2.50, mod: 0.92, rho: -0.09, fh: 0.43 },
     'indian super league': { name: "อินเดีย ซูเปอร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
     'india football league': { name: "อินเดีย ฟุตบอล ลีก", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
     'israel liga alif': { name: "อิสราเอล ลีกา อลีฟ", goals: 2.40, mod: 0.92, rho: -0.10, fh: 0.42 },
@@ -428,6 +450,8 @@ const LEAGUE_CONSTANTS = {
     'kuwait premier league': { name: "คูเวต พรีเมียร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
     'vietnam league 1': { name: "เวียดนาม ลีก 1", goals: 2.35, mod: 0.88, rho: -0.10, fh: 0.42 },
     'indonesia super league': { name: "อินโดนีเซีย ซูเปอร์ ลีก", goals: 2.80, mod: 1.08, rho: -0.06, fh: 0.45 },
+    
+    // ลีกอเมริกาใต้
     'bolivia primera division': { name: "โบลิเวีย ปริมารา ดิวิชั่น", goals: 2.97, mod: 1.10, rho: -0.06, fh: 0.45 },
     'chile primera division': { name: "ชิลี ปริมารา ดิวิชั่น", goals: 2.76, mod: 1.02, rho: -0.07, fh: 0.45 },
     'peru liga 1': { name: "เปรู ลีกา 1", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
@@ -438,15 +462,21 @@ const LEAGUE_CONSTANTS = {
     'paraguay primera division': { name: "ปารากวัย ปริมารา ดิวิชั่น", goals: 2.33, mod: 0.86, rho: -0.11, fh: 0.41 },
     'colombia primera a': { name: "โคลอมเบีย ปริมารา เอ", goals: 2.16, mod: 0.80, rho: -0.12, fh: 0.40 },
     'argentina liga profesional': { name: "อาร์เจนตินา ลีกา โปรเฟสชันนัล", goals: 1.94, mod: 0.72, rho: -0.13, fh: 0.39 },
+    
+    // อเมริกาเหนือ / แอฟริกา / โอเชียเนีย
     'mls': { name: "เมเจอร์ลีกซอกเกอร์ (MLS)", goals: 3.12, mod: 1.14, rho: -0.05, fh: 0.46 },
+    'a league': { name: "เอ-ลีก ออสเตรเลีย", goals: 3.05, mod: 1.12, rho: -0.05, fh: 0.46 },
+    'australia championship': { name: "ออสเตรเลีย แชมเปี้ยนชิพ", goals: 2.90, mod: 1.08, rho: -0.07, fh: 0.45 },
     'morocco botola pro': { name: "โมรอคโค โบโตลา โปร", goals: 2.20, mod: 0.85, rho: -0.11, fh: 0.41 },
     'egypt cup': { name: "อียิปต์ คัพ", goals: 2.30, mod: 0.85, rho: -0.11, fh: 0.41 },
+    
+    // อื่นๆ
     'uefa europa': { name: "ยูฟ่า ยูโรปา ลีก", goals: 2.80, mod: 1.00, rho: -0.07, fh: 0.45 },
     'uefa conference': { name: "ยูฟ่า คอนเฟอเรนซ์", goals: 2.75, mod: 1.00, rho: -0.07, fh: 0.45 },
     'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
 };
 
-/* xG Model v5.5 */
+/* xG Model v5.7 */
 const XG_WEIGHTS = {
     SOT_BASE: 0.30,
     OFF_TARGET: 0.035,
@@ -515,7 +545,7 @@ function showCalcError(msg) {
 }
 function clearCalcError() { document.getElementById('calcError').classList.add('d-none'); }
 
-const STORAGE_KEY = 'jackai_inputs_v4';
+const STORAGE_KEY = 'jackai_inputs_v6';
 const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueInput','handicapSelect','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
 
 function saveInputs() {
@@ -588,7 +618,7 @@ function strengthToAttackMult(strength) {
 }
 
 /* ============================================================
-   AUTO STRENGTH ESTIMATOR v1.1 (No Possession)
+   AUTO STRENGTH ESTIMATOR
    ============================================================ */
 function autoEstimateStrength() {
     const ah = parseFloat(document.getElementById('auto_ah').value) || 0;
@@ -942,7 +972,7 @@ function predictMatch() {
         </div>`;
 
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.5: Strength ประเมินจาก AH + สถิติสด. xG = BigChance×0.45 + SOT(ไม่ big)×0.22 + offTarget×0.035. ρ=${rho}. `;
+    let note = `⚙️ v5.7: Strength ประเมินจาก AH + สถิติสด. xG = BigChance×0.45 + SOT(ไม่ big)×0.22 + offTarget×0.035. ρ=${rho}. `;
     if (!hasBigData) note += '⚠️ ไม่มี Big Chances → xG อาจคลาดเคลื่อน ±10–15%';
     calibNote.innerText = note;
 
