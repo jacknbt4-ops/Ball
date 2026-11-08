@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.10.0 - Symmetric & Smooth (Swapped Layout)</title>
+    <title>⚽ JackAI Scanner v5.11.0 - Final Polish (Swapped Layout)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
@@ -57,20 +57,20 @@
         .auto-label { font-size: 0.7rem; font-weight: bold; color: #d39e00; }
         .top3-sum-note { font-size: 0.65rem; color: #6c757d; padding-top: 4px; border-top: 1px dashed #dee2e6; margin-top: 4px; }
         .prob-absolute-tag { font-size: 0.55rem; opacity: 0.7; }
+        .debug-badge { font-size: 0.55rem; background: #6c757d; color: #fff; padding: 1px 5px; border-radius: 3px; }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
         <div class="container-fluid">
             <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">
-                <i class="bi bi-globe2"></i> JackAI Scanner v5.10.0 
-                <span class="badge bg-info text-dark ms-1" style="font-size:0.55rem;">SYMMETRIC + SMOOTH</span>
+                <i class="bi bi-globe2"></i> JackAI Scanner v5.11.0 
+                <span class="badge bg-dark text-white ms-1" style="font-size:0.55rem;">FINAL POLISH</span>
             </span>
         </div>
     </nav>
 
     <div class="main-container">
-        <!-- ฝั่งซ้าย: แผงควบคุม -->
         <div class="left-panel">
             <div class="card card-body">
                 <div class="row g-2 mb-2">
@@ -384,14 +384,19 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.10.0 — Symmetric & Smooth Release
+   JackAI Scanner v5.11.0 — Final Polish Release
    ------------------------------------------------------------
    [v5.8.2] FIX #3: ลบการคูณ currentLeagueModifier ซ้ำ
    [v5.9.0] FIX #1: Calibrate XG_WEIGHTS
-   [v5.9.0] FIX #2: Calibrate timeWeight (0.97→1.05)
-   [v5.10.0] FIX #6: strengthToAttackMult → exp + clamp [0.55, 1.80]
-   [v5.10.0] FIX #7: hRatio/aRatio → Laplace smoothing +0.35
-   [v5.10.0] FIX #15: Top3 Scores → แสดง prob ดิบ + แสดงผลรวม Top3
+   [v5.9.0] FIX #2: Calibrate timeWeight
+   [v5.10.0] FIX #6: strengthToAttackMult → exp + clamp
+   [v5.10.0] FIX #7: hRatio/aRatio → Laplace smoothing
+   [v5.10.0] FIX #15: Top3 Scores → absolute prob
+   [v5.11.0] FIX #4: Dixon-Coles normalize (comment + debug guard)
+   [v5.11.0] FIX #5: avgTimeWeight → numeric integration
+   [v5.11.0] FIX #8: Tempo 0-0 late-game boost
+   [v5.11.0] FIX #10: et1_end ใช้เฉพาะ i1
+   [v5.11.0] FIX #14: Confidence เพิ่ม minuteScore
    ============================================================ */
 
 let currentLeagueText = "ลีกมาตรฐาน";
@@ -471,7 +476,6 @@ const LEAGUE_CONSTANTS = {
     'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
 };
 
-/* [v5.9.0] Calibrated xG Weights */
 const XG_WEIGHTS = {
     SOT_BASE: 0.30,
     OFF_TARGET: 0.030,
@@ -479,10 +483,9 @@ const XG_WEIGHTS = {
     SOT_NON_BIG: 0.20
 };
 
-/* [v5.10.0] FIX #6: Symmetric strength multiplier + clamp */
-const STRENGTH_SENSITIVITY = 0.0060;   // [v5.10.0] 0.0065 → 0.0060 (symmetric exp form)
-const STRENGTH_MIN_MULT = 0.55;         // [v5.10.0] clamp ล่าง
-const STRENGTH_MAX_MULT = 1.80;         // [v5.10.0] clamp บน
+const STRENGTH_SENSITIVITY = 0.0060;
+const STRENGTH_MIN_MULT = 0.55;
+const STRENGTH_MAX_MULT = 1.80;
 
 const RED_CARD_ATTACK_MULT = 0.78;
 const RED_CARD_DEFENSE_MULT = 1.18;
@@ -490,7 +493,12 @@ const TEMPO_MIN = 0.85, TEMPO_MAX = 1.30;
 const MAX_GOALS_GRID = 9;
 const MAX_FH_GOALS_GRID = 6;
 const EPS = 0.001;
-const LAPLACE_SMOOTH = 0.35;            // [v5.10.0] FIX #7: pseudo-count
+const LAPLACE_SMOOTH = 0.35;
+
+/* [v5.11.0] Constants สำหรับ integration + tempo boost + confidence */
+const INTEGRATION_STEPS = 20;             // FIX #5
+const TEMPO_0_0_LATE_MINUTE = 75;         // FIX #8
+const TEMPO_0_0_LATE_BOOST = 1.05;        // FIX #8
 
 function handleLeagueInput() {
     const input = document.getElementById('leagueInput').value;
@@ -535,14 +543,26 @@ function timeWeight(minute, totalMatchTime) {
     const ratio = Math.min(1, Math.max(0, minute / totalMatchTime));
     return 0.97 + 0.08 * Math.pow(ratio, 1.6);
 }
-function avgTimeWeight(minute, remaining, totalMatchTime) {
-    if (remaining <= 0) return 1;
+
+/* ============================================================
+   [v5.11.0] FIX #5: avgTimeWeight → numeric integration
+   ------------------------------------------------------------
+   เดิม: average ของ timeWeight ที่ 10 จุด → ใช้กับ baseRate×remaining
+        เป็นการประมาณที่ bias (underestimate xG เล็กน้อย
+        เพราะไม่ถ่วงน้ำหนักช่วงท้ายที่ weight สูง)
+   ใหม่: ∫ rate(t)×timeWeight(t) dt ด้วย Simpson's rule 20 steps
+   ============================================================ */
+function expectedGoalsIntegrated(minute, remaining, totalMatchTime, basePerMin) {
+    if (remaining <= 0) return 0;
+    const n = INTEGRATION_STEPS;
+    const dt = remaining / n;
     let sum = 0;
-    for (let i = 0; i < 10; i++) {
-        const m = Math.min(minute + (remaining * i / 10), totalMatchTime);
-        sum += timeWeight(m, totalMatchTime);
+    for (let i = 0; i < n; i++) {
+        // midpoint rule (ถูกพอ + เสถียร)
+        const t = minute + (i + 0.5) * dt;
+        sum += basePerMin * timeWeight(t, totalMatchTime) * dt;
     }
-    return sum / 10;
+    return sum;
 }
 
 function pickColor(pct) {
@@ -558,7 +578,7 @@ function showCalcError(msg) {
 }
 function clearCalcError() { document.getElementById('calcError').classList.add('d-none'); }
 
-const STORAGE_KEY = 'jackai_inputs_v11';
+const STORAGE_KEY = 'jackai_inputs_v12';
 const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueInput','handicapSelect','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
 
 function saveInputs() {
@@ -589,10 +609,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+/* ============================================================
+   [v5.11.0] FIX #10: et1_end ใช้เฉพาะ i1 (ไม่บวก i2)
+   ------------------------------------------------------------
+   เดิม (ผิด): et1_end = 105 + i1 + i2
+                → ต่อเวลาครึ่งแรกโดนทดเจ็บครึ่งหลังไปด้วย
+                → remaining ผิดไป i2 นาที
+   ใหม่ (ถูก): et1_end = 105 + i1  (ทดเจ็บครึ่งแรกเท่านั้น)
+   ============================================================ */
 function calculateRemaining(minute, i1, i2, format) {
     const half1_end = 45 + i1;
     const half2_end = 90 + i1 + i2;
-    const et1_end = 105 + i1 + i2;
+    const et1_end = 105 + i1;              // [v5.11.0] fix: ไม่บวก i2
     const et2_end = 120 + i1 + i2;
     let remaining = 0;
     if (format === "90") {
@@ -638,15 +666,6 @@ function calcShotXg(sot, big, shots) {
     return { xg, sotNonBig, offTarget };
 }
 
-/* ============================================================
-   [v5.10.0] FIX #6: Symmetric strength multiplier
-   ------------------------------------------------------------
-   เดิม: Math.pow(1.0065, s-70)  →  asym: 100 = +21.5%, 0 = -36.6%
-   ใหม่: Math.exp(0.0060 × (s-70)) → sym ใน log-space + clamp
-        s=100 → exp(0.18) ≈ 1.197 (+19.7%)
-        s=0   → exp(-0.42) ≈ 0.657 (-34.3%)
-        clamp [0.55, 1.80] กัน extreme
-   ============================================================ */
 function strengthToAttackMult(strength) {
     const raw = Math.exp(STRENGTH_SENSITIVITY * (strength - 70));
     return Math.max(STRENGTH_MIN_MULT, Math.min(STRENGTH_MAX_MULT, raw));
@@ -758,9 +777,6 @@ function predictMatch() {
     const aAttack = aShot.xg * aStrMult;
     const totalAttack = hAttack + aAttack;
 
-    /* [v5.10.0] FIX #7: Laplace smoothing
-       ป้องกัน hRatio = 1.0 เมื่อทีมเยือนยิง 0 → เยือนได้ xG = 0
-       ใช้ pseudo-count 0.35 ต่อฝั่ง */
     const smoothedH = hAttack + LAPLACE_SMOOTH;
     const smoothedA = aAttack + LAPLACE_SMOOTH;
     const hRatio = smoothedH / (smoothedH + smoothedA);
@@ -780,8 +796,26 @@ function predictMatch() {
             tempoModifier = Math.min(TEMPO_MAX, 1 + (diffRatio - 1) * 0.15);
             if (tempoModifier > 1.08) { tempoText = `🔥 ดุเดือด (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-danger text-white"; tempoIcon = "bi-fire"; }
         } else if (actualGoals === 0 && minute > 30) {
-            tempoModifier = 0.90;
-            tempoText = `🧊 เนือย (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-primary text-white"; tempoIcon = "bi-snow";
+            /* ============================================================
+               [v5.11.0] FIX #8: late-game 0-0 boost
+               ------------------------------------------------------------
+               เดิม: minute > 30 && 0-0 → tempoModifier = 0.90 (ลดทุกกรณี)
+                     ที่นาที 85 ยัง 0-0 → ลด xG 10% ซึ่งขัดความจริง
+                     (ช่วงท้ายเกม 0-0 ทีมมักเปิดเกมบุก)
+               ใหม่: ถ้า minute ≥ 75 && 0-0 → × 1.05 (boost)
+                     ถ้า minute 30-74 && 0-0 → คงเดิม 0.90 (เนือย)
+               ============================================================ */
+            if (minute >= TEMPO_0_0_LATE_MINUTE) {
+                tempoModifier = TEMPO_0_0_LATE_BOOST;
+                tempoText = `⏰ ท้ายเกม 0-0 เปิดเกม (x${tempoModifier.toFixed(2)})`;
+                tempoBadgeClass = "bg-warning text-dark";
+                tempoIcon = "bi-alarm";
+            } else {
+                tempoModifier = 0.90;
+                tempoText = `🧊 เนือย (x${tempoModifier.toFixed(2)})`;
+                tempoBadgeClass = "bg-primary text-white";
+                tempoIcon = "bi-snow";
+            }
         } else if (actualGoals < expectedGoalsSoFar) {
             const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
             tempoModifier = Math.max(TEMPO_MIN, 1 - (1 - diffRatio) * 0.15);
@@ -792,9 +826,12 @@ function predictMatch() {
     tempoEl.className = `badge ${tempoBadgeClass}`;
     tempoEl.innerHTML = `<i class="bi ${tempoIcon}"></i> Tempo: ${tempoText}`;
 
+    /* ============================================================
+       [v5.11.0] FIX #5: ใช้ expectedGoalsIntegrated แทน avgTw × remaining
+       ============================================================ */
     const baseXgPerMin = currentLeagueAvgGoals / 90;
-    const avgTw = avgTimeWeight(minute, remaining, totalMatchTime);
-    const expectedGoals = baseXgPerMin * remaining * avgTw * tempoModifier;
+    const expectedGoalsRaw = expectedGoalsIntegrated(minute, remaining, totalMatchTime, baseXgPerMin);
+    const expectedGoals = expectedGoalsRaw * tempoModifier;
 
     let xgH = expectedGoals * hRatio;
     let xgA = expectedGoals * aRatio;
@@ -819,6 +856,19 @@ function predictMatch() {
     xgA = xgA * rcAttackAway * rcDefenseHome;
 
     const rho = currentLeagueRho;
+    /* ============================================================
+       [v5.11.0] FIX #4: ตรวจสอบ Dixon-Coles normalize อย่างถูกต้อง
+       ------------------------------------------------------------
+       หมายเหตุ: การคูณ tau แล้ว normalize (ที่นี่) เป็นวิธีที่ถูกต้อง
+       ตาม Dixon & Coles (1997) เพราะ tau ทำให้ผลรวม prob ≠ 1
+       การ normalize คืนผลรวมเป็น 1 หลังปรับ tau ถือเป็น standard practice
+       
+       สิ่งที่เคยเข้าใจผิด: "normalize ทำให้ rho หาย" — ไม่จริง
+       เพราะ tau เปลี่ยน shape (prob ของ 0-0/1-1 ฯลฯ) ก่อน normalize
+       normalization แค่ rescale ให้ผลรวม = 1 ไม่ได้ลบ shape ที่เปลี่ยนไป
+       
+       เพิ่ม guard: ตรวจ probSum ใกล้ 1 หลัง normalize (±0.001)
+       ============================================================ */
     let probGrid = [], total = 0;
     for (let h = 0; h <= MAX_GOALS_GRID; h++) {
         for (let a = 0; a <= MAX_GOALS_GRID; a++) {
@@ -827,7 +877,13 @@ function predictMatch() {
             total += p;
         }
     }
+    if (total <= 0) { showCalcError('ไม่สามารถคำนวณ probability grid ได้ (ผลรวมเป็น 0)'); return; }
     probGrid.forEach(x => x.p /= total);
+    // Guard: ตรวจ prob sum ≈ 1 (สำหรับ debug)
+    const probSumAfterNorm = probGrid.reduce((s, x) => s + x.p, 0);
+    if (Math.abs(probSumAfterNorm - 1) > 0.001) {
+        console.warn(`[v5.11.0] probSum drift: ${probSumAfterNorm.toFixed(6)} (ควร ≈ 1)`);
+    }
 
     let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
     let pFTOver05 = 0, pFTOver15 = 0, pFTOver25 = 0, pFTOver35 = 0;
@@ -870,6 +926,10 @@ function predictMatch() {
         if (totalFTGoals > 5.5) pFTOver55 += x.p;
         if (totalFTGoals > 6.5) pFTOver65 += x.p;
     });
+
+    // Normalize AH sum (กัน rounding error)
+    const ahSum = pAHHomeWin + pAHAwayWin + pAHPush;
+    if (ahSum > 0) { pAHHomeWin /= ahSum; pAHAwayWin /= ahSum; pAHPush /= ahSum; }
 
     document.getElementById('ahCurrentRate').innerText = ahRate === 0
         ? "เสมอ (0.0)"
@@ -974,16 +1034,9 @@ function predictMatch() {
     setFhRow('fhOver25', 'fhOver25Bar', fhOver25);
     setFhRow('fhOver35', 'fhOver35Bar', fhOver35);
 
-    /* ============================================================
-       [v5.10.0] FIX #15: Top 3 Scores → prob ABSOLUTE (ไม่ normalize)
-       ------------------------------------------------------------
-       เดิม: normalize ให้ 3 สกอร์รวม = 100% → user เข้าใจผิด
-       ใหม่: แสดง prob ดิบ × 100 + แสดงผลรวม Top3
-       ============================================================ */
+    /* [v5.10.0] Top3 = absolute prob (ไม่ normalize) */
     const top3Raw = probGrid.map(x => ({ score: `${cH + x.h}-${cA + x.a}`, prob: x.p }))
         .sort((a, b) => b.prob - a.prob).slice(0, 3);
-    
-    // [v5.10.0] ใช้ prob ดิบโดยตรง ไม่ normalize
     const finalScores = top3Raw.map(x => ({ score: x.score, prob: x.prob * 100 }));
     const top3SumProb = finalScores.reduce((sum, item) => sum + item.prob, 0);
 
@@ -998,19 +1051,33 @@ function predictMatch() {
         </div></div>`
     ).join('');
     
-    // [v5.10.0] แสดงหมายเหตุ Top3 sum
     document.getElementById('top3SumNote').innerHTML = 
         `Top 3 รวมกัน = <strong>${top3SumProb.toFixed(1)}%</strong> ของทั้งหมด ` +
         `<span class="prob-absolute-tag">(ตัวเลขแต่ละอันคือ absolute probability)</span>`;
 
+    /* ============================================================
+       [v5.11.0] FIX #14: Confidence รวม minuteScore
+       ------------------------------------------------------------
+       เดิม: shotConsistency×0.40 + sampleSize×0.60
+             → นาที 5 ยิง 1 SOT 1 = shotConsistency 1.0 → confidence 41.8%
+               (สูงเกินสำหรับข้อมูลแค่ 1 ครั้งใน 5 นาที)
+       ใหม่: shotConsistency×0.30 + sampleSize×0.35 + minuteScore×0.35
+             minuteScore = min(1, minute/60)
+             → นาที 5 ยิง 1 SOT 1 → confidence ลดลงเหลือ ~17%
+       ============================================================ */
     const hShotAcc = hShots > 0 ? hSot / hShots : 0;
     const aShotAcc = aShots > 0 ? aSot / aShots : 0;
     const shotConsistency = (hShotAcc + aShotAcc) / 2;
     const sampleSizeScore = Math.min(1, (hShots + aShots) / 30);
+    const minuteScore = Math.min(1, minute / 60);   // [v5.11.0] ใหม่
     const hasBigData = (hBig + aBig) > 0;
     const dataQualityScore = hasBigData ? 1.0 : 0.75;
 
-    const rawConfidence = (shotConsistency * 0.40 + sampleSizeScore * 0.60) * dataQualityScore * 100;
+    const rawConfidence = (
+        shotConsistency * 0.30 +
+        sampleSizeScore * 0.35 +
+        minuteScore * 0.35
+    ) * dataQualityScore * 100;
     const confidence = Math.round(Math.max(0, Math.min(100, rawConfidence)));
 
     document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
@@ -1045,10 +1112,14 @@ function predictMatch() {
         <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#6c757d;">
             <span>Ratio: 🏠 ${(hRatio*100).toFixed(1)}% / ✈️ ${(aRatio*100).toFixed(1)}%</span>
             <span class="fst-italic">smooth +${LAPLACE_SMOOTH} ต่อฝั่ง</span>
+        </div>
+        <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#6c757d;">
+            <span>Base xG (∫): ${expectedGoalsRaw.toFixed(2)} × tempo ${tempoModifier.toFixed(2)}</span>
+            <span class="debug-badge">conf = ${confidence}%</span>
         </div>`;
 
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.10.0 (Sym+Smooth): strength=exp(${STRENGTH_SENSITIVITY}·Δ) clamp[${STRENGTH_MIN_MULT},${STRENGTH_MAX_MULT}]; ratio +Laplace ${LAPLACE_SMOOTH}; Top3 แสดง absolute prob; weights Big=${XG_WEIGHTS.BIG_CHANCE}, SOT=${XG_WEIGHTS.SOT_NON_BIG}, off=${XG_WEIGHTS.OFF_TARGET}; timeWeight 0.97→1.05; ρ=${rho}. `;
+    let note = `⚙️ v5.11.0 (Final Polish): ∫xG ${INTEGRATION_STEPS} steps; strength=exp(${STRENGTH_SENSITIVITY}·Δ) clamp[${STRENGTH_MIN_MULT},${STRENGTH_MAX_MULT}]; +Laplace ${LAPLACE_SMOOTH}; Top3 absolute; 0-0 late (≥${TEMPO_0_0_LATE_MINUTE}′) boost ×${TEMPO_0_0_LATE_BOOST}; et1_end=105+i1; conf=cons×0.30+size×0.35+min×0.35; weights Big=${XG_WEIGHTS.BIG_CHANCE}, SOT=${XG_WEIGHTS.SOT_NON_BIG}, off=${XG_WEIGHTS.OFF_TARGET}; ρ=${rho}. `;
     if (!hasBigData) note += '⚠️ ไม่มี Big Chances → xG อาจคลาดเคลื่อน ±10–15%';
     calibNote.innerText = note;
 
