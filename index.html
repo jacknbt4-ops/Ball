@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.13.2 - Smart Search (Full AH)</title>
+    <title>⚽ JackAI Scanner v5.15.0 - Final Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
     <style>
         html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
         body { background-color: #f8f9fa; color: #212529; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, system-ui, -apple-system, Roboto; display: flex; flex-direction: column; font-size: 0.85rem; }
@@ -64,15 +66,29 @@
         .league-item { padding: 6px 10px; cursor: pointer; font-size: 0.8rem; border-bottom: 1px solid #f1f3f5; }
         .league-item:hover { background-color: #e9ecef; }
         .league-item small { color: #6c757d; font-size: 0.7rem; display: block; }
+        
+        .btn-donate { background: linear-gradient(45deg, #ff8a00, #e52e71); color: white; border: none; font-weight: bold; border-radius: 20px; padding: 4px 16px; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(229, 46, 113, 0.4); transition: transform 0.2s; }
+        .btn-donate:hover { transform: scale(1.05); color: white; }
+        .donate-box { border: 2px dashed #e52e71; border-radius: 12px; padding: 20px; background: #fff0f5; }
+
+        #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
+    <div id="loadingOverlay">
+        <div class="spinner-border text-primary mb-2" style="width: 2rem; height: 2rem;" role="status"></div>
+        <h6 class="fw-bold text-dark">🤖 AI กำลังสแกนตัวเลขจากภาพ...</h6>
+        <p class="text-muted small" id="ocrProgress" style="font-size: 0.75rem;">กำลังเตรียมการ...</p>
+    </div>
+
     <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
-        <div class="container-fluid">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
             <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">
-                <i class="bi bi-globe2"></i> JackAI Scanner v5.13.2
-                <span class="badge bg-dark text-white ms-1" style="font-size:0.55rem;">FULL AH</span>
+                <i class="bi bi-globe2"></i> JackAI Scanner v5.15.0
             </span>
+            <button class="btn btn-donate" onclick="openDonateModal()">
+                <i class="bi bi-heart-fill text-white"></i> สนับสนุน
+            </button>
         </div>
     </nav>
 
@@ -82,6 +98,29 @@
                 <div class="row g-2 mb-2">
                     <div class="col-6"><input type="text" id="home_name" class="form-control form-control-sm border-success fw-bold text-success" value="ทีมเหย้า" placeholder="ทีมเหย้า" style="border-width: 2px;"></div>
                     <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary" value="ทีมเยือน" placeholder="ทีมเยือน" style="border-width: 2px;"></div>
+                </div>
+
+                <!-- 🔥 ระบบดึงข้อมูลอัตโนมัติ (API & OCR) -->
+                <div class="mb-2 p-2 rounded border bg-light">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="text-primary fw-bold mb-0" style="font-size: 0.7rem;"><i class="bi bi-cloud-download"></i> ดึงข้อมูลอัตโนมัติ</label>
+                    </div>
+                    
+                    <div class="input-group input-group-sm mb-1">
+                        <input type="password" id="apiKey" class="form-control form-control-sm" placeholder="ใส่ API Key ที่นี่" value="2e292132b40cbdf53f7f57741276bfad">
+                        <button class="btn btn-primary fw-bold text-white btn-sm" type="button" onclick="loadLiveMatches()" id="btnLoadLive" style="font-size: 0.75rem;"><i class="bi bi-arrow-repeat"></i> โหลด</button>
+                    </div>
+                    <select id="liveMatchSelect" class="form-select form-select-sm mb-2" onchange="onSelectLiveMatch()" disabled>
+                        <option value="">-- กดปุ่ม "โหลดคู่สด" --</option>
+                    </select>
+
+                    <div class="upload-zone border rounded p-2 text-center" style="border: 1px dashed #3b82f6; background: #eff6ff; cursor: pointer;" onclick="document.getElementById('graphUpload').click()">
+                        <i class="bi bi-image text-primary"></i> <span class="fw-bold ms-1" style="font-size: 0.75rem; color: #3b82f6;">หรืออัปโหลดภาพกราฟ (OCR)</span>
+                        <img id="graphPreview" class="mx-auto" alt="Preview" style="max-width: 100%; border-radius: 4px; display: none; margin-top: 5px; max-height: 60px; object-fit: contain;">
+                    </div>
+                    <input type="file" id="graphUpload" accept="image/*" class="d-none" onchange="processImage(event)">
+                    
+                    <div id="apiStatus" class="mt-1 text-muted" style="font-size:0.65rem;">พร้อมใช้งาน</div>
                 </div>
 
                 <div class="auto-box">
@@ -114,13 +153,11 @@
                 </div>
 
                 <div class="row g-2 mb-1">
-                    <!-- ช่องค้นหาลีก -->
                     <div class="col-7 position-relative">
                         <input type="text" id="leagueSearch" class="form-control form-control-sm text-info fw-bold" placeholder="-- พิมพ์ชื่อลีกเพื่อค้นหา --" autocomplete="off">
                         <div id="leagueDropdown" class="league-dropdown"></div>
                     </div>
                     <div class="col-5">
-                        <!-- 🔥 เพิ่ม AH -1.5, -1.75, -2.0 -->
                         <select id="handicapSelect" class="form-select form-select-sm text-warning fw-bold">
                             <option value="0">AH: 0.0</option>
                             <option value="0.25">AH: 0.25</option>
@@ -301,10 +338,52 @@
         </div>
     </div>
 
+    <!-- 🔥 Modal สำหรับการบริจาค (โลโก้แสดงผลแน่นอน) -->
+    <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-danger text-white border-0">
+                    <h5 class="modal-title fw-bold" id="donateModalLabel"><i class="bi bi-heart-fill text-warning"></i> สนับสนุนผู้พัฒนา</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <p class="mb-3 text-secondary">หากโปรแกรม JackAI Scanner นี้มีประโยชน์กับคุณ <br>คุณสามารถเลี้ยงกาแฟหรือสนับสนุนค่าพัฒนาได้ที่:</p>
+                    
+                    <div class="donate-box text-center mb-3">
+                        <div class="mb-3">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/TrueMoney_Logo.svg/512px-TrueMoney_Logo.svg.png" alt="TrueMoney" style="height: 50px; object-fit: contain;" onerror="this.style.display='none'">
+                        </div>
+                        <h6 class="fw-bold text-dark mb-1">พร้อมเพย์ / ทรูมันนี่ วอลเล็ท</h6>
+                        <h4 class="fw-extrabold text-danger mb-3">094-475-4282</h4>
+                        <button class="btn btn-outline-danger fw-bold w-100" onclick="copyDonateNumber()">
+                            <i class="bi bi-clipboard-check"></i> คัดลอกเบอร์โอนเงิน
+                        </button>
+                    </div>
+                    
+                    <small class="text-muted">ขอบคุณที่สนับสนุนครับ ❤️</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
 <script>
 /* ============================================================
-   JackAI Scanner v5.13.2 — Full AH
+   JackAI Scanner v5.15.0 — Ultimate Final Release
    ============================================================ */
+
+function openDonateModal() {
+    const modal = new bootstrap.Modal(document.getElementById('donateModal'));
+    modal.show();
+}
+
+function copyDonateNumber() {
+    const phoneNumber = "0944754282";
+    navigator.clipboard.writeText(phoneNumber).then(() => {
+        alert("✅ คัดลอกเบอร์ TrueMoney แล้วครับ: 094-475-4282\n(สามารถนำไปวางในแอปธนาคารเพื่อโอนได้เลย)");
+    }).catch(err => {
+        alert("❌ ไม่สามารถคัดลอกได้ กรุณาจดเบอร์: 094-475-4282");
+    });
+}
 
 let currentLeagueText = "ลีกมาตรฐาน";
 let currentLeagueAvgGoals = 2.70;
@@ -503,7 +582,7 @@ function showCalcError(msg) {
 }
 function clearCalcError() { document.getElementById('calcError').classList.add('d-none'); }
 
-const STORAGE_KEY = 'jackai_inputs_v14'; 
+const STORAGE_KEY = 'jackai_inputs_v15'; 
 const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
 
 function saveInputs() {
@@ -636,6 +715,75 @@ function autoEstimateStrength() {
     el.style.display = 'block';
     el.innerHTML = `🏠 <strong>${Math.round(finalHome)}</strong> (Base ${homeBase.toFixed(0)} ${liveAdjHome>=0?'+':''}${liveAdjHome.toFixed(1)} Live) &nbsp;|&nbsp; ✈️ <strong>${Math.round(finalAway)}</strong> (Base ${awayBase.toFixed(0)} ${liveAdjAway>=0?'+':''}${liveAdjAway.toFixed(1)} Live)`;
     saveInputs();
+}
+
+// ==========================================
+// 📷 ระบบสแกนรูปภาพ (OCR) อัตโนมัติ
+// ==========================================
+async function processImage(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('graphPreview').src = e.target.result;
+        document.getElementById('graphPreview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+
+    const overlay = document.getElementById('loadingOverlay');
+    const progressText = document.getElementById('ocrProgress');
+    overlay.style.display = 'flex';
+
+    try {
+        const worker = await Tesseract.createWorker('eng', 1, {
+            logger: m => { if (m.status === 'recognizing text') progressText.innerText = `สแกน... ${Math.round(m.progress * 100)}%`; }
+        });
+        const ret = await worker.recognize(file);
+        await worker.terminate();
+        
+        const text = ret.data.text;
+        console.log("ข้อมูลดิบที่อ่านได้:", text);
+
+        const timeMatch = text.match(/(\d{1,3})[':]\d{2}/);
+        if (timeMatch) document.getElementById('match_minute').value = parseInt(timeMatch[1], 10);
+
+        const scoreMatch = text.match(/(\d+)\s*[:\-]\s*(\d+)/);
+        if (scoreMatch) {
+            document.getElementById('current_home_score').value = parseInt(scoreMatch[1], 10);
+            document.getElementById('current_away_score').value = parseInt(scoreMatch[2], 10);
+        }
+
+        const possMatch = text.match(/(\d{2,3})%\s+(\d{2,3})%/);
+        if (possMatch) {
+            document.getElementById('poss_slider').value = parseInt(possMatch[1], 10);
+            updatePossession();
+        }
+
+        const lines = text.split('\n');
+        lines.forEach(line => {
+            const nums = line.match(/\d+/g);
+            if (nums && nums.length >= 2) {
+                const hNum = parseInt(nums[0], 10);
+                const aNum = parseInt(nums[1], 10);
+                
+                if (line.toLowerCase().includes('shots on target') || line.toLowerCase().includes('shots on goal')) {
+                    document.getElementById('h_sot').value = hNum;
+                    document.getElementById('a_sot').value = aNum;
+                } else if (line.toLowerCase().includes('shots') && !line.toLowerCase().includes('off')) {
+                    document.getElementById('h_shots').value = hNum;
+                    document.getElementById('a_shots').value = aNum;
+                }
+            }
+        });
+
+        overlay.style.display = 'none';
+
+    } catch (error) {
+        console.error("OCR Error:", error);
+        alert("ไม่สามารถสแกนรูปภาพได้ กรุณากรอกตัวเลขด้วยตัวเองครับ");
+        overlay.style.display = 'none';
+    }
 }
 
 function predictMatch() {
@@ -1008,7 +1156,7 @@ function predictMatch() {
         </div>`;
 
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.13.2 (Full AH): ∫xG ${INTEGRATION_STEPS} steps; HT Score used for 1H calc; grid=${MAX_GOALS_GRID}; ρ=${rho}. `;
+    let note = `⚙️ v5.15.0 (Final): ∫xG ${INTEGRATION_STEPS} steps; HT Score used for 1H calc; grid=${MAX_GOALS_GRID}; ρ=${rho}. `;
     if (!hasBigData) note += '⚠️ ไม่มี Big Chances → xG อาจคลาดเคลื่อน ±10–15%';
     calibNote.innerText = note;
 
