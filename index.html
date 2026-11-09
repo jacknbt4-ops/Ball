@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.18.3 — Professional</title>
+    <title>⚽ JackAI Scanner v5.18.4 — Dark Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,131 +12,822 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         :root {
-            --brand-50:  #eff6ff; --brand-100: #dbeafe; --brand-500: #3b82f6; --brand-600: #2563eb; --brand-700: #1d4ed8; --brand-900: #1e3a8a;
-            --ink-50:  #f8fafc; --ink-100: #f1f5f9; --ink-200: #e2e8f0; --ink-300: #cbd5e1; --ink-400: #94a3b8;
-            --ink-500: #64748b; --ink-600: #475569; --ink-700: #334155; --ink-800: #1e293b; --ink-900: #0f172a;
-            --success-50: #ecfdf5; --success-500: #10b981; --success-600: #059669; --success-700: #047857;
-            --warning-50: #fffbeb; --warning-500: #f59e0b; --warning-600: #d97706;
-            --danger-50: #fef2f2; --danger-500: #ef4444; --danger-600: #dc2626;
-            --info-500: #06b6d4; --info-600: #0891b2;
-            --shadow-xs: 0 1px 2px 0 rgb(15 23 42 / 0.04);
-            --shadow-sm: 0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.06);
-            --shadow-md: 0 4px 6px -1px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.06);
-            --shadow-lg: 0 10px 15px -3px rgb(15 23 42 / 0.08), 0 4px 6px -4px rgb(15 23 42 / 0.06);
-            --shadow-xl: 0 20px 25px -5px rgb(15 23 42 / 0.10), 0 8px 10px -6px rgb(15 23 42 / 0.08);
-            --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px; --radius-xl: 18px;
+            /* Dark palette */
+            --bg-base: #0a0e1a;
+            --bg-elevated: #0f172a;
+            --bg-card: #131a2b;
+            --bg-card-hover: #1a2337;
+            --bg-input: #0b1220;
+            --bg-muted: #1e293b;
+
+            --border-subtle: #1e2a3f;
+            --border-default: #253347;
+            --border-strong: #334155;
+
+            --text-primary: #e6edf7;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-dim: #475569;
+
+            /* Accents */
+            --emerald-400: #34d399;
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-glow: rgba(16, 185, 129, 0.35);
+
+            --cyan-400: #22d3ee;
+            --cyan-500: #06b6d4;
+            --cyan-600: #0891b2;
+            --cyan-glow: rgba(6, 182, 212, 0.35);
+
+            --amber-400: #fbbf24;
+            --amber-500: #f59e0b;
+            --amber-600: #d97706;
+            --amber-glow: rgba(245, 158, 11, 0.35);
+
+            --rose-400: #fb7185;
+            --rose-500: #f43f5e;
+            --rose-600: #e11d48;
+            --rose-glow: rgba(244, 63, 94, 0.35);
+
+            --violet-400: #a78bfa;
+            --violet-500: #8b5cf6;
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.6), 0 4px 8px -4px rgba(0, 0, 0, 0.4);
+            --shadow-xl: 0 24px 48px -8px rgba(0, 0, 0, 0.7);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+
             --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
         }
+
         * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-        body { background: var(--ink-50); color: var(--ink-800); font-family: 'Inter', 'IBM Plex Sans Thai', system-ui, -apple-system, sans-serif; font-size: 13px; line-height: 1.5; display: flex; flex-direction: column; }
-        .tnum, .stat-grid input, .rating-box input, #ahCurrentRate, #ahHomeProb, #ahAwayProb, #ahPushProb, .score-box, [id$="Prob"], [id$="Over05"], [id$="Over15"], [id$="Over25"], [id$="Over35"], [id$="Over45"], [id$="Over55"], [id$="Over65"] { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
-        .navbar-custom { height: 56px; flex-shrink: 0; background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-800) 100%); border-bottom: 1px solid var(--ink-700); box-shadow: var(--shadow-md); z-index: 100; }
-        .navbar-brand-custom { font-weight: 700; font-size: 15px; color: #fff !important; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
-        .navbar-brand-custom .brand-icon { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, var(--success-500) 0%, var(--success-700) 100%); display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35); }
-        .navbar-version { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,0.1); color: var(--ink-300); letter-spacing: 0.02em; }
-        .main-container { flex: 1; padding: 14px; display: flex; gap: 14px; height: calc(100vh - 56px); box-sizing: border-box; overflow: hidden; }
-        .left-panel { width: 420px; min-width: 420px; height: 100%; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; overflow-x: hidden; padding-right: 2px; }
-        .right-panel { flex: 1; height: 100%; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; overflow-x: hidden; padding-right: 2px; }
+
+        body {
+            background: var(--bg-base);
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 60%);
+            color: var(--text-primary);
+            font-family: 'Inter', 'IBM Plex Sans Thai', system-ui, -apple-system, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tnum, .stat-grid input, .rating-box input, #ahCurrentRate, #ahHomeProb, #ahAwayProb, #ahPushProb,
+        .score-box, [id$="Prob"], [id$="Over05"], [id$="Over15"], [id$="Over25"], [id$="Over35"],
+        [id$="Over45"], [id$="Over55"], [id$="Over65"] {
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "tnum";
+        }
+
+        /* ============ NAVBAR ============ */
+        .navbar-custom {
+            height: 60px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, #0d1424 0%, #0a0e1a 100%);
+            border-bottom: 1px solid var(--border-subtle);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            position: relative;
+        }
+        .navbar-custom::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--emerald-500), var(--cyan-500), transparent);
+            opacity: 0.6;
+        }
+        .navbar-brand-custom {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-primary) !important;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .navbar-brand-custom .brand-icon {
+            width: 36px; height: 36px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--emerald-500) 0%, var(--cyan-600) 100%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--emerald-glow), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .navbar-version {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15));
+            color: var(--emerald-400);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            letter-spacing: 0.04em;
+        }
+
+        /* ============ LAYOUT ============ */
+        .main-container {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            gap: 16px;
+            height: calc(100vh - 60px);
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .left-panel {
+            width: 430px;
+            min-width: 430px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 4px;
+        }
+        .right-panel {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 4px;
+        }
+
         @media (max-width: 991.98px) {
             html, body { overflow: auto; height: auto; }
-            .main-container { flex-direction: column; height: auto; overflow: visible; padding: 10px; gap: 10px; }
+            .main-container { flex-direction: column; height: auto; overflow: visible; padding: 12px; gap: 12px; }
             .left-panel, .right-panel { width: 100% !important; min-width: 100% !important; height: auto !important; overflow-y: visible !important; }
             .navbar-brand-custom { font-size: 13px; }
         }
-        .card { background: #fff; border: 1px solid var(--ink-200); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); color: var(--ink-800); transition: box-shadow 0.2s var(--ease-out); }
-        .card:hover { box-shadow: var(--shadow-md); }
-        .card-body { padding: 14px; }
-        .card-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-400); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-        .form-control-sm, .form-select-sm { padding: 7px 10px; font-size: 13px; background: #fff; border: 1px solid var(--ink-300); color: var(--ink-800); font-family: inherit; border-radius: var(--radius-sm); transition: all 0.15s var(--ease-out); }
-        .form-control-sm:hover, .form-select-sm:hover { border-color: var(--ink-400); }
-        .form-control-sm:focus, .form-select-sm:focus { border-color: var(--brand-500); box-shadow: 0 0 0 3px var(--brand-100); outline: none; }
-        .form-select-sm { font-weight: 600; }
-        .stat-grid label { font-size: 10.5px; margin-bottom: 4px; color: var(--ink-500); display: block; font-weight: 500; text-transform: uppercase; letter-spacing: 0.03em; }
-        .stat-grid input { text-align: center; font-weight: 700; height: 34px; font-family: inherit; border-radius: var(--radius-sm); font-size: 14px; }
-        .team-input-home { border: 2px solid var(--success-500) !important; font-weight: 700; color: var(--success-700) !important; background: var(--success-50) !important; height: 38px; }
-        .team-input-away { border: 2px solid var(--brand-500) !important; font-weight: 700; color: var(--brand-700) !important; background: var(--brand-50) !important; height: 38px; }
-        .team-input-home:focus, .team-input-away:focus { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15) !important; }
-        .team-input-away:focus { box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important; }
-        .red-card-box { border: 1px solid #fecaca; background: var(--danger-50); border-radius: var(--radius-md); padding: 6px 8px; }
-        .red-card-input { border-color: var(--danger-500) !important; font-weight: 700; color: var(--danger-600); height: 30px; text-align: center; font-family: inherit; border-radius: var(--radius-sm); font-size: 13px; }
-        .rating-box { border: 1px solid var(--brand-100); background: var(--brand-50); border-radius: var(--radius-md); padding: 5px 8px; }
-        .rating-box input { border-color: var(--brand-500) !important; font-weight: 800; color: var(--brand-700); height: 30px; text-align: center; background: transparent; font-size: 15px; }
-        .auto-box { border: 1px dashed var(--warning-500); background: var(--warning-50); border-radius: var(--radius-md); padding: 10px; margin-bottom: 10px; }
-        .auto-label { font-size: 10.5px; font-weight: 700; color: var(--warning-600); text-transform: uppercase; letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 4px; }
-        .ht-score-box { border: 1px solid #fde68a; background: var(--warning-50); border-radius: var(--radius-md); padding: 8px; }
-        .btn-predict { background: linear-gradient(135deg, var(--danger-500) 0%, var(--danger-600) 100%); color: white; border-radius: var(--radius-md); padding: 12px; font-size: 14px; font-weight: 700; border: none; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25); transition: all 0.2s var(--ease-out); letter-spacing: 0.01em; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-predict:hover { background: linear-gradient(135deg, var(--danger-600) 0%, #b91c1c 100%); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35); color: white; }
+
+        /* ============ CARDS ============ */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            color: var(--text-primary);
+            transition: all 0.25s var(--ease-out);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+            pointer-events: none;
+        }
+        .card:hover {
+            border-color: var(--border-default);
+            box-shadow: var(--shadow-lg);
+        }
+        .card-body { padding: 16px; }
+
+        .card-section-title {
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-section-title i {
+            color: var(--cyan-400);
+            font-size: 13px;
+        }
+
+        /* ============ INPUTS ============ */
+        .form-control-sm, .form-select-sm {
+            padding: 8px 12px;
+            font-size: 13px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-default);
+            color: var(--text-primary);
+            font-family: inherit;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s var(--ease-out);
+        }
+        .form-control-sm:hover, .form-select-sm:hover {
+            border-color: var(--border-strong);
+            background: #0d1626;
+        }
+        .form-control-sm:focus, .form-select-sm:focus {
+            border-color: var(--cyan-500);
+            background: #0d1626;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15), 0 0 20px rgba(6, 182, 212, 0.1);
+            outline: none;
+            color: var(--text-primary);
+        }
+        .form-control-sm::placeholder, .form-select-sm::placeholder {
+            color: var(--text-dim);
+        }
+        .form-select-sm {
+            font-weight: 600;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        }
+        .form-select-sm option {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+
+        .stat-grid label {
+            font-size: 10.5px;
+            margin-bottom: 5px;
+            color: var(--text-muted);
+            display: block;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .stat-grid input {
+            text-align: center;
+            font-weight: 700;
+            height: 36px;
+            font-family: inherit;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+        }
+
+        /* Team inputs */
+        .team-input-home {
+            border: 1.5px solid var(--emerald-600) !important;
+            font-weight: 700;
+            color: var(--emerald-400) !important;
+            background: rgba(16, 185, 129, 0.08) !important;
+            height: 40px;
+        }
+        .team-input-home:focus {
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), 0 0 20px rgba(16, 185, 129, 0.15) !important;
+            border-color: var(--emerald-400) !important;
+        }
+        .team-input-away {
+            border: 1.5px solid var(--cyan-600) !important;
+            font-weight: 700;
+            color: var(--cyan-400) !important;
+            background: rgba(6, 182, 212, 0.08) !important;
+            height: 40px;
+        }
+        .team-input-away:focus {
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2), 0 0 20px rgba(6, 182, 212, 0.15) !important;
+            border-color: var(--cyan-400) !important;
+        }
+
+        /* Red card box */
+        .red-card-box {
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            background: rgba(244, 63, 94, 0.08);
+            border-radius: var(--radius-md);
+            padding: 6px 8px;
+        }
+        .red-card-input {
+            border-color: var(--rose-500) !important;
+            font-weight: 700;
+            color: var(--rose-400);
+            background: rgba(244, 63, 94, 0.08) !important;
+            height: 32px;
+            text-align: center;
+            font-family: inherit;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+        }
+        .red-card-input:focus {
+            box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.2) !important;
+        }
+
+        /* Rating box */
+        .rating-box {
+            border: 1px solid rgba(6, 182, 212, 0.25);
+            background: rgba(6, 182, 212, 0.06);
+            border-radius: var(--radius-md);
+            padding: 5px 10px;
+        }
+        .rating-box input {
+            border-color: var(--cyan-600) !important;
+            font-weight: 800;
+            color: var(--cyan-400);
+            height: 32px;
+            text-align: center;
+            background: transparent;
+            font-size: 16px;
+        }
+        .rating-box input:focus {
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15) !important;
+        }
+
+        /* Auto estimate box */
+        .auto-box {
+            border: 1px dashed rgba(245, 158, 11, 0.4);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.03));
+            border-radius: var(--radius-md);
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .auto-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--amber-400);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* HT box */
+        .ht-score-box {
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.02));
+            border-radius: var(--radius-md);
+            padding: 10px;
+        }
+
+        /* ============ BUTTONS ============ */
+        .btn-predict {
+            background: linear-gradient(135deg, var(--rose-500) 0%, #be123c 100%);
+            color: white;
+            border-radius: var(--radius-md);
+            padding: 13px;
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            box-shadow: 0 4px 16px var(--rose-glow), inset 0 1px 0 rgba(255,255,255,0.2);
+            transition: all 0.2s var(--ease-out);
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-predict:hover {
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px var(--rose-glow), inset 0 1px 0 rgba(255,255,255,0.2);
+            color: white;
+        }
         .btn-predict:active { transform: translateY(0); }
-        .btn-donate { background: linear-gradient(135deg, #f59e0b 0%, #ec4899 100%); color: white; border: none; font-weight: 700; border-radius: 999px; padding: 6px 14px; font-size: 12px; box-shadow: 0 2px 8px rgba(236, 72, 153, 0.35); transition: all 0.2s var(--ease-out); display: inline-flex; align-items: center; gap: 5px; }
-        .btn-donate:hover { transform: translateY(-1px) scale(1.02); color: white; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.45); }
-        .btn-reset { border: 1px solid var(--ink-300); color: var(--ink-600); border-radius: var(--radius-md); padding: 8px; font-size: 12px; font-weight: 600; background: #fff; transition: all 0.15s var(--ease-out); display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-reset:hover { background: var(--ink-100); border-color: var(--ink-400); color: var(--ink-800); }
-        .badge-pill-custom { font-size: 10px; font-weight: 600; padding: 4px 9px; border-radius: 999px; letter-spacing: 0.01em; display: inline-flex; align-items: center; gap: 4px; }
-        .result-header { background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-800) 100%); color: #fff; border: none; position: relative; overflow: hidden; }
-        .result-header::before { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%); border-radius: 50%; }
-        .result-header h5 { color: #fff; font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
-        .result-header .result-meta { color: var(--ink-400); font-size: 11px; }
-        .result-header .result-meta strong { color: var(--warning-500); font-weight: 700; }
-        .prob-card { border-radius: var(--radius-md); padding: 8px; text-align: center; border: 1px solid; }
-        .prob-card .prob-label { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; opacity: 0.75; }
-        .prob-card .prob-value { font-size: 17px; font-weight: 800; margin-top: 2px; letter-spacing: -0.02em; }
-        .next-goal-home { background: var(--success-50); border-color: #a7f3d0; color: var(--success-700); }
-        .next-goal-none { background: var(--ink-100); border-color: var(--ink-200); color: var(--ink-600); }
-        .next-goal-away { background: var(--brand-50); border-color: #bfdbfe; color: var(--brand-700); }
-        .fh-home { background: var(--success-50); border-color: #a7f3d0; color: var(--success-700); }
-        .fh-draw { background: var(--warning-50); border-color: #fde68a; color: var(--warning-600); }
-        .fh-away { background: var(--brand-50); border-color: #bfdbfe; color: var(--brand-700); }
-        .score-box { border-radius: var(--radius-md); padding: 10px 6px; text-align: center; color: #fff; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
-        .score-box::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%); pointer-events: none; }
-        .score-box .score-icon { font-size: 14px; }
-        .score-box .score-value { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
-        .score-box .score-prob { font-size: 11px; font-weight: 700; opacity: 0.95; }
-        .score-gold { background: linear-gradient(135deg, #10b981 0%, #047857 100%); }
-        .score-silver { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        .score-bronze { background: linear-gradient(135deg, #64748b 0%, #334155 100%); }
-        .progress { border-radius: 999px; overflow: hidden; }
-        .progress-bar { border-radius: 999px; transition: width 0.5s var(--ease-out); }
-        .prob-row-label { font-size: 11px; font-weight: 600; color: var(--ink-600); }
-        .ah-rate-box { background: var(--ink-100); border-radius: var(--radius-md); padding: 8px; text-align: center; border: 1px solid var(--ink-200); }
-        .ah-rate-box .ah-label { font-size: 10px; font-weight: 600; color: var(--ink-500); text-transform: uppercase; letter-spacing: 0.04em; }
-        .ah-rate-box .ah-value { font-size: 18px; font-weight: 800; color: var(--ink-900); letter-spacing: -0.02em; margin-top: 2px; }
-        .empty-state { background: #fff; border: 1px dashed var(--ink-300); border-radius: var(--radius-xl); }
-        .empty-state .empty-icon { font-size: 56px; color: var(--ink-300); opacity: 0.6; }
-        .warn-box { background: var(--warning-50); border: 1px solid #fde68a; border-radius: var(--radius-md); padding: 8px 12px; font-size: 11.5px; color: #78350f; font-weight: 500; }
-        .alert-danger { border-radius: var(--radius-md) !important; background: var(--danger-50) !important; border-color: #fecaca !important; color: #7f1d1d !important; font-size: 12px !important; }
-        .xh-highlight { font-size: 11.5px; background: var(--ink-100); padding: 10px 12px; border-radius: var(--radius-md); border: 1px solid var(--ink-200); color: var(--ink-600); }
-        .calib-note { font-size: 10px; color: var(--ink-400); font-style: italic; }
-        .top3-sum-note { font-size: 10.5px; color: var(--ink-500); padding-top: 6px; border-top: 1px dashed var(--ink-200); margin-top: 6px; }
-        .prob-absolute-tag { font-size: 9px; opacity: 0.7; }
-        .debug-badge { font-size: 9px; background: var(--ink-600); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 600; letter-spacing: 0.02em; }
-        .team-section-label { font-size: 11.5px; font-weight: 700; text-align: center; padding-bottom: 6px; margin-bottom: 8px; border-bottom: 2px solid; }
-        .team-section-home { color: var(--success-700); border-color: var(--success-500); }
-        .team-section-away { color: var(--brand-700); border-color: var(--brand-500); }
-        .league-dropdown { position: absolute; z-index: 1000; max-height: 260px; overflow-y: auto; width: 100%; background: #fff; border: 1px solid var(--ink-300); border-radius: 0 0 var(--radius-md) var(--radius-md); box-shadow: var(--shadow-lg); display: none; }
-        .league-item { padding: 9px 12px; cursor: pointer; font-size: 12.5px; border-bottom: 1px solid var(--ink-100); transition: background 0.1s; }
-        .league-item:hover { background: var(--brand-50); }
-        .league-item small { color: var(--ink-400); font-size: 10.5px; display: block; margin-top: 1px; }
+
+        .btn-donate {
+            background: linear-gradient(135deg, var(--amber-500) 0%, #ec4899 100%);
+            color: white;
+            border: none;
+            font-weight: 700;
+            border-radius: 999px;
+            padding: 7px 16px;
+            font-size: 12px;
+            box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            transition: all 0.2s var(--ease-out);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-donate:hover {
+            transform: translateY(-1px) scale(1.03);
+            color: white;
+            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.5);
+        }
+
+        .btn-reset {
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
+            border-radius: var(--radius-md);
+            padding: 9px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--bg-elevated);
+            transition: all 0.15s var(--ease-out);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-reset:hover {
+            background: var(--bg-muted);
+            border-color: var(--border-strong);
+            color: var(--text-primary);
+        }
+
+        /* ============ BADGES ============ */
+        .badge-pill-custom {
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 5px 11px;
+            border-radius: 999px;
+            letter-spacing: 0.02em;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid transparent;
+        }
+        .badge-pill-custom.bg-secondary {
+            background: rgba(148, 163, 184, 0.12) !important;
+            border-color: rgba(148, 163, 184, 0.25) !important;
+            color: var(--text-secondary) !important;
+        }
+        .badge-pill-custom.bg-info {
+            background: rgba(6, 182, 212, 0.12) !important;
+            border-color: rgba(6, 182, 212, 0.3) !important;
+            color: var(--cyan-400) !important;
+        }
+        .badge-pill-custom.bg-success {
+            background: rgba(16, 185, 129, 0.12) !important;
+            border-color: rgba(16, 185, 129, 0.3) !important;
+            color: var(--emerald-400) !important;
+        }
+        .badge-pill-custom.bg-warning {
+            background: rgba(245, 158, 11, 0.12) !important;
+            border-color: rgba(245, 158, 11, 0.3) !important;
+            color: var(--amber-400) !important;
+        }
+        .badge-pill-custom.bg-danger {
+            background: rgba(244, 63, 94, 0.12) !important;
+            border-color: rgba(244, 63, 94, 0.3) !important;
+            color: var(--rose-400) !important;
+        }
+        .badge-pill-custom.bg-primary {
+            background: rgba(59, 130, 246, 0.12) !important;
+            border-color: rgba(59, 130, 246, 0.3) !important;
+            color: #60a5fa !important;
+        }
+
+        /* ============ RESULT HEADER ============ */
+        .result-header {
+            background: linear-gradient(135deg, #0f1c33 0%, #0a1220 100%);
+            color: var(--text-primary);
+            border: 1px solid var(--border-default);
+            position: relative;
+            overflow: hidden;
+        }
+        .result-header::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 220px; height: 220px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .result-header::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; left: -60px;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .result-header h5 {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: -0.01em;
+            position: relative;
+            z-index: 1;
+        }
+        .result-header .result-meta {
+            color: var(--text-muted);
+            font-size: 11.5px;
+            position: relative;
+            z-index: 1;
+        }
+        .result-header .result-meta strong {
+            color: var(--amber-400);
+            font-weight: 700;
+        }
+        .result-header .d-flex { position: relative; z-index: 1; }
+
+        /* ============ PROB CARDS ============ */
+        .prob-card {
+            border-radius: var(--radius-md);
+            padding: 10px;
+            text-align: center;
+            border: 1px solid;
+            transition: all 0.2s var(--ease-out);
+        }
+        .prob-card .prob-label {
+            font-size: 10.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            opacity: 0.75;
+        }
+        .prob-card .prob-value {
+            font-size: 18px;
+            font-weight: 800;
+            margin-top: 3px;
+            letter-spacing: -0.02em;
+        }
+
+        .next-goal-home, .fh-home {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.35);
+            color: var(--emerald-400);
+        }
+        .next-goal-none {
+            background: rgba(148, 163, 184, 0.08);
+            border-color: rgba(148, 163, 184, 0.25);
+            color: var(--text-secondary);
+        }
+        .next-goal-away, .fh-away {
+            background: rgba(6, 182, 212, 0.1);
+            border-color: rgba(6, 182, 212, 0.35);
+            color: var(--cyan-400);
+        }
+        .fh-draw {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.35);
+            color: var(--amber-400);
+        }
+
+        /* ============ SCORE BOX ============ */
+        .score-box {
+            border-radius: var(--radius-md);
+            padding: 12px 6px;
+            text-align: center;
+            color: #fff;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .score-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%);
+            pointer-events: none;
+        }
+        .score-box .score-icon { font-size: 15px; line-height: 1; }
+        .score-box .score-value { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-top: 2px; }
+        .score-box .score-prob { font-size: 11.5px; font-weight: 700; opacity: 0.95; margin-top: 2px; }
+
+        .score-gold {
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        .score-silver {
+            background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        .score-bronze {
+            background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+
+        /* ============ PROGRESS ============ */
+        .progress {
+            border-radius: 999px;
+            overflow: hidden;
+            background: var(--bg-input);
+        }
+        .progress-bar {
+            border-radius: 999px;
+            transition: width 0.6s var(--ease-out);
+        }
+        .progress-bar.bg-success {
+            background: linear-gradient(90deg, var(--emerald-600), var(--emerald-400)) !important;
+            box-shadow: 0 0 10px var(--emerald-glow);
+        }
+        .progress-bar.bg-warning {
+            background: linear-gradient(90deg, var(--amber-600), var(--amber-400)) !important;
+            box-shadow: 0 0 10px var(--amber-glow);
+        }
+        .progress-bar.bg-danger {
+            background: linear-gradient(90deg, #be123c, var(--rose-400)) !important;
+            box-shadow: 0 0 10px var(--rose-glow);
+        }
+        .progress-bar.bg-orange {
+            background: linear-gradient(90deg, #ea580c, #fb923c) !important;
+            box-shadow: 0 0 10px rgba(251, 146, 60, 0.35);
+        }
+
+        .prob-row-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* ============ AH RATE ============ */
+        .ah-rate-box {
+            background: linear-gradient(135deg, var(--bg-input) 0%, #0d1626 100%);
+            border-radius: var(--radius-md);
+            padding: 10px;
+            text-align: center;
+            border: 1px solid var(--border-default);
+        }
+        .ah-rate-box .ah-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .ah-rate-box .ah-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--cyan-400);
+            letter-spacing: -0.02em;
+            margin-top: 2px;
+            text-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+
+        /* ============ EMPTY STATE ============ */
+        .empty-state {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            position: relative;
+            overflow: hidden;
+        }
+        .empty-state::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 30%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .empty-state .empty-icon {
+            font-size: 64px;
+            color: var(--cyan-500);
+            opacity: 0.5;
+            filter: drop-shadow(0 0 20px var(--cyan-glow));
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 20px var(--cyan-glow)); }
+            50% { opacity: 0.7; filter: drop-shadow(0 0 30px var(--cyan-glow)); }
+        }
+
+        /* ============ ALERTS ============ */
+        .warn-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            font-size: 11.5px;
+            color: var(--amber-400);
+            font-weight: 500;
+        }
+        .alert-danger {
+            border-radius: var(--radius-md) !important;
+            background: rgba(244, 63, 94, 0.1) !important;
+            border-color: rgba(244, 63, 94, 0.3) !important;
+            color: var(--rose-400) !important;
+            font-size: 12px !important;
+        }
+
+        /* ============ MISC ============ */
+        .xh-highlight {
+            font-size: 11.5px;
+            background: var(--bg-input);
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+        .calib-note {
+            font-size: 10.5px;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+        .top3-sum-note {
+            font-size: 10.5px;
+            color: var(--text-muted);
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-subtle);
+            margin-top: 8px;
+        }
+        .prob-absolute-tag { font-size: 9px; opacity: 0.6; }
+        .debug-badge {
+            font-size: 9px;
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--cyan-400);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .team-section-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            text-align: center;
+            padding-bottom: 7px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .team-section-home {
+            color: var(--emerald-400);
+            border-color: var(--emerald-600);
+        }
+        .team-section-away {
+            color: var(--cyan-400);
+            border-color: var(--cyan-600);
+        }
+
+        /* ============ LEAGUE DROPDOWN ============ */
+        .league-dropdown {
+            position: absolute;
+            z-index: 1000;
+            max-height: 280px;
+            overflow-y: auto;
+            width: 100%;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-default);
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            box-shadow: var(--shadow-xl);
+            display: none;
+        }
+        .league-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 12.5px;
+            border-bottom: 1px solid var(--border-subtle);
+            transition: background 0.15s;
+            color: var(--text-primary);
+        }
+        .league-item:hover {
+            background: linear-gradient(90deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
+            border-left: 2px solid var(--cyan-500);
+        }
+        .league-item small {
+            color: var(--text-dim);
+            font-size: 10.5px;
+            display: block;
+            margin-top: 2px;
+        }
         .league-item:last-child { border-bottom: none; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--ink-300); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--ink-400); }
+
+        /* ============ SCROLLBAR ============ */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-default);
+            border-radius: 10px;
+            border: 2px solid var(--bg-base);
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+
+        /* ============ ANIMATIONS ============ */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        #resultsArea > * { animation: fadeInUp 0.35s var(--ease-out) both; }
-        #resultsArea > *:nth-child(2) { animation-delay: 0.03s; }
-        #resultsArea > *:nth-child(3) { animation-delay: 0.06s; }
-        #resultsArea > *:nth-child(4) { animation-delay: 0.09s; }
-        #resultsArea > *:nth-child(5) { animation-delay: 0.12s; }
-        #resultsArea > *:nth-child(6) { animation-delay: 0.15s; }
-        #resultsArea > *:nth-child(7) { animation-delay: 0.18s; }
-        .donate-box { border: 2px dashed #f472b6; border-radius: var(--radius-lg); padding: 22px; background: linear-gradient(135deg, #fff1f2 0%, #fef2f2 100%); }
-        .modal-content { border-radius: var(--radius-lg) !important; overflow: hidden; }
-        .modal-header { border: none !important; padding: 16px 20px; background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
-        .modal-body { padding: 24px !important; }
+        #resultsArea > * {
+            animation: fadeInUp 0.4s var(--ease-out) both;
+        }
+        #resultsArea > *:nth-child(2) { animation-delay: 0.04s; }
+        #resultsArea > *:nth-child(3) { animation-delay: 0.08s; }
+        #resultsArea > *:nth-child(4) { animation-delay: 0.12s; }
+        #resultsArea > *:nth-child(5) { animation-delay: 0.16s; }
+        #resultsArea > *:nth-child(6) { animation-delay: 0.20s; }
+        #resultsArea > *:nth-child(7) { animation-delay: 0.24s; }
+
+        /* ============ MODAL ============ */
+        .donate-box {
+            border: 2px dashed rgba(244, 114, 182, 0.5);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(244, 63, 94, 0.04) 100%);
+        }
+        .modal-content {
+            border-radius: var(--radius-lg) !important;
+            overflow: hidden;
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-default) !important;
+        }
+        .modal-header {
+            border: none !important;
+            padding: 18px 22px;
+            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+        }
+        .modal-body { padding: 26px !important; color: var(--text-primary); }
+        .modal-body .text-secondary { color: var(--text-secondary) !important; }
+        .modal-body .text-dark { color: var(--text-primary) !important; }
+        .btn-close-white { filter: brightness(0) invert(1); }
     </style>
 </head>
 <body>
@@ -144,9 +835,9 @@
         <div class="container-fluid d-flex align-items-center justify-content-between gap-2">
             <div class="d-flex align-items-center gap-2">
                 <div class="navbar-brand-custom">
-                    <span class="brand-icon"><i class="bi bi-dribbble" style="font-size: 16px; color: #fff;"></i></span>
+                    <span class="brand-icon"><i class="bi bi-dribbble" style="font-size: 18px; color: #fff;"></i></span>
                     <span>JackAI Scanner</span>
-                    <span class="navbar-version">v5.18.3</span>
+                    <span class="navbar-version">v5.18.4 · DARK</span>
                 </div>
             </div>
             <button class="btn btn-donate" onclick="openDonateModal()">
@@ -161,13 +852,13 @@
                 <div class="row g-2 mb-3">
                     <div class="col-6">
                         <label class="stat-grid" style="display:block;">
-                            <label style="font-size:10px;color:var(--success-700);font-weight:700;margin-bottom:4px;">🏠 ทีมเหย้า</label>
+                            <label style="font-size:10px;color:var(--emerald-400);font-weight:700;margin-bottom:5px;">🏠 ทีมเหย้า</label>
                             <input type="text" id="home_name" class="form-control form-control-sm team-input-home" value="ทีมเหย้า" placeholder="ทีมเหย้า">
                         </label>
                     </div>
                     <div class="col-6">
                         <label class="stat-grid" style="display:block;">
-                            <label style="font-size:10px;color:var(--brand-700);font-weight:700;margin-bottom:4px;">✈️ ทีมเยือน</label>
+                            <label style="font-size:10px;color:var(--cyan-400);font-weight:700;margin-bottom:5px;">✈️ ทีมเยือน</label>
                             <input type="text" id="away_name" class="form-control form-control-sm team-input-away" value="ทีมเยือน" placeholder="ทีมเยือน">
                         </label>
                     </div>
@@ -176,39 +867,39 @@
                 <div class="auto-box">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="auto-label"><i class="bi bi-magic"></i> ประเมินความแข็งแกร่งอัตโนมัติ</span>
-                        <button class="btn btn-sm btn-warning py-0 px-2 fw-bold" style="font-size:10.5px;border-radius:6px;" onclick="autoEstimateStrength()">คำนวณ</button>
+                        <button class="btn btn-sm btn-warning py-1 px-3 fw-bold" style="font-size:11px;border-radius:6px;" onclick="autoEstimateStrength()">คำนวณ</button>
                     </div>
-                    <div class="row g-1">
+                    <div class="row g-2">
                         <div class="col-6">
-                            <label style="font-size:10px; color:var(--ink-500); font-weight:600;">ราคาต่อรอง AH (เหย้า)</label>
-                            <input type="number" id="auto_ah" class="form-control form-control-sm text-center" value="0" step="0.25" placeholder="เช่น -0.5, 0.75">
+                            <label style="font-size:10px; color:var(--text-muted); font-weight:600;">ราคาต่อรอง AH (เหย้า)</label>
+                            <input type="number" id="auto_ah" class="form-control form-control-sm text-center" value="0" step="0.25" placeholder="เช่น -0.5">
                         </div>
                         <div class="col-6">
-                            <label style="font-size:10px; color:var(--ink-500); font-weight:600;">น้ำหนักสถิติสด (%)</label>
+                            <label style="font-size:10px; color:var(--text-muted); font-weight:600;">น้ำหนักสถิติสด (%)</label>
                             <input type="number" id="auto_live_weight" class="form-control form-control-sm text-center" value="30" min="0" max="100">
                         </div>
                     </div>
-                    <div id="autoResult" class="mt-1" style="font-size:11px; color:#78350f; display:none; font-weight:600;"></div>
+                    <div id="autoResult" class="mt-2" style="font-size:11px; color:var(--amber-400); display:none; font-weight:600;"></div>
                 </div>
 
                 <div class="row g-2 mb-3">
                     <div class="col-6">
-                        <label class="text-success fw-bold" style="font-size:10px; text-transform:uppercase; letter-spacing:0.04em;">🏠 ความแข็งแกร่งเหย้า</label>
+                        <label class="fw-bold" style="font-size:10px; color:var(--emerald-400); text-transform:uppercase; letter-spacing:0.05em;">🏠 ความแข็งแกร่งเหย้า</label>
                         <div class="rating-box"><input type="number" id="home_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div>
                     </div>
                     <div class="col-6">
-                        <label class="text-primary fw-bold" style="font-size:10px; text-transform:uppercase; letter-spacing:0.04em;">✈️ ความแข็งแกร่งเยือน</label>
+                        <label class="fw-bold" style="font-size:10px; color:var(--cyan-400); text-transform:uppercase; letter-spacing:0.05em;">✈️ ความแข็งแกร่งเยือน</label>
                         <div class="rating-box"><input type="number" id="away_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div>
                     </div>
                 </div>
 
                 <div class="row g-2 mb-1">
                     <div class="col-7 position-relative">
-                        <input type="text" id="leagueSearch" class="form-control form-control-sm text-info fw-bold" placeholder="-- ค้นหาชื่อลีก --" autocomplete="off">
+                        <input type="text" id="leagueSearch" class="form-control form-control-sm" style="color:var(--cyan-400);font-weight:700;" placeholder="-- ค้นหาชื่อลีก --" autocomplete="off">
                         <div id="leagueDropdown" class="league-dropdown"></div>
                     </div>
                     <div class="col-5">
-                        <select id="handicapSelect" class="form-select form-select-sm text-warning fw-bold">
+                        <select id="handicapSelect" class="form-select form-select-sm" style="color:var(--amber-400);font-weight:700;">
                             <option value="0">AH: 0.0</option>
                             <option value="0.25">AH: 0.25</option>
                             <option value="0.5">AH: 0.5</option>
@@ -230,33 +921,33 @@
                     </div>
                 </div>
                 <div id="leagueResult" class="mb-3 mt-1" style="font-size: 11px;">
-                    <span class="text-warning fw-bold">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>
+                    <span style="color:var(--amber-400);font-weight:700;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>
                 </div>
 
                 <div class="row g-2 mb-3 ht-score-box">
-                    <div class="col-12 text-center fw-bold" style="font-size:11px;color:var(--warning-600);">
+                    <div class="col-12 text-center fw-bold" style="font-size:11px;color:var(--amber-400);">
                         <i class="bi bi-clock-history"></i> สกอร์ครึ่งแรก (HT Score)
                     </div>
                     <div class="col-6">
                         <div class="stat-grid text-center">
-                            <label class="text-success">เหย้า (HT)</label>
-                            <input type="number" id="ht_home_score" class="form-control form-control-sm text-success" value="0" min="0">
+                            <label style="color:var(--emerald-400);">เหย้า (HT)</label>
+                            <input type="number" id="ht_home_score" class="form-control form-control-sm" style="color:var(--emerald-400);" value="0" min="0">
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-grid text-center">
-                            <label class="text-primary">เยือน (HT)</label>
-                            <input type="number" id="ht_away_score" class="form-control form-control-sm text-primary" value="0" min="0">
+                            <label style="color:var(--cyan-400);">เยือน (HT)</label>
+                            <input type="number" id="ht_away_score" class="form-control form-control-sm" style="color:var(--cyan-400);" value="0" min="0">
                         </div>
                     </div>
                 </div>
 
                 <div class="row g-2 mb-3">
-                    <div class="col-3"><div class="stat-grid text-center"><label>นาที</label><input type="number" id="match_minute" class="form-control form-control-sm text-danger" value="0" min="0" max="120"></div></div>
-                    <div class="col-3"><div class="stat-grid text-center"><label class="text-warning">ทด 1H</label><input type="number" id="injury_1" class="form-control form-control-sm text-warning" value="0" min="0" max="15"></div></div>
-                    <div class="col-3"><div class="stat-grid text-center"><label class="text-warning">ทด 2H</label><input type="number" id="injury_2" class="form-control form-control-sm text-warning" value="0" min="0" max="15"></div></div>
-                    <div class="col-3"><div class="stat-grid text-center"><label class="text-info">รูปแบบ</label>
-                        <select id="match_format" class="form-select form-select-sm text-info fw-bold" style="padding: 6px 2px; height: 34px; font-size: 11px;">
+                    <div class="col-3"><div class="stat-grid text-center"><label>นาที</label><input type="number" id="match_minute" class="form-control form-control-sm" style="color:var(--rose-400);" value="0" min="0" max="120"></div></div>
+                    <div class="col-3"><div class="stat-grid text-center"><label style="color:var(--amber-400);">ทด 1H</label><input type="number" id="injury_1" class="form-control form-control-sm" style="color:var(--amber-400);" value="0" min="0" max="15"></div></div>
+                    <div class="col-3"><div class="stat-grid text-center"><label style="color:var(--amber-400);">ทด 2H</label><input type="number" id="injury_2" class="form-control form-control-sm" style="color:var(--amber-400);" value="0" min="0" max="15"></div></div>
+                    <div class="col-3"><div class="stat-grid text-center"><label style="color:var(--cyan-400);">รูปแบบ</label>
+                        <select id="match_format" class="form-select form-select-sm" style="padding: 7px 4px; height: 36px; font-size: 11px; color:var(--cyan-400); font-weight:700;">
                             <option value="90">90 นาที</option>
                             <option value="120">120 นาที</option>
                         </select>
@@ -264,31 +955,31 @@
                 </div>
 
                 <div class="row g-2 mb-3">
-                    <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เหย้า</label><input type="number" id="current_home_score" class="form-control form-control-sm text-success" value="0" min="0"></div></div>
-                    <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เยือน</label><input type="number" id="current_away_score" class="form-control form-control-sm text-primary" value="0" min="0"></div></div>
+                    <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เหย้า</label><input type="number" id="current_home_score" class="form-control form-control-sm" style="color:var(--emerald-400);" value="0" min="0"></div></div>
+                    <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เยือน</label><input type="number" id="current_away_score" class="form-control form-control-sm" style="color:var(--cyan-400);" value="0" min="0"></div></div>
                     <div class="col-4">
                         <div class="red-card-box d-flex gap-2 h-100 align-items-end pb-1 px-2">
-                            <div class="flex-fill text-center"><label class="text-danger fw-bold" style="font-size: 10px; margin-bottom: 2px;">แดง🏠</label><input type="number" id="red_home" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
-                            <div class="flex-fill text-center"><label class="text-danger fw-bold" style="font-size: 10px; margin-bottom: 2px;">แดง✈️</label><input type="number" id="red_away" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
+                            <div class="flex-fill text-center"><label class="fw-bold" style="font-size: 10px; margin-bottom: 3px; color:var(--rose-400);">แดง🏠</label><input type="number" id="red_home" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
+                            <div class="flex-fill text-center"><label class="fw-bold" style="font-size: 10px; margin-bottom: 3px; color:var(--rose-400);">แดง✈️</label><input type="number" id="red_away" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="row g-2 mb-3">
-                    <div class="col-6 border-end">
+                    <div class="col-6" style="border-right: 1px solid var(--border-subtle);">
                         <div class="team-section-label team-section-home">🏠 เหย้า</div>
                         <div class="stat-grid d-flex flex-column gap-2">
                             <div><label>ยิงทั้งหมด</label><input type="number" id="h_shots" class="form-control form-control-sm" value="0" min="0"></div>
-                            <div><label class="text-danger fw-bold">ยิงตรงกรอบ</label><input type="number" id="h_sot" class="form-control form-control-sm border-danger" value="0" min="0" style="border-width: 2px;"></div>
-                            <div><label class="text-warning fw-bold">Big Chances</label><input type="number" id="h_big" class="form-control form-control-sm border-warning" value="0" min="0" style="border-width: 2px;"></div>
+                            <div><label style="color:var(--rose-400);font-weight:700;">ยิงตรงกรอบ</label><input type="number" id="h_sot" class="form-control form-control-sm" style="border: 1.5px solid var(--rose-600) !important; color:var(--rose-400);" value="0" min="0"></div>
+                            <div><label style="color:var(--amber-400);font-weight:700;">Big Chances</label><input type="number" id="h_big" class="form-control form-control-sm" style="border: 1.5px solid var(--amber-600) !important; color:var(--amber-400);" value="0" min="0"></div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="team-section-label team-section-away">✈️ เยือน</div>
                         <div class="stat-grid d-flex flex-column gap-2">
                             <div><label>ยิงทั้งหมด</label><input type="number" id="a_shots" class="form-control form-control-sm" value="0" min="0"></div>
-                            <div><label class="text-danger fw-bold">ยิงตรงกรอบ</label><input type="number" id="a_sot" class="form-control form-control-sm border-danger" value="0" min="0" style="border-width: 2px;"></div>
-                            <div><label class="text-warning fw-bold">Big Chances</label><input type="number" id="a_big" class="form-control form-control-sm border-warning" value="0" min="0" style="border-width: 2px;"></div>
+                            <div><label style="color:var(--rose-400);font-weight:700;">ยิงตรงกรอบ</label><input type="number" id="a_sot" class="form-control form-control-sm" style="border: 1.5px solid var(--rose-600) !important; color:var(--rose-400);" value="0" min="0"></div>
+                            <div><label style="color:var(--amber-400);font-weight:700;">Big Chances</label><input type="number" id="a_big" class="form-control form-control-sm" style="border: 1.5px solid var(--amber-600) !important; color:var(--amber-400);" value="0" min="0"></div>
                         </div>
                     </div>
                 </div>
@@ -312,7 +1003,7 @@
                     </div>
                     <div class="d-flex justify-content-center gap-1 flex-wrap">
                         <span class="badge badge-pill-custom bg-secondary" id="leagueInfluenceText">ลีกมาตรฐาน</span>
-                        <span class="badge badge-pill-custom bg-info text-dark" id="confidenceBadge">Confidence: -</span>
+                        <span class="badge badge-pill-custom bg-info" id="confidenceBadge">Confidence: -</span>
                         <span class="badge badge-pill-custom bg-secondary" id="tempoBadge"><i class="bi bi-speedometer2"></i> Tempo: ปกติ</span>
                         <span class="badge badge-pill-custom bg-success" id="dataQualityBadge">Data: -</span>
                     </div>
@@ -341,8 +1032,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-center mt-2" style="font-size:11px;color:var(--ink-500);">
-                        เสมอราคา (Push): <span id="ahPushProb" class="fw-bold text-dark">0%</span>
+                    <div class="text-center mt-2" style="font-size:11px;color:var(--text-muted);">
+                        เสมอราคา (Push): <span id="ahPushProb" class="fw-bold" style="color:var(--text-primary);">0%</span>
                     </div>
                 </div>
 
@@ -409,8 +1100,8 @@
 
             <div id="emptyState" class="empty-state h-100 d-flex flex-column justify-content-center align-items-center p-5">
                 <i class="bi bi-cpu empty-icon mb-3"></i>
-                <h6 class="fw-bold text-dark mb-1" style="font-size:15px;">กรอกข้อมูลสถิติ และเลือกลีก แล้วกดประมวลผล</h6>
-                <p class="text-secondary mb-0" style="font-size:12px;">ผลวิเคราะห์จะแสดงตรงนี้</p>
+                <h6 class="fw-bold mb-1" style="font-size:16px;color:var(--text-primary);">กรอกข้อมูลสถิติ และเลือกลีก แล้วกดประมวลผล</h6>
+                <p class="mb-0" style="font-size:12px;color:var(--text-muted);">ผลวิเคราะห์จะแสดงตรงนี้</p>
             </div>
         </div>
     </div>
@@ -423,18 +1114,18 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <p class="mb-3 text-secondary" style="font-size:13px;">หากโปรแกรม JackAI Scanner นี้มีประโยชน์กับคุณ<br>คุณสามารถเลี้ยงกาแฟหรือสนับสนุนค่าพัฒนาได้ที่:</p>
+                    <p class="mb-3" style="font-size:13px;color:var(--text-secondary);">หากโปรแกรม JackAI Scanner นี้มีประโยชน์กับคุณ<br>คุณสามารถเลี้ยงกาแฟหรือสนับสนุนค่าพัฒนาได้ที่:</p>
                     <div class="donate-box text-center mb-3">
                         <div class="mb-3">
                             <img src="https://www.truemoney.com/wp-content/uploads/2023/02/truemoney_logo_1x.png" alt="TrueMoney" style="height: 40px; object-fit: contain;" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/TrueMoney_Logo.svg/512px-TrueMoney_Logo.svg.png'">
                         </div>
-                        <h6 class="fw-bold text-dark mb-1" style="font-size:13px;">พร้อมเพย์ / ทรูมันนี่ วอลเล็ท</h6>
-                        <h4 class="fw-extrabold text-danger mb-3" style="letter-spacing:0.05em;">094-475-4282</h4>
+                        <h6 class="fw-bold mb-1" style="font-size:13px;color:var(--text-primary);">พร้อมเพย์ / ทรูมันนี่ วอลเล็ท</h6>
+                        <h4 class="fw-extrabold mb-3" style="letter-spacing:0.05em;color:var(--rose-400);text-shadow:0 0 20px var(--rose-glow);">094-475-4282</h4>
                         <button class="btn btn-outline-danger fw-bold w-100" onclick="copyDonateNumber()">
                             <i class="bi bi-clipboard-check"></i> คัดลอกเบอร์โอนเงิน
                         </button>
                     </div>
-                    <small class="text-muted">ขอบคุณที่สนับสนุนครับ ❤️</small>
+                    <small style="color:var(--text-muted);">ขอบคุณที่สนับสนุนครับ ❤️</small>
                 </div>
             </div>
         </div>
@@ -442,9 +1133,9 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.18.3 — Professional UI
-   - เพิ่มลีกบัลแกเรีย: First Professional / Second Professional
-   - เพิ่มลีกโรมาเนีย: Liga 2
+   JackAI Scanner v5.18.4 — Dark Edition
+   - โทนดาร์ก พรีเมียม พร้อม glow effect
+   - ฟังก์ชันเดิม 100%
    ============================================================ */
 const XG_WEIGHTS = { SOT_BASE: 0.30, OFF_TARGET: 0.030, BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20 };
 const STRENGTH_SENSITIVITY = 0.0060, STRENGTH_MIN_MULT = 0.55, STRENGTH_MAX_MULT = 1.80;
@@ -540,11 +1231,9 @@ const LEAGUE_CONSTANTS = {
     'uefa conference': { name: "ยูฟ่า คอนเฟอเรนซ์", goals: 2.75, mod: 1.00, rho: -0.07, fh: 0.45 },
     'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
 
-    // 🇧🇬 Bulgaria
     'bulgaria first professional league': { name: "บัลแกเรีย เฟิร์สต์ โปรเฟสชันแนล", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.43 },
     'bulgaria second professional league': { name: "บัลแกเรีย เซ็คคั่น โปรเฟสชันแนล", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
 
-    // 🇷🇴 Romania
     'romania liga 2': { name: "โรมาเนีย ลีกา 2", goals: 2.50, mod: 0.93, rho: -0.09, fh: 0.43 }
 };
 
@@ -584,7 +1273,7 @@ function renderDropdown(query = '') {
         key.includes(lowerQuery) || val.name.toLowerCase().includes(lowerQuery)
     );
     if (filtered.length === 0) {
-        dropdown.innerHTML = '<div class="league-item text-muted">ไม่พบลีกที่ค้นหา</div>';
+        dropdown.innerHTML = '<div class="league-item" style="color:var(--text-muted);">ไม่พบลีกที่ค้นหา</div>';
     } else {
         filtered.slice(0, 50).forEach(([key, val]) => {
             const item = document.createElement('div');
@@ -614,12 +1303,12 @@ function handleLeagueInput() {
     if (selectedLeagueKey === 'default' || !LEAGUE_CONSTANTS[selectedLeagueKey]) {
         currentLeagueAvgGoals = 2.70; currentLeagueText = "ลีกมาตรฐาน";
         currentLeagueRho = -0.08; currentLeagueFHShare = 0.44;
-        resultEl.innerHTML = '<span class="text-warning fw-bold" style="font-size:11px;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>';
+        resultEl.innerHTML = '<span style="color:var(--amber-400);font-weight:700;font-size:11px;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>';
     } else {
         const v = LEAGUE_CONSTANTS[selectedLeagueKey];
         currentLeagueAvgGoals = v.goals; currentLeagueText = v.name;
         currentLeagueRho = v.rho; currentLeagueFHShare = v.fh;
-        resultEl.innerHTML = `<span class="text-info fw-bold" style="font-size:11px;"><i class="bi bi-check-circle-fill"></i> ${v.name} · ${v.goals} ประตู/เกม · ρ=${v.rho} · 1H ${(v.fh*100).toFixed(0)}%</span>`;
+        resultEl.innerHTML = `<span style="color:var(--cyan-400);font-weight:700;font-size:11px;"><i class="bi bi-check-circle-fill"></i> ${v.name} · ${v.goals} ประตู/เกม · ρ=${v.rho} · 1H ${(v.fh*100).toFixed(0)}%</span>`;
     }
 }
 
@@ -860,19 +1549,19 @@ function predictMatch() {
         if (actualGoals > expectedGoalsSoFar) {
             const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
             tempoModifier = Math.min(TEMPO_MAX, 1 + (diffRatio - 1) * 0.15);
-            if (tempoModifier > 1.08) { tempoText = `🔥 ดุเดือด (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-danger text-white"; tempoIcon = "bi-fire"; }
+            if (tempoModifier > 1.08) { tempoText = `🔥 ดุเดือด (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-danger"; tempoIcon = "bi-fire"; }
         } else if (actualGoals === 0 && minute > 30) {
             if (minute >= TEMPO_0_0_LATE_MINUTE) {
                 tempoModifier = TEMPO_0_0_LATE_BOOST; tempoText = `⏰ ท้ายเกม 0-0 (x${tempoModifier.toFixed(2)})`;
-                tempoBadgeClass = "bg-warning text-dark"; tempoIcon = "bi-alarm";
+                tempoBadgeClass = "bg-warning"; tempoIcon = "bi-alarm";
             } else {
                 tempoModifier = 0.90; tempoText = `🧊 เนือย (x${tempoModifier.toFixed(2)})`;
-                tempoBadgeClass = "bg-primary text-white"; tempoIcon = "bi-snow";
+                tempoBadgeClass = "bg-primary"; tempoIcon = "bi-snow";
             }
         } else if (actualGoals < expectedGoalsSoFar) {
             const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
             tempoModifier = Math.max(TEMPO_MIN, 1 - (1 - diffRatio) * 0.15);
-            if (tempoModifier < 0.92) { tempoText = `🐢 ช้า (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-warning text-dark"; tempoIcon = "bi-hourglass-split"; }
+            if (tempoModifier < 0.92) { tempoText = `🐢 ช้า (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-warning"; tempoIcon = "bi-hourglass-split"; }
         }
     }
     const tempoEl = document.getElementById('tempoBadge');
@@ -1029,7 +1718,7 @@ function predictMatch() {
             <div class="score-prob">${fmtPct(item.prob)}</div>
         </div></div>`
     ).join('');
-    document.getElementById('top3SumNote').innerHTML = `Top 3 รวมกัน = <strong>${fmtPct(top3SumProb)}</strong> <span class="prob-absolute-tag">(absolute)</span>`;
+    document.getElementById('top3SumNote').innerHTML = `Top 3 รวมกัน = <strong style="color:var(--text-primary);">${fmtPct(top3SumProb)}</strong> <span class="prob-absolute-tag">(absolute)</span>`;
     const hShotAcc = hShots > 0 ? hSot / hShots : 0;
     const aShotAcc = aShots > 0 ? aSot / aShots : 0;
     const shotConsistency = (hShotAcc + aShotAcc) / 2;
@@ -1048,7 +1737,7 @@ function predictMatch() {
     document.getElementById('leagueInfluenceText').innerText = currentLeagueText;
     const dqEl = document.getElementById('dataQualityBadge');
     if (hasBigData) { dqEl.className = 'badge badge-pill-custom bg-success'; dqEl.innerText = 'Data: High'; }
-    else { dqEl.className = 'badge badge-pill-custom bg-warning text-dark'; dqEl.innerText = 'Data: Medium'; }
+    else { dqEl.className = 'badge badge-pill-custom bg-warning'; dqEl.innerText = 'Data: Medium'; }
     const rcArea = document.getElementById('redCardImpactArea');
     if (redHome > 0 || redAway > 0) {
         let parts = [];
@@ -1058,24 +1747,24 @@ function predictMatch() {
         rcArea.classList.remove('d-none');
     } else rcArea.classList.add('d-none');
     document.getElementById('xgBreakdown').innerHTML =
-        `<div class="d-flex justify-content-between border-bottom pb-1 mb-1">
-            <span>🏠 เหย้า xG: <strong>${xgH.toFixed(2)}</strong></span>
-            <span class="text-success">${hShot.xg.toFixed(2)} × str ${hStrMult.toFixed(2)}</span>
+        `<div class="d-flex justify-content-between border-bottom pb-1 mb-1" style="border-color:var(--border-subtle) !important;">
+            <span>🏠 เหย้า xG: <strong style="color:var(--emerald-400);">${xgH.toFixed(2)}</strong></span>
+            <span style="color:var(--emerald-400);">${hShot.xg.toFixed(2)} × str ${hStrMult.toFixed(2)}</span>
         </div>
         <div class="d-flex justify-content-between">
-            <span>✈️ เยือน xG: <strong>${xgA.toFixed(2)}</strong></span>
-            <span class="text-primary">${aShot.xg.toFixed(2)} × str ${aStrMult.toFixed(2)}</span>
+            <span>✈️ เยือน xG: <strong style="color:var(--cyan-400);">${xgA.toFixed(2)}</strong></span>
+            <span style="color:var(--cyan-400);">${aShot.xg.toFixed(2)} × str ${aStrMult.toFixed(2)}</span>
         </div>
-        <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:10.5px; color:var(--ink-500);">
+        <div class="d-flex justify-content-between mt-2 pt-2 border-top" style="font-size:10.5px; color:var(--text-muted); border-color:var(--border-subtle) !important;">
             <span>Ratio: 🏠 ${(hRatio*100).toFixed(1)}% / ✈️ ${(aRatio*100).toFixed(1)}%</span>
             <span class="fst-italic">smooth +${LAPLACE_SMOOTH}</span>
         </div>
-        <div class="d-flex justify-content-between mt-1" style="font-size:10.5px; color:var(--ink-500);">
+        <div class="d-flex justify-content-between mt-1" style="font-size:10.5px; color:var(--text-muted);">
             <span>Base xG (∫): ${expectedGoalsRaw.toFixed(2)} × tempo ${tempoModifier.toFixed(2)}</span>
             <span class="debug-badge">conf ${confidence}%</span>
         </div>`;
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.18.3 · ∫xG ${INTEGRATION_STEPS} steps · grid=${MAX_GOALS_GRID} · ρ=${rho}`;
+    let note = `⚙️ v5.18.4 · ∫xG ${INTEGRATION_STEPS} steps · grid=${MAX_GOALS_GRID} · ρ=${rho}`;
     if (!hasBigData) note += ' · ⚠️ ไม่มี Big Chances';
     calibNote.innerText = note;
     saveInputs();
