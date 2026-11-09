@@ -12,23 +12,21 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         :root {
-            /* Light Palette */
-            --bg-base: #f8fafc;       
+            --bg-base: #f8fafc;
             --bg-elevated: #ffffff;
             --bg-card: #ffffff;
             --bg-input: #ffffff;
-            --bg-muted: #f1f5f9;      
+            --bg-muted: #f1f5f9;
 
-            --border-subtle: #e2e8f0; 
+            --border-subtle: #e2e8f0;
             --border-default: #cbd5e1;
-            --border-strong: #94a3b8; 
+            --border-strong: #94a3b8;
 
-            --text-primary: #0f172a;  
+            --text-primary: #0f172a;
             --text-secondary: #475569;
-            --text-muted: #64748b;    
-            --text-dim: #94a3b8;      
+            --text-muted: #64748b;
+            --text-dim: #94a3b8;
 
-            /* Accents */
             --emerald-50: #ecfdf5;
             --emerald-400: #34d399;
             --emerald-500: #10b981;
@@ -62,7 +60,6 @@
             --blue-600: #2563eb;
             --blue-700: #1d4ed8;
 
-            /* Shadows */
             --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
             --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
             --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.06), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
@@ -96,7 +93,6 @@
             font-feature-settings: "tnum";
         }
 
-        /* ============ SCROLLBAR — Minimal Slate ============ */
         ::-webkit-scrollbar { width: 10px; height: 10px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb {
@@ -113,7 +109,6 @@
         ::-webkit-scrollbar-corner { background: transparent; }
         * { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
 
-        /* ============ NAVBAR ============ */
         .navbar-custom {
             height: 60px;
             flex-shrink: 0;
@@ -152,7 +147,6 @@
             letter-spacing: 0.04em;
         }
 
-        /* ============ LAYOUT ============ */
         .main-container {
             flex: 1;
             padding: 16px;
@@ -202,7 +196,6 @@
             .navbar-brand-custom { font-size: 13px; }
         }
 
-        /* ============ CARDS ============ */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
@@ -230,7 +223,6 @@
         }
         .card-section-title i { color: var(--blue-500); font-size: 13px; }
 
-        /* ============ INPUTS & SELECTS ============ */
         .form-control-sm, .form-select-sm {
             padding: 8px 12px;
             font-size: 13px;
@@ -256,13 +248,12 @@
 
         .form-select-sm {
             font-weight: 600;
-            /* ใช้ SVG เส้นบาง สีเทา แทนลูกศรหนาๆ ของ Bootstrap */
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M4 6l4 4 4-4'/%3e%3c/svg%3e");
             background-repeat: no-repeat;
             background-position: right 10px center;
             background-size: 14px;
-            padding-right: 30px; /* เว้นที่ให้ลูกศร */
-            appearance: none; /* ซ่อนลูกศรของ Browser */
+            padding-right: 30px;
+            appearance: none;
         }
 
         .stat-grid label {
@@ -371,7 +362,6 @@
             padding: 10px;
         }
 
-        /* ============ BUTTONS ============ */
         .btn-predict {
             background: linear-gradient(135deg, var(--rose-500) 0%, var(--rose-700) 100%);
             color: white;
@@ -436,7 +426,6 @@
             color: var(--text-primary);
         }
 
-        /* ============ BADGES ============ */
         .badge-pill-custom {
             font-size: 10.5px;
             font-weight: 600;
@@ -479,7 +468,6 @@
             color: var(--blue-700) !important;
         }
 
-        /* ============ RESULT HEADER ============ */
         .result-header {
             background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
             color: var(--text-primary);
@@ -516,7 +504,6 @@
         }
         .result-header .d-flex { position: relative; z-index: 1; }
 
-        /* ============ PROB CARDS ============ */
         .prob-card {
             border-radius: var(--radius-md);
             padding: 10px;
@@ -559,7 +546,6 @@
             color: var(--amber-700);
         }
 
-        /* ============ SCORE BOX ============ */
         .score-box {
             border-radius: var(--radius-md);
             padding: 12px 6px;
@@ -584,7 +570,6 @@
         .score-silver { background: linear-gradient(135deg, var(--amber-500) 0%, var(--amber-700) 100%); }
         .score-bronze { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); }
 
-        /* ============ PROGRESS ============ */
         .progress {
             border-radius: 999px;
             overflow: hidden;
@@ -605,7 +590,6 @@
             color: var(--text-secondary);
         }
 
-        /* ============ AH RATE ============ */
         .ah-rate-box {
             background: var(--bg-muted);
             border-radius: var(--radius-md);
@@ -628,7 +612,6 @@
             margin-top: 2px;
         }
 
-        /* ============ EMPTY STATE ============ */
         .empty-state {
             background: #ffffff;
             border: 2px dashed var(--border-default);
@@ -647,7 +630,6 @@
             50% { opacity: 0.8; }
         }
 
-        /* ============ ALERTS ============ */
         .warn-box {
             background: var(--amber-50);
             border: 1px solid #fde68a;
@@ -665,7 +647,6 @@
             font-size: 12px !important;
         }
 
-        /* ============ MISC ============ */
         .xh-highlight {
             font-size: 11.5px;
             background: var(--bg-muted);
@@ -717,7 +698,6 @@
             border-color: var(--blue-500);
         }
 
-        /* ============ LEAGUE DROPDOWN ============ */
         .league-dropdown {
             position: absolute;
             z-index: 1000;
@@ -750,7 +730,6 @@
         }
         .league-item:last-child { border-bottom: none; }
 
-        /* ============ ANIMATIONS ============ */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -765,7 +744,6 @@
         #resultsArea > *:nth-child(6) { animation-delay: 0.20s; }
         #resultsArea > *:nth-child(7) { animation-delay: 0.24s; }
 
-        /* ============ MODAL ============ */
         .donate-box {
             border: 2px dashed #fbcfe8;
             border-radius: var(--radius-lg);
@@ -1064,8 +1042,6 @@
         </div>
     </div>
 
-    <!-- 🔥 ลบ Scroll Hints ออกแล้ว -->
-
     <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
@@ -1093,7 +1069,7 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.19.2 — Light Edition (Scroll Hint Removed)
+   JackAI Scanner v5.19.2 — Light Edition (100% Fix Included)
    ============================================================ */
 const XG_WEIGHTS = { SOT_BASE: 0.30, OFF_TARGET: 0.030, BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20 };
 const STRENGTH_SENSITIVITY = 0.0060, STRENGTH_MIN_MULT = 0.55, STRENGTH_MAX_MULT = 1.80;
@@ -1200,9 +1176,12 @@ function copyDonateNumber() {
     .catch(() => alert("❌ ไม่สามารถคัดลอกได้ กรุณาจดเบอร์: 094-475-4282"));
 }
 
+/* ============================================================
+   ✅ FIX: 100% Display for Over lines (0.5 – 6.5)
+   ============================================================ */
 function fmtPct(val) {
     if (val < 0.5) return '<0.5%';
-    if (val > 99.5) return '>99.5%';
+    if (val >= 99.5) return '100%';
     return val.toFixed(0) + '%';
 }
 
@@ -1339,8 +1318,6 @@ function resetInputs() {
     location.reload();
 }
 
-/* 🔥 ลบฟังก์ชัน setupScrollHint ออกแล้ว */
-
 document.addEventListener('DOMContentLoaded', () => {
     restoreInputs();
     handleLeagueInput();
@@ -1359,8 +1336,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('leagueDropdown').style.display = 'none';
         }
     });
-
-    // 🔥 ลบการเรียกใช้ setupScrollHint ออกแล้ว
 });
 
 function calculateRemaining(minute, i1, i2, format) {
@@ -1585,11 +1560,13 @@ function predictMatch() {
     document.getElementById('ahHomeProb').innerText = fmtPct(pAHHomeWin * 100);
     document.getElementById('ahAwayProb').innerText = fmtPct(pAHAwayWin * 100);
     document.getElementById('ahPushProb').innerText = fmtPct(pAHPush * 100);
+
+    /* ✅ FIX: ผ่านจริง → แสดง 100% ตรงๆ (ครบทุกเส้น 0.5–6.5) */
     const setFtRow = (id, barId, val, actualTrigger) => {
         const finalVal = actualTrigger ? 100.0 : val * 100;
         const el = document.getElementById(id);
         const c = pickColor(finalVal);
-        el.innerText = fmtPct(finalVal);
+        el.innerText = actualTrigger ? '100%' : fmtPct(finalVal);
         el.className = 'fw-bold ' + c.text;
         const bar = document.getElementById(barId);
         bar.style.width = finalVal + '%';
