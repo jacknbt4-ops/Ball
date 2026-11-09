@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.19.1 — Professional</title>
+    <title>⚽ JackAI Scanner v5.19.2 — Professional</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -200,40 +200,7 @@
                 padding-right: 0;
             }
             .navbar-brand-custom { font-size: 13px; }
-            .scroll-hint { display: none !important; }
         }
-
-        /* ============ SCROLL HINT ============ */
-        .scroll-hint {
-            position: fixed;
-            bottom: 24px;
-            left: 236px;
-            transform: translateX(-50%);
-            background: #ffffff;
-            border: 1px solid var(--border-default);
-            color: var(--text-secondary);
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: bounceDown 1.5s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 50;
-            box-shadow: var(--shadow-md);
-            transition: opacity 0.3s, transform 0.3s;
-        }
-        .scroll-hint.hidden {
-            opacity: 0;
-            transform: translateX(-50%) translateY(20px);
-        }
-        .scroll-hint i { font-size: 16px; }
-        @keyframes bounceDown {
-            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
-            50% { transform: translateX(-50%) translateY(6px); opacity: 1; }
-        }
-        .scroll-hint-right { left: auto; right: 40px; }
 
         /* ============ CARDS ============ */
         .card {
@@ -287,7 +254,6 @@
             color: var(--text-dim);
         }
 
-        /* 🔥 FIX: ลบลูกศรที่ซ้ำซ้อนออก และใส่ลูกศรเส้นบางๆ แทน */
         .form-select-sm {
             font-weight: 600;
             /* ใช้ SVG เส้นบาง สีเทา แทนลูกศรหนาๆ ของ Bootstrap */
@@ -827,7 +793,7 @@
                 <div class="navbar-brand-custom">
                     <span class="brand-icon"><i class="bi bi-dribbble" style="font-size: 18px; color: #fff;"></i></span>
                     <span>JackAI Scanner</span>
-                    <span class="navbar-version">v5.19.1</span>
+                    <span class="navbar-version">v5.19.2</span>
                 </div>
             </div>
             <button class="btn btn-donate" onclick="openDonateModal()">
@@ -1098,9 +1064,7 @@
         </div>
     </div>
 
-    <!-- Scroll Hints -->
-    <div class="scroll-hint" id="scrollHintLeft"><i class="bi bi-chevron-double-down"></i></div>
-    <div class="scroll-hint scroll-hint-right" id="scrollHintRight"><i class="bi bi-chevron-double-down"></i></div>
+    <!-- 🔥 ลบ Scroll Hints ออกแล้ว -->
 
     <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -1129,7 +1093,7 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.19.1 — Light Edition (Arrow Fixed)
+   JackAI Scanner v5.19.2 — Light Edition (Scroll Hint Removed)
    ============================================================ */
 const XG_WEIGHTS = { SOT_BASE: 0.30, OFF_TARGET: 0.030, BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20 };
 const STRENGTH_SENSITIVITY = 0.0060, STRENGTH_MIN_MULT = 0.55, STRENGTH_MAX_MULT = 1.80;
@@ -1375,28 +1339,7 @@ function resetInputs() {
     location.reload();
 }
 
-/* ============ SCROLL HINT ============ */
-function setupScrollHint(panelSelector, hintId) {
-    const panel = document.querySelector(panelSelector);
-    const hint = document.getElementById(hintId);
-    if (!panel || !hint) return;
-
-    function updateHint() {
-        const hasScroll = panel.scrollHeight > panel.clientHeight + 5;
-        const atBottom = panel.scrollHeight - panel.scrollTop <= panel.clientHeight + 20;
-        if (!hasScroll || atBottom) {
-            hint.classList.add('hidden');
-        } else {
-            hint.classList.remove('hidden');
-        }
-    }
-
-    panel.addEventListener('scroll', updateHint);
-    window.addEventListener('resize', updateHint);
-    updateHint();
-    setTimeout(updateHint, 300);
-    setTimeout(updateHint, 1000);
-}
+/* 🔥 ลบฟังก์ชัน setupScrollHint ออกแล้ว */
 
 document.addEventListener('DOMContentLoaded', () => {
     restoreInputs();
@@ -1417,8 +1360,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    setupScrollHint('.left-panel', 'scrollHintLeft');
-    setupScrollHint('.right-panel', 'scrollHintRight');
+    // 🔥 ลบการเรียกใช้ setupScrollHint ออกแล้ว
 });
 
 function calculateRemaining(minute, i1, i2, format) {
@@ -1783,7 +1725,7 @@ function predictMatch() {
             <span class="debug-badge">conf ${confidence}%</span>
         </div>`;
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.19.1 · ∫xG ${INTEGRATION_STEPS} steps · grid=${MAX_GOALS_GRID} · ρ=${rho}`;
+    let note = `⚙️ v5.19.2 · ∫xG ${INTEGRATION_STEPS} steps · grid=${MAX_GOALS_GRID} · ρ=${rho}`;
     if (!hasBigData) note += ' · ⚠️ ไม่มี Big Chances';
     calibNote.innerText = note;
     saveInputs();
