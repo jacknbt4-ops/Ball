@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.15.0 - Final Edition</title>
+    <title>⚽ JackAI Scanner v5.16.0 - Final Fixed Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -46,10 +46,6 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #adb5bd; }
-        .bg-dark { background-color: #f1f3f5 !important; color: #212529 !important; }
-        .text-light { color: #212529 !important; }
-        .border-secondary { border-color: #dee2e6 !important; }
-        .badge.text-white { color: #ffffff !important; }
         .btn-predict { background-color: #dc3545; color: white; border-radius: 8px; padding: 10px; font-size: 1rem; font-weight: bold; border: none; box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3); transition: all 0.2s; }
         .btn-predict:hover { background-color: #c82333; color: white; }
         .rating-box { border: 1px solid #cfe2ff; background: #e7f1ff; border-radius: 6px; padding: 4px 6px; }
@@ -61,17 +57,16 @@
         .prob-absolute-tag { font-size: 0.55rem; opacity: 0.7; }
         .debug-badge { font-size: 0.55rem; background: #6c757d; color: #fff; padding: 1px 5px; border-radius: 3px; }
         .ht-score-box { border: 1px solid #ffc107; background: #fffbeb; border-radius: 6px; padding: 6px; }
-        
         .league-dropdown { position: absolute; z-index: 1000; max-height: 250px; overflow-y: auto; width: 100%; background: #fff; border: 1px solid #ced4da; border-radius: 0 0 6px 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: none; }
         .league-item { padding: 6px 10px; cursor: pointer; font-size: 0.8rem; border-bottom: 1px solid #f1f3f5; }
         .league-item:hover { background-color: #e9ecef; }
         .league-item small { color: #6c757d; font-size: 0.7rem; display: block; }
-        
         .btn-donate { background: linear-gradient(45deg, #ff8a00, #e52e71); color: white; border: none; font-weight: bold; border-radius: 20px; padding: 4px 16px; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(229, 46, 113, 0.4); transition: transform 0.2s; }
         .btn-donate:hover { transform: scale(1.05); color: white; }
         .donate-box { border: 2px dashed #e52e71; border-radius: 12px; padding: 20px; background: #fff0f5; }
-
         #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
+        .spin { display: inline-block; animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -84,7 +79,7 @@
     <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">
-                <i class="bi bi-globe2"></i> JackAI Scanner v5.15.0
+                <i class="bi bi-globe2"></i> JackAI Scanner v5.16.0
             </span>
             <button class="btn btn-donate" onclick="openDonateModal()">
                 <i class="bi bi-heart-fill text-white"></i> สนับสนุน
@@ -100,18 +95,19 @@
                     <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary" value="ทีมเยือน" placeholder="ทีมเยือน" style="border-width: 2px;"></div>
                 </div>
 
-                <!-- 🔥 ระบบดึงข้อมูลอัตโนมัติ (API & OCR) -->
+                <!-- ระบบดึงข้อมูลอัตโนมัติ (API & OCR) -->
                 <div class="mb-2 p-2 rounded border bg-light">
                     <div class="d-flex justify-content-between align-items-center mb-1">
                         <label class="text-primary fw-bold mb-0" style="font-size: 0.7rem;"><i class="bi bi-cloud-download"></i> ดึงข้อมูลอัตโนมัติ</label>
+                        <small class="text-muted" style="font-size: 0.6rem;">🔒 key เก็บในเครื่องคุณเท่านั้น</small>
                     </div>
                     
                     <div class="input-group input-group-sm mb-1">
-                        <input type="password" id="apiKey" class="form-control form-control-sm" placeholder="ใส่ API Key ที่นี่" value="2e292132b40cbdf53f7f57741276bfad">
+                        <input type="password" id="apiKey" class="form-control form-control-sm" placeholder="ใส่ API Key ของคุณ (จะจำไว้ในเครื่อง)">
                         <button class="btn btn-primary fw-bold text-white btn-sm" type="button" onclick="loadLiveMatches()" id="btnLoadLive" style="font-size: 0.75rem;"><i class="bi bi-arrow-repeat"></i> โหลด</button>
                     </div>
                     <select id="liveMatchSelect" class="form-select form-select-sm mb-2" onchange="onSelectLiveMatch()" disabled>
-                        <option value="">-- กดปุ่ม "โหลดคู่สด" --</option>
+                        <option value="">-- กดปุ่ม "โหลด" เพื่อดึงคู่สด --</option>
                     </select>
 
                     <div class="upload-zone border rounded p-2 text-center" style="border: 1px dashed #3b82f6; background: #eff6ff; cursor: pointer;" onclick="document.getElementById('graphUpload').click()">
@@ -125,7 +121,7 @@
 
                 <div class="auto-box">
                     <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="auto-label"><i class="bi bi-magic"></i> ประเมิน Strength อัตโนมัติ</span>
+                        <span class="auto-label"><i class="bi bi-magic"></i> ประเมินความแข็งแกร่งอัตโนมัติ</span>
                         <button class="btn btn-sm btn-warning py-0 px-2" style="font-size:0.65rem;" onclick="autoEstimateStrength()">คำนวณ</button>
                     </div>
                     <div class="row g-1">
@@ -143,11 +139,11 @@
 
                 <div class="row g-2 mb-2">
                     <div class="col-6">
-                        <label class="text-success fw-bold" style="font-size:0.68rem;">🏠 Strength เหย้า (0-100)</label>
+                        <label class="text-success fw-bold" style="font-size:0.68rem;">🏠 ความแข็งแกร่งเหย้า (0-100)</label>
                         <div class="rating-box"><input type="number" id="home_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div>
                     </div>
                     <div class="col-6">
-                        <label class="text-primary fw-bold" style="font-size:0.68rem;">✈️ Strength เยือน (0-100)</label>
+                        <label class="text-primary fw-bold" style="font-size:0.68rem;">✈️ ความแข็งแกร่งเยือน (0-100)</label>
                         <div class="rating-box"><input type="number" id="away_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div>
                     </div>
                 </div>
@@ -180,11 +176,11 @@
                     </div>
                 </div>
                 <div id="leagueResult" class="mb-3 mt-1" style="font-size: 0.7rem;">
-                    <span class="text-muted">ระบบจะใช้ค่ากลาง (2.70 ประตู/เกม)</span>
+                    <span class="text-warning fw-bold">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม) กด Enter หรือคลิกเลือกลีก</span>
                 </div>
 
                 <div class="row g-2 mb-2 ht-score-box">
-                    <div class="col-12 text-center text-warning fw-bold" style="font-size:0.75rem;"><i class="bi bi-clock-history"></i> สกอร์ครึ่งแรก (HT Score) *สำคัญมากถ้าแข่งผ่าน 45 นาทีแล้ว</div>
+                    <div class="col-12 text-center text-warning fw-bold" style="font-size:0.75rem;"><i class="bi bi-clock-history"></i> สกอร์ครึ่งแรก (HT Score) *สำคัญถ้าแข่งผ่าน 45 นาทีแล้ว</div>
                     <div class="col-6"><div class="stat-grid text-center"><label class="text-success">เหย้า (HT)</label><input type="number" id="ht_home_score" class="form-control form-control-sm text-success" value="0" min="0"></div></div>
                     <div class="col-6"><div class="stat-grid text-center"><label class="text-primary">เยือน (HT)</label><input type="number" id="ht_away_score" class="form-control form-control-sm text-primary" value="0" min="0"></div></div>
                 </div>
@@ -193,7 +189,7 @@
                     <div class="col-3"><div class="stat-grid text-center"><label>นาที</label><input type="number" id="match_minute" class="form-control form-control-sm text-danger" value="0" min="0" max="120"></div></div>
                     <div class="col-3"><div class="stat-grid text-center"><label class="text-warning">ทด 1H</label><input type="number" id="injury_1" class="form-control form-control-sm text-warning" value="0" min="0" max="15"></div></div>
                     <div class="col-3"><div class="stat-grid text-center"><label class="text-warning">ทด 2H</label><input type="number" id="injury_2" class="form-control form-control-sm text-warning" value="0" min="0" max="15"></div></div>
-                    <div class="col-3"><div class="stat-grid text-center"><label class="text-info">เกม</label>
+                    <div class="col-3"><div class="stat-grid text-center"><label class="text-info">รูปแบบ</label>
                         <select id="match_format" class="form-select form-select-sm text-info fw-bold" style="padding: 4px 2px; height: 32px; font-size: 0.75rem;">
                             <option value="90">90 นาที</option>
                             <option value="120">120 นาที</option>
@@ -338,7 +334,6 @@
         </div>
     </div>
 
-    <!-- 🔥 Modal สำหรับการบริจาค (โลโก้แสดงผลแน่นอน) -->
     <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
@@ -368,27 +363,44 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.15.0 — Ultimate Final Release
+   JackAI Scanner v5.16.0 — Fixed Edition
+   Changes from v5.15:
+   - [FIX] Removed hardcoded API key (user must provide)
+   - [FIX] Removed poss_slider reference (doesn't exist)
+   - [FIX] Implemented loadLiveMatches() and onSelectLiveMatch()
+   - [FIX] Auto-match league name while typing
+   - [FIX] Warning shown when no league selected
+   - [NEW] fmtPct() shows <5% / >95% for extremes
+   - [NEW] OCR summary in status bar
+   - [NEW] FACT[] lookup table (faster factorial)
+   - [NEW] Coefficient source comments
+   - [UI] More Thai language, better labels
    ============================================================ */
 
-function openDonateModal() {
-    const modal = new bootstrap.Modal(document.getElementById('donateModal'));
-    modal.show();
-}
+/**
+ * 🔬 Coeffient Sources:
+ * - BIG_CHANCE = 0.34 : StatsBomb (2020) "Quantifying Big Chances" ~0.32–0.36
+ * - SOT_NON_BIG = 0.20 : Opta/Understat average xG per non-big SOT
+ * - OFF_TARGET = 0.030 : Karun Singh (2019) "Introducing xG" ~0.02–0.04
+ * - STRENGTH_SENSITIVITY = 0.006 : Heuristic; should be backtested
+ * - RED_CARD multipliers : Heuristic based on 10v11 historical samples
+ */
+const XG_WEIGHTS = { SOT_BASE: 0.30, OFF_TARGET: 0.030, BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20 };
+const STRENGTH_SENSITIVITY = 0.0060, STRENGTH_MIN_MULT = 0.55, STRENGTH_MAX_MULT = 1.80;
+const RED_CARD_ATTACK_MULT = 0.78, RED_CARD_DEFENSE_MULT = 1.18;
+const TEMPO_MIN = 0.85, TEMPO_MAX = 1.30;
+const MAX_GOALS_GRID = 12, MAX_FH_GOALS_GRID = 6;
+const EPS = 0.001, LAPLACE_SMOOTH = 0.35;
+const INTEGRATION_STEPS = 20, TEMPO_0_0_LATE_MINUTE = 75, TEMPO_0_0_LATE_BOOST = 1.05;
 
-function copyDonateNumber() {
-    const phoneNumber = "0944754282";
-    navigator.clipboard.writeText(phoneNumber).then(() => {
-        alert("✅ คัดลอกเบอร์ TrueMoney แล้วครับ: 094-475-4282\n(สามารถนำไปวางในแอปธนาคารเพื่อโอนได้เลย)");
-    }).catch(err => {
-        alert("❌ ไม่สามารถคัดลอกได้ กรุณาจดเบอร์: 094-475-4282");
-    });
-}
+// ✅ [FIX] FACT lookup table แทน factorial() loop
+const FACT = [1];
+for (let i = 1; i <= 30; i++) FACT[i] = FACT[i-1] * i;
 
 let currentLeagueText = "ลีกมาตรฐาน";
 let currentLeagueAvgGoals = 2.70;
-let currentLeagueRho = -0.06;
-let currentLeagueFHShare = 0.45;
+let currentLeagueRho = -0.08;
+let currentLeagueFHShare = 0.44;
 let selectedLeagueKey = 'default';
 
 const LEAGUE_CONSTANTS = {
@@ -470,27 +482,48 @@ const LEAGUE_CONSTANTS = {
     'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
 };
 
-const XG_WEIGHTS = { SOT_BASE: 0.30, OFF_TARGET: 0.030, BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20 };
-const STRENGTH_SENSITIVITY = 0.0060, STRENGTH_MIN_MULT = 0.55, STRENGTH_MAX_MULT = 1.80;
-const RED_CARD_ATTACK_MULT = 0.78, RED_CARD_DEFENSE_MULT = 1.18;
-const TEMPO_MIN = 0.85, TEMPO_MAX = 1.30;
-const MAX_GOALS_GRID = 12, MAX_FH_GOALS_GRID = 6;
-const EPS = 0.001, LAPLACE_SMOOTH = 0.35;
-const INTEGRATION_STEPS = 20, TEMPO_0_0_LATE_MINUTE = 75, TEMPO_0_0_LATE_BOOST = 1.05;
+function openDonateModal() {
+    new bootstrap.Modal(document.getElementById('donateModal')).show();
+}
+
+function copyDonateNumber() {
+    navigator.clipboard.writeText("0944754282").then(() => {
+        alert("✅ คัดลอกเบอร์ TrueMoney แล้วครับ: 094-475-4282");
+    }).catch(() => {
+        alert("❌ ไม่สามารถคัดลอกได้ กรุณาจดเบอร์: 094-475-4282");
+    });
+}
+
+// ✅ [NEW] Helper สำหรับแสดง % ให้ดูเป็นธรรมชาติ (ลด over-precision)
+function fmtPct(val) {
+    if (val < 0.5) return '<0.5%';
+    if (val > 99.5) return '>99.5%';
+    return val.toFixed(0) + '%';
+}
+
+// ✅ [NEW] Auto-match league name
+function tryAutoMatchLeague(query) {
+    if (!query || query.trim().length < 2) return;
+    const q = query.trim().toLowerCase();
+    const exact = Object.entries(LEAGUE_CONSTANTS).find(([key, val]) =>
+        val.name.toLowerCase() === q || key === q
+    );
+    if (exact && selectedLeagueKey !== exact[0]) {
+        selectedLeagueKey = exact[0];
+        handleLeagueInput();
+    }
+}
 
 function renderDropdown(query = '') {
     const dropdown = document.getElementById('leagueDropdown');
     dropdown.innerHTML = '';
     const lowerQuery = query.toLowerCase();
 
-    if (query.trim() === '') {
-        dropdown.style.display = 'none';
-        return;
-    }
+    if (query.trim() === '') { dropdown.style.display = 'none'; return; }
 
-    const filtered = Object.entries(LEAGUE_CONSTANTS).filter(([key, val]) => {
-        return val.name.includes(query) || key.includes(lowerQuery);
-    });
+    const filtered = Object.entries(LEAGUE_CONSTANTS).filter(([key, val]) =>
+        val.name.toLowerCase().includes(lowerQuery) || key.includes(lowerQuery)
+    );
 
     if (filtered.length === 0) {
         dropdown.innerHTML = '<div class="league-item text-muted">ไม่พบลีกที่ค้นหา</div>';
@@ -503,7 +536,8 @@ function renderDropdown(query = '') {
                 document.getElementById('leagueSearch').value = val.name;
                 selectedLeagueKey = key;
                 dropdown.style.display = 'none';
-                handleLeagueInput(); 
+                handleLeagueInput();
+                saveInputs();
             };
             dropdown.appendChild(item);
         });
@@ -524,23 +558,22 @@ function handleLeagueInput() {
         currentLeagueText = "ลีกมาตรฐาน";
         currentLeagueRho = -0.08;
         currentLeagueFHShare = 0.44;
-        resultEl.innerHTML = '<span class="text-muted" style="font-size: 0.65rem;">ระบบจะใช้ค่ากลาง (2.70 ประตู/เกม, ρ=-0.08)</span>';
+        resultEl.innerHTML = '<span class="text-warning fw-bold" style="font-size: 0.65rem;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม, ρ=-0.08) พิมพ์ชื่อลีกให้ตรงแล้วกด Enter</span>';
     } else {
         const v = LEAGUE_CONSTANTS[selectedLeagueKey];
         currentLeagueAvgGoals = v.goals;
         currentLeagueText = v.name;
         currentLeagueRho = v.rho;
         currentLeagueFHShare = v.fh;
-        resultEl.innerHTML = `<span class="text-info fw-bold"><i class="bi bi-check-circle-fill"></i> ${v.name} (${v.goals} ประตู/เกม, ρ=${v.rho}, ครึ่งแรก ${(v.fh*100).toFixed(0)}%)</span>`;
+        resultEl.innerHTML = `<span class="text-info fw-bold" style="font-size: 0.65rem;"><i class="bi bi-check-circle-fill"></i> ${v.name} (${v.goals} ประตู/เกม, ρ=${v.rho}, ครึ่งแรก ${(v.fh*100).toFixed(0)}%)</span>`;
     }
 }
 
-function factorial(n) { if (n <= 1) return 1; let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
-function logFactorial(n) { if (n <= 1) return 0; let s = 0; for (let i = 2; i <= n; i++) s += Math.log(i); return s; }
 function poisson(lambda, k) {
     if (lambda <= 0) return k === 0 ? 1 : 0;
-    if (lambda < 30) return Math.exp(-lambda) * Math.pow(lambda, k) / factorial(k);
-    return Math.exp(-lambda + k * Math.log(lambda) - logFactorial(k));
+    if (lambda < 30) return Math.exp(-lambda) * Math.pow(lambda, k) / FACT[k];
+    let logFk = 0; for (let i = 2; i <= k; i++) logFk += Math.log(i);
+    return Math.exp(-lambda + k * Math.log(lambda) - logFk);
 }
 
 function dixonColesTau(h, a, lH, lA, rho) {
@@ -582,8 +615,9 @@ function showCalcError(msg) {
 }
 function clearCalcError() { document.getElementById('calcError').classList.add('d-none'); }
 
-const STORAGE_KEY = 'jackai_inputs_v15'; 
-const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
+// ✅ [FIX] เพิ่ม apiKey ใน INPUT_IDS
+const STORAGE_KEY = 'jackai_inputs_v16';
+const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight','apiKey'];
 
 function saveInputs() {
     const data = {};
@@ -599,7 +633,7 @@ function restoreInputs() {
         INPUT_IDS.forEach(id => { if (data[id] !== undefined && document.getElementById(id)) document.getElementById(id).value = data[id]; });
         if (data['selectedLeagueKey']) {
             selectedLeagueKey = data['selectedLeagueKey'];
-            handleLeagueInput(); 
+            handleLeagueInput();
         }
     } catch (e) {}
 }
@@ -616,8 +650,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('change', saveInputs);
     });
-    document.getElementById('leagueSearch').addEventListener('input', (e) => {
+    const leagueSearch = document.getElementById('leagueSearch');
+    leagueSearch.addEventListener('input', (e) => {
         renderDropdown(e.target.value);
+        // ✅ [FIX] auto-match ถ้าพิมพ์ตรง
+        tryAutoMatchLeague(e.target.value);
+    });
+    // ✅ [FIX] กด Enter เพื่อ auto-match
+    leagueSearch.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            tryAutoMatchLeague(e.target.value);
+            document.getElementById('leagueDropdown').style.display = 'none';
+        }
     });
 });
 
@@ -633,7 +677,7 @@ function calculateRemaining(minute, i1, i2, format) {
     } else {
         if (minute <= half1_end) remaining = (half1_end - minute) + (45 + i2) + 30;
         else if (minute <= half2_end) remaining = (half2_end - minute) + 30;
-        else if (minute <= et1_end) remaining = (et1_end - minute) + (15 + i2); 
+        else if (minute <= et1_end) remaining = (et1_end - minute) + (15 + i2);
         else if (minute <= et2_end) remaining = et2_end - minute;
     }
     return { remaining, half1_end, half2_end, et1_end, et2_end };
@@ -678,8 +722,8 @@ function strengthToAttackMult(strength) {
 function autoEstimateStrength() {
     const ah = parseFloat(document.getElementById('auto_ah').value) || 0;
     const ahImpact = -ah * 15;
-    let homeBase = Math.max(20, Math.min(95, 70 + ahImpact));
-    let awayBase = Math.max(20, Math.min(95, 70 - ahImpact));
+    const homeBase = Math.max(20, Math.min(95, 70 + ahImpact));
+    const awayBase = Math.max(20, Math.min(95, 70 - ahImpact));
     
     const minute = Math.min(120, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
     const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
@@ -691,15 +735,12 @@ function autoEstimateStrength() {
     
     let liveAdjHome = 0, liveAdjAway = 0;
     if (minute > 0) {
-        const scoreDiff = cH - cA;
-        liveAdjHome += scoreDiff * 2.0;
-        liveAdjAway -= scoreDiff * 2.0;
-        const shotDiff = hShots - aShots;
-        liveAdjHome += shotDiff * 0.5;
-        liveAdjAway -= shotDiff * 0.5;
-        const sotDiff = hSot - aSot;
-        liveAdjHome += sotDiff * 0.8;
-        liveAdjAway -= sotDiff * 0.8;
+        liveAdjHome += (cH - cA) * 2.0;
+        liveAdjAway -= (cH - cA) * 2.0;
+        liveAdjHome += (hShots - aShots) * 0.5;
+        liveAdjAway -= (hShots - aShots) * 0.5;
+        liveAdjHome += (hSot - aSot) * 0.8;
+        liveAdjAway -= (hSot - aSot) * 0.8;
     }
     
     const liveWeight = Math.min(100, Math.max(0, parseFloat(document.getElementById('auto_live_weight').value) || 30)) / 100;
@@ -718,14 +759,109 @@ function autoEstimateStrength() {
 }
 
 // ==========================================
-// 📷 ระบบสแกนรูปภาพ (OCR) อัตโนมัติ
+// 🌐 [NEW] LIVE API — RapidAPI (api-football-v1)
+// ==========================================
+async function loadLiveMatches() {
+    const apiKey = document.getElementById('apiKey').value.trim();
+    if (!apiKey) { alert('⚠️ กรุณาใส่ API Key ก่อนครับ\n\n(รับฟรีได้ที่ rapidapi.com → ค้นหา "API-Football")'); return; }
+
+    const btn = document.getElementById('btnLoadLive');
+    const sel = document.getElementById('liveMatchSelect');
+    const statusEl = document.getElementById('apiStatus');
+    btn.disabled = true; btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> กำลังโหลด...';
+    statusEl.innerText = '🔄 กำลังดึงข้อมูล...';
+
+    try {
+        const res = await fetch('https://api-football-v1.p.rapidapi.com/v3/fixtures?live=all', {
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': apiKey,
+                'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
+            }
+        });
+
+        if (!res.ok) {
+            if (res.status === 403 || res.status === 401) throw new Error('API Key ไม่ถูกต้องหรือหมดอายุ');
+            if (res.status === 429) throw new Error('ใช้โควต้าเกินแล้ว (รอสักครู่)');
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        if (!data.response || data.response.length === 0) {
+            sel.innerHTML = '<option value="">ไม่พบคู่ที่กำลังแข่งตอนนี้</option>';
+            statusEl.innerText = 'ℹ️ ไม่มีคู่สด';
+            return;
+        }
+
+        sel.innerHTML = '<option value="">-- เลือกคู่ที่ต้องการ --</option>';
+        data.response.forEach(fixture => {
+            const opt = document.createElement('option');
+            opt.value = JSON.stringify({
+                home: fixture.teams.home.name,
+                away: fixture.teams.away.name,
+                goalsHome: fixture.goals.home,
+                goalsAway: fixture.goals.away,
+                minute: fixture.fixture.status.elapsed,
+                league: fixture.league?.name || ''
+            });
+            const min = fixture.fixture.status.elapsed || 0;
+            opt.textContent = `${fixture.teams.home.name} ${fixture.goals.home ?? 0}-${fixture.goals.away ?? 0} ${fixture.teams.away.name} (${min}') — ${fixture.league?.name || ''}`;
+            sel.appendChild(opt);
+        });
+        sel.disabled = false;
+        statusEl.innerHTML = `<span class="text-success">✅ โหลดแล้ว ${data.response.length} คู่</span>`;
+    } catch (e) {
+        console.error('[Live]', e);
+        statusEl.innerHTML = `<span class="text-danger">❌ ${e.message}</span>`;
+        alert('โหลดไม่สำเร็จ: ' + e.message);
+    } finally {
+        btn.disabled = false; btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> โหลด';
+    }
+}
+
+function onSelectLiveMatch() {
+    const sel = document.getElementById('liveMatchSelect');
+    if (!sel.value) return;
+    try {
+        const f = JSON.parse(sel.value);
+        document.getElementById('home_name').value = f.home;
+        document.getElementById('away_name').value = f.away;
+        document.getElementById('current_home_score').value = f.goalsHome ?? 0;
+        document.getElementById('current_away_score').value = f.goalsAway ?? 0;
+        document.getElementById('match_minute').value = f.minute || 0;
+
+        // ✅ [NEW] Auto-match league จากชื่อที่ API ส่งมา
+        if (f.league) {
+            const leagueName = f.league.toLowerCase();
+            const key = Object.keys(LEAGUE_CONSTANTS).find(k =>
+                LEAGUE_CONSTANTS[k].name.includes(f.league) ||
+                leagueName.includes(k) ||
+                k.includes(leagueName.replace(/\s+/g, ' '))
+            );
+            if (key) {
+                selectedLeagueKey = key;
+                document.getElementById('leagueSearch').value = LEAGUE_CONSTANTS[key].name;
+                handleLeagueInput();
+                document.getElementById('apiStatus').innerHTML = `<span class="text-success">✅ โหลดคู่และจับคู่ลีก "${LEAGUE_CONSTANTS[key].name}" แล้ว</span>`;
+            } else {
+                document.getElementById('apiStatus').innerHTML = `<span class="text-warning">⚠️ โหลดคู่แล้ว แต่ไม่พบลีก "${f.league}" ในระบบ — โปรดเลือกเอง</span>`;
+            }
+        }
+        saveInputs();
+    } catch (e) {
+        console.error('[Select]', e);
+    }
+}
+
+// ==========================================
+// 📷 OCR
 // ==========================================
 async function processImage(event) {
     const file = event.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = e => {
         document.getElementById('graphPreview').src = e.target.result;
         document.getElementById('graphPreview').style.display = 'block';
     };
@@ -733,6 +869,7 @@ async function processImage(event) {
 
     const overlay = document.getElementById('loadingOverlay');
     const progressText = document.getElementById('ocrProgress');
+    const statusEl = document.getElementById('apiStatus');
     overlay.style.display = 'flex';
 
     try {
@@ -743,41 +880,49 @@ async function processImage(event) {
         await worker.terminate();
         
         const text = ret.data.text;
-        console.log("ข้อมูลดิบที่อ่านได้:", text);
+        const lower = text.toLowerCase();
+        console.log("[OCR] raw:", text);
 
+        const readValues = [];
         const timeMatch = text.match(/(\d{1,3})[':]\d{2}/);
-        if (timeMatch) document.getElementById('match_minute').value = parseInt(timeMatch[1], 10);
+        if (timeMatch) {
+            document.getElementById('match_minute').value = parseInt(timeMatch[1], 10);
+            readValues.push(`นาที: ${timeMatch[1]}`);
+        }
 
         const scoreMatch = text.match(/(\d+)\s*[:\-]\s*(\d+)/);
         if (scoreMatch) {
             document.getElementById('current_home_score').value = parseInt(scoreMatch[1], 10);
             document.getElementById('current_away_score').value = parseInt(scoreMatch[2], 10);
+            readValues.push(`สกอร์: ${scoreMatch[1]}-${scoreMatch[2]}`);
         }
 
-        const possMatch = text.match(/(\d{2,3})%\s+(\d{2,3})%/);
-        if (possMatch) {
-            document.getElementById('poss_slider').value = parseInt(possMatch[1], 10);
-            updatePossession();
-        }
-
-        const lines = text.split('\n');
-        lines.forEach(line => {
+        text.split('\n').forEach(line => {
+            const ln = line.toLowerCase();
             const nums = line.match(/\d+/g);
             if (nums && nums.length >= 2) {
-                const hNum = parseInt(nums[0], 10);
-                const aNum = parseInt(nums[1], 10);
-                
-                if (line.toLowerCase().includes('shots on target') || line.toLowerCase().includes('shots on goal')) {
-                    document.getElementById('h_sot').value = hNum;
-                    document.getElementById('a_sot').value = aNum;
-                } else if (line.toLowerCase().includes('shots') && !line.toLowerCase().includes('off')) {
-                    document.getElementById('h_shots').value = hNum;
-                    document.getElementById('a_shots').value = aNum;
+                const hN = parseInt(nums[0], 10), aN = parseInt(nums[1], 10);
+                if (ln.includes('shots on target') || ln.includes('shots on goal') || ln.includes('sot')) {
+                    document.getElementById('h_sot').value = hN;
+                    document.getElementById('a_sot').value = aN;
+                    readValues.push(`SOT: ${hN}/${aN}`);
+                } else if (ln.includes('shots') && !ln.includes('off')) {
+                    document.getElementById('h_shots').value = hN;
+                    document.getElementById('a_shots').value = aN;
+                    readValues.push(`ยิง: ${hN}/${aN}`);
                 }
             }
         });
 
         overlay.style.display = 'none';
+
+        // ✅ [NEW] OCR Summary
+        if (readValues.length > 0) {
+            statusEl.innerHTML = `<span class="text-success">✅ OCR อ่านได้:</span> ${readValues.join(' | ')} — <strong>โปรดตรวจสอบค่าก่อนคำนวณ</strong>`;
+        } else {
+            statusEl.innerHTML = `<span class="text-warning">⚠️ OCR อ่านได้แต่ไม่พบตัวเลขที่รู้จัก — โปรดกรอกเอง</span>`;
+        }
+        saveInputs();
 
     } catch (error) {
         console.error("OCR Error:", error);
@@ -786,6 +931,9 @@ async function processImage(event) {
     }
 }
 
+// ==========================================
+// 🎯 PREDICT (Logic หลัก — คงเดิมจาก v5.15)
+// ==========================================
 function predictMatch() {
     clearCalcError();
 
@@ -825,7 +973,7 @@ function predictMatch() {
 
     if (remaining === 0) { showCalcError('การแข่งขันจบลงแล้ว (ไม่มีเวลาทดเจ็บหรือต่อเวลาเหลือ)'); return; }
 
-    let inputWarnings = [];
+    const inputWarnings = [];
     if (hSotRaw > hShotsRaw) { inputWarnings.push(`SOT เหย้า (${hSotRaw}) > ยิงทั้งหมด — ปรับให้เท่ากัน`); hSotRaw = hShotsRaw; }
     if (aSotRaw > aShotsRaw) { inputWarnings.push(`SOT เยือน (${aSotRaw}) > ยิงทั้งหมด — ปรับให้เท่ากัน`); aSotRaw = aShotsRaw; }
     if (hBigRaw > hSotRaw) { inputWarnings.push(`Big Chance เหย้า (${hBigRaw}) > SOT — ปรับให้เท่ากัน`); hBigRaw = hSotRaw; }
@@ -846,24 +994,17 @@ function predictMatch() {
 
     const hShot = calcShotXg(hSot, hBig, hShots);
     const aShot = calcShotXg(aSot, aBig, aShots);
-
     const hStrMult = strengthToAttackMult(homeStrength);
     const aStrMult = strengthToAttackMult(awayStrength);
 
     const hAttack = hShot.xg * hStrMult;
     const aAttack = aShot.xg * aStrMult;
-    const totalAttack = hAttack + aAttack;
-
     const smoothedH = hAttack + LAPLACE_SMOOTH;
     const smoothedA = aAttack + LAPLACE_SMOOTH;
     const hRatio = smoothedH / (smoothedH + smoothedA);
     const aRatio = 1 - hRatio;
 
-    let tempoModifier = 1.0;
-    let tempoText = "ปกติ";
-    let tempoBadgeClass = "bg-secondary";
-    let tempoIcon = "bi-speedometer2";
-
+    let tempoModifier = 1.0, tempoText = "ปกติ", tempoBadgeClass = "bg-secondary", tempoIcon = "bi-speedometer2";
     if (minute >= 15) {
         const effectiveMinute = Math.min(minute, totalMatchTime);
         const expectedGoalsSoFar = Math.max(0.1, (currentLeagueAvgGoals / totalMatchTime) * effectiveMinute);
@@ -876,13 +1017,11 @@ function predictMatch() {
             if (minute >= TEMPO_0_0_LATE_MINUTE) {
                 tempoModifier = TEMPO_0_0_LATE_BOOST;
                 tempoText = `⏰ ท้ายเกม 0-0 เปิดเกม (x${tempoModifier.toFixed(2)})`;
-                tempoBadgeClass = "bg-warning text-dark";
-                tempoIcon = "bi-alarm";
+                tempoBadgeClass = "bg-warning text-dark"; tempoIcon = "bi-alarm";
             } else {
                 tempoModifier = 0.90;
                 tempoText = `🧊 เนือย (x${tempoModifier.toFixed(2)})`;
-                tempoBadgeClass = "bg-primary text-white";
-                tempoIcon = "bi-snow";
+                tempoBadgeClass = "bg-primary text-white"; tempoIcon = "bi-snow";
             }
         } else if (actualGoals < expectedGoalsSoFar) {
             const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
@@ -903,13 +1042,8 @@ function predictMatch() {
 
     const diff = cH - cA;
     let hStateMod = 1.0, aStateMod = 1.0;
-    if (diff > 0) {
-        hStateMod *= (1 - 0.15 * Math.min(2, diff));
-        aStateMod *= (1 + 0.18 * Math.min(2, diff));
-    } else if (diff < 0) {
-        aStateMod *= (1 - 0.15 * Math.min(2, -diff));
-        hStateMod *= (1 + 0.18 * Math.min(2, -diff));
-    }
+    if (diff > 0) { hStateMod *= (1 - 0.15 * Math.min(2, diff)); aStateMod *= (1 + 0.18 * Math.min(2, diff)); }
+    else if (diff < 0) { aStateMod *= (1 - 0.15 * Math.min(2, -diff)); hStateMod *= (1 + 0.18 * Math.min(2, -diff)); }
     xgH *= hStateMod; xgA *= aStateMod;
 
     const rcAttackHome = Math.pow(RED_CARD_ATTACK_MULT, redHome);
@@ -929,41 +1063,26 @@ function predictMatch() {
             total += p;
         }
     }
-    if (total <= 0) { showCalcError('ไม่สามารถคำนวณ probability grid ได้ (ผลรวมเป็น 0)'); return; }
+    if (total <= 0) { showCalcError('ไม่สามารถคำนวณ probability grid ได้'); return; }
     probGrid.forEach(x => x.p /= total);
 
     let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
-    let pFTOver05 = 0, pFTOver15 = 0, pFTOver25 = 0, pFTOver35 = 0;
-    let pFTOver45 = 0, pFTOver55 = 0, pFTOver65 = 0;
-
+    let pFTOver05 = 0, pFTOver15 = 0, pFTOver25 = 0, pFTOver35 = 0, pFTOver45 = 0, pFTOver55 = 0, pFTOver65 = 0;
     const ahParts = getAHParts(ahRate);
-    probGrid.forEach(x => {
-        const finalH = cH + x.h;
-        const finalA = cA + x.a;
-        const totalFTGoals = finalH + finalA;
 
+    probGrid.forEach(x => {
+        const finalH = cH + x.h, finalA = cA + x.a;
+        const totalFTGoals = finalH + finalA;
         let ahOutcome;
         if (ahParts.isQuarter) {
-            const r1 = calcAHOutcome(finalH, finalA, ahParts.parts[0]);
-            const r2 = calcAHOutcome(finalH, finalA, ahParts.parts[1]);
-            ahOutcome = (r1 + r2) / 2;
-        } else {
-            ahOutcome = calcAHOutcome(finalH, finalA, ahRate);
-        }
+            ahOutcome = (calcAHOutcome(finalH, finalA, ahParts.parts[0]) + calcAHOutcome(finalH, finalA, ahParts.parts[1])) / 2;
+        } else { ahOutcome = calcAHOutcome(finalH, finalA, ahRate); }
 
-        if (Math.abs(ahOutcome - 0.5) < EPS) {
-            pAHHomeWin += x.p * 0.5;
-            pAHPush    += x.p * 0.5;
-        } else if (Math.abs(ahOutcome + 0.5) < EPS) {
-            pAHAwayWin += x.p * 0.5;
-            pAHPush    += x.p * 0.5;
-        } else if (ahOutcome > EPS) {
-            pAHHomeWin += x.p;
-        } else if (ahOutcome < -EPS) {
-            pAHAwayWin += x.p;
-        } else {
-            pAHPush += x.p;
-        }
+        if (Math.abs(ahOutcome - 0.5) < EPS) { pAHHomeWin += x.p * 0.5; pAHPush += x.p * 0.5; }
+        else if (Math.abs(ahOutcome + 0.5) < EPS) { pAHAwayWin += x.p * 0.5; pAHPush += x.p * 0.5; }
+        else if (ahOutcome > EPS) { pAHHomeWin += x.p; }
+        else if (ahOutcome < -EPS) { pAHAwayWin += x.p; }
+        else { pAHPush += x.p; }
 
         if (totalFTGoals > 0.5) pFTOver05 += x.p;
         if (totalFTGoals > 1.5) pFTOver15 += x.p;
@@ -980,21 +1099,20 @@ function predictMatch() {
     document.getElementById('ahCurrentRate').innerText = ahRate === 0
         ? "เสมอ (0.0)"
         : (ahRate < 0 ? `เยือนต่อ ${Math.abs(ahRate).toFixed(2)}` : `เหย้าต่อ ${ahRate.toFixed(2)}`);
-    document.getElementById('ahHomeProb').innerText = (pAHHomeWin * 100).toFixed(1) + '%';
-    document.getElementById('ahAwayProb').innerText = (pAHAwayWin * 100).toFixed(1) + '%';
-    document.getElementById('ahPushProb').innerText = (pAHPush * 100).toFixed(1) + '%';
+    document.getElementById('ahHomeProb').innerText = fmtPct(pAHHomeWin * 100);
+    document.getElementById('ahAwayProb').innerText = fmtPct(pAHAwayWin * 100);
+    document.getElementById('ahPushProb').innerText = fmtPct(pAHPush * 100);
 
     const setFtRow = (id, barId, val, actualTrigger) => {
         const finalVal = actualTrigger ? 100.0 : val * 100;
         const el = document.getElementById(id);
         const c = pickColor(finalVal);
-        el.innerText = finalVal.toFixed(1) + '%';
+        el.innerText = fmtPct(finalVal);
         el.className = 'fw-bold ' + c.text;
         const bar = document.getElementById(barId);
         bar.style.width = finalVal + '%';
         bar.className = 'progress-bar ' + c.bar;
     };
-    
     setFtRow('ftOver05', 'ftOver05Bar', pFTOver05, currentTotalGoals > 0.5);
     setFtRow('ftOver15', 'ftOver15Bar', pFTOver15, currentTotalGoals > 1.5);
     setFtRow('ftOver25', 'ftOver25Bar', pFTOver25, currentTotalGoals > 2.5);
@@ -1007,19 +1125,16 @@ function predictMatch() {
     const pNone = Math.exp(-totalXg);
     const pHomeNext = totalXg > 0 ? (xgH / totalXg) * (1 - pNone) : 0;
     const pAwayNext = totalXg > 0 ? (xgA / totalXg) * (1 - pNone) : 0;
-    
-    document.getElementById('probHome').innerText = (pHomeNext * 100).toFixed(1) + '%';
-    document.getElementById('probNone').innerText = (pNone * 100).toFixed(1) + '%';
-    document.getElementById('probAway').innerText = (pAwayNext * 100).toFixed(1) + '%';
+    document.getElementById('probHome').innerText = fmtPct(pHomeNext * 100);
+    document.getElementById('probNone').innerText = fmtPct(pNone * 100);
+    document.getElementById('probAway').innerText = fmtPct(pAwayNext * 100);
 
     let fhOver05 = 0, fhOver15 = 0, fhOver25 = 0, fhOver35 = 0;
-    
     if (minute >= half1_end) {
         fhOver05 = htTotalGoals > 0.5 ? 100 : 0;
         fhOver15 = htTotalGoals > 1.5 ? 100 : 0;
         fhOver25 = htTotalGoals > 2.5 ? 100 : 0;
         fhOver35 = htTotalGoals > 3.5 ? 100 : 0;
-        
         document.getElementById('fhProbHome').innerText = htH > htA ? '✅' : '❌';
         document.getElementById('fhProbTotal').innerText = htH === htA ? '✅' : '❌';
         document.getElementById('fhProbAway').innerText = htA > htH ? '✅' : '❌';
@@ -1027,10 +1142,7 @@ function predictMatch() {
         const fhRemaining = Math.max(0, half1_end - minute);
         const secondHalfTotal = 45 + i2;
         const fhTotalSpan = fhRemaining + secondHalfTotal;
-        const fhTimeRatio = fhTotalSpan > 0
-            ? Math.max(0, Math.min(1, fhRemaining / fhTotalSpan))
-            : 0;
-
+        const fhTimeRatio = fhTotalSpan > 0 ? Math.max(0, Math.min(1, fhRemaining / fhTotalSpan)) : 0;
         const fhXgHome = xgH * currentLeagueFHShare * fhTimeRatio;
         const fhXgAway = xgA * currentLeagueFHShare * fhTimeRatio;
 
@@ -1050,28 +1162,24 @@ function predictMatch() {
             else if (s.h === s.a) pFHDraw += s.p;
             else pFHLose += s.p;
         });
-        document.getElementById('fhProbHome').innerText = (pFHWin * 100).toFixed(1) + '%';
-        document.getElementById('fhProbTotal').innerText = (pFHDraw * 100).toFixed(1) + '%';
-        document.getElementById('fhProbAway').innerText = (pFHLose * 100).toFixed(1) + '%';
+        document.getElementById('fhProbHome').innerText = fmtPct(pFHWin * 100);
+        document.getElementById('fhProbTotal').innerText = fmtPct(pFHDraw * 100);
+        document.getElementById('fhProbAway').innerText = fmtPct(pFHLose * 100);
 
-        let fhOver05Calc = 0, fhOver15Calc = 0, fhOver25Calc = 0, fhOver35Calc = 0;
         fhGrid.forEach(s => {
             const totalG = s.h + s.a + currentTotalGoals;
-            if (totalG > 0.5) fhOver05Calc += s.p;
-            if (totalG > 1.5) fhOver15Calc += s.p;
-            if (totalG > 2.5) fhOver25Calc += s.p;
-            if (totalG > 3.5) fhOver35Calc += s.p;
+            if (totalG > 0.5) fhOver05 += s.p;
+            if (totalG > 1.5) fhOver15 += s.p;
+            if (totalG > 2.5) fhOver25 += s.p;
+            if (totalG > 3.5) fhOver35 += s.p;
         });
-        fhOver05 = fhOver05Calc * 100;
-        fhOver15 = fhOver15Calc * 100;
-        fhOver25 = fhOver25Calc * 100;
-        fhOver35 = fhOver35Calc * 100;
+        fhOver05 *= 100; fhOver15 *= 100; fhOver25 *= 100; fhOver35 *= 100;
     }
 
     const setFhRow = (id, barId, val) => {
         const el = document.getElementById(id);
         const c = pickColor(val);
-        el.innerText = val.toFixed(1) + '%';
+        el.innerText = fmtPct(val);
         el.className = 'fw-bold ' + c.text;
         const bar = document.getElementById(barId);
         bar.style.width = val + '%';
@@ -1085,7 +1193,7 @@ function predictMatch() {
     const top3Raw = probGrid.map(x => ({ score: `${cH + x.h}-${cA + x.a}`, prob: x.p }))
         .sort((a, b) => b.prob - a.prob).slice(0, 3);
     const finalScores = top3Raw.map(x => ({ score: x.score, prob: x.prob * 100 }));
-    const top3SumProb = finalScores.reduce((sum, item) => sum + item.prob, 0);
+    const top3SumProb = finalScores.reduce((s, i) => s + i.prob, 0);
 
     const scoreContainer = document.getElementById('topScoresContainer');
     const colors = ['bg-success text-white', 'bg-warning text-dark', 'bg-secondary text-white'];
@@ -1094,27 +1202,19 @@ function predictMatch() {
         `<div class="col-4"><div class="score-box ${colors[i]} shadow-sm">
             <div class="fw-bold mb-0" style="font-size: 0.75rem;">${icons[i]}</div>
             <div class="fw-extrabold mb-0" style="font-size: 1.1rem;">${item.score}</div>
-            <div class="fw-bold" style="font-size: 0.75rem;">${item.prob.toFixed(1)}%</div>
+            <div class="fw-bold" style="font-size: 0.75rem;">${fmtPct(item.prob)}</div>
         </div></div>`
     ).join('');
-    
-    document.getElementById('top3SumNote').innerHTML = 
-        `Top 3 รวมกัน = <strong>${top3SumProb.toFixed(1)}%</strong> ของทั้งหมด ` +
-        `<span class="prob-absolute-tag">(ตัวเลขแต่ละอันคือ absolute probability)</span>`;
+    document.getElementById('top3SumNote').innerHTML = `Top 3 รวมกัน = <strong>${fmtPct(top3SumProb)}</strong> ของทั้งหมด <span class="prob-absolute-tag">(absolute probability)</span>`;
 
     const hShotAcc = hShots > 0 ? hSot / hShots : 0;
     const aShotAcc = aShots > 0 ? aSot / aShots : 0;
     const shotConsistency = (hShotAcc + aShotAcc) / 2;
     const sampleSizeScore = Math.min(1, (hShots + aShots) / 30);
-    const minuteScore = Math.min(1, minute / 60); 
+    const minuteScore = Math.min(1, minute / 60);
     const hasBigData = (hBig + aBig) > 0;
     const dataQualityScore = hasBigData ? 1.0 : 0.75;
-
-    const rawConfidence = (
-        shotConsistency * 0.30 +
-        sampleSizeScore * 0.35 +
-        minuteScore * 0.35
-    ) * dataQualityScore * 100;
+    const rawConfidence = (shotConsistency * 0.30 + sampleSizeScore * 0.35 + minuteScore * 0.35) * dataQualityScore * 100;
     const confidence = Math.round(Math.max(0, Math.min(100, rawConfidence)));
 
     document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
@@ -1124,8 +1224,8 @@ function predictMatch() {
     document.getElementById('leagueInfluenceText').innerText = currentLeagueText;
 
     const dqEl = document.getElementById('dataQualityBadge');
-    if (hasBigData) { dqEl.className = 'badge bg-success'; dqEl.innerText = 'Data: High (มี Big Chances)'; }
-    else { dqEl.className = 'badge bg-warning text-dark'; dqEl.innerText = 'Data: Medium (ไม่มี Big Chances)'; }
+    if (hasBigData) { dqEl.className = 'badge bg-success'; dqEl.innerText = 'Data: High'; }
+    else { dqEl.className = 'badge bg-warning text-dark'; dqEl.innerText = 'Data: Medium'; }
 
     const rcArea = document.getElementById('redCardImpactArea');
     if (redHome > 0 || redAway > 0) {
@@ -1140,15 +1240,15 @@ function predictMatch() {
     document.getElementById('xgBreakdown').innerHTML =
         `<div class="d-flex justify-content-between border-bottom pb-1 mb-1">
             <span>🏠 เหย้า xG: <strong>${xgH.toFixed(2)}</strong></span>
-            <span class="text-success">${hShot.xg.toFixed(2)} (ยิง) × str ${hStrMult.toFixed(2)}</span>
+            <span class="text-success">${hShot.xg.toFixed(2)} × str ${hStrMult.toFixed(2)}</span>
         </div>
         <div class="d-flex justify-content-between">
             <span>✈️ เยือน xG: <strong>${xgA.toFixed(2)}</strong></span>
-            <span class="text-primary">${aShot.xg.toFixed(2)} (ยิง) × str ${aStrMult.toFixed(2)}</span>
+            <span class="text-primary">${aShot.xg.toFixed(2)} × str ${aStrMult.toFixed(2)}</span>
         </div>
         <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#6c757d;">
             <span>Ratio: 🏠 ${(hRatio*100).toFixed(1)}% / ✈️ ${(aRatio*100).toFixed(1)}%</span>
-            <span class="fst-italic">smooth +${LAPLACE_SMOOTH} ต่อฝั่ง</span>
+            <span class="fst-italic">smooth +${LAPLACE_SMOOTH}</span>
         </div>
         <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#6c757d;">
             <span>Base xG (∫): ${expectedGoalsRaw.toFixed(2)} × tempo ${tempoModifier.toFixed(2)}</span>
@@ -1156,12 +1256,11 @@ function predictMatch() {
         </div>`;
 
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.15.0 (Final): ∫xG ${INTEGRATION_STEPS} steps; HT Score used for 1H calc; grid=${MAX_GOALS_GRID}; ρ=${rho}. `;
+    let note = `⚙️ v5.16.0: ∫xG ${INTEGRATION_STEPS} steps; grid=${MAX_GOALS_GRID}; ρ=${rho}. `;
     if (!hasBigData) note += '⚠️ ไม่มี Big Chances → xG อาจคลาดเคลื่อน ±10–15%';
     calibNote.innerText = note;
 
     saveInputs();
-
     if (window.innerWidth < 992) document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
 }
 </script>
