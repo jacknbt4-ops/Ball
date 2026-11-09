@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.18.4 — Dark Edition</title>
+    <title>⚽ JackAI Scanner v5.18.5 — Dark Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,7 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         :root {
-            /* Dark palette */
             --bg-base: #0a0e1a;
             --bg-elevated: #0f172a;
             --bg-card: #131a2b;
@@ -29,7 +28,6 @@
             --text-muted: #64748b;
             --text-dim: #475569;
 
-            /* Accents */
             --emerald-400: #34d399;
             --emerald-500: #10b981;
             --emerald-600: #059669;
@@ -90,6 +88,35 @@
             font-feature-settings: "tnum";
         }
 
+        /* ============ SCROLLBAR — เห็นชัดเจน ============ */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border-left: 1px solid var(--border-subtle);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--cyan-500) 0%, var(--emerald-500) 100%);
+            border-radius: 10px;
+            border: 2px solid var(--bg-base);
+            box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+            min-height: 40px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--cyan-400) 0%, var(--emerald-400) 100%);
+            box-shadow: 0 0 14px rgba(6, 182, 212, 0.6);
+        }
+        ::-webkit-scrollbar-corner { background: transparent; }
+
+        /* Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: var(--cyan-500) rgba(255, 255, 255, 0.03);
+        }
+
         /* ============ NAVBAR ============ */
         .navbar-custom {
             height: 60px;
@@ -148,15 +175,17 @@
             overflow: hidden;
         }
         .left-panel {
-            width: 430px;
-            min-width: 430px;
+            width: 440px;
+            min-width: 440px;
             height: 100%;
             display: flex;
             flex-direction: column;
             gap: 12px;
             overflow-y: auto;
             overflow-x: hidden;
-            padding-right: 4px;
+            padding-right: 8px;
+            scrollbar-gutter: stable;
+            scroll-behavior: smooth;
         }
         .right-panel {
             flex: 1;
@@ -166,14 +195,60 @@
             gap: 12px;
             overflow-y: auto;
             overflow-x: hidden;
-            padding-right: 4px;
+            padding-right: 8px;
+            scrollbar-gutter: stable;
+            scroll-behavior: smooth;
         }
 
         @media (max-width: 991.98px) {
             html, body { overflow: auto; height: auto; }
+            body { overflow-y: auto; }
             .main-container { flex-direction: column; height: auto; overflow: visible; padding: 12px; gap: 12px; }
-            .left-panel, .right-panel { width: 100% !important; min-width: 100% !important; height: auto !important; overflow-y: visible !important; }
+            .left-panel, .right-panel {
+                width: 100% !important;
+                min-width: 100% !important;
+                height: auto !important;
+                overflow-y: visible !important;
+                padding-right: 0;
+            }
             .navbar-brand-custom { font-size: 13px; }
+            .scroll-hint { display: none !important; }
+        }
+
+        /* ============ SCROLL HINT ============ */
+        .scroll-hint {
+            position: fixed;
+            bottom: 24px;
+            left: 236px;
+            transform: translateX(-50%);
+            background: rgba(6, 182, 212, 0.18);
+            border: 1px solid var(--cyan-500);
+            color: var(--cyan-400);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounceDown 1.5s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 20px var(--cyan-glow);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .scroll-hint.hidden {
+            opacity: 0;
+            transform: translateX(-50%) translateY(20px);
+        }
+        .scroll-hint i { font-size: 16px; }
+        @keyframes bounceDown {
+            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+            50% { transform: translateX(-50%) translateY(6px); opacity: 1; }
+        }
+        .scroll-hint-right {
+            left: auto;
+            right: 40px;
         }
 
         /* ============ CARDS ============ */
@@ -269,7 +344,6 @@
             font-size: 14px;
         }
 
-        /* Team inputs */
         .team-input-home {
             border: 1.5px solid var(--emerald-600) !important;
             font-weight: 700;
@@ -293,7 +367,6 @@
             border-color: var(--cyan-400) !important;
         }
 
-        /* Red card box */
         .red-card-box {
             border: 1px solid rgba(244, 63, 94, 0.3);
             background: rgba(244, 63, 94, 0.08);
@@ -315,7 +388,6 @@
             box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.2) !important;
         }
 
-        /* Rating box */
         .rating-box {
             border: 1px solid rgba(6, 182, 212, 0.25);
             background: rgba(6, 182, 212, 0.06);
@@ -335,7 +407,6 @@
             box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15) !important;
         }
 
-        /* Auto estimate box */
         .auto-box {
             border: 1px dashed rgba(245, 158, 11, 0.4);
             background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.03));
@@ -354,7 +425,6 @@
             gap: 5px;
         }
 
-        /* HT box */
         .ht-score-box {
             border: 1px solid rgba(245, 158, 11, 0.3);
             background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.02));
@@ -781,16 +851,6 @@
         }
         .league-item:last-child { border-bottom: none; }
 
-        /* ============ SCROLLBAR ============ */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-base); }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-default);
-            border-radius: 10px;
-            border: 2px solid var(--bg-base);
-        }
-        ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
-
         /* ============ ANIMATIONS ============ */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
@@ -837,7 +897,7 @@
                 <div class="navbar-brand-custom">
                     <span class="brand-icon"><i class="bi bi-dribbble" style="font-size: 18px; color: #fff;"></i></span>
                     <span>JackAI Scanner</span>
-                    <span class="navbar-version">v5.18.4 · DARK</span>
+                    <span class="navbar-version">v5.18.5 · DARK</span>
                 </div>
             </div>
             <button class="btn btn-donate" onclick="openDonateModal()">
@@ -1106,6 +1166,10 @@
         </div>
     </div>
 
+    <!-- Scroll Hints -->
+    <div class="scroll-hint" id="scrollHintLeft"><i class="bi bi-chevron-double-down"></i></div>
+    <div class="scroll-hint scroll-hint-right" id="scrollHintRight"><i class="bi bi-chevron-double-down"></i></div>
+
     <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
@@ -1133,8 +1197,10 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.18.4 — Dark Edition
-   - โทนดาร์ก พรีเมียม พร้อม glow effect
+   JackAI Scanner v5.18.5 — Dark Edition
+   - แก้ scrollbar ครบทุกจุด (เห็นชัดเจน)
+   - เพิ่ม scroll hint indicator
+   - scrollbar-gutter: stable
    - ฟังก์ชันเดิม 100%
    ============================================================ */
 const XG_WEIGHTS = { SOT_BASE: 0.30, OFF_TARGET: 0.030, BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20 };
@@ -1173,6 +1239,7 @@ const LEAGUE_CONSTANTS = {
     'armenia premier league': { name: "อาร์มีเนีย พรีเมียร์ ลีก", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.43 },
     'ukraine premier league': { name: "ยูเครน พรีเมียร์ ลีก", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
     'north macedonia first league': { name: "นอร์ท มาซิโดเนีย เฟิร์ส ลีก", goals: 2.60, mod: 0.98, rho: -0.09, fh: 0.43 },
+    'romania liga 2': { name: "โรมาเนีย ลีกา 2", goals: 2.50, mod: 0.93, rho: -0.09, fh: 0.43 },
     'romania liga 3': { name: "โรมาเนีย ลีกา 3", goals: 2.65, mod: 1.00, rho: -0.08, fh: 0.44 },
     'romania superliga': { name: "โรมาเนีย ซูเปอร์ลีกา", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.43 },
     'slovenia division 2': { name: "สโลวีเนีย ดิวิชั่น 2", goals: 2.80, mod: 1.05, rho: -0.07, fh: 0.45 },
@@ -1232,9 +1299,7 @@ const LEAGUE_CONSTANTS = {
     'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
 
     'bulgaria first professional league': { name: "บัลแกเรีย เฟิร์สต์ โปรเฟสชันแนล", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.43 },
-    'bulgaria second professional league': { name: "บัลแกเรีย เซ็คคั่น โปรเฟสชันแนล", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
-
-    'romania liga 2': { name: "โรมาเนีย ลีกา 2", goals: 2.50, mod: 0.93, rho: -0.09, fh: 0.43 }
+    'bulgaria second professional league': { name: "บัลแกเรีย เซ็คคั่น โปรเฟสชันแนล", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 }
 };
 
 function openDonateModal() { new bootstrap.Modal(document.getElementById('donateModal')).show(); }
@@ -1382,6 +1447,30 @@ function resetInputs() {
     location.reload();
 }
 
+/* ============ SCROLL HINT ============ */
+function setupScrollHint(panelSelector, hintId) {
+    const panel = document.querySelector(panelSelector);
+    const hint = document.getElementById(hintId);
+    if (!panel || !hint) return;
+
+    function updateHint() {
+        const hasScroll = panel.scrollHeight > panel.clientHeight + 5;
+        const atBottom = panel.scrollHeight - panel.scrollTop <= panel.clientHeight + 20;
+        if (!hasScroll || atBottom) {
+            hint.classList.add('hidden');
+        } else {
+            hint.classList.remove('hidden');
+        }
+    }
+
+    panel.addEventListener('scroll', updateHint);
+    window.addEventListener('resize', updateHint);
+    updateHint();
+    // Delay after load for accurate measurement
+    setTimeout(updateHint, 300);
+    setTimeout(updateHint, 1000);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     restoreInputs();
     handleLeagueInput();
@@ -1400,6 +1489,10 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('leagueDropdown').style.display = 'none';
         }
     });
+
+    // Setup scroll hints
+    setupScrollHint('.left-panel', 'scrollHintLeft');
+    setupScrollHint('.right-panel', 'scrollHintRight');
 });
 
 function calculateRemaining(minute, i1, i2, format) {
@@ -1764,7 +1857,7 @@ function predictMatch() {
             <span class="debug-badge">conf ${confidence}%</span>
         </div>`;
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.18.4 · ∫xG ${INTEGRATION_STEPS} steps · grid=${MAX_GOALS_GRID} · ρ=${rho}`;
+    let note = `⚙️ v5.18.5 · ∫xG ${INTEGRATION_STEPS} steps · grid=${MAX_GOALS_GRID} · ρ=${rho}`;
     if (!hasBigData) note += ' · ⚠️ ไม่มี Big Chances';
     calibNote.innerText = note;
     saveInputs();
