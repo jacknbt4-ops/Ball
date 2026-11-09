@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.18.2 — Professional</title>
+    <title>⚽ JackAI Scanner v5.18.3 — Professional</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -146,7 +146,7 @@
                 <div class="navbar-brand-custom">
                     <span class="brand-icon"><i class="bi bi-dribbble" style="font-size: 16px; color: #fff;"></i></span>
                     <span>JackAI Scanner</span>
-                    <span class="navbar-version">v5.18.2</span>
+                    <span class="navbar-version">v5.18.3</span>
                 </div>
             </div>
             <button class="btn btn-donate" onclick="openDonateModal()">
@@ -442,8 +442,9 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.18.2 — Professional UI
+   JackAI Scanner v5.18.3 — Professional UI
    - เพิ่มลีกบัลแกเรีย: First Professional / Second Professional
+   - เพิ่มลีกโรมาเนีย: Liga 2
    ============================================================ */
 const XG_WEIGHTS = { SOT_BASE: 0.30, OFF_TARGET: 0.030, BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20 };
 const STRENGTH_SENSITIVITY = 0.0060, STRENGTH_MIN_MULT = 0.55, STRENGTH_MAX_MULT = 1.80;
@@ -541,7 +542,10 @@ const LEAGUE_CONSTANTS = {
 
     // 🇧🇬 Bulgaria
     'bulgaria first professional league': { name: "บัลแกเรีย เฟิร์สต์ โปรเฟสชันแนล", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.43 },
-    'bulgaria second professional league': { name: "บัลแกเรีย เซ็คคั่น โปรเฟสชันแนล", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 }
+    'bulgaria second professional league': { name: "บัลแกเรีย เซ็คคั่น โปรเฟสชันแนล", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
+
+    // 🇷🇴 Romania
+    'romania liga 2': { name: "โรมาเนีย ลีกา 2", goals: 2.50, mod: 0.93, rho: -0.09, fh: 0.43 }
 };
 
 function openDonateModal() { new bootstrap.Modal(document.getElementById('donateModal')).show(); }
@@ -1071,7 +1075,7 @@ function predictMatch() {
             <span class="debug-badge">conf ${confidence}%</span>
         </div>`;
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.18.2 · ∫xG ${INTEGRATION_STEPS} steps · grid=${MAX_GOALS_GRID} · ρ=${rho}`;
+    let note = `⚙️ v5.18.3 · ∫xG ${INTEGRATION_STEPS} steps · grid=${MAX_GOALS_GRID} · ρ=${rho}`;
     if (!hasBigData) note += ' · ⚠️ ไม่มี Big Chances';
     calibNote.innerText = note;
     saveInputs();
