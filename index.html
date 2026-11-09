@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.18.5 — Dark Edition</title>
+    <title>⚽ JackAI Scanner v5.19.1 — Professional</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,49 +12,61 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         :root {
-            --bg-base: #0a0e1a;
-            --bg-elevated: #0f172a;
-            --bg-card: #131a2b;
-            --bg-card-hover: #1a2337;
-            --bg-input: #0b1220;
-            --bg-muted: #1e293b;
+            /* Light Palette */
+            --bg-base: #f8fafc;       
+            --bg-elevated: #ffffff;
+            --bg-card: #ffffff;
+            --bg-input: #ffffff;
+            --bg-muted: #f1f5f9;      
 
-            --border-subtle: #1e2a3f;
-            --border-default: #253347;
-            --border-strong: #334155;
+            --border-subtle: #e2e8f0; 
+            --border-default: #cbd5e1;
+            --border-strong: #94a3b8; 
 
-            --text-primary: #e6edf7;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --text-dim: #475569;
+            --text-primary: #0f172a;  
+            --text-secondary: #475569;
+            --text-muted: #64748b;    
+            --text-dim: #94a3b8;      
 
+            /* Accents */
+            --emerald-50: #ecfdf5;
             --emerald-400: #34d399;
             --emerald-500: #10b981;
             --emerald-600: #059669;
-            --emerald-glow: rgba(16, 185, 129, 0.35);
+            --emerald-700: #047857;
+            --emerald-glow: rgba(16, 185, 129, 0.25);
 
+            --cyan-50: #ecfeff;
             --cyan-400: #22d3ee;
             --cyan-500: #06b6d4;
             --cyan-600: #0891b2;
-            --cyan-glow: rgba(6, 182, 212, 0.35);
+            --cyan-700: #0e7490;
+            --cyan-glow: rgba(6, 182, 212, 0.25);
 
+            --amber-50: #fffbeb;
             --amber-400: #fbbf24;
             --amber-500: #f59e0b;
             --amber-600: #d97706;
-            --amber-glow: rgba(245, 158, 11, 0.35);
+            --amber-700: #b45309;
+            --amber-glow: rgba(245, 158, 11, 0.25);
 
+            --rose-50: #fef2f2;
             --rose-400: #fb7185;
             --rose-500: #f43f5e;
             --rose-600: #e11d48;
-            --rose-glow: rgba(244, 63, 94, 0.35);
+            --rose-700: #be123c;
+            --rose-glow: rgba(244, 63, 94, 0.25);
 
-            --violet-400: #a78bfa;
-            --violet-500: #8b5cf6;
+            --blue-50: #eff6ff;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
 
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
-            --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.6), 0 4px 8px -4px rgba(0, 0, 0, 0.4);
-            --shadow-xl: 0 24px 48px -8px rgba(0, 0, 0, 0.7);
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.06), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+            --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
 
             --radius-sm: 8px;
             --radius-md: 12px;
@@ -69,10 +81,6 @@
 
         body {
             background: var(--bg-base);
-            background-image:
-                radial-gradient(circle at 0% 0%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 60%);
             color: var(--text-primary);
             font-family: 'Inter', 'IBM Plex Sans Thai', system-ui, -apple-system, sans-serif;
             font-size: 13px;
@@ -88,52 +96,32 @@
             font-feature-settings: "tnum";
         }
 
-        /* ============ SCROLLBAR — เห็นชัดเจน ============ */
-        ::-webkit-scrollbar {
-            width: 12px;
-            height: 12px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            border-left: 1px solid var(--border-subtle);
-        }
+        /* ============ SCROLLBAR — Minimal Slate ============ */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--cyan-500) 0%, var(--emerald-500) 100%);
-            border-radius: 10px;
-            border: 2px solid var(--bg-base);
-            box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
-            min-height: 40px;
+            background: #cbd5e1;
+            border-radius: 999px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+            transition: background 0.2s;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, var(--cyan-400) 0%, var(--emerald-400) 100%);
-            box-shadow: 0 0 14px rgba(6, 182, 212, 0.6);
+            background: #94a3b8;
+            background-clip: content-box;
         }
         ::-webkit-scrollbar-corner { background: transparent; }
-
-        /* Firefox */
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: var(--cyan-500) rgba(255, 255, 255, 0.03);
-        }
+        * { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
 
         /* ============ NAVBAR ============ */
         .navbar-custom {
             height: 60px;
             flex-shrink: 0;
-            background: linear-gradient(180deg, #0d1424 0%, #0a0e1a 100%);
+            background: #ffffff;
             border-bottom: 1px solid var(--border-subtle);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow-sm);
             z-index: 100;
             position: relative;
-        }
-        .navbar-custom::after {
-            content: '';
-            position: absolute;
-            bottom: -1px; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--emerald-500), var(--cyan-500), transparent);
-            opacity: 0.6;
         }
         .navbar-brand-custom {
             font-weight: 700;
@@ -147,20 +135,20 @@
         .navbar-brand-custom .brand-icon {
             width: 36px; height: 36px;
             border-radius: 12px;
-            background: linear-gradient(135deg, var(--emerald-500) 0%, var(--cyan-600) 100%);
+            background: linear-gradient(135deg, var(--emerald-500) 0%, var(--emerald-700) 100%);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 20px var(--emerald-glow), inset 0 1px 0 rgba(255,255,255,0.2);
+            box-shadow: 0 2px 8px var(--emerald-glow);
         }
         .navbar-version {
             font-size: 10px;
             font-weight: 700;
             padding: 4px 10px;
             border-radius: 999px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15));
-            color: var(--emerald-400);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: var(--bg-muted);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-default);
             letter-spacing: 0.04em;
         }
 
@@ -221,9 +209,9 @@
             bottom: 24px;
             left: 236px;
             transform: translateX(-50%);
-            background: rgba(6, 182, 212, 0.18);
-            border: 1px solid var(--cyan-500);
-            color: var(--cyan-400);
+            background: #ffffff;
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
             width: 38px;
             height: 38px;
             border-radius: 50%;
@@ -233,8 +221,7 @@
             animation: bounceDown 1.5s ease-in-out infinite;
             pointer-events: none;
             z-index: 50;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 0 20px var(--cyan-glow);
+            box-shadow: var(--shadow-md);
             transition: opacity 0.3s, transform 0.3s;
         }
         .scroll-hint.hidden {
@@ -246,33 +233,20 @@
             0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
             50% { transform: translateX(-50%) translateY(6px); opacity: 1; }
         }
-        .scroll-hint-right {
-            left: auto;
-            right: 40px;
-        }
+        .scroll-hint-right { left: auto; right: 40px; }
 
         /* ============ CARDS ============ */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-sm);
             color: var(--text-primary);
             transition: all 0.25s var(--ease-out);
-            position: relative;
-            overflow: hidden;
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
-            pointer-events: none;
         }
         .card:hover {
             border-color: var(--border-default);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-md);
         }
         .card-body { padding: 16px; }
 
@@ -287,12 +261,9 @@
             align-items: center;
             gap: 8px;
         }
-        .card-section-title i {
-            color: var(--cyan-400);
-            font-size: 13px;
-        }
+        .card-section-title i { color: var(--blue-500); font-size: 13px; }
 
-        /* ============ INPUTS ============ */
+        /* ============ INPUTS & SELECTS ============ */
         .form-control-sm, .form-select-sm {
             padding: 8px 12px;
             font-size: 13px;
@@ -305,25 +276,27 @@
         }
         .form-control-sm:hover, .form-select-sm:hover {
             border-color: var(--border-strong);
-            background: #0d1626;
         }
         .form-control-sm:focus, .form-select-sm:focus {
-            border-color: var(--cyan-500);
-            background: #0d1626;
-            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15), 0 0 20px rgba(6, 182, 212, 0.1);
+            border-color: var(--blue-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
             outline: none;
-            color: var(--text-primary);
+            background: #ffffff;
         }
         .form-control-sm::placeholder, .form-select-sm::placeholder {
             color: var(--text-dim);
         }
+
+        /* 🔥 FIX: ลบลูกศรที่ซ้ำซ้อนออก และใส่ลูกศรเส้นบางๆ แทน */
         .form-select-sm {
             font-weight: 600;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-        }
-        .form-select-sm option {
-            background: var(--bg-elevated);
-            color: var(--text-primary);
+            /* ใช้ SVG เส้นบาง สีเทา แทนลูกศรหนาๆ ของ Bootstrap */
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M4 6l4 4 4-4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 14px;
+            padding-right: 30px; /* เว้นที่ให้ลูกศร */
+            appearance: none; /* ซ่อนลูกศรของ Browser */
         }
 
         .stat-grid label {
@@ -345,39 +318,39 @@
         }
 
         .team-input-home {
-            border: 1.5px solid var(--emerald-600) !important;
+            border: 1.5px solid var(--emerald-500) !important;
             font-weight: 700;
-            color: var(--emerald-400) !important;
-            background: rgba(16, 185, 129, 0.08) !important;
+            color: var(--emerald-700) !important;
+            background: var(--emerald-50) !important;
             height: 40px;
         }
         .team-input-home:focus {
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2), 0 0 20px rgba(16, 185, 129, 0.15) !important;
-            border-color: var(--emerald-400) !important;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+            border-color: var(--emerald-600) !important;
         }
         .team-input-away {
-            border: 1.5px solid var(--cyan-600) !important;
+            border: 1.5px solid var(--blue-500) !important;
             font-weight: 700;
-            color: var(--cyan-400) !important;
-            background: rgba(6, 182, 212, 0.08) !important;
+            color: var(--blue-700) !important;
+            background: var(--blue-50) !important;
             height: 40px;
         }
         .team-input-away:focus {
-            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2), 0 0 20px rgba(6, 182, 212, 0.15) !important;
-            border-color: var(--cyan-400) !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+            border-color: var(--blue-600) !important;
         }
 
         .red-card-box {
-            border: 1px solid rgba(244, 63, 94, 0.3);
-            background: rgba(244, 63, 94, 0.08);
+            border: 1px solid #fecaca;
+            background: var(--rose-50);
             border-radius: var(--radius-md);
             padding: 6px 8px;
         }
         .red-card-input {
             border-color: var(--rose-500) !important;
             font-weight: 700;
-            color: var(--rose-400);
-            background: rgba(244, 63, 94, 0.08) !important;
+            color: var(--rose-700);
+            background: #ffffff !important;
             height: 32px;
             text-align: center;
             font-family: inherit;
@@ -389,27 +362,27 @@
         }
 
         .rating-box {
-            border: 1px solid rgba(6, 182, 212, 0.25);
-            background: rgba(6, 182, 212, 0.06);
+            border: 1px solid #bfdbfe;
+            background: var(--blue-50);
             border-radius: var(--radius-md);
             padding: 5px 10px;
         }
         .rating-box input {
-            border-color: var(--cyan-600) !important;
+            border-color: var(--blue-500) !important;
             font-weight: 800;
-            color: var(--cyan-400);
+            color: var(--blue-700);
             height: 32px;
             text-align: center;
             background: transparent;
             font-size: 16px;
         }
         .rating-box input:focus {
-            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15) !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
         }
 
         .auto-box {
-            border: 1px dashed rgba(245, 158, 11, 0.4);
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.03));
+            border: 1px dashed var(--amber-500);
+            background: var(--amber-50);
             border-radius: var(--radius-md);
             padding: 12px;
             margin-bottom: 12px;
@@ -417,7 +390,7 @@
         .auto-label {
             font-size: 10.5px;
             font-weight: 700;
-            color: var(--amber-400);
+            color: var(--amber-700);
             text-transform: uppercase;
             letter-spacing: 0.06em;
             display: inline-flex;
@@ -426,22 +399,22 @@
         }
 
         .ht-score-box {
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(245, 158, 11, 0.02));
+            border: 1px solid #fde68a;
+            background: var(--amber-50);
             border-radius: var(--radius-md);
             padding: 10px;
         }
 
         /* ============ BUTTONS ============ */
         .btn-predict {
-            background: linear-gradient(135deg, var(--rose-500) 0%, #be123c 100%);
+            background: linear-gradient(135deg, var(--rose-500) 0%, var(--rose-700) 100%);
             color: white;
             border-radius: var(--radius-md);
             padding: 13px;
             font-size: 14px;
             font-weight: 700;
             border: none;
-            box-shadow: 0 4px 16px var(--rose-glow), inset 0 1px 0 rgba(255,255,255,0.2);
+            box-shadow: 0 4px 12px var(--rose-glow);
             transition: all 0.2s var(--ease-out);
             letter-spacing: 0.02em;
             display: flex;
@@ -450,9 +423,9 @@
             gap: 8px;
         }
         .btn-predict:hover {
-            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+            background: linear-gradient(135deg, var(--rose-600) 0%, #9f1239 100%);
             transform: translateY(-1px);
-            box-shadow: 0 8px 24px var(--rose-glow), inset 0 1px 0 rgba(255,255,255,0.2);
+            box-shadow: 0 6px 16px var(--rose-glow);
             color: white;
         }
         .btn-predict:active { transform: translateY(0); }
@@ -465,7 +438,7 @@
             border-radius: 999px;
             padding: 7px 16px;
             font-size: 12px;
-            box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            box-shadow: 0 2px 10px rgba(236, 72, 153, 0.3);
             transition: all 0.2s var(--ease-out);
             display: inline-flex;
             align-items: center;
@@ -474,7 +447,7 @@
         .btn-donate:hover {
             transform: translateY(-1px) scale(1.03);
             color: white;
-            box-shadow: 0 6px 20px rgba(236, 72, 153, 0.5);
+            box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4);
         }
 
         .btn-reset {
@@ -484,7 +457,7 @@
             padding: 9px;
             font-size: 12px;
             font-weight: 600;
-            background: var(--bg-elevated);
+            background: #ffffff;
             transition: all 0.15s var(--ease-out);
             display: flex;
             align-items: center;
@@ -510,41 +483,41 @@
             border: 1px solid transparent;
         }
         .badge-pill-custom.bg-secondary {
-            background: rgba(148, 163, 184, 0.12) !important;
-            border-color: rgba(148, 163, 184, 0.25) !important;
+            background: var(--bg-muted) !important;
+            border-color: var(--border-default) !important;
             color: var(--text-secondary) !important;
         }
         .badge-pill-custom.bg-info {
-            background: rgba(6, 182, 212, 0.12) !important;
-            border-color: rgba(6, 182, 212, 0.3) !important;
-            color: var(--cyan-400) !important;
+            background: var(--blue-50) !important;
+            border-color: #bfdbfe !important;
+            color: var(--blue-700) !important;
         }
         .badge-pill-custom.bg-success {
-            background: rgba(16, 185, 129, 0.12) !important;
-            border-color: rgba(16, 185, 129, 0.3) !important;
-            color: var(--emerald-400) !important;
+            background: var(--emerald-50) !important;
+            border-color: #a7f3d0 !important;
+            color: var(--emerald-700) !important;
         }
         .badge-pill-custom.bg-warning {
-            background: rgba(245, 158, 11, 0.12) !important;
-            border-color: rgba(245, 158, 11, 0.3) !important;
-            color: var(--amber-400) !important;
+            background: var(--amber-50) !important;
+            border-color: #fde68a !important;
+            color: var(--amber-700) !important;
         }
         .badge-pill-custom.bg-danger {
-            background: rgba(244, 63, 94, 0.12) !important;
-            border-color: rgba(244, 63, 94, 0.3) !important;
-            color: var(--rose-400) !important;
+            background: var(--rose-50) !important;
+            border-color: #fecaca !important;
+            color: var(--rose-700) !important;
         }
         .badge-pill-custom.bg-primary {
-            background: rgba(59, 130, 246, 0.12) !important;
-            border-color: rgba(59, 130, 246, 0.3) !important;
-            color: #60a5fa !important;
+            background: var(--blue-50) !important;
+            border-color: #bfdbfe !important;
+            color: var(--blue-700) !important;
         }
 
         /* ============ RESULT HEADER ============ */
         .result-header {
-            background: linear-gradient(135deg, #0f1c33 0%, #0a1220 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
             color: var(--text-primary);
-            border: 1px solid var(--border-default);
+            border: 1px solid var(--border-subtle);
             position: relative;
             overflow: hidden;
         }
@@ -553,16 +526,7 @@
             position: absolute;
             top: -60px; right: -60px;
             width: 220px; height: 220px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .result-header::after {
-            content: '';
-            position: absolute;
-            bottom: -60px; left: -60px;
-            width: 200px; height: 200px;
-            background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
             border-radius: 50%;
             pointer-events: none;
         }
@@ -581,7 +545,7 @@
             z-index: 1;
         }
         .result-header .result-meta strong {
-            color: var(--amber-400);
+            color: var(--amber-600);
             font-weight: 700;
         }
         .result-header .d-flex { position: relative; z-index: 1; }
@@ -599,7 +563,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.04em;
-            opacity: 0.75;
+            opacity: 0.8;
         }
         .prob-card .prob-value {
             font-size: 18px;
@@ -609,24 +573,24 @@
         }
 
         .next-goal-home, .fh-home {
-            background: rgba(16, 185, 129, 0.1);
-            border-color: rgba(16, 185, 129, 0.35);
-            color: var(--emerald-400);
+            background: var(--emerald-50);
+            border-color: #a7f3d0;
+            color: var(--emerald-700);
         }
         .next-goal-none {
-            background: rgba(148, 163, 184, 0.08);
-            border-color: rgba(148, 163, 184, 0.25);
+            background: var(--bg-muted);
+            border-color: var(--border-default);
             color: var(--text-secondary);
         }
         .next-goal-away, .fh-away {
-            background: rgba(6, 182, 212, 0.1);
-            border-color: rgba(6, 182, 212, 0.35);
-            color: var(--cyan-400);
+            background: var(--blue-50);
+            border-color: #bfdbfe;
+            color: var(--blue-700);
         }
         .fh-draw {
-            background: rgba(245, 158, 11, 0.1);
-            border-color: rgba(245, 158, 11, 0.35);
-            color: var(--amber-400);
+            background: var(--amber-50);
+            border-color: #fde68a;
+            color: var(--amber-700);
         }
 
         /* ============ SCORE BOX ============ */
@@ -638,58 +602,36 @@
             box-shadow: var(--shadow-md);
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
         }
         .score-box::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%);
+            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 60%);
             pointer-events: none;
         }
         .score-box .score-icon { font-size: 15px; line-height: 1; }
         .score-box .score-value { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-top: 2px; }
         .score-box .score-prob { font-size: 11.5px; font-weight: 700; opacity: 0.95; margin-top: 2px; }
 
-        .score-gold {
-            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
-        }
-        .score-silver {
-            background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
-            box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
-        }
-        .score-bronze {
-            background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
-            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
-        }
+        .score-gold { background: linear-gradient(135deg, var(--emerald-500) 0%, var(--emerald-700) 100%); }
+        .score-silver { background: linear-gradient(135deg, var(--amber-500) 0%, var(--amber-700) 100%); }
+        .score-bronze { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); }
 
         /* ============ PROGRESS ============ */
         .progress {
             border-radius: 999px;
             overflow: hidden;
-            background: var(--bg-input);
+            background: var(--bg-muted);
         }
         .progress-bar {
             border-radius: 999px;
             transition: width 0.6s var(--ease-out);
         }
-        .progress-bar.bg-success {
-            background: linear-gradient(90deg, var(--emerald-600), var(--emerald-400)) !important;
-            box-shadow: 0 0 10px var(--emerald-glow);
-        }
-        .progress-bar.bg-warning {
-            background: linear-gradient(90deg, var(--amber-600), var(--amber-400)) !important;
-            box-shadow: 0 0 10px var(--amber-glow);
-        }
-        .progress-bar.bg-danger {
-            background: linear-gradient(90deg, #be123c, var(--rose-400)) !important;
-            box-shadow: 0 0 10px var(--rose-glow);
-        }
-        .progress-bar.bg-orange {
-            background: linear-gradient(90deg, #ea580c, #fb923c) !important;
-            box-shadow: 0 0 10px rgba(251, 146, 60, 0.35);
-        }
+        .progress-bar.bg-success { background: linear-gradient(90deg, var(--emerald-600), var(--emerald-400)) !important; }
+        .progress-bar.bg-warning { background: linear-gradient(90deg, var(--amber-600), var(--amber-400)) !important; }
+        .progress-bar.bg-danger { background: linear-gradient(90deg, var(--rose-700), var(--rose-400)) !important; }
+        .progress-bar.bg-orange { background: linear-gradient(90deg, #ea580c, #fb923c) !important; }
 
         .prob-row-label {
             font-size: 11px;
@@ -699,11 +641,11 @@
 
         /* ============ AH RATE ============ */
         .ah-rate-box {
-            background: linear-gradient(135deg, var(--bg-input) 0%, #0d1626 100%);
+            background: var(--bg-muted);
             border-radius: var(--radius-md);
             padding: 10px;
             text-align: center;
-            border: 1px solid var(--border-default);
+            border: 1px solid var(--border-subtle);
         }
         .ah-rate-box .ah-label {
             font-size: 10px;
@@ -715,61 +657,52 @@
         .ah-rate-box .ah-value {
             font-size: 20px;
             font-weight: 800;
-            color: var(--cyan-400);
+            color: var(--blue-600);
             letter-spacing: -0.02em;
             margin-top: 2px;
-            text-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
         }
 
         /* ============ EMPTY STATE ============ */
         .empty-state {
-            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
-            border: 1px solid var(--border-subtle);
+            background: #ffffff;
+            border: 2px dashed var(--border-default);
             border-radius: var(--radius-xl);
             position: relative;
             overflow: hidden;
         }
-        .empty-state::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 30%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
-            pointer-events: none;
-        }
         .empty-state .empty-icon {
             font-size: 64px;
-            color: var(--cyan-500);
-            opacity: 0.5;
-            filter: drop-shadow(0 0 20px var(--cyan-glow));
+            color: var(--border-strong);
+            opacity: 0.6;
             animation: pulseGlow 3s ease-in-out infinite;
         }
         @keyframes pulseGlow {
-            0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 20px var(--cyan-glow)); }
-            50% { opacity: 0.7; filter: drop-shadow(0 0 30px var(--cyan-glow)); }
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
         }
 
         /* ============ ALERTS ============ */
         .warn-box {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.3);
+            background: var(--amber-50);
+            border: 1px solid #fde68a;
             border-radius: var(--radius-md);
             padding: 10px 14px;
             font-size: 11.5px;
-            color: var(--amber-400);
+            color: var(--amber-700);
             font-weight: 500;
         }
         .alert-danger {
             border-radius: var(--radius-md) !important;
-            background: rgba(244, 63, 94, 0.1) !important;
-            border-color: rgba(244, 63, 94, 0.3) !important;
-            color: var(--rose-400) !important;
+            background: var(--rose-50) !important;
+            border-color: #fecaca !important;
+            color: var(--rose-700) !important;
             font-size: 12px !important;
         }
 
         /* ============ MISC ============ */
         .xh-highlight {
             font-size: 11.5px;
-            background: var(--bg-input);
+            background: var(--bg-muted);
             padding: 12px 14px;
             border-radius: var(--radius-md);
             border: 1px solid var(--border-subtle);
@@ -777,7 +710,7 @@
         }
         .calib-note {
             font-size: 10.5px;
-            color: var(--text-dim);
+            color: var(--text-muted);
             font-style: italic;
         }
         .top3-sum-note {
@@ -790,13 +723,13 @@
         .prob-absolute-tag { font-size: 9px; opacity: 0.6; }
         .debug-badge {
             font-size: 9px;
-            background: rgba(6, 182, 212, 0.15);
-            color: var(--cyan-400);
+            background: var(--bg-muted);
+            color: var(--text-secondary);
             padding: 2px 7px;
             border-radius: 4px;
             font-weight: 700;
             letter-spacing: 0.03em;
-            border: 1px solid rgba(6, 182, 212, 0.3);
+            border: 1px solid var(--border-default);
         }
 
         .team-section-label {
@@ -810,12 +743,12 @@
             letter-spacing: 0.05em;
         }
         .team-section-home {
-            color: var(--emerald-400);
-            border-color: var(--emerald-600);
+            color: var(--emerald-700);
+            border-color: var(--emerald-500);
         }
         .team-section-away {
-            color: var(--cyan-400);
-            border-color: var(--cyan-600);
+            color: var(--blue-700);
+            border-color: var(--blue-500);
         }
 
         /* ============ LEAGUE DROPDOWN ============ */
@@ -825,10 +758,10 @@
             max-height: 280px;
             overflow-y: auto;
             width: 100%;
-            background: var(--bg-elevated);
+            background: #ffffff;
             border: 1px solid var(--border-default);
             border-radius: 0 0 var(--radius-md) var(--radius-md);
-            box-shadow: var(--shadow-xl);
+            box-shadow: var(--shadow-lg);
             display: none;
         }
         .league-item {
@@ -840,11 +773,11 @@
             color: var(--text-primary);
         }
         .league-item:hover {
-            background: linear-gradient(90deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
-            border-left: 2px solid var(--cyan-500);
+            background: var(--blue-50);
+            border-left: 2px solid var(--blue-500);
         }
         .league-item small {
-            color: var(--text-dim);
+            color: var(--text-muted);
             font-size: 10.5px;
             display: block;
             margin-top: 2px;
@@ -868,25 +801,22 @@
 
         /* ============ MODAL ============ */
         .donate-box {
-            border: 2px dashed rgba(244, 114, 182, 0.5);
+            border: 2px dashed #fbcfe8;
             border-radius: var(--radius-lg);
             padding: 24px;
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(244, 63, 94, 0.04) 100%);
+            background: #fdf2f8;
         }
         .modal-content {
             border-radius: var(--radius-lg) !important;
             overflow: hidden;
-            background: var(--bg-card) !important;
-            border: 1px solid var(--border-default) !important;
+            border: none !important;
         }
         .modal-header {
             border: none !important;
             padding: 18px 22px;
             background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
         }
-        .modal-body { padding: 26px !important; color: var(--text-primary); }
-        .modal-body .text-secondary { color: var(--text-secondary) !important; }
-        .modal-body .text-dark { color: var(--text-primary) !important; }
+        .modal-body { padding: 26px !important; }
         .btn-close-white { filter: brightness(0) invert(1); }
     </style>
 </head>
@@ -897,7 +827,7 @@
                 <div class="navbar-brand-custom">
                     <span class="brand-icon"><i class="bi bi-dribbble" style="font-size: 18px; color: #fff;"></i></span>
                     <span>JackAI Scanner</span>
-                    <span class="navbar-version">v5.18.5 · DARK</span>
+                    <span class="navbar-version">v5.19.1</span>
                 </div>
             </div>
             <button class="btn btn-donate" onclick="openDonateModal()">
@@ -912,13 +842,13 @@
                 <div class="row g-2 mb-3">
                     <div class="col-6">
                         <label class="stat-grid" style="display:block;">
-                            <label style="font-size:10px;color:var(--emerald-400);font-weight:700;margin-bottom:5px;">🏠 ทีมเหย้า</label>
+                            <label style="font-size:10px;color:var(--emerald-700);font-weight:700;margin-bottom:5px;">🏠 ทีมเหย้า</label>
                             <input type="text" id="home_name" class="form-control form-control-sm team-input-home" value="ทีมเหย้า" placeholder="ทีมเหย้า">
                         </label>
                     </div>
                     <div class="col-6">
                         <label class="stat-grid" style="display:block;">
-                            <label style="font-size:10px;color:var(--cyan-400);font-weight:700;margin-bottom:5px;">✈️ ทีมเยือน</label>
+                            <label style="font-size:10px;color:var(--blue-700);font-weight:700;margin-bottom:5px;">✈️ ทีมเยือน</label>
                             <input type="text" id="away_name" class="form-control form-control-sm team-input-away" value="ทีมเยือน" placeholder="ทีมเยือน">
                         </label>
                     </div>
@@ -939,27 +869,29 @@
                             <input type="number" id="auto_live_weight" class="form-control form-control-sm text-center" value="30" min="0" max="100">
                         </div>
                     </div>
-                    <div id="autoResult" class="mt-2" style="font-size:11px; color:var(--amber-400); display:none; font-weight:600;"></div>
+                    <div id="autoResult" class="mt-2" style="font-size:11px; color:var(--amber-700); display:none; font-weight:600;"></div>
                 </div>
 
                 <div class="row g-2 mb-3">
                     <div class="col-6">
-                        <label class="fw-bold" style="font-size:10px; color:var(--emerald-400); text-transform:uppercase; letter-spacing:0.05em;">🏠 ความแข็งแกร่งเหย้า</label>
-                        <div class="rating-box"><input type="number" id="home_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div>
+                        <label class="fw-bold" style="font-size:10px; color:var(--emerald-700); text-transform:uppercase; letter-spacing:0.05em;">🏠 ความแข็งแกร่งเหย้า</label>
+                        <div class="rating-box" style="border-color:#a7f3d0;background:var(--emerald-50);">
+                            <input type="number" id="home_strength" class="form-control form-control-sm" style="color:var(--emerald-700);border-color:var(--emerald-500)!important;" value="70" min="0" max="100">
+                        </div>
                     </div>
                     <div class="col-6">
-                        <label class="fw-bold" style="font-size:10px; color:var(--cyan-400); text-transform:uppercase; letter-spacing:0.05em;">✈️ ความแข็งแกร่งเยือน</label>
+                        <label class="fw-bold" style="font-size:10px; color:var(--blue-700); text-transform:uppercase; letter-spacing:0.05em;">✈️ ความแข็งแกร่งเยือน</label>
                         <div class="rating-box"><input type="number" id="away_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div>
                     </div>
                 </div>
 
                 <div class="row g-2 mb-1">
                     <div class="col-7 position-relative">
-                        <input type="text" id="leagueSearch" class="form-control form-control-sm" style="color:var(--cyan-400);font-weight:700;" placeholder="-- ค้นหาชื่อลีก --" autocomplete="off">
+                        <input type="text" id="leagueSearch" class="form-control form-control-sm" style="color:var(--blue-600);font-weight:700;" placeholder="-- ค้นหาชื่อลีก --" autocomplete="off">
                         <div id="leagueDropdown" class="league-dropdown"></div>
                     </div>
                     <div class="col-5">
-                        <select id="handicapSelect" class="form-select form-select-sm" style="color:var(--amber-400);font-weight:700;">
+                        <select id="handicapSelect" class="form-select form-select-sm" style="color:var(--amber-600);font-weight:700;">
                             <option value="0">AH: 0.0</option>
                             <option value="0.25">AH: 0.25</option>
                             <option value="0.5">AH: 0.5</option>
@@ -981,33 +913,33 @@
                     </div>
                 </div>
                 <div id="leagueResult" class="mb-3 mt-1" style="font-size: 11px;">
-                    <span style="color:var(--amber-400);font-weight:700;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>
+                    <span style="color:var(--amber-700);font-weight:700;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>
                 </div>
 
                 <div class="row g-2 mb-3 ht-score-box">
-                    <div class="col-12 text-center fw-bold" style="font-size:11px;color:var(--amber-400);">
+                    <div class="col-12 text-center fw-bold" style="font-size:11px;color:var(--amber-700);">
                         <i class="bi bi-clock-history"></i> สกอร์ครึ่งแรก (HT Score)
                     </div>
                     <div class="col-6">
                         <div class="stat-grid text-center">
-                            <label style="color:var(--emerald-400);">เหย้า (HT)</label>
-                            <input type="number" id="ht_home_score" class="form-control form-control-sm" style="color:var(--emerald-400);" value="0" min="0">
+                            <label style="color:var(--emerald-700);">เหย้า (HT)</label>
+                            <input type="number" id="ht_home_score" class="form-control form-control-sm" style="color:var(--emerald-700);" value="0" min="0">
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-grid text-center">
-                            <label style="color:var(--cyan-400);">เยือน (HT)</label>
-                            <input type="number" id="ht_away_score" class="form-control form-control-sm" style="color:var(--cyan-400);" value="0" min="0">
+                            <label style="color:var(--blue-700);">เยือน (HT)</label>
+                            <input type="number" id="ht_away_score" class="form-control form-control-sm" style="color:var(--blue-700);" value="0" min="0">
                         </div>
                     </div>
                 </div>
 
                 <div class="row g-2 mb-3">
-                    <div class="col-3"><div class="stat-grid text-center"><label>นาที</label><input type="number" id="match_minute" class="form-control form-control-sm" style="color:var(--rose-400);" value="0" min="0" max="120"></div></div>
-                    <div class="col-3"><div class="stat-grid text-center"><label style="color:var(--amber-400);">ทด 1H</label><input type="number" id="injury_1" class="form-control form-control-sm" style="color:var(--amber-400);" value="0" min="0" max="15"></div></div>
-                    <div class="col-3"><div class="stat-grid text-center"><label style="color:var(--amber-400);">ทด 2H</label><input type="number" id="injury_2" class="form-control form-control-sm" style="color:var(--amber-400);" value="0" min="0" max="15"></div></div>
-                    <div class="col-3"><div class="stat-grid text-center"><label style="color:var(--cyan-400);">รูปแบบ</label>
-                        <select id="match_format" class="form-select form-select-sm" style="padding: 7px 4px; height: 36px; font-size: 11px; color:var(--cyan-400); font-weight:700;">
+                    <div class="col-3"><div class="stat-grid text-center"><label>นาที</label><input type="number" id="match_minute" class="form-control form-control-sm" style="color:var(--rose-600);" value="0" min="0" max="120"></div></div>
+                    <div class="col-3"><div class="stat-grid text-center"><label style="color:var(--amber-600);">ทด 1H</label><input type="number" id="injury_1" class="form-control form-control-sm" style="color:var(--amber-600);" value="0" min="0" max="15"></div></div>
+                    <div class="col-3"><div class="stat-grid text-center"><label style="color:var(--amber-600);">ทด 2H</label><input type="number" id="injury_2" class="form-control form-control-sm" style="color:var(--amber-600);" value="0" min="0" max="15"></div></div>
+                    <div class="col-3"><div class="stat-grid text-center"><label style="color:var(--blue-600);">รูปแบบ</label>
+                        <select id="match_format" class="form-select form-select-sm" style="padding: 7px 20px 7px 8px; height: 36px; font-size: 11px; color:var(--blue-600); font-weight:700; background-position: right 4px center; background-size: 12px;">
                             <option value="90">90 นาที</option>
                             <option value="120">120 นาที</option>
                         </select>
@@ -1015,12 +947,12 @@
                 </div>
 
                 <div class="row g-2 mb-3">
-                    <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เหย้า</label><input type="number" id="current_home_score" class="form-control form-control-sm" style="color:var(--emerald-400);" value="0" min="0"></div></div>
-                    <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เยือน</label><input type="number" id="current_away_score" class="form-control form-control-sm" style="color:var(--cyan-400);" value="0" min="0"></div></div>
+                    <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เหย้า</label><input type="number" id="current_home_score" class="form-control form-control-sm" style="color:var(--emerald-700);" value="0" min="0"></div></div>
+                    <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เยือน</label><input type="number" id="current_away_score" class="form-control form-control-sm" style="color:var(--blue-700);" value="0" min="0"></div></div>
                     <div class="col-4">
                         <div class="red-card-box d-flex gap-2 h-100 align-items-end pb-1 px-2">
-                            <div class="flex-fill text-center"><label class="fw-bold" style="font-size: 10px; margin-bottom: 3px; color:var(--rose-400);">แดง🏠</label><input type="number" id="red_home" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
-                            <div class="flex-fill text-center"><label class="fw-bold" style="font-size: 10px; margin-bottom: 3px; color:var(--rose-400);">แดง✈️</label><input type="number" id="red_away" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
+                            <div class="flex-fill text-center"><label class="fw-bold" style="font-size: 10px; margin-bottom: 3px; color:var(--rose-600);">แดง🏠</label><input type="number" id="red_home" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
+                            <div class="flex-fill text-center"><label class="fw-bold" style="font-size: 10px; margin-bottom: 3px; color:var(--rose-600);">แดง✈️</label><input type="number" id="red_away" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
                         </div>
                     </div>
                 </div>
@@ -1030,16 +962,16 @@
                         <div class="team-section-label team-section-home">🏠 เหย้า</div>
                         <div class="stat-grid d-flex flex-column gap-2">
                             <div><label>ยิงทั้งหมด</label><input type="number" id="h_shots" class="form-control form-control-sm" value="0" min="0"></div>
-                            <div><label style="color:var(--rose-400);font-weight:700;">ยิงตรงกรอบ</label><input type="number" id="h_sot" class="form-control form-control-sm" style="border: 1.5px solid var(--rose-600) !important; color:var(--rose-400);" value="0" min="0"></div>
-                            <div><label style="color:var(--amber-400);font-weight:700;">Big Chances</label><input type="number" id="h_big" class="form-control form-control-sm" style="border: 1.5px solid var(--amber-600) !important; color:var(--amber-400);" value="0" min="0"></div>
+                            <div><label style="color:var(--rose-600);font-weight:700;">ยิงตรงกรอบ</label><input type="number" id="h_sot" class="form-control form-control-sm" style="border: 1.5px solid #fca5a5 !important; color:var(--rose-700);" value="0" min="0"></div>
+                            <div><label style="color:var(--amber-600);font-weight:700;">Big Chances</label><input type="number" id="h_big" class="form-control form-control-sm" style="border: 1.5px solid #fcd34d !important; color:var(--amber-700);" value="0" min="0"></div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="team-section-label team-section-away">✈️ เยือน</div>
                         <div class="stat-grid d-flex flex-column gap-2">
                             <div><label>ยิงทั้งหมด</label><input type="number" id="a_shots" class="form-control form-control-sm" value="0" min="0"></div>
-                            <div><label style="color:var(--rose-400);font-weight:700;">ยิงตรงกรอบ</label><input type="number" id="a_sot" class="form-control form-control-sm" style="border: 1.5px solid var(--rose-600) !important; color:var(--rose-400);" value="0" min="0"></div>
-                            <div><label style="color:var(--amber-400);font-weight:700;">Big Chances</label><input type="number" id="a_big" class="form-control form-control-sm" style="border: 1.5px solid var(--amber-600) !important; color:var(--amber-400);" value="0" min="0"></div>
+                            <div><label style="color:var(--rose-600);font-weight:700;">ยิงตรงกรอบ</label><input type="number" id="a_sot" class="form-control form-control-sm" style="border: 1.5px solid #fca5a5 !important; color:var(--rose-700);" value="0" min="0"></div>
+                            <div><label style="color:var(--amber-600);font-weight:700;">Big Chances</label><input type="number" id="a_big" class="form-control form-control-sm" style="border: 1.5px solid #fcd34d !important; color:var(--amber-700);" value="0" min="0"></div>
                         </div>
                     </div>
                 </div>
@@ -1184,7 +1116,7 @@
                             <img src="https://www.truemoney.com/wp-content/uploads/2023/02/truemoney_logo_1x.png" alt="TrueMoney" style="height: 40px; object-fit: contain;" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/TrueMoney_Logo.svg/512px-TrueMoney_Logo.svg.png'">
                         </div>
                         <h6 class="fw-bold mb-1" style="font-size:13px;color:var(--text-primary);">พร้อมเพย์ / ทรูมันนี่ วอลเล็ท</h6>
-                        <h4 class="fw-extrabold mb-3" style="letter-spacing:0.05em;color:var(--rose-400);text-shadow:0 0 20px var(--rose-glow);">094-475-4282</h4>
+                        <h4 class="fw-extrabold mb-3" style="letter-spacing:0.05em;color:var(--rose-600);">094-475-4282</h4>
                         <button class="btn btn-outline-danger fw-bold w-100" onclick="copyDonateNumber()">
                             <i class="bi bi-clipboard-check"></i> คัดลอกเบอร์โอนเงิน
                         </button>
@@ -1197,11 +1129,7 @@
 
 <script>
 /* ============================================================
-   JackAI Scanner v5.18.5 — Dark Edition
-   - แก้ scrollbar ครบทุกจุด (เห็นชัดเจน)
-   - เพิ่ม scroll hint indicator
-   - scrollbar-gutter: stable
-   - ฟังก์ชันเดิม 100%
+   JackAI Scanner v5.19.1 — Light Edition (Arrow Fixed)
    ============================================================ */
 const XG_WEIGHTS = { SOT_BASE: 0.30, OFF_TARGET: 0.030, BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20 };
 const STRENGTH_SENSITIVITY = 0.0060, STRENGTH_MIN_MULT = 0.55, STRENGTH_MAX_MULT = 1.80;
@@ -1368,12 +1296,12 @@ function handleLeagueInput() {
     if (selectedLeagueKey === 'default' || !LEAGUE_CONSTANTS[selectedLeagueKey]) {
         currentLeagueAvgGoals = 2.70; currentLeagueText = "ลีกมาตรฐาน";
         currentLeagueRho = -0.08; currentLeagueFHShare = 0.44;
-        resultEl.innerHTML = '<span style="color:var(--amber-400);font-weight:700;font-size:11px;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>';
+        resultEl.innerHTML = '<span style="color:var(--amber-700);font-weight:700;font-size:11px;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>';
     } else {
         const v = LEAGUE_CONSTANTS[selectedLeagueKey];
         currentLeagueAvgGoals = v.goals; currentLeagueText = v.name;
         currentLeagueRho = v.rho; currentLeagueFHShare = v.fh;
-        resultEl.innerHTML = `<span style="color:var(--cyan-400);font-weight:700;font-size:11px;"><i class="bi bi-check-circle-fill"></i> ${v.name} · ${v.goals} ประตู/เกม · ρ=${v.rho} · 1H ${(v.fh*100).toFixed(0)}%</span>`;
+        resultEl.innerHTML = `<span style="color:var(--blue-700);font-weight:700;font-size:11px;"><i class="bi bi-check-circle-fill"></i> ${v.name} · ${v.goals} ประตู/เกม · ρ=${v.rho} · 1H ${(v.fh*100).toFixed(0)}%</span>`;
     }
 }
 
@@ -1466,7 +1394,6 @@ function setupScrollHint(panelSelector, hintId) {
     panel.addEventListener('scroll', updateHint);
     window.addEventListener('resize', updateHint);
     updateHint();
-    // Delay after load for accurate measurement
     setTimeout(updateHint, 300);
     setTimeout(updateHint, 1000);
 }
@@ -1490,7 +1417,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Setup scroll hints
     setupScrollHint('.left-panel', 'scrollHintLeft');
     setupScrollHint('.right-panel', 'scrollHintRight');
 });
@@ -1841,12 +1767,12 @@ function predictMatch() {
     } else rcArea.classList.add('d-none');
     document.getElementById('xgBreakdown').innerHTML =
         `<div class="d-flex justify-content-between border-bottom pb-1 mb-1" style="border-color:var(--border-subtle) !important;">
-            <span>🏠 เหย้า xG: <strong style="color:var(--emerald-400);">${xgH.toFixed(2)}</strong></span>
-            <span style="color:var(--emerald-400);">${hShot.xg.toFixed(2)} × str ${hStrMult.toFixed(2)}</span>
+            <span>🏠 เหย้า xG: <strong style="color:var(--emerald-700);">${xgH.toFixed(2)}</strong></span>
+            <span style="color:var(--emerald-700);">${hShot.xg.toFixed(2)} × str ${hStrMult.toFixed(2)}</span>
         </div>
         <div class="d-flex justify-content-between">
-            <span>✈️ เยือน xG: <strong style="color:var(--cyan-400);">${xgA.toFixed(2)}</strong></span>
-            <span style="color:var(--cyan-400);">${aShot.xg.toFixed(2)} × str ${aStrMult.toFixed(2)}</span>
+            <span>✈️ เยือน xG: <strong style="color:var(--blue-700);">${xgA.toFixed(2)}</strong></span>
+            <span style="color:var(--blue-700);">${aShot.xg.toFixed(2)} × str ${aStrMult.toFixed(2)}</span>
         </div>
         <div class="d-flex justify-content-between mt-2 pt-2 border-top" style="font-size:10.5px; color:var(--text-muted); border-color:var(--border-subtle) !important;">
             <span>Ratio: 🏠 ${(hRatio*100).toFixed(1)}% / ✈️ ${(aRatio*100).toFixed(1)}%</span>
@@ -1857,7 +1783,7 @@ function predictMatch() {
             <span class="debug-badge">conf ${confidence}%</span>
         </div>`;
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.18.5 · ∫xG ${INTEGRATION_STEPS} steps · grid=${MAX_GOALS_GRID} · ρ=${rho}`;
+    let note = `⚙️ v5.19.1 · ∫xG ${INTEGRATION_STEPS} steps · grid=${MAX_GOALS_GRID} · ρ=${rho}`;
     if (!hasBigData) note += ' · ⚠️ ไม่มี Big Chances';
     calibNote.innerText = note;
     saveInputs();
