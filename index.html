@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v5.16.0 - Final Fixed Edition</title>
+    <title>⚽ JackAI Scanner v5.17.0 - No-API Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
     <style>
         html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
         body { background-color: #f8f9fa; color: #212529; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, system-ui, -apple-system, Roboto; display: flex; flex-direction: column; font-size: 0.85rem; }
@@ -64,22 +63,13 @@
         .btn-donate { background: linear-gradient(45deg, #ff8a00, #e52e71); color: white; border: none; font-weight: bold; border-radius: 20px; padding: 4px 16px; font-size: 0.8rem; box-shadow: 0 2px 5px rgba(229, 46, 113, 0.4); transition: transform 0.2s; }
         .btn-donate:hover { transform: scale(1.05); color: white; }
         .donate-box { border: 2px dashed #e52e71; border-radius: 12px; padding: 20px; background: #fff0f5; }
-        #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
-        .spin { display: inline-block; animation: spin 1s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-    <div id="loadingOverlay">
-        <div class="spinner-border text-primary mb-2" style="width: 2rem; height: 2rem;" role="status"></div>
-        <h6 class="fw-bold text-dark">🤖 AI กำลังสแกนตัวเลขจากภาพ...</h6>
-        <p class="text-muted small" id="ocrProgress" style="font-size: 0.75rem;">กำลังเตรียมการ...</p>
-    </div>
-
     <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">
-                <i class="bi bi-globe2"></i> JackAI Scanner v5.16.0
+                <i class="bi bi-globe2"></i> JackAI Scanner v5.17.0
             </span>
             <button class="btn btn-donate" onclick="openDonateModal()">
                 <i class="bi bi-heart-fill text-white"></i> สนับสนุน
@@ -93,30 +83,6 @@
                 <div class="row g-2 mb-2">
                     <div class="col-6"><input type="text" id="home_name" class="form-control form-control-sm border-success fw-bold text-success" value="ทีมเหย้า" placeholder="ทีมเหย้า" style="border-width: 2px;"></div>
                     <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary" value="ทีมเยือน" placeholder="ทีมเยือน" style="border-width: 2px;"></div>
-                </div>
-
-                <!-- ระบบดึงข้อมูลอัตโนมัติ (API & OCR) -->
-                <div class="mb-2 p-2 rounded border bg-light">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <label class="text-primary fw-bold mb-0" style="font-size: 0.7rem;"><i class="bi bi-cloud-download"></i> ดึงข้อมูลอัตโนมัติ</label>
-                        <small class="text-muted" style="font-size: 0.6rem;">🔒 key เก็บในเครื่องคุณเท่านั้น</small>
-                    </div>
-                    
-                    <div class="input-group input-group-sm mb-1">
-                        <input type="password" id="apiKey" class="form-control form-control-sm" placeholder="4dc631e4e03403e5d4205b3415539903">
-                        <button class="btn btn-primary fw-bold text-white btn-sm" type="button" onclick="loadLiveMatches()" id="btnLoadLive" style="font-size: 0.75rem;"><i class="bi bi-arrow-repeat"></i> โหลด</button>
-                    </div>
-                    <select id="liveMatchSelect" class="form-select form-select-sm mb-2" onchange="onSelectLiveMatch()" disabled>
-                        <option value="">-- กดปุ่ม "โหลด" เพื่อดึงคู่สด --</option>
-                    </select>
-
-                    <div class="upload-zone border rounded p-2 text-center" style="border: 1px dashed #3b82f6; background: #eff6ff; cursor: pointer;" onclick="document.getElementById('graphUpload').click()">
-                        <i class="bi bi-image text-primary"></i> <span class="fw-bold ms-1" style="font-size: 0.75rem; color: #3b82f6;">หรืออัปโหลดภาพกราฟ (OCR)</span>
-                        <img id="graphPreview" class="mx-auto" alt="Preview" style="max-width: 100%; border-radius: 4px; display: none; margin-top: 5px; max-height: 60px; object-fit: contain;">
-                    </div>
-                    <input type="file" id="graphUpload" accept="image/*" class="d-none" onchange="processImage(event)">
-                    
-                    <div id="apiStatus" class="mt-1 text-muted" style="font-size:0.65rem;">พร้อมใช้งาน</div>
                 </div>
 
                 <div class="auto-box">
@@ -343,7 +309,6 @@
                 </div>
                 <div class="modal-body text-center p-4">
                     <p class="mb-3 text-secondary">หากโปรแกรม JackAI Scanner นี้มีประโยชน์กับคุณ <br>คุณสามารถเลี้ยงกาแฟหรือสนับสนุนค่าพัฒนาได้ที่:</p>
-                    
                     <div class="donate-box text-center mb-3">
                         <div class="mb-3">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/TrueMoney_Logo.svg/512px-TrueMoney_Logo.svg.png" alt="TrueMoney" style="height: 50px; object-fit: contain;" onerror="this.style.display='none'">
@@ -354,7 +319,6 @@
                             <i class="bi bi-clipboard-check"></i> คัดลอกเบอร์โอนเงิน
                         </button>
                     </div>
-                    
                     <small class="text-muted">ขอบคุณที่สนับสนุนครับ ❤️</small>
                 </div>
             </div>
@@ -362,29 +326,8 @@
     </div>
 
 <script>
-/* ============================================================
-   JackAI Scanner v5.16.0 — Fixed Edition
-   Changes from v5.15:
-   - [FIX] Removed hardcoded API key (user must provide)
-   - [FIX] Removed poss_slider reference (doesn't exist)
-   - [FIX] Implemented loadLiveMatches() and onSelectLiveMatch()
-   - [FIX] Auto-match league name while typing
-   - [FIX] Warning shown when no league selected
-   - [NEW] fmtPct() shows <5% / >95% for extremes
-   - [NEW] OCR summary in status bar
-   - [NEW] FACT[] lookup table (faster factorial)
-   - [NEW] Coefficient source comments
-   - [UI] More Thai language, better labels
-   ============================================================ */
+/* JackAI Scanner v5.17.0 — No-API Edition */
 
-/**
- * 🔬 Coeffient Sources:
- * - BIG_CHANCE = 0.34 : StatsBomb (2020) "Quantifying Big Chances" ~0.32–0.36
- * - SOT_NON_BIG = 0.20 : Opta/Understat average xG per non-big SOT
- * - OFF_TARGET = 0.030 : Karun Singh (2019) "Introducing xG" ~0.02–0.04
- * - STRENGTH_SENSITIVITY = 0.006 : Heuristic; should be backtested
- * - RED_CARD multipliers : Heuristic based on 10v11 historical samples
- */
 const XG_WEIGHTS = { SOT_BASE: 0.30, OFF_TARGET: 0.030, BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20 };
 const STRENGTH_SENSITIVITY = 0.0060, STRENGTH_MIN_MULT = 0.55, STRENGTH_MAX_MULT = 1.80;
 const RED_CARD_ATTACK_MULT = 0.78, RED_CARD_DEFENSE_MULT = 1.18;
@@ -393,7 +336,6 @@ const MAX_GOALS_GRID = 12, MAX_FH_GOALS_GRID = 6;
 const EPS = 0.001, LAPLACE_SMOOTH = 0.35;
 const INTEGRATION_STEPS = 20, TEMPO_0_0_LATE_MINUTE = 75, TEMPO_0_0_LATE_BOOST = 1.05;
 
-// ✅ [FIX] FACT lookup table แทน factorial() loop
 const FACT = [1];
 for (let i = 1; i <= 30; i++) FACT[i] = FACT[i-1] * i;
 
@@ -434,7 +376,6 @@ const LEAGUE_CONSTANTS = {
     'czech national football league': { name: "เช็ก เนชั่นแนล ฟุตบอล ลีก", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.44 },
     'azerbaijan premier league': { name: "อาร์เซอร์ไบจัน พรีเมียร์ ลีก", goals: 2.40, mod: 0.92, rho: -0.10, fh: 0.42 },
     'uzbekistan super league': { name: "อุซเบกิสถาน ซุปเปอร์ ลีก", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
-    
     'thai league': { name: "ไทยลีก", goals: 2.95, mod: 1.10, rho: -0.06, fh: 0.46 },
     'j1 league': { name: "เจลีก J1", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
     'j2 league': { name: "เจลีก J2", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
@@ -452,7 +393,6 @@ const LEAGUE_CONSTANTS = {
     'kuwait premier league': { name: "คูเวต พรีเมียร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
     'vietnam league 1': { name: "เวียดนาม ลีก 1", goals: 2.35, mod: 0.88, rho: -0.10, fh: 0.42 },
     'indonesia super league': { name: "อินโดนีเซีย ซูเปอร์ ลีก", goals: 2.80, mod: 1.08, rho: -0.06, fh: 0.45 },
-    
     'bolivia primera division': { name: "โบลิเวีย ปริมารา ดิวิชั่น", goals: 2.97, mod: 1.10, rho: -0.06, fh: 0.45 },
     'chile primera division': { name: "ชิลี ปริมารา ดิวิชั่น", goals: 2.76, mod: 1.02, rho: -0.07, fh: 0.45 },
     'peru liga 1': { name: "เปรู ลีกา 1", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
@@ -464,19 +404,16 @@ const LEAGUE_CONSTANTS = {
     'paraguay primera division': { name: "ปารากวัย ปริมารา ดิวิชั่น", goals: 2.33, mod: 0.86, rho: -0.11, fh: 0.41 },
     'colombia primera a': { name: "โคลอมเบีย ปริมารา เอ", goals: 2.16, mod: 0.80, rho: -0.12, fh: 0.40 },
     'liga profesional': { name: "อาร์เจนตินา ลีกา โปรเฟสชันนัล", goals: 1.94, mod: 0.72, rho: -0.13, fh: 0.39 },
-    
     'mexico liga de expansion': { name: "เม็กซิโก ลีกา เด เอ็กซ์แพนชั่น", goals: 2.60, mod: 0.95, rho: -0.08, fh: 0.44 },
     'costa rica primera division': { name: "คอสตาริก้า พรีเมียร์ ดิวิชั่น", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
     'el salvador primera division': { name: "เอล ซัลวาดอร์ พรีเมียร์ ดิวิชั่น", goals: 2.40, mod: 0.92, rho: -0.08, fh: 0.43 },
     'honduras liga nacional': { name: "ฮอนดูลาส ลีก้า นาเชียนยอล", goals: 2.55, mod: 0.95, rho: -0.08, fh: 0.44 },
     'guatemala liga nacional': { name: "กัวเตมาลา ลีกา นาซิอองนาล", goals: 2.45, mod: 0.93, rho: -0.08, fh: 0.43 },
-
     'mls': { name: "เมเจอร์ลีกซอกเกอร์ (MLS)", goals: 3.12, mod: 1.14, rho: -0.05, fh: 0.46 },
     'a league': { name: "เอ-ลีก ออสเตรเลีย", goals: 3.05, mod: 1.12, rho: -0.05, fh: 0.46 },
     'australia championship': { name: "ออสเตรเลีย แชมเปี้ยนชิพ", goals: 2.90, mod: 1.08, rho: -0.07, fh: 0.45 },
     'morocco botola pro': { name: "โมรอคโค โบโตลา โปร", goals: 2.20, mod: 0.85, rho: -0.11, fh: 0.41 },
     'egypt cup': { name: "อียิปต์ คัพ", goals: 2.30, mod: 0.85, rho: -0.11, fh: 0.41 },
-    
     'uefa europa': { name: "ยูฟ่า ยูโรปา ลีก", goals: 2.80, mod: 1.00, rho: -0.07, fh: 0.45 },
     'uefa conference': { name: "ยูฟ่า คอนเฟอเรนซ์", goals: 2.75, mod: 1.00, rho: -0.07, fh: 0.45 },
     'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
@@ -494,14 +431,12 @@ function copyDonateNumber() {
     });
 }
 
-// ✅ [NEW] Helper สำหรับแสดง % ให้ดูเป็นธรรมชาติ (ลด over-precision)
 function fmtPct(val) {
     if (val < 0.5) return '<0.5%';
     if (val > 99.5) return '>99.5%';
     return val.toFixed(0) + '%';
 }
 
-// ✅ [NEW] Auto-match league name
 function tryAutoMatchLeague(query) {
     if (!query || query.trim().length < 2) return;
     const q = query.trim().toLowerCase();
@@ -518,7 +453,6 @@ function renderDropdown(query = '') {
     const dropdown = document.getElementById('leagueDropdown');
     dropdown.innerHTML = '';
     const lowerQuery = query.toLowerCase();
-
     if (query.trim() === '') { dropdown.style.display = 'none'; return; }
 
     const filtered = Object.entries(LEAGUE_CONSTANTS).filter(([key, val]) =>
@@ -615,9 +549,8 @@ function showCalcError(msg) {
 }
 function clearCalcError() { document.getElementById('calcError').classList.add('d-none'); }
 
-// ✅ [FIX] เพิ่ม apiKey ใน INPUT_IDS
-const STORAGE_KEY = 'jackai_inputs_v16';
-const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight','apiKey'];
+const STORAGE_KEY = 'jackai_inputs_v17';
+const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
 
 function saveInputs() {
     const data = {};
@@ -653,10 +586,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const leagueSearch = document.getElementById('leagueSearch');
     leagueSearch.addEventListener('input', (e) => {
         renderDropdown(e.target.value);
-        // ✅ [FIX] auto-match ถ้าพิมพ์ตรง
         tryAutoMatchLeague(e.target.value);
     });
-    // ✅ [FIX] กด Enter เพื่อ auto-match
     leagueSearch.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             tryAutoMatchLeague(e.target.value);
@@ -724,7 +655,7 @@ function autoEstimateStrength() {
     const ahImpact = -ah * 15;
     const homeBase = Math.max(20, Math.min(95, 70 + ahImpact));
     const awayBase = Math.max(20, Math.min(95, 70 - ahImpact));
-    
+
     const minute = Math.min(120, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
     const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
     const cA = Math.max(0, parseInt(document.getElementById('current_away_score').value, 10) || 0);
@@ -732,7 +663,7 @@ function autoEstimateStrength() {
     const aShots = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
     const hSot = Math.max(0, parseInt(document.getElementById('h_sot').value, 10) || 0);
     const aSot = Math.max(0, parseInt(document.getElementById('a_sot').value, 10) || 0);
-    
+
     let liveAdjHome = 0, liveAdjAway = 0;
     if (minute > 0) {
         liveAdjHome += (cH - cA) * 2.0;
@@ -742,198 +673,22 @@ function autoEstimateStrength() {
         liveAdjHome += (hSot - aSot) * 0.8;
         liveAdjAway -= (hSot - aSot) * 0.8;
     }
-    
+
     const liveWeight = Math.min(100, Math.max(0, parseFloat(document.getElementById('auto_live_weight').value) || 30)) / 100;
     const baseWeight = 1 - liveWeight;
-    
+
     const finalHome = Math.max(20, Math.min(95, homeBase * baseWeight + (homeBase + liveAdjHome) * liveWeight));
     const finalAway = Math.max(20, Math.min(95, awayBase * baseWeight + (awayBase + liveAdjAway) * liveWeight));
-    
+
     document.getElementById('home_strength').value = Math.round(finalHome);
     document.getElementById('away_strength').value = Math.round(finalAway);
-    
+
     const el = document.getElementById('autoResult');
     el.style.display = 'block';
     el.innerHTML = `🏠 <strong>${Math.round(finalHome)}</strong> (Base ${homeBase.toFixed(0)} ${liveAdjHome>=0?'+':''}${liveAdjHome.toFixed(1)} Live) &nbsp;|&nbsp; ✈️ <strong>${Math.round(finalAway)}</strong> (Base ${awayBase.toFixed(0)} ${liveAdjAway>=0?'+':''}${liveAdjAway.toFixed(1)} Live)`;
     saveInputs();
 }
 
-// ==========================================
-// 🌐 [NEW] LIVE API — RapidAPI (api-football-v1)
-// ==========================================
-async function loadLiveMatches() {
-    const apiKey = document.getElementById('apiKey').value.trim();
-    if (!apiKey) { alert('⚠️ กรุณาใส่ API Key ก่อนครับ\n\n(รับฟรีได้ที่ rapidapi.com → ค้นหา "API-Football")'); return; }
-
-    const btn = document.getElementById('btnLoadLive');
-    const sel = document.getElementById('liveMatchSelect');
-    const statusEl = document.getElementById('apiStatus');
-    btn.disabled = true; btn.innerHTML = '<i class="bi bi-arrow-repeat spin"></i> กำลังโหลด...';
-    statusEl.innerText = '🔄 กำลังดึงข้อมูล...';
-
-    try {
-        const res = await fetch('https://api-football-v1.p.rapidapi.com/v3/fixtures?live=all', {
-            method: 'GET',
-            headers: {
-                'X-RapidAPI-Key': apiKey,
-                'X-RapidAPI-Host': 'api-football-v1.p.rapidapi.com'
-            }
-        });
-
-        if (!res.ok) {
-            if (res.status === 403 || res.status === 401) throw new Error('API Key ไม่ถูกต้องหรือหมดอายุ');
-            if (res.status === 429) throw new Error('ใช้โควต้าเกินแล้ว (รอสักครู่)');
-            throw new Error(`HTTP ${res.status}`);
-        }
-
-        const data = await res.json();
-        if (!data.response || data.response.length === 0) {
-            sel.innerHTML = '<option value="">ไม่พบคู่ที่กำลังแข่งตอนนี้</option>';
-            statusEl.innerText = 'ℹ️ ไม่มีคู่สด';
-            return;
-        }
-
-        sel.innerHTML = '<option value="">-- เลือกคู่ที่ต้องการ --</option>';
-        data.response.forEach(fixture => {
-            const opt = document.createElement('option');
-            opt.value = JSON.stringify({
-                home: fixture.teams.home.name,
-                away: fixture.teams.away.name,
-                goalsHome: fixture.goals.home,
-                goalsAway: fixture.goals.away,
-                minute: fixture.fixture.status.elapsed,
-                league: fixture.league?.name || ''
-            });
-            const min = fixture.fixture.status.elapsed || 0;
-            opt.textContent = `${fixture.teams.home.name} ${fixture.goals.home ?? 0}-${fixture.goals.away ?? 0} ${fixture.teams.away.name} (${min}') — ${fixture.league?.name || ''}`;
-            sel.appendChild(opt);
-        });
-        sel.disabled = false;
-        statusEl.innerHTML = `<span class="text-success">✅ โหลดแล้ว ${data.response.length} คู่</span>`;
-    } catch (e) {
-        console.error('[Live]', e);
-        statusEl.innerHTML = `<span class="text-danger">❌ ${e.message}</span>`;
-        alert('โหลดไม่สำเร็จ: ' + e.message);
-    } finally {
-        btn.disabled = false; btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> โหลด';
-    }
-}
-
-function onSelectLiveMatch() {
-    const sel = document.getElementById('liveMatchSelect');
-    if (!sel.value) return;
-    try {
-        const f = JSON.parse(sel.value);
-        document.getElementById('home_name').value = f.home;
-        document.getElementById('away_name').value = f.away;
-        document.getElementById('current_home_score').value = f.goalsHome ?? 0;
-        document.getElementById('current_away_score').value = f.goalsAway ?? 0;
-        document.getElementById('match_minute').value = f.minute || 0;
-
-        // ✅ [NEW] Auto-match league จากชื่อที่ API ส่งมา
-        if (f.league) {
-            const leagueName = f.league.toLowerCase();
-            const key = Object.keys(LEAGUE_CONSTANTS).find(k =>
-                LEAGUE_CONSTANTS[k].name.includes(f.league) ||
-                leagueName.includes(k) ||
-                k.includes(leagueName.replace(/\s+/g, ' '))
-            );
-            if (key) {
-                selectedLeagueKey = key;
-                document.getElementById('leagueSearch').value = LEAGUE_CONSTANTS[key].name;
-                handleLeagueInput();
-                document.getElementById('apiStatus').innerHTML = `<span class="text-success">✅ โหลดคู่และจับคู่ลีก "${LEAGUE_CONSTANTS[key].name}" แล้ว</span>`;
-            } else {
-                document.getElementById('apiStatus').innerHTML = `<span class="text-warning">⚠️ โหลดคู่แล้ว แต่ไม่พบลีก "${f.league}" ในระบบ — โปรดเลือกเอง</span>`;
-            }
-        }
-        saveInputs();
-    } catch (e) {
-        console.error('[Select]', e);
-    }
-}
-
-// ==========================================
-// 📷 OCR
-// ==========================================
-async function processImage(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = e => {
-        document.getElementById('graphPreview').src = e.target.result;
-        document.getElementById('graphPreview').style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-
-    const overlay = document.getElementById('loadingOverlay');
-    const progressText = document.getElementById('ocrProgress');
-    const statusEl = document.getElementById('apiStatus');
-    overlay.style.display = 'flex';
-
-    try {
-        const worker = await Tesseract.createWorker('eng', 1, {
-            logger: m => { if (m.status === 'recognizing text') progressText.innerText = `สแกน... ${Math.round(m.progress * 100)}%`; }
-        });
-        const ret = await worker.recognize(file);
-        await worker.terminate();
-        
-        const text = ret.data.text;
-        const lower = text.toLowerCase();
-        console.log("[OCR] raw:", text);
-
-        const readValues = [];
-        const timeMatch = text.match(/(\d{1,3})[':]\d{2}/);
-        if (timeMatch) {
-            document.getElementById('match_minute').value = parseInt(timeMatch[1], 10);
-            readValues.push(`นาที: ${timeMatch[1]}`);
-        }
-
-        const scoreMatch = text.match(/(\d+)\s*[:\-]\s*(\d+)/);
-        if (scoreMatch) {
-            document.getElementById('current_home_score').value = parseInt(scoreMatch[1], 10);
-            document.getElementById('current_away_score').value = parseInt(scoreMatch[2], 10);
-            readValues.push(`สกอร์: ${scoreMatch[1]}-${scoreMatch[2]}`);
-        }
-
-        text.split('\n').forEach(line => {
-            const ln = line.toLowerCase();
-            const nums = line.match(/\d+/g);
-            if (nums && nums.length >= 2) {
-                const hN = parseInt(nums[0], 10), aN = parseInt(nums[1], 10);
-                if (ln.includes('shots on target') || ln.includes('shots on goal') || ln.includes('sot')) {
-                    document.getElementById('h_sot').value = hN;
-                    document.getElementById('a_sot').value = aN;
-                    readValues.push(`SOT: ${hN}/${aN}`);
-                } else if (ln.includes('shots') && !ln.includes('off')) {
-                    document.getElementById('h_shots').value = hN;
-                    document.getElementById('a_shots').value = aN;
-                    readValues.push(`ยิง: ${hN}/${aN}`);
-                }
-            }
-        });
-
-        overlay.style.display = 'none';
-
-        // ✅ [NEW] OCR Summary
-        if (readValues.length > 0) {
-            statusEl.innerHTML = `<span class="text-success">✅ OCR อ่านได้:</span> ${readValues.join(' | ')} — <strong>โปรดตรวจสอบค่าก่อนคำนวณ</strong>`;
-        } else {
-            statusEl.innerHTML = `<span class="text-warning">⚠️ OCR อ่านได้แต่ไม่พบตัวเลขที่รู้จัก — โปรดกรอกเอง</span>`;
-        }
-        saveInputs();
-
-    } catch (error) {
-        console.error("OCR Error:", error);
-        alert("ไม่สามารถสแกนรูปภาพได้ กรุณากรอกตัวเลขด้วยตัวเองครับ");
-        overlay.style.display = 'none';
-    }
-}
-
-// ==========================================
-// 🎯 PREDICT (Logic หลัก — คงเดิมจาก v5.15)
-// ==========================================
 function predictMatch() {
     clearCalcError();
 
@@ -1256,7 +1011,7 @@ function predictMatch() {
         </div>`;
 
     const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v5.16.0: ∫xG ${INTEGRATION_STEPS} steps; grid=${MAX_GOALS_GRID}; ρ=${rho}. `;
+    let note = `⚙️ v5.17.0: ∫xG ${INTEGRATION_STEPS} steps; grid=${MAX_GOALS_GRID}; ρ=${rho}. `;
     if (!hasBigData) note += '⚠️ ไม่มี Big Chances → xG อาจคลาดเคลื่อน ±10–15%';
     calibNote.innerText = note;
 
