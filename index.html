@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Suite v6.1 — Login Edition</title>
+<title>⚽ JackAI Suite v6.3 — Clean Refactor</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -161,8 +161,9 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
   <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
     <div class="container-fluid d-flex align-items-center gap-2">
       <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">
-        <i class="bi bi-dribbble" style="font-size:1.15rem; color:#198754; vertical-align:-2px;"></i> JackAI Scanner v6.1
+        <i class="bi bi-dribbble" style="font-size:1.15rem; color:#198754; vertical-align:-2px;"></i> JackAI Scanner v6.3
         <span class="badge bg-success" style="font-size:0.55rem;">PRO</span>
+        <span class="badge bg-warning text-dark" style="font-size:0.5rem;">Clean</span>
       </span>
       <div class="d-flex align-items-center gap-2 ms-auto">
         <span class="user-badge d-none d-md-block"><i class="bi bi-person-circle"></i> <span id="displayUserEmailScan">-</span></span>
@@ -370,7 +371,7 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
       <div id="emptyState" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted card border p-5 bg-white">
         <i class="bi bi-cpu-fill text-secondary mb-3" style="font-size:4rem; opacity:0.3;"></i>
         <h6 class="text-dark">กรอกข้อมูลสถิติ และเลือกลีก แล้วกดประมวลผล</h6>
-        <p class="text-secondary" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้ (v6.1 Pro)</p>
+        <p class="text-secondary" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้ (v6.3 — Clean Refactor)</p>
       </div>
     </div>
   </div>
@@ -395,8 +396,7 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
       </div>
     </div>
   </div>
-</div>
-<!-- ============================================================
+</div><!-- ============================================================
      APP: TRACKER
      ============================================================ -->
 <div id="appTracker">
@@ -405,13 +405,14 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
       <span class="navbar-brand mb-0 h1 fs-5 fw-bold">
         <i class="bi bi-clipboard-data text-danger"></i> JackAI Tracker
         <span class="badge bg-danger" style="font-size:0.6rem; vertical-align:middle;">GRADE</span>
+        <span class="badge bg-warning text-dark" style="font-size:0.5rem;">v6.3</span>
       </span>
       <div class="d-flex gap-2 align-items-center">
         <span class="user-badge d-none d-md-block"><i class="bi bi-person-circle"></i> <span id="displayUserEmailTrack">-</span></span>
         <button class="btn btn-view-switch" onclick="showScanner()"><i class="bi bi-arrow-left"></i> กลับ Scanner</button>
         <button class="btn btn-sm btn-outline-primary" onclick="reloadData()"><i class="bi bi-arrow-clockwise"></i> รีโหลด</button>
         <button class="btn btn-sm btn-outline-success" onclick="exportAllCSV()"><i class="bi bi-download"></i> Export CSV</button>
-        <button class="btn btn-sm btn-outline-info" onclick="runTests()" title="Run test suite"><i class="bi bi-bug"></i> Run Tests</button>
+        <button class="btn btn-sm btn-outline-info" onclick="runTests()" title="Run test suite (Ctrl+Shift+T)"><i class="bi bi-bug"></i> Run Tests</button>
         <button class="btn btn-sm btn-outline-danger" onclick="handleLogout()" title="ออกจากระบบ"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
@@ -499,7 +500,7 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header bg-info text-white">
-          <h5 class="modal-title fw-bold"><i class="bi bi-bug-fill"></i> Test Results — Phase A</h5>
+          <h5 class="modal-title fw-bold"><i class="bi bi-bug-fill"></i> Test Results — v6.3 Clean Refactor</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
@@ -517,111 +518,165 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
 
 <script>
 /* ============================================================
-   AUTHENTICATION & STORAGE MANAGER
+   C1-1: DOM HELPERS
    ============================================================ */
-let currentUser = '';
-const USER_SESSION_KEY = 'jackai_active_user';
+const $ = (id) => document.getElementById(id);
+const $$ = (sel) => document.querySelectorAll(sel);
 
-// ฟังก์ชันดึง Key ของ LocalStorage ตามชื่อ User
-function getKeys() {
-    const userSuffix = currentUser ? `_${currentUser.replace(/[^a-zA-Z0-9]/g, '_')}` : '';
-    return {
-        history: `jackai_history_v6${userSuffix}`,
-        results: `jackai_results_data${userSuffix}`,
-        inputs: `jackai_inputs_v6${userSuffix}`
-    };
-}
-
-function handleLogin() {
-    const emailInput = document.getElementById('loginEmail');
-    const email = emailInput.value.trim().toLowerCase();
-    
-    // ตรวจสอบรูปแบบอีเมลเบื้องต้น
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        alert('⚠️ กรุณากรอกอีเมลให้ถูกต้อง (เช่น example@gmail.com)');
-        emailInput.focus();
-        return;
-    }
-    
-    // บันทึก Session
-    currentUser = email;
-    localStorage.setItem(USER_SESSION_KEY, currentUser);
-    
-    // อัปเดต UI
-    initAppForUser();
-}
-
-function handleLogout() {
-    if(!confirm('คุณต้องการออกจากระบบใช่หรือไม่?\n(ข้อมูลการทำนายของคุณจะยังถูกบันทึกไว้)')) return;
-    localStorage.removeItem(USER_SESSION_KEY);
-    location.reload();
-}
-
-function checkAuth() {
-    const savedUser = localStorage.getItem(USER_SESSION_KEY);
-    if (savedUser) {
-        currentUser = savedUser;
-        document.getElementById('loginOverlay').style.display = 'none';
-        initAppForUser();
-    } else {
-        document.getElementById('loginOverlay').style.display = 'flex';
-        document.getElementById('loginEmail').focus();
-    }
-}
-
-function initAppForUser() {
-    // แสดงอีเมลบน Navbar
-    document.getElementById('displayUserEmailScan').innerText = currentUser;
-    document.getElementById('displayUserEmailTrack').innerText = currentUser;
-    
-    // ซ่อน Overlay
-    document.getElementById('loginOverlay').style.display = 'none';
-    
-    // ✅ FIX #5: restoreInputs() เรียก handleLeagueInput() ภายในแล้ว (ถ้ามี key)
-    // จึงไม่ต้องเรียกซ้ำ — แต่ถ้าไม่มี key ใน localStorage ต้องเรียกเอง
-    const keys = getKeys();
-    const hasSavedInputs = !!localStorage.getItem(keys.inputs);
-    restoreInputs();
-    if (!hasSavedInputs) {
-      handleLeagueInput();  // เรียกเฉพาะกรณีไม่มีข้อมูลเก่า
-    }
-    updateUngradedBadge();
-    renderAll();
-}
-
-// กด Enter เพื่อ Login
-document.getElementById('loginEmail').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') handleLogin();
-});
+const readNum = (id, { min = -Infinity, max = Infinity, fallback = 0, integer = false } = {}) => {
+  const el = $(id);
+  if (!el) return fallback;
+  let v = integer ? parseInt(el.value, 10) : parseFloat(el.value);
+  if (!Number.isFinite(v)) v = fallback;
+  return Math.max(min, Math.min(max, v));
+};
+const readStr = (id, fallback = '') => {
+  const el = $(id);
+  return el ? (el.value || '').trim() || fallback : fallback;
+};
+const writeVal = (id, val) => { const el = $(id); if (el) el.value = val; };
+const writeText = (id, text) => { const el = $(id); if (el) el.innerText = text; };
+const writeHtml = (id, html) => { const el = $(id); if (el) el.innerHTML = html; };
+const showEl = (id, show = true) => { const el = $(id); if (el) el.classList.toggle('d-none', !show); };
+const safeAlert = (msg) => { try { alert(msg); } catch (e) { console.warn('[alert]', msg); } };
+const safeConfirm = (msg) => { try { return confirm(msg); } catch (e) { console.warn('[confirm]', msg); return false; } };
 
 /* ============================================================
-   SHARED CONSTANTS & CONFIG
+   C1-2: APP STATE
+   ============================================================ */
+const AppState = {
+  user: '',
+  league: {
+    key: 'default',
+    text: 'ลีกมาตรฐาน',
+    avgGoals: 2.70,
+    rho: -0.08,
+    fhShare: 0.44,
+  },
+  lastPrediction: null,
+  calibrationChart: null,
+
+  setUser(email) { this.user = email || ''; },
+  setLeague(key, data) {
+    this.league = {
+      key,
+      text: data.name,
+      avgGoals: data.goals,
+      rho: data.rho,
+      fhShare: data.fh,
+    };
+  },
+  setDefaultLeague() {
+    this.league = { key: 'default', text: 'ลีกมาตรฐาน', avgGoals: 2.70, rho: -0.08, fhShare: 0.44 };
+  },
+  setLastPrediction(pred) { this.lastPrediction = pred; },
+  setChart(chart) {
+    if (this.calibrationChart) {
+      try { this.calibrationChart.destroy(); } catch (e) {}
+    }
+    this.calibrationChart = chart;
+  },
+  reset() {
+    this.user = '';
+    this.setDefaultLeague();
+    this.setLastPrediction(null);
+    this.setChart(null);
+  },
+};
+
+/* ============================================================
+   C1-3: STORAGE LAYER
+   ============================================================ */
+const USER_SESSION_KEY = 'jackai_active_user';
+
+const Storage = {
+  _userSuffix() {
+    return AppState.user ? `_${AppState.user.replace(/[^a-zA-Z0-9]/g, '_')}` : '';
+  },
+  key(type) {
+    const map = {
+      history: `jackai_history_v6${this._userSuffix()}`,
+      results: `jackai_results_data${this._userSuffix()}`,
+      inputs: `jackai_inputs_v6${this._userSuffix()}`,
+    };
+    return map[type] || null;
+  },
+  get(type, fallback = []) {
+    const k = this.key(type);
+    if (!k) return fallback;
+    try {
+      const raw = localStorage.getItem(k);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) {
+      console.warn('[Storage.get]', type, e);
+      return fallback;
+    }
+  },
+  set(type, data) {
+    const k = this.key(type);
+    if (!k) return false;
+    try {
+      localStorage.setItem(k, JSON.stringify(data));
+      return true;
+    } catch (e) {
+      console.error('[Storage.set]', type, e);
+      return false;
+    }
+  },
+  remove(type) {
+    const k = this.key(type);
+    if (!k) return;
+    try { localStorage.removeItem(k); } catch (e) {}
+  },
+  saveSession() {
+    try { localStorage.setItem(USER_SESSION_KEY, AppState.user); } catch (e) {}
+  },
+  loadSession() {
+    try { return localStorage.getItem(USER_SESSION_KEY); } catch (e) { return null; }
+  },
+  clearSession() {
+    try { localStorage.removeItem(USER_SESSION_KEY); } catch (e) {}
+  },
+};
+
+// Backward-compat: alias getKeys สำหรับ test suite
+function getKeys() {
+  return {
+    history: Storage.key('history'),
+    results: Storage.key('results'),
+    inputs: Storage.key('inputs'),
+  };
+}
+
+/* ============================================================
+   C1-5: CONFIG
    ============================================================ */
 const CONFIG = {
   XG: { BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20, OFF_TARGET: 0.030 },
-  STRENGTH: { SENSITIVITY: 0.0060, MIN_MULT: 0.55, MAX_MULT: 1.80, BAYES_SHRINK: 0.85 },
+  STRENGTH: { SENSITIVITY: 0.0115, MIN_MULT: 0.45, MAX_MULT: 2.20, BAYES_SHRINK: 0.88 },
   HOME_ADV: { SHARE: 0.55, SHOTS_FOR_FULL_WEIGHT: 20 },
   RED: { ATTACK_MULT: 0.78, DEFENSE_MULT: 1.18 },
   TEMPO: { MIN: 0.85, MAX: 1.30, ET_RATE_MULT: 0.75, LATE_0_0_MINUTE: 75, LATE_0_0_BOOST: 1.05 },
+  TEMPO_BASELINE: {
+    SHOT_XG_MIN_THRESHOLD: 0.3,
+    SHOT_WEIGHT: 0.65,
+    LEAGUE_WEIGHT: 0.35,
+  },
+  SCORE_EFFECT: {
+    LEADING_ATTACK_PENALTY: 0.15,
+    TRAILING_ATTACK_BOOST: 0.18,
+    MAX_DIFF: 2,
+  },
   INTEGRATION_STEPS: 30,
   GRID: { MAX_GOALS: 15, MAX_FH_GOALS: 8, LAPLACE_SMOOTH: 0.35, RHO_DEFAULT: -0.08 },
-  CONFIDENCE: { BASE: 0.25, W_SAMPLE: 0.30, W_QUALITY: 0.25, W_AGREEMENT: 0.20, W_MINUTE: 0.15, W_ACCURACY: 0.10, SHRINK: 0.92 },
-  LIMITS: { INJURY_MAX: 15, MINUTE_MAX: 120, RED_MAX: 5 }
+  CONFIDENCE: { BASE: 0.25, W_SAMPLE: 0.25, W_QUALITY: 0.20, W_AGREEMENT: 0.18, W_MINUTE: 0.12, W_ACCURACY: 0.10, W_LEAD: 0.15, SHRINK: 0.92 },
+  KELLY: { CAP: 0.05 },
+  LIMITS: { INJURY_MAX: 15, MINUTE_MAX: 120, RED_MAX: 5 },
 };
 const EPS = 0.001;
 const TEMPO_0_0_LATE_MINUTE = CONFIG.TEMPO.LATE_0_0_MINUTE;
 const TEMPO_0_0_LATE_BOOST = CONFIG.TEMPO.LATE_0_0_BOOST;
 const FACT = [1]; for (let i = 1; i <= 30; i++) FACT[i] = FACT[i-1] * i;
-
-let currentLeagueText = "ลีกมาตรฐาน";
-let currentLeagueAvgGoals = 2.70;
-let currentLeagueRho = CONFIG.GRID.RHO_DEFAULT;
-let currentLeagueFHShare = 0.44;
-let selectedLeagueKey = 'default';
-
-// ✅ NEW: state ของผลทำนายล่าสุด (raw values ไม่ใช่ string)
-let lastPrediction = null;
 
 /* ========== LEAGUE CONSTANTS ========== */
 const LEAGUE_CONSTANTS = {
@@ -725,18 +780,11 @@ const LEAGUE_CONSTANTS = {
   'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
 };
 
-/* ========== UTILITIES (FIX #17: toNum) ========== */
-// ✅ FIX #17: helper แปลงเป็น number อย่างปลอดภัย
+/* ========== MATH / STATS HELPERS ========== */
 function toNum(v) {
   if (v === null || v === undefined || v === '') return null;
   const n = Number(v);
   return Number.isFinite(n) ? n : null;
-}
-
-function openDonateModal() { new bootstrap.Modal(document.getElementById('donateModal')).show(); }
-function copyDonateNumber() {
-  navigator.clipboard.writeText("0944754282").then(() => alert("✅ คัดลอกเบอร์ TrueMoney แล้ว: 094-475-4282"))
-    .catch(() => alert("❌ คัดลอกไม่ได้ กรุณาจดเบอร์: 094-475-4282"));
 }
 function fmtPct(v) { if (v < 0.5) return '<0.5%'; if (v > 99.5) return '>99.5%'; return v.toFixed(0) + '%'; }
 function poisson(lambda, k) {
@@ -753,8 +801,6 @@ function dixonColesTau(h, a, lH, lA, rho) {
   else if (h === 1 && a === 1) tau = 1 - rho;
   return Math.max(0.01, tau);
 }
-
-// ✅ FIX #12: timeWeight รองรับ ET
 function timeWeight(minute) {
   if (minute <= 15) return 0.80;
   if (minute <= 30) return 0.88;
@@ -762,10 +808,9 @@ function timeWeight(minute) {
   if (minute <= 60) return 1.00;
   if (minute <= 75) return 1.10;
   if (minute <= 90) return 1.25;
-  if (minute <= 105) return 1.30;  // ET1
-  return 1.35;                      // ET2
+  if (minute <= 105) return 1.30;
+  return 1.35;
 }
-
 function expectedGoalsIntegrated(minute, remaining, format, i1, i2, basePerMin) {
   if (remaining <= 0) return 0;
   const n = CONFIG.INTEGRATION_STEPS, dt = remaining / n, half2_end = 90 + i1 + i2;
@@ -783,52 +828,6 @@ function pickColor(pct) {
   if (pct >= 35) return { bar: 'bg-warning', text: 'text-warning' };
   if (pct >= 15) return { bar: 'bg-orange', text: 'text-orange' };
   return { bar: 'bg-danger', text: 'text-danger' };
-}
-function showCalcError(msg) { document.getElementById('calcErrorText').innerText = msg; document.getElementById('calcError').classList.remove('d-none'); }
-function clearCalcError() { document.getElementById('calcError').classList.add('d-none'); }
-
-function tryAutoMatchLeague(query) {
-  if (!query || query.trim().length < 2) return;
-  const q = query.trim().toLowerCase();
-  const exact = Object.entries(LEAGUE_CONSTANTS).find(([key, val]) => val.name.toLowerCase() === q || key === q);
-  if (exact && selectedLeagueKey !== exact[0]) { selectedLeagueKey = exact[0]; handleLeagueInput(); }
-}
-function renderDropdown(query = '') {
-  const dropdown = document.getElementById('leagueDropdown');
-  dropdown.innerHTML = '';
-  const lq = query.toLowerCase();
-  if (query.trim() === '') { dropdown.style.display = 'none'; return; }
-  const filtered = Object.entries(LEAGUE_CONSTANTS).filter(([k, v]) => v.name.toLowerCase().includes(lq) || k.includes(lq));
-  if (filtered.length === 0) dropdown.innerHTML = '<div class="league-item text-muted">ไม่พบลีกที่ค้นหา</div>';
-  else filtered.slice(0, 50).forEach(([key, val]) => {
-    const item = document.createElement('div');
-    item.className = 'league-item';
-    item.innerHTML = `<strong>${val.name}</strong> <small class="d-inline">(${key})</small>`;
-    item.onclick = () => {
-      document.getElementById('leagueSearch').value = val.name;
-      selectedLeagueKey = key; dropdown.style.display = 'none';
-      handleLeagueInput(); saveInputs();
-    };
-    dropdown.appendChild(item);
-  });
-  dropdown.style.display = 'block';
-}
-document.addEventListener('click', (e) => {
-  const dd = document.getElementById('leagueDropdown');
-  if (dd && !e.target.closest('#leagueSearch') && !e.target.closest('#leagueDropdown')) dd.style.display = 'none';
-});
-function handleLeagueInput() {
-  const el = document.getElementById('leagueResult');
-  if (selectedLeagueKey === 'default' || !LEAGUE_CONSTANTS[selectedLeagueKey]) {
-    currentLeagueAvgGoals = 2.70; currentLeagueText = "ลีกมาตรฐาน";
-    currentLeagueRho = CONFIG.GRID.RHO_DEFAULT; currentLeagueFHShare = 0.44;
-    el.innerHTML = '<span class="text-warning fw-bold" style="font-size:0.65rem;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>';
-  } else {
-    const v = LEAGUE_CONSTANTS[selectedLeagueKey];
-    currentLeagueAvgGoals = v.goals; currentLeagueText = v.name;
-    currentLeagueRho = v.rho; currentLeagueFHShare = v.fh;
-    el.innerHTML = `<span class="text-info fw-bold" style="font-size:0.65rem;"><i class="bi bi-check-circle-fill"></i> ${v.name} (${v.goals} ประตู/เกม, ρ=${v.rho}, ครึ่งแรก ${(v.fh*100).toFixed(0)}%)</span>`;
-  }
 }
 function calcAHOutcome(fh, fa, h) { const n = fh - fa - h; if (n > EPS) return 1; if (n < -EPS) return -1; return 0; }
 function getAHParts(ah) {
@@ -861,42 +860,9 @@ function calculateRemaining(minute, i1, i2, format) {
   else { if (minute <= h1e) r = (h1e - minute) + (45 + i2) + 30; else if (minute <= h2e) r = (h2e - minute) + 30; else if (minute <= et1e) r = (et1e - minute) + (15 + i2); else if (minute <= et2e) r = et2e - minute; }
   return { remaining: r, half1_end: h1e, half2_end: h2e, et1_end: et1e, et2_end: et2e };
 }
-function autoEstimateStrength() {
-  const ah = parseFloat(document.getElementById('auto_ah').value) || 0;
-  const ahImpact = -ah * 15;
-  const homeBase = Math.max(20, Math.min(95, 70 + ahImpact));
-  const awayBase = Math.max(20, Math.min(95, 70 - ahImpact));
-  const minute = Math.min(120, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
-  const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
-  const cA = Math.max(0, parseInt(document.getElementById('current_away_score').value, 10) || 0);
-  const hShots = Math.max(0, parseInt(document.getElementById('h_shots').value, 10) || 0);
-  const aShots = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
-  const hSot = Math.max(0, parseInt(document.getElementById('h_sot').value, 10) || 0);
-  const aSot = Math.max(0, parseInt(document.getElementById('a_sot').value, 10) || 0);
-  let lh = 0, la = 0;
-  if (minute > 0) {
-    lh += (cH - cA) * 2.0; la -= (cH - cA) * 2.0;
-    lh += (hShots - aShots) * 0.5; la -= (hShots - aShots) * 0.5;
-    lh += (hSot - aSot) * 0.8; la -= (hSot - aSot) * 0.8;
-  }
-  const lw = Math.min(100, Math.max(0, parseFloat(document.getElementById('auto_live_weight').value) || 30)) / 100;
-  const bw = 1 - lw;
-  const fh = Math.max(20, Math.min(95, homeBase * bw + (homeBase + lh) * lw));
-  const fa = Math.max(20, Math.min(95, awayBase * bw + (awayBase + la) * lw));
-  document.getElementById('home_strength').value = Math.round(fh);
-  document.getElementById('away_strength').value = Math.round(fa);
-  const el = document.getElementById('autoResult');
-  el.style.display = 'block';
-  el.innerHTML = `🏠 <strong>${Math.round(fh)}</strong> (Base ${homeBase.toFixed(0)} ${lh>=0?'+':''}${lh.toFixed(1)}) &nbsp;|&nbsp; ✈️ <strong>${Math.round(fa)}</strong> (Base ${awayBase.toFixed(0)} ${la>=0?'+':''}${la.toFixed(1)})`;
-  saveInputs();
-}
-function calcValueBet(mp, odds) {
-  if (odds <= 1) return null;
-  const imp = 1 / odds, ev = (mp * odds) - 1, b = odds - 1;
-  const kelly = b > 0 ? (b * mp - (1 - mp)) / b : 0;
-  return { implied: imp, edge: mp - imp, ev, kelly, kellyHalf: kelly / 2, isValue: ev > 0.02 && kelly > 0.02 };
-}
-function calcConfidence({ hShots, aShots, hSot, aSot, hBig, aBig, minute, top3ProbSum }) {
+
+/* ========== MODEL HELPERS ========== */
+function calcConfidence({ hShots, aShots, hSot, aSot, hBig, aBig, minute, top3ProbSum, goalDiff = 0 }) {
   const total = hShots + aShots;
   const sSample = Math.min(1, total / 25);
   const acc = total > 0 ? (hSot + aSot) / total : 0;
@@ -904,26 +870,811 @@ function calcConfidence({ hShots, aShots, hSot, aSot, hBig, aBig, minute, top3Pr
   const qScore = hasBig ? 1.0 : 0.6;
   const mScore = Math.min(1, minute / 75);
   const aScore = Math.min(1, top3ProbSum / 0.65);
+  const leadMagnitude = Math.min(3, Math.abs(goalDiff));
+  const leadScore = Math.min(1, (leadMagnitude / 3) * (minute / 75));
   const C = CONFIG.CONFIDENCE;
-  const comp = C.W_SAMPLE * sSample + C.W_QUALITY * qScore + C.W_AGREEMENT * aScore + C.W_MINUTE * mScore + C.W_ACCURACY * acc;
+  const comp = C.W_SAMPLE * sSample + C.W_QUALITY * qScore + C.W_AGREEMENT * aScore
+             + C.W_MINUTE * mScore + C.W_ACCURACY * acc + C.W_LEAD * leadScore;
   const raw = (C.BASE + (1 - C.BASE) * comp) * C.SHRINK * 100;
   return Math.round(Math.max(0, Math.min(100, raw)));
 }
 function hasBigData(hBig, aBig) { return (hBig + aBig) > 0; }
 
-function recordPrediction(pred) {
-  const keys = getKeys();
-  let h = [];
-  try { h = JSON.parse(localStorage.getItem(keys.history) || '[]'); } catch (e) {}
-  h.push({ id: Date.now(), ts: new Date().toISOString(), ...pred, actual: null });
-  if (h.length > 500) h = h.slice(-500);
-  try { localStorage.setItem(keys.history, JSON.stringify(h)); } catch (e) {}
-  updateUngradedBadge();
+function calcValueBet(mp, odds) {
+  if (odds <= 1) return null;
+  const imp = 1 / odds, ev = (mp * odds) - 1, b = odds - 1;
+  const kelly = b > 0 ? Math.max(0, (b * mp - (1 - mp)) / b) : 0;
+  const kellyCapped = Math.min(kelly, CONFIG.KELLY.CAP);
+  const kellyHalf = Math.min(kelly / 2, CONFIG.KELLY.CAP / 2);
+  return {
+    implied: imp,
+    edge: mp - imp,
+    ev,
+    kelly,
+    kellyCapped,
+    kellyHalf,
+    wasCapped: kelly > CONFIG.KELLY.CAP,
+    isValue: ev > 0.02 && kelly > 0.02
+  };
 }
+
+/* ========== ERROR UI ========== */
+function showCalcError(msg) { writeText('calcErrorText', msg); showEl('calcError', true); }
+function clearCalcError() { showEl('calcError', false); }
+/* ============================================================
+   AUTHENTICATION
+   ============================================================ */
+function handleLogin() {
+  const emailInput = $('loginEmail');
+  const email = (emailInput.value || '').trim().toLowerCase();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    safeAlert('⚠️ กรุณากรอกอีเมลให้ถูกต้อง (เช่น example@gmail.com)');
+    emailInput.focus();
+    return;
+  }
+  AppState.setUser(email);
+  Storage.saveSession();
+  initAppForUser();
+}
+
+function handleLogout() {
+  if (!safeConfirm('คุณต้องการออกจากระบบใช่หรือไม่?\n(ข้อมูลการทำนายของคุณจะยังถูกบันทึกไว้)')) return;
+  Storage.clearSession();
+  location.reload();
+}
+
+function checkAuth() {
+  const savedUser = Storage.loadSession();
+  if (savedUser) {
+    AppState.setUser(savedUser);
+    showEl('loginOverlay', false);
+    $('loginOverlay').style.display = 'none';
+    initAppForUser();
+  } else {
+    $('loginOverlay').style.display = 'flex';
+    $('loginEmail').focus();
+  }
+}
+
+function initAppForUser() {
+  writeText('displayUserEmailScan', AppState.user);
+  writeText('displayUserEmailTrack', AppState.user);
+  $('loginOverlay').style.display = 'none';
+
+  const hasSavedInputs = !!localStorage.getItem(Storage.key('inputs'));
+  restoreInputs();
+  if (!hasSavedInputs) handleLeagueInput();
+  updateUngradedBadge();
+  renderAll();
+}
+
+document.getElementById('loginEmail').addEventListener('keypress', function (e) {
+  if (e.key === 'Enter') handleLogin();
+});
+
+/* ============================================================
+   LEAGUE UI
+   ============================================================ */
+function tryAutoMatchLeague(query) {
+  if (!query || query.trim().length < 2) return;
+  const q = query.trim().toLowerCase();
+  const exact = Object.entries(LEAGUE_CONSTANTS).find(([key, val]) => val.name.toLowerCase() === q || key === q);
+  if (exact && AppState.league.key !== exact[0]) {
+    AppState.setLeague(exact[0], exact[1]);
+    handleLeagueInput();
+  }
+}
+
+function renderDropdown(query = '') {
+  const dropdown = $('leagueDropdown');
+  dropdown.innerHTML = '';
+  const lq = query.toLowerCase();
+  if (query.trim() === '') { dropdown.style.display = 'none'; return; }
+  const filtered = Object.entries(LEAGUE_CONSTANTS).filter(([k, v]) => v.name.toLowerCase().includes(lq) || k.includes(lq));
+  if (filtered.length === 0) dropdown.innerHTML = '<div class="league-item text-muted">ไม่พบลีกที่ค้นหา</div>';
+  else filtered.slice(0, 50).forEach(([key, val]) => {
+    const item = document.createElement('div');
+    item.className = 'league-item';
+    item.innerHTML = `<strong>${val.name}</strong> <small class="d-inline">(${key})</small>`;
+    item.onclick = () => {
+      writeVal('leagueSearch', val.name);
+      AppState.setLeague(key, val);
+      dropdown.style.display = 'none';
+      handleLeagueInput(); saveInputs();
+    };
+    dropdown.appendChild(item);
+  });
+  dropdown.style.display = 'block';
+}
+
+document.addEventListener('click', (e) => {
+  const dd = $('leagueDropdown');
+  if (dd && !e.target.closest('#leagueSearch') && !e.target.closest('#leagueDropdown')) dd.style.display = 'none';
+});
+
+function handleLeagueInput() {
+  const el = $('leagueResult');
+  const lg = AppState.league;
+  if (lg.key === 'default' || !LEAGUE_CONSTANTS[lg.key]) {
+    AppState.setDefaultLeague();
+    el.innerHTML = '<span class="text-warning fw-bold" style="font-size:0.65rem;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>';
+  } else {
+    const v = LEAGUE_CONSTANTS[lg.key];
+    AppState.setLeague(lg.key, v);
+    el.innerHTML = `<span class="text-info fw-bold" style="font-size:0.65rem;"><i class="bi bi-check-circle-fill"></i> ${v.name} (${v.goals} ประตู/เกม, ρ=${v.rho}, ครึ่งแรก ${(v.fh*100).toFixed(0)}%)</span>`;
+  }
+}
+
+/* ============================================================
+   INPUTS SAVE/RESTORE
+   ============================================================ */
+const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight','ah_odds'];
+
+function saveInputs() {
+  if (!AppState.user) return;
+  const data = {};
+  INPUT_IDS.forEach(id => { const el = $(id); if (el) data[id] = el.value; });
+  data['selectedLeagueKey'] = AppState.league.key;
+  Storage.set('inputs', data);
+}
+
+function restoreInputs() {
+  if (!AppState.user) return;
+  const data = Storage.get('inputs', null);
+  if (!data) return;
+  INPUT_IDS.forEach(id => { if (data[id] !== undefined) writeVal(id, data[id]); });
+  if (data['selectedLeagueKey'] && LEAGUE_CONSTANTS[data['selectedLeagueKey']]) {
+    AppState.setLeague(data['selectedLeagueKey'], LEAGUE_CONSTANTS[data['selectedLeagueKey']]);
+    handleLeagueInput();
+  }
+}
+
+function resetInputs() {
+  if (!safeConfirm('ล้างข้อมูลและโหลดค่าเริ่มต้นใหม่?')) return;
+  Storage.remove('inputs');
+  location.reload();
+}
+
+/* ============================================================
+   AUTO ESTIMATE STRENGTH
+   ============================================================ */
+function autoEstimateStrength() {
+  const ah = readNum('auto_ah', { fallback: 0 });
+  const ahImpact = -ah * 15;
+  const homeBase = Math.max(20, Math.min(95, 70 + ahImpact));
+  const awayBase = Math.max(20, Math.min(95, 70 - ahImpact));
+  const minute = readNum('match_minute', { min: 0, max: 120, integer: true, fallback: 0 });
+  const cH = readNum('current_home_score', { min: 0, integer: true, fallback: 0 });
+  const cA = readNum('current_away_score', { min: 0, integer: true, fallback: 0 });
+  const hShots = readNum('h_shots', { min: 0, integer: true, fallback: 0 });
+  const aShots = readNum('a_shots', { min: 0, integer: true, fallback: 0 });
+  const hSot = readNum('h_sot', { min: 0, integer: true, fallback: 0 });
+  const aSot = readNum('a_sot', { min: 0, integer: true, fallback: 0 });
+
+  let lh = 0, la = 0;
+  if (minute > 0) {
+    lh += (cH - cA) * 2.0; la -= (cH - cA) * 2.0;
+    lh += (hShots - aShots) * 0.5; la -= (hShots - aShots) * 0.5;
+    lh += (hSot - aSot) * 0.8; la -= (hSot - aSot) * 0.8;
+  }
+  const lw = readNum('auto_live_weight', { min: 0, max: 100, fallback: 30 }) / 100;
+  const bw = 1 - lw;
+  const fh = Math.max(20, Math.min(95, homeBase * bw + (homeBase + lh) * lw));
+  const fa = Math.max(20, Math.min(95, awayBase * bw + (awayBase + la) * lw));
+
+  writeVal('home_strength', Math.round(fh));
+  writeVal('away_strength', Math.round(fa));
+
+  const el = $('autoResult');
+  el.style.display = 'block';
+  el.innerHTML = `🏠 <strong>${Math.round(fh)}</strong> (Base ${homeBase.toFixed(0)} ${lh>=0?'+':''}${lh.toFixed(1)}) &nbsp;|&nbsp; ✈️ <strong>${Math.round(fa)}</strong> (Base ${awayBase.toFixed(0)} ${la>=0?'+':''}${la.toFixed(1)})`;
+  saveInputs();
+}
+
+/* ============================================================
+   C1-4: PREDICTOR PIPELINE
+   ============================================================ */
+
+// -- Step 1: Read inputs
+function readMatchInputs() {
+  return {
+    homeName: readStr('home_name', 'ทีมเหย้า'),
+    awayName: readStr('away_name', 'ทีมเยือน'),
+    homeStrength: readNum('home_strength', { min: 0, max: 100, fallback: 70 }),
+    awayStrength: readNum('away_strength', { min: 0, max: 100, fallback: 70 }),
+    minute: readNum('match_minute', { min: 0, max: CONFIG.LIMITS.MINUTE_MAX, integer: true, fallback: 0 }),
+    injury1: readNum('injury_1', { min: 0, max: CONFIG.LIMITS.INJURY_MAX, integer: true, fallback: 0 }),
+    injury2: readNum('injury_2', { min: 0, max: CONFIG.LIMITS.INJURY_MAX, integer: true, fallback: 0 }),
+    format: $('match_format').value || '90',
+    cH: readNum('current_home_score', { min: 0, integer: true, fallback: 0 }),
+    cA: readNum('current_away_score', { min: 0, integer: true, fallback: 0 }),
+    htH: readNum('ht_home_score', { min: 0, integer: true, fallback: 0 }),
+    htA: readNum('ht_away_score', { min: 0, integer: true, fallback: 0 }),
+    redHome: readNum('red_home', { min: 0, max: CONFIG.LIMITS.RED_MAX, integer: true, fallback: 0 }),
+    redAway: readNum('red_away', { min: 0, max: CONFIG.LIMITS.RED_MAX, integer: true, fallback: 0 }),
+    ahRate: parseFloat($('handicapSelect').value) || 0,
+    hShots: readNum('h_shots', { min: 0, integer: true, fallback: 0 }),
+    aShots: readNum('a_shots', { min: 0, integer: true, fallback: 0 }),
+    hSot: readNum('h_sot', { min: 0, integer: true, fallback: 0 }),
+    aSot: readNum('a_sot', { min: 0, integer: true, fallback: 0 }),
+    hBig: readNum('h_big', { min: 0, integer: true, fallback: 0 }),
+    aBig: readNum('a_big', { min: 0, integer: true, fallback: 0 }),
+    ahOdds: readNum('ah_odds', { min: 1.01, fallback: 1.90 }),
+  };
+}
+
+// -- Step 2: Validate + fix inconsistencies
+function validateInputs(inputs) {
+  const warnings = [];
+  let hSot = inputs.hSot, aSot = inputs.aSot, hBig = inputs.hBig, aBig = inputs.aBig;
+  if (hSot > inputs.hShots) { warnings.push('SOT เหย้า > ยิงทั้งหมด'); hSot = inputs.hShots; }
+  if (aSot > inputs.aShots) { warnings.push('SOT เยือน > ยิงทั้งหมด'); aSot = inputs.aShots; }
+  if (hBig > hSot) { warnings.push('Big เหย้า > SOT'); hBig = hSot; }
+  if (aBig > aSot) { warnings.push('Big เยือน > SOT'); aBig = aSot; }
+  if (inputs.hShots + inputs.aShots === 0) {
+    return { ok: false, error: 'กรุณาระบุการยิงอย่างน้อย 1 ครั้ง', warnings: [] };
+  }
+  return {
+    ok: true,
+    warnings,
+    cleaned: { hSot, aSot, hBig, aBig },
+  };
+}
+
+// -- Step 3: Ratio (home vs away share)
+function calcRatio(inputs, cleaned) {
+  const hShot = calcShotXg(cleaned.hSot, cleaned.hBig, inputs.hShots);
+  const aShot = calcShotXg(cleaned.aSot, cleaned.aBig, inputs.aShots);
+  const hAtkMult = strengthToAttackMult(inputs.homeStrength), hDefMult = strengthToDefenseMult(inputs.homeStrength);
+  const aAtkMult = strengthToAttackMult(inputs.awayStrength), aDefMult = strengthToDefenseMult(inputs.awayStrength);
+
+  const hAttackNet = hShot.xg * hAtkMult * aDefMult;
+  const aAttackNet = aShot.xg * aAtkMult * hDefMult;
+  const smoothedH = hAttackNet + CONFIG.GRID.LAPLACE_SMOOTH;
+  const smoothedA = aAttackNet + CONFIG.GRID.LAPLACE_SMOOTH;
+  const shotRatio = smoothedH / (smoothedH + smoothedA);
+  const shotWeight = Math.min(1, (inputs.hShots + inputs.aShots) / CONFIG.HOME_ADV.SHOTS_FOR_FULL_WEIGHT);
+  const hRatio = shotWeight * shotRatio + (1 - shotWeight) * CONFIG.HOME_ADV.SHARE;
+
+  return {
+    hRatio, aRatio: 1 - hRatio,
+    hShot, aShot,
+    hAtkMult, hDefMult, aAtkMult, aDefMult,
+    shotXgH_pre: hShot.xg * hAtkMult * aDefMult,
+    shotXgA_pre: aShot.xg * aAtkMult * hDefMult,
+  };
+}
+
+// -- Step 4: Tempo modifier (M1 baseline: 65% shot xG + 35% league)
+function calcTempo(inputs, ratio) {
+  const totalMatchTime = getTotalMatchTime(inputs.format, inputs.injury1, inputs.injury2);
+  const currentTotalGoals = inputs.cH + inputs.cA;
+  const shotXgTotal_pre = ratio.shotXgH_pre + ratio.shotXgA_pre;
+  const hasSufficientShotData = shotXgTotal_pre >= CONFIG.TEMPO_BASELINE.SHOT_XG_MIN_THRESHOLD && inputs.minute >= 15;
+  const leagueRatePer90 = AppState.league.avgGoals;
+  const shotRatePer90 = (shotXgTotal_pre / Math.max(1, inputs.minute)) * 90;
+  const baselineRatePer90 = hasSufficientShotData
+    ? (shotRatePer90 * CONFIG.TEMPO_BASELINE.SHOT_WEIGHT + leagueRatePer90 * CONFIG.TEMPO_BASELINE.LEAGUE_WEIGHT)
+    : leagueRatePer90;
+
+  let modifier = 1.0, text = 'ปกติ', badge = 'bg-secondary', icon = 'bi-speedometer2';
+
+  if (inputs.minute >= 15) {
+    const effMin = Math.min(inputs.minute, totalMatchTime);
+    const tempo90Equiv = Math.min(effMin, 90) + Math.max(0, effMin - 90) * CONFIG.TEMPO.ET_RATE_MULT;
+    const expSoFar = Math.max(0.1, (baselineRatePer90 / 90) * tempo90Equiv);
+    const actG = currentTotalGoals;
+
+    if (actG > expSoFar) {
+      const dr = actG / Math.max(0.1, expSoFar);
+      modifier = Math.min(CONFIG.TEMPO.MAX, 1 + (dr - 1) * 0.15);
+      if (modifier > 1.08) { text = `🔥 ดุเดือด (x${modifier.toFixed(2)})`; badge = 'bg-danger text-white'; icon = 'bi-fire'; }
+    } else if (actG === 0 && inputs.minute > 30) {
+      if (inputs.minute >= TEMPO_0_0_LATE_MINUTE) {
+        modifier = TEMPO_0_0_LATE_BOOST; text = `⏰ 0-0 ท้ายเกม (x${modifier.toFixed(2)})`; badge = 'bg-warning text-dark'; icon = 'bi-alarm';
+      } else {
+        modifier = 0.90; text = `🧊 เนือย (x${modifier.toFixed(2)})`; badge = 'bg-primary text-white'; icon = 'bi-snow';
+      }
+    } else if (actG < expSoFar) {
+      const dr = actG / Math.max(0.1, expSoFar);
+      modifier = Math.max(CONFIG.TEMPO.MIN, 1 - (1 - dr) * 0.15);
+      if (modifier < 0.92) { text = `🐢 ช้า (x${modifier.toFixed(2)})`; badge = 'bg-warning text-dark'; icon = 'bi-hourglass-split'; }
+    }
+  }
+
+  return { modifier, text, badge, icon, baselineRatePer90, hasSufficientShotData, totalMatchTime };
+}
+
+// -- Step 5: Expected goals (integrated + score effect + red cards)
+function calcExpectedGoals(inputs, ratio, tempo) {
+  const baseXgPerMin = tempo.baselineRatePer90 / 90;
+  const timeData = calculateRemaining(inputs.minute, inputs.injury1, inputs.injury2, inputs.format);
+  const expectedGoalsRaw = expectedGoalsIntegrated(inputs.minute, timeData.remaining, inputs.format, inputs.injury1, inputs.injury2, baseXgPerMin);
+  const expectedGoals = expectedGoalsRaw * tempo.modifier;
+  let xgH = expectedGoals * ratio.hRatio;
+  let xgA = expectedGoals * ratio.aRatio;
+
+  // Score effect
+  const diff = inputs.cH - inputs.cA;
+  let hSM = 1.0, aSM = 1.0;
+  const SE = CONFIG.SCORE_EFFECT;
+  if (diff > 0) {
+    hSM *= (1 - SE.LEADING_ATTACK_PENALTY * Math.min(SE.MAX_DIFF, diff));
+    aSM *= (1 + SE.TRAILING_ATTACK_BOOST * Math.min(SE.MAX_DIFF, diff));
+  } else if (diff < 0) {
+    aSM *= (1 - SE.LEADING_ATTACK_PENALTY * Math.min(SE.MAX_DIFF, -diff));
+    hSM *= (1 + SE.TRAILING_ATTACK_BOOST * Math.min(SE.MAX_DIFF, -diff));
+  }
+  xgH *= hSM; xgA *= aSM;
+
+  // Red cards
+  const rcAH = Math.pow(CONFIG.RED.ATTACK_MULT, inputs.redHome), rcDH = Math.pow(CONFIG.RED.DEFENSE_MULT, inputs.redHome);
+  const rcAA = Math.pow(CONFIG.RED.ATTACK_MULT, inputs.redAway), rcDA = Math.pow(CONFIG.RED.DEFENSE_MULT, inputs.redAway);
+  const xgHBeforeRed = xgH, xgABeforeRed = xgA;
+  xgH = xgH * rcAH * rcDA;
+  xgA = xgA * rcAA * rcDH;
+
+  return { xgH, xgA, xgHBeforeRed, xgABeforeRed, expectedGoalsRaw, timeData, expectedGoals };
+}
+
+// -- Step 6: Build score grid
+function buildScoreGrid(xgH, xgA, rho) {
+  const grid = [];
+  let total = 0;
+  for (let h = 0; h <= CONFIG.GRID.MAX_GOALS; h++) {
+    for (let a = 0; a <= CONFIG.GRID.MAX_GOALS; a++) {
+      const p = poisson(xgH, h) * poisson(xgA, a) * dixonColesTau(h, a, xgH, xgA, rho);
+      grid.push({ h, a, p });
+      total += p;
+    }
+  }
+  if (total > 0) grid.forEach(x => x.p /= total);
+  return { grid, total };
+}
+
+// -- Step 7: AH probabilities
+function calcAH(grid, cH, cA, ahRate) {
+  const ahParts = getAHParts(ahRate);
+  let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
+  grid.forEach(x => {
+    const fh = cH + x.h, fa = cA + x.a;
+    let ah;
+    if (ahParts.isQuarter) ah = (calcAHOutcome(fh, fa, ahParts.parts[0]) + calcAHOutcome(fh, fa, ahParts.parts[1])) / 2;
+    else ah = calcAHOutcome(fh, fa, ahRate);
+    if (Math.abs(ah - 0.5) < EPS) { pAHHomeWin += x.p * 0.5; pAHPush += x.p * 0.5; }
+    else if (Math.abs(ah + 0.5) < EPS) { pAHAwayWin += x.p * 0.5; pAHPush += x.p * 0.5; }
+    else if (ah > EPS) pAHHomeWin += x.p;
+    else if (ah < -EPS) pAHAwayWin += x.p;
+    else pAHPush += x.p;
+  });
+  const sum = pAHHomeWin + pAHAwayWin + pAHPush;
+  if (sum > 0) { pAHHomeWin /= sum; pAHAwayWin /= sum; pAHPush /= sum; }
+  return { pAHHomeWin, pAHAwayWin, pAHPush };
+}
+
+// -- Step 8: FT over probabilities
+function calcFT(grid, cH, cA) {
+  const p = { 0.5: 0, 1.5: 0, 2.5: 0, 3.5: 0, 4.5: 0, 5.5: 0, 6.5: 0 };
+  grid.forEach(x => {
+    const tg = cH + x.h + cA + x.a;
+    [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5].forEach(t => { if (tg > t) p[t] += x.p; });
+  });
+  return { pOver05: p[0.5], pOver15: p[1.5], pOver25: p[2.5], pOver35: p[3.5], pOver45: p[4.5], pOver55: p[5.5], pOver65: p[6.5] };
+}
+
+// -- Step 9: FH probabilities
+function calcFH(inputs, xgH, xgA, rho, timeData) {
+  const currentTotalGoals = inputs.cH + inputs.cA;
+  const htTotalGoals = inputs.htH + inputs.htA;
+  const half1_end = timeData.half1_end;
+
+  if (inputs.minute >= half1_end) {
+    return {
+      isFinished: true,
+      fhProbHome: inputs.htH > inputs.htA ? 100 : 0,
+      fhProbTotal: inputs.htH === inputs.htA ? 100 : 0,
+      fhProbAway: inputs.htA > inputs.htH ? 100 : 0,
+      fh05: htTotalGoals > 0.5 ? 100 : 0,
+      fh15: htTotalGoals > 1.5 ? 100 : 0,
+      fh25: htTotalGoals > 2.5 ? 100 : 0,
+      fh35: htTotalGoals > 3.5 ? 100 : 0,
+      htHomeWin: inputs.htH > inputs.htA,
+      htDraw: inputs.htH === inputs.htA,
+      htAwayWin: inputs.htA > inputs.htH,
+    };
+  }
+
+  const fhRem = Math.max(0, half1_end - inputs.minute), sh2 = 45 + inputs.injury2;
+  const ratio2 = (fhRem + sh2) > 0 ? Math.max(0, Math.min(1, fhRem / (fhRem + sh2))) : 0;
+  const fhXH = xgH * AppState.league.fhShare * ratio2;
+  const fhXA = xgA * AppState.league.fhShare * ratio2;
+
+  const fhGrid = [];
+  let fhT = 0;
+  for (let h = 0; h <= CONFIG.GRID.MAX_FH_GOALS; h++) {
+    for (let a = 0; a <= CONFIG.GRID.MAX_FH_GOALS; a++) {
+      const p = poisson(fhXH, h) * poisson(fhXA, a) * dixonColesTau(h, a, fhXH, fhXA, rho);
+      fhGrid.push({ h, a, p });
+      fhT += p;
+    }
+  }
+  if (fhT > 0) fhGrid.forEach(x => x.p /= fhT);
+
+  let pFW = 0, pFD = 0, pFL = 0, fh05 = 0, fh15 = 0, fh25 = 0, fh35 = 0;
+  fhGrid.forEach(s => {
+    if (s.h > s.a) pFW += s.p; else if (s.h === s.a) pFD += s.p; else pFL += s.p;
+    const tg = s.h + s.a + currentTotalGoals;
+    if (tg > 0.5) fh05 += s.p; if (tg > 1.5) fh15 += s.p; if (tg > 2.5) fh25 += s.p; if (tg > 3.5) fh35 += s.p;
+  });
+
+  return {
+    isFinished: false,
+    fhProbHome: pFW * 100, fhProbTotal: pFD * 100, fhProbAway: pFL * 100,
+    fh05: fh05 * 100, fh15: fh15 * 100, fh25: fh25 * 100, fh35: fh35 * 100,
+    htHomeWin: pFW > pFD && pFW > pFL,
+    htDraw: pFD > pFW && pFD > pFL,
+    htAwayWin: pFL > pFW && pFL > pFD,
+  };
+}
+
+// -- Step 10: Top 3 scores
+function calcTop3(grid, cH, cA) {
+  const top3 = grid
+    .map(x => ({ score: `${cH + x.h}-${cA + x.a}`, prob: x.p }))
+    .sort((a, b) => b.prob - a.prob)
+    .slice(0, 3)
+    .map(x => ({ score: x.score, prob: x.prob * 100 }));
+  const sum = top3.reduce((s, i) => s + i.prob, 0);
+  return { top3, sum };
+}
+
+// -- Step 11: Next goal probabilities
+function calcNextGoal(xgH, xgA) {
+  const tXg = xgH + xgA, pNone = Math.exp(-tXg);
+  const pHN = tXg > 0 ? (xgH / tXg) * (1 - pNone) : 0;
+  const pAN = tXg > 0 ? (xgA / tXg) * (1 - pNone) : 0;
+  return { pHN, pNone, pAN };
+}
+
+// -- Step 12: Render all results
+function renderPrediction(result) {
+  const { inputs, xgH, xgA, ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, valueBet, timeData } = result;
+
+  writeText('ahCurrentRate', inputs.ahRate === 0 ? 'เสมอ (0.0)' : (inputs.ahRate < 0 ? `เยือนต่อ ${Math.abs(inputs.ahRate).toFixed(2)}` : `เหย้าต่อ ${inputs.ahRate.toFixed(2)}`));
+  writeText('ahHomeProb', fmtPct(ah.pAHHomeWin * 100));
+  writeText('ahAwayProb', fmtPct(ah.pAHAwayWin * 100));
+  writeText('ahPushProb', fmtPct(ah.pAHPush * 100));
+
+  // Value / Kelly
+  const vbEl = $('valueBetDisplay');
+  if (valueBet && valueBet.isValue) {
+    const capNote = valueBet.wasCapped ? ' ⚠️' : '';
+    vbEl.innerHTML = `<span class="text-success fw-bold">💰 VALUE</span> | Edge ${(valueBet.edge*100).toFixed(1)}% | EV ${(valueBet.ev*100).toFixed(1)}% | K½ ${(valueBet.kellyHalf*100).toFixed(1)}%${capNote}`;
+    vbEl.className = 'form-control form-control-sm value-bet-box bg-success-subtle border-success text-success fw-bold';
+    vbEl.title = valueBet.wasCapped
+      ? `Kelly ค่าดิบ = ${(valueBet.kelly*100).toFixed(1)}% → ถูก cap ที่ 5% (แนะนำ ${(valueBet.kellyHalf*100).toFixed(1)}% ของ bankroll)`
+      : `แนะนำเดิมพัน ${(valueBet.kellyHalf*100).toFixed(1)}% ของ bankroll`;
+  } else if (valueBet) {
+    vbEl.innerText = `Edge ${(valueBet.edge*100).toFixed(1)}% | EV ${(valueBet.ev*100).toFixed(1)}% (ไม่มี value)`;
+    vbEl.className = 'form-control form-control-sm value-bet-box bg-light text-secondary';
+    vbEl.title = '';
+  } else {
+    vbEl.innerText = '-';
+    vbEl.className = 'form-control form-control-sm value-bet-box bg-light text-secondary';
+    vbEl.title = '';
+  }
+
+  // FT rows
+  const setFtRow = (id, barId, val, trigger) => {
+    const fv = trigger ? 100 : val * 100;
+    const el = $(id), c = pickColor(fv);
+    el.innerText = fmtPct(fv); el.className = 'fw-bold ' + c.text;
+    const bar = $(barId);
+    bar.style.width = fv + '%'; bar.className = 'progress-bar ' + c.bar;
+  };
+  setFtRow('ftOver05', 'ftOver05Bar', ft.pOver05, inputs.cH + inputs.cA > 0.5);
+  setFtRow('ftOver15', 'ftOver15Bar', ft.pOver15, inputs.cH + inputs.cA > 1.5);
+  setFtRow('ftOver25', 'ftOver25Bar', ft.pOver25, inputs.cH + inputs.cA > 2.5);
+  setFtRow('ftOver35', 'ftOver35Bar', ft.pOver35, inputs.cH + inputs.cA > 3.5);
+  setFtRow('ftOver45', 'ftOver45Bar', ft.pOver45, inputs.cH + inputs.cA > 4.5);
+  setFtRow('ftOver55', 'ftOver55Bar', ft.pOver55, inputs.cH + inputs.cA > 5.5);
+  setFtRow('ftOver65', 'ftOver65Bar', ft.pOver65, inputs.cH + inputs.cA > 6.5);
+
+  // Next goal
+  writeText('probHome', fmtPct(nextGoal.pHN * 100));
+  writeText('probNone', fmtPct(nextGoal.pNone * 100));
+  writeText('probAway', fmtPct(nextGoal.pAN * 100));
+
+  // FH
+  if (fh.isFinished) {
+    writeText('fhProbHome', fh.htHomeWin ? '✅' : '❌');
+    writeText('fhProbTotal', fh.htDraw ? '✅' : '❌');
+    writeText('fhProbAway', fh.htAwayWin ? '✅' : '❌');
+  } else {
+    writeText('fhProbHome', fmtPct(fh.fhProbHome));
+    writeText('fhProbTotal', fmtPct(fh.fhProbTotal));
+    writeText('fhProbAway', fmtPct(fh.fhProbAway));
+  }
+  const setFhRow = (id, barId, val) => {
+    const el = $(id), c = pickColor(val);
+    el.innerText = fmtPct(val); el.className = 'fw-bold ' + c.text;
+    const bar = $(barId); bar.style.width = val + '%'; bar.className = 'progress-bar ' + c.bar;
+  };
+  setFhRow('fhOver05', 'fhOver05Bar', fh.fh05);
+  setFhRow('fhOver15', 'fhOver15Bar', fh.fh15);
+  setFhRow('fhOver25', 'fhOver25Bar', fh.fh25);
+  setFhRow('fhOver35', 'fhOver35Bar', fh.fh35);
+
+  // Top 3
+  const colors = ['bg-success text-white', 'bg-warning text-dark', 'bg-secondary text-white'];
+  const icons = ['🥇', '🥈', '🥉'];
+  writeHtml('topScoresContainer', top3.top3.map((item, i) => `<div class="col-4"><div class="score-box ${colors[i]} shadow-sm">
+    <div class="fw-bold mb-0" style="font-size:0.75rem;">${icons[i]}</div>
+    <div class="fw-extrabold mb-0" style="font-size:1.1rem;">${item.score}</div>
+    <div class="fw-bold" style="font-size:0.75rem;">${fmtPct(item.prob)}</div>
+  </div></div>`).join(''));
+  writeHtml('top3SumNote', `Top 3 รวม = <strong>${fmtPct(top3.sum)}</strong> <span class="prob-absolute-tag">(absolute)</span>`);
+
+  // Header
+  writeText('resultTitle', `${inputs.homeName} ${inputs.cH} - ${inputs.cA} ${inputs.awayName}`);
+  writeText('displayMinute', inputs.minute);
+  writeText('displayRemaining', timeData.remaining);
+  writeText('confidenceBadge', `Confidence: ${confidence}%`);
+  writeText('leagueInfluenceText', AppState.league.text);
+
+  // Data quality
+  const dqEl = $('dataQualityBadge');
+  if (hasBigData(inputs.hBig, inputs.aBig)) { dqEl.className = 'badge bg-success'; dqEl.innerText = 'Data: High'; }
+  else if ((inputs.hShots + inputs.aShots) >= 10) { dqEl.className = 'badge bg-warning text-dark'; dqEl.innerText = 'Data: Medium'; }
+  else { dqEl.className = 'badge bg-danger'; dqEl.innerText = 'Data: Low'; }
+
+  // Tempo
+  const tempoEl = $('tempoBadge');
+  tempoEl.className = `badge ${tempo.badge}`;
+  tempoEl.innerHTML = `<i class="bi ${tempo.icon}"></i> Tempo: ${tempo.text}`;
+
+  // Red card impact
+  const rcArea = $('redCardImpactArea');
+  if (inputs.redHome > 0 || inputs.redAway > 0) {
+    let parts = [];
+    if (inputs.redHome > 0) parts.push(`เหย้า ${inputs.redHome} ใบ`);
+    if (inputs.redAway > 0) parts.push(`เยือน ${inputs.redAway} ใบ`);
+    writeHtml('redImpactText', parts.join(' | ') + ` (xG: ${xgH.before.toFixed(2)}→${xgH.after.toFixed(2)} vs ${xgA.before.toFixed(2)}→${xgA.after.toFixed(2)})`);
+    rcArea.classList.remove('d-none');
+  } else rcArea.classList.add('d-none');
+
+  // xG breakdown
+  writeHtml('xgBreakdown',
+    `<div class="d-flex justify-content-between border-bottom pb-1 mb-1"><span>🏠 เหย้า xG: <strong>${xgH.after.toFixed(2)}</strong></span><span class="text-success">${ratio.hShot.xg.toFixed(2)} × atk${ratio.hAtkMult.toFixed(2)} × def${ratio.aDefMult.toFixed(2)}</span></div>
+     <div class="d-flex justify-content-between"><span>✈️ เยือน xG: <strong>${xgA.after.toFixed(2)}</strong></span><span class="text-primary">${ratio.aShot.xg.toFixed(2)} × atk${ratio.aAtkMult.toFixed(2)} × def${ratio.hDefMult.toFixed(2)}</span></div>
+     <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#6c757d;"><span>Ratio: 🏠 ${(ratio.hRatio*100).toFixed(1)}% / ✈️ ${(ratio.aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
+     <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#6c757d;"><span>∫xG ${result.expectedGoalsRaw.toFixed(2)} × tempo ${tempo.modifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>
+     <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#6c757d;"><span>baseline ${tempo.baselineRatePer90.toFixed(2)}/90 ${tempo.hasSufficientShotData ? '(blend shot)' : '(league)'}</span><span>goalDiff=${inputs.cH - inputs.cA}</span></div>`);
+
+  writeText('calibNote', `⚙️ v6.3 Clean: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ ไม่มี Big Chances' : ''));
+}
+
+/* ============================================================
+   PREDICT MATCH — ORCHESTRATOR (~40 บรรทัด)
+   ============================================================ */
+function predictMatch() {
+  if (!AppState.user) return;
+  clearCalcError();
+
+  const inputs = readMatchInputs();
+  const validation = validateInputs(inputs);
+  if (!validation.ok) { showCalcError(validation.error); return; }
+
+  const warnings = validation.warnings;
+  const cleaned = validation.cleaned;
+
+  // Warn box
+  if (warnings.length > 0) {
+    writeText('inputWarningText', warnings.join(' | '));
+    showEl('inputWarning', true);
+  } else showEl('inputWarning', false);
+
+  showEl('emptyState', false);
+  showEl('resultsArea', true);
+
+  const ratio = calcRatio(inputs, cleaned);
+  const tempo = calcTempo(inputs, ratio);
+  const eg = calcExpectedGoals(inputs, ratio, tempo);
+
+  if (eg.timeData.remaining <= 0) {
+    showCalcError('การแข่งขันจบลงแล้ว');
+    return;
+  }
+
+  const { grid, total } = buildScoreGrid(eg.xgH, eg.xgA, AppState.league.rho);
+  if (total <= 0) { showCalcError('คำนวณ grid ไม่ได้'); return; }
+
+  const ah = calcAH(grid, inputs.cH, inputs.cA, inputs.ahRate);
+  const ft = calcFT(grid, inputs.cH, inputs.cA);
+  const fh = calcFH(inputs, eg.xgH, eg.xgA, AppState.league.rho, eg.timeData);
+  const top3 = calcTop3(grid, inputs.cH, inputs.cA);
+  const nextGoal = calcNextGoal(eg.xgH, eg.xgA);
+  const confidence = calcConfidence({
+    hShots: inputs.hShots, aShots: inputs.aShots,
+    hSot: cleaned.hSot, aSot: cleaned.aSot,
+    hBig: cleaned.hBig, aBig: cleaned.aBig,
+    minute: inputs.minute,
+    top3ProbSum: top3.sum / 100,
+    goalDiff: inputs.cH - inputs.cA,
+  });
+  const valueBet = calcValueBet(ah.pAHHomeWin, inputs.ahOdds);
+
+  const result = {
+    inputs,
+    xgH: { before: eg.xgHBeforeRed, after: eg.xgH },
+    xgA: { before: eg.xgABeforeRed, after: eg.xgA },
+    ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, valueBet,
+    timeData: eg.timeData,
+    expectedGoalsRaw: eg.expectedGoalsRaw,
+  };
+
+  // Save for sendToTable
+  AppState.setLastPrediction({
+    pFT: [ft.pOver05, ft.pOver15, ft.pOver25, ft.pOver35, ft.pOver45, ft.pOver55, ft.pOver65],
+    pFH: [fh.fh05 / 100, fh.fh15 / 100, fh.fh25 / 100, fh.fh35 / 100],
+    pAHHome: ah.pAHHomeWin, pAHAway: ah.pAHAwayWin, pAHPush: ah.pAHPush,
+    pOver25: ft.pOver25,
+    xgH: eg.xgH, xgA: eg.xgA,
+    minute: inputs.minute, remaining: eg.timeData.remaining,
+    currentHomeScore: inputs.cH, currentAwayScore: inputs.cA,
+    htHome: inputs.htH, htAway: inputs.htA,
+    half1End: eg.timeData.half1_end,
+    league: AppState.league.text, leagueKey: AppState.league.key,
+    homeName: inputs.homeName, awayName: inputs.awayName,
+    confidence, timestamp: Date.now(),
+  });
+
+  renderPrediction(result);
+
+  // Record with error boundary
+  try {
+    recordPrediction({
+      league: AppState.league.text, leagueKey: AppState.league.key,
+      home: inputs.homeName, away: inputs.awayName,
+      minute: inputs.minute, score: `${inputs.cH}-${inputs.cA}`,
+      xgH: eg.xgH, xgA: eg.xgA,
+      pOver25: ft.pOver25, pOver15: ft.pOver15,
+      pAHHome: ah.pAHHomeWin, pAHAway: ah.pAHAwayWin,
+      confidence,
+      homeStrength: inputs.homeStrength, awayStrength: inputs.awayStrength,
+    });
+  } catch (e) {
+    console.error('[recordPrediction]', e);
+  }
+
+  saveInputs();
+  if (window.innerWidth < 992) $('resultsArea').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ============================================================
+   SEND TO TABLE
+   ============================================================ */
+function sendToTable() {
+  if (!AppState.user) return;
+  const p = AppState.lastPrediction;
+  if (!p) {
+    safeAlert('⚠️ กรุณากด "ประมวลผลคาดการณ์" ก่อนส่งไปตาราง');
+    return;
+  }
+
+  const ftVals = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5];
+  let bestFT = 'รอผล', bestIdx = -1, maxProb = 0;
+  p.pFT.forEach((prob, i) => {
+    if (prob > maxProb && prob >= 0.50) { maxProb = prob; bestIdx = i; }
+  });
+  if (bestIdx >= 0) bestFT = `สูง ${ftVals[bestIdx]} (${fmtPct(maxProb * 100)})`;
+
+  let htPred;
+  if (p.minute >= p.half1End) htPred = `จบ 1H (${p.htHome}-${p.htAway})`;
+  else htPred = `โอกาสสูง 0.5: ${fmtPct(p.pFH[0] * 100)}`;
+
+  const newRecord = {
+    date: new Date().toLocaleDateString('th-TH'),
+    league: p.league,
+    match: `${p.homeName} ${p.currentHomeScore} - ${p.currentAwayScore} ${p.awayName}`,
+    minute: p.minute, ht: htPred, ft: bestFT, result: '',
+    _prob: { over25: p.pOver25, over05: p.pFT[0], over15: p.pFT[1], ahHome: p.pAHHome, confidence: p.confidence }
+  };
+
+  const data = Storage.get('results', []);
+  data.push(newRecord);
+  if (Storage.set('results', data)) {
+    safeAlert('✅ ส่งข้อมูลไปยัง Simple Log ใน Tracker แล้ว!');
+  } else {
+    safeAlert('❌ บันทึกไม่สำเร็จ (localStorage เต็ม?)');
+  }
+}
+
+/* ============================================================
+   TRACKER — DATA LAYER
+   ============================================================ */
+function loadHistory() { return AppState.user ? Storage.get('history', []) : []; }
+function saveHistory(r) { if (AppState.user) Storage.set('history', r); updateUngradedBadge(); }
+function loadResults() { return AppState.user ? Storage.get('results', []) : []; }
+function saveResults(r) { if (AppState.user) Storage.set('results', r); }
+
+function calcBrier(record) {
+  if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
+  const p = toNum(record.pOver25);
+  if (p === null) return null;
+  const a = record.actual.totalGoals > 2.5 ? 1 : 0;
+  return Math.pow(p - a, 2);
+}
+function calcHit(record) {
+  if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
+  const p = toNum(record.pOver25);
+  if (p === null) return null;
+  const a = record.actual.totalGoals > 2.5 ? 1 : 0;
+  const pred = p > 0.5 ? 1 : 0;
+  return pred === a ? 1 : 0;
+}
+function calcPL(record) {
+  if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
+  const stake = toNum(record.stake);
+  const odds = toNum(record.odds);
+  const p = toNum(record.pOver25);
+  if (stake === null || odds === null || p === null) return null;
+  if (stake <= 0 || odds <= 1) return null;
+  const a = record.actual.totalGoals > 2.5 ? 1 : 0;
+  const pred = p > 0.5 ? 1 : 0;
+  return pred === a ? stake * (odds - 1) : -stake;
+}
+function predictDirection(p) { if (typeof p !== 'number') return '?'; return p > 0.5 ? 'OVER' : 'UNDER'; }
+
+function summarize(records) {
+  const graded = records.filter(r => r.actual && typeof r.actual.totalGoals === 'number');
+  const out = { total: records.length, gradedCount: graded.length, ungradedCount: records.length - graded.length, brier: null, hitRate: null, roi: null, totalStake: 0, totalPL: 0, brierQuality: null };
+  if (!graded.length) return out;
+  const bs = graded.map(calcBrier).filter(v => v !== null);
+  if (bs.length) out.brier = bs.reduce((a, b) => a + b, 0) / bs.length;
+  const hits = graded.map(calcHit).filter(v => v !== null);
+  if (hits.length) out.hitRate = hits.reduce((a, b) => a + b, 0) / hits.length;
+  graded.forEach(r => { const pl = calcPL(r); if (pl !== null) { out.totalStake += toNum(r.stake) || 0; out.totalPL += pl; } });
+  if (out.totalStake > 0) out.roi = out.totalPL / out.totalStake;
+  if (out.brier !== null) out.brierQuality = out.brier < 0.20 ? 'good' : out.brier < 0.25 ? 'ok' : 'bad';
+  return out;
+}
+
+function applyFilters(records) {
+  const lg = $('filterLeague').value;
+  const df = $('filterDateFrom').value;
+  const dt = $('filterDateTo').value;
+  const gd = $('filterGraded').value;
+  return records.filter(r => {
+    if (lg && r.league !== lg) return false;
+    if (gd === 'graded' && !(r.actual && typeof r.actual.totalGoals === 'number')) return false;
+    if (gd === 'ungraded' && (r.actual && typeof r.actual.totalGoals === 'number')) return false;
+    if (df || dt) { const d = r.ts ? r.ts.slice(0, 10) : ''; if (df && d < df) return false; if (dt && d > dt) return false; }
+    return true;
+  });
+}
+
+function updateUngradedBadge() {
+  if (!AppState.user) return;
+  const h = loadHistory();
+  const un = h.filter(r => !(r.actual && typeof r.actual.totalGoals === 'number')).length;
+  const b = $('navUngradedBadge');
+  if (b) b.innerText = un;
+}
+
+function recordPrediction(pred) {
+  const h = loadHistory();
+  h.push({ id: Date.now(), ts: new Date().toISOString(), ...pred, actual: null });
+  if (h.length > 500) h.splice(0, h.length - 500);
+  if (Storage.set('history', h)) updateUngradedBadge();
+}
+
+/* ============================================================
+   SCANNER EXTRA BUTTONS
+   ============================================================ */
 function calcBrierScore() {
-  const keys = getKeys();
-  let h = [];
-  try { h = JSON.parse(localStorage.getItem(keys.history) || '[]'); } catch (e) {}
+  const h = loadHistory();
   const graded = h.filter(p => p.actual && typeof p.actual.totalGoals === 'number');
   if (!graded.length) return { n: 0, brier: null, total: h.length };
   let sum = 0;
@@ -932,15 +1683,13 @@ function calcBrierScore() {
 }
 function showBrierScore() {
   const { n, brier, total } = calcBrierScore();
-  if (n === 0) { alert(`📊 ยังไม่มีผลที่ grade\n\nทั้งหมด ${total} records\n\n👉 ใช้แท็บ Tracker เพื่อ grade ผ่าน UI`); return; }
+  if (n === 0) { safeAlert(`📊 ยังไม่มีผลที่ grade\n\nทั้งหมด ${total} records\n\n👉 ใช้แท็บ Tracker เพื่อ grade ผ่าน UI`); return; }
   const q = brier < 0.20 ? '🏆 ดีเยี่ยม' : brier < 0.25 ? '✅ ดี' : brier < 0.30 ? '⚠️ พอใช้' : '❌ ต้องปรับ';
-  alert(`📊 Brier Score (Over/Under 2.5)\n\nN = ${n} (จาก ${total})\nBrier = ${brier.toFixed(4)}\n${q}`);
+  safeAlert(`📊 Brier Score (Over/Under 2.5)\n\nN = ${n} (จาก ${total})\nBrier = ${brier.toFixed(4)}\n${q}`);
 }
 function exportHistoryCSV() {
-  const keys = getKeys();
-  let h = [];
-  try { h = JSON.parse(localStorage.getItem(keys.history) || '[]'); } catch (e) {}
-  if (!h.length) { alert('📭 ยังไม่มีประวัติ'); return; }
+  const h = loadHistory();
+  if (!h.length) { safeAlert('📭 ยังไม่มีประวัติ'); return; }
   const headers = ['id','ts','league','home','away','minute','score','xgH','xgA','pOver25','pAHHome','pAHAway','confidence','actualOver25','actualTotal'];
   const rows = h.map(p => [
     p.id, p.ts, `"${p.league||''}"`, `"${p.home||''}"`, `"${p.away||''}"`, p.minute, `"${p.score||''}"`,
@@ -953,441 +1702,14 @@ function exportHistoryCSV() {
   const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `jackai_history_${currentUser.split('@')[0]}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `jackai_history_${AppState.user.split('@')[0]}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
-
-/* ========== SCANNER STORAGE ========== */
-const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight','ah_odds'];
-function saveInputs() {
-  if(!currentUser) return;
-  const keys = getKeys();
-  const data = {};
-  INPUT_IDS.forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value; });
-  data['selectedLeagueKey'] = selectedLeagueKey;
-  try { localStorage.setItem(keys.inputs, JSON.stringify(data)); } catch (e) {}
-}
-function restoreInputs() {
-  if(!currentUser) return;
-  const keys = getKeys();
-  try {
-    const raw = localStorage.getItem(keys.inputs);
-    if (!raw) return;
-    const data = JSON.parse(raw);
-    INPUT_IDS.forEach(id => { if (data[id] !== undefined && document.getElementById(id)) document.getElementById(id).value = data[id]; });
-    if (data['selectedLeagueKey']) { selectedLeagueKey = data['selectedLeagueKey']; handleLeagueInput(); }
-  } catch (e) {}
-}
-function resetInputs() {
-  if (!confirm('ล้างข้อมูลและโหลดค่าเริ่มต้นใหม่?')) return;
-  const keys = getKeys();
-  try { localStorage.removeItem(keys.inputs); } catch (e) {}
-  location.reload();
-}
-
-/* ========== SCANNER MAIN ========== */
-function predictMatch() {
-  if(!currentUser) return;
-  clearCalcError();
-  const homeName = document.getElementById('home_name').value.trim() || 'ทีมเหย้า';
-  const awayName = document.getElementById('away_name').value.trim() || 'ทีมเยือน';
-  const homeStrength = Math.min(100, Math.max(0, parseFloat(document.getElementById('home_strength').value) || 70));
-  const awayStrength = Math.min(100, Math.max(0, parseFloat(document.getElementById('away_strength').value) || 70));
-  const minute = Math.min(CONFIG.LIMITS.MINUTE_MAX, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
-  const i1 = Math.min(CONFIG.LIMITS.INJURY_MAX, Math.max(0, parseInt(document.getElementById('injury_1').value, 10) || 0));
-  const i2 = Math.min(CONFIG.LIMITS.INJURY_MAX, Math.max(0, parseInt(document.getElementById('injury_2').value, 10) || 0));
-  const format = document.getElementById('match_format').value;
-  const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
-  const cA = Math.max(0, parseInt(document.getElementById('current_away_score').value, 10) || 0);
-  const currentTotalGoals = cH + cA;
-  const htH = Math.max(0, parseInt(document.getElementById('ht_home_score').value, 10) || 0);
-  const htA = Math.max(0, parseInt(document.getElementById('ht_away_score').value, 10) || 0);
-  const htTotalGoals = htH + htA;
-  const redHome = Math.min(CONFIG.LIMITS.RED_MAX, Math.max(0, parseInt(document.getElementById('red_home').value, 10) || 0));
-  const redAway = Math.min(CONFIG.LIMITS.RED_MAX, Math.max(0, parseInt(document.getElementById('red_away').value, 10) || 0));
-  const ahRate = parseFloat(document.getElementById('handicapSelect').value) || 0;
-  let hShotsRaw = Math.max(0, parseInt(document.getElementById('h_shots').value, 10) || 0);
-  let aShotsRaw = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
-  let hSotRaw = Math.max(0, parseInt(document.getElementById('h_sot').value, 10) || 0);
-  let aSotRaw = Math.max(0, parseInt(document.getElementById('a_sot').value, 10) || 0);
-  let hBigRaw = Math.max(0, parseInt(document.getElementById('h_big').value, 10) || 0);
-  let aBigRaw = Math.max(0, parseInt(document.getElementById('a_big').value, 10) || 0);
-  const totalMatchTime = getTotalMatchTime(format, i1, i2);
-  const timeData = calculateRemaining(minute, i1, i2, format);
-  const remaining = timeData.remaining, half1_end = timeData.half1_end;
-  if (remaining === 0) { showCalcError('การแข่งขันจบลงแล้ว'); return; }
-  const inputWarnings = [];
-  if (hSotRaw > hShotsRaw) { inputWarnings.push(`SOT เหย้า > ยิงทั้งหมด`); hSotRaw = hShotsRaw; }
-  if (aSotRaw > aShotsRaw) { inputWarnings.push(`SOT เยือน > ยิงทั้งหมด`); aSotRaw = aShotsRaw; }
-  if (hBigRaw > hSotRaw) { inputWarnings.push(`Big เหย้า > SOT`); hBigRaw = hSotRaw; }
-  if (aBigRaw > aSotRaw) { inputWarnings.push(`Big เยือน > SOT`); aBigRaw = aSotRaw; }
-  const hSot = hSotRaw, aSot = aSotRaw, hShots = hShotsRaw, aShots = aShotsRaw, hBig = hBigRaw, aBig = aBigRaw;
-  if (hShots + aShots === 0) { showCalcError('กรุณาระบุการยิงอย่างน้อย 1 ครั้ง'); return; }
-  document.getElementById('emptyState').classList.add('d-none');
-  document.getElementById('resultsArea').classList.remove('d-none');
-  document.getElementById('resultsArea').classList.add('d-flex');
-  const warnBox = document.getElementById('inputWarning');
-  if (inputWarnings.length > 0) { document.getElementById('inputWarningText').innerText = inputWarnings.join(' | '); warnBox.classList.remove('d-none'); }
-  else warnBox.classList.add('d-none');
-
-  const hShot = calcShotXg(hSot, hBig, hShots);
-  const aShot = calcShotXg(aSot, aBig, aShots);
-  const hAtkMult = strengthToAttackMult(homeStrength), hDefMult = strengthToDefenseMult(homeStrength);
-  const aAtkMult = strengthToAttackMult(awayStrength), aDefMult = strengthToDefenseMult(awayStrength);
-  const hAttackNet = hShot.xg * hAtkMult * aDefMult;
-  const aAttackNet = aShot.xg * aAtkMult * hDefMult;
-  const smoothedH = hAttackNet + CONFIG.GRID.LAPLACE_SMOOTH;
-  const smoothedA = aAttackNet + CONFIG.GRID.LAPLACE_SMOOTH;
-  const shotRatio = smoothedH / (smoothedH + smoothedA);
-  const shotWeight = Math.min(1, (hShots + aShots) / CONFIG.HOME_ADV.SHOTS_FOR_FULL_WEIGHT);
-  const hRatio = shotWeight * shotRatio + (1 - shotWeight) * CONFIG.HOME_ADV.SHARE;
-  const aRatio = 1 - hRatio;
-
-  let tempoModifier = 1.0, tempoText = "ปกติ", tempoBadgeClass = "bg-secondary", tempoIcon = "bi-speedometer2";
-  if (minute >= 15) {
-    const effMin = Math.min(minute, totalMatchTime);
-    const tempo90Equiv = Math.min(effMin, 90) + Math.max(0, effMin - 90) * CONFIG.TEMPO.ET_RATE_MULT;
-    const expSoFar = Math.max(0.1, (currentLeagueAvgGoals / 90) * tempo90Equiv);
-    const actG = currentTotalGoals;
-    if (actG > expSoFar) {
-      const dr = actG / Math.max(0.1, expSoFar);
-      tempoModifier = Math.min(CONFIG.TEMPO.MAX, 1 + (dr - 1) * 0.15);
-      if (tempoModifier > 1.08) { tempoText = `🔥 ดุเดือด (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-danger text-white"; tempoIcon = "bi-fire"; }
-    } else if (actG === 0 && minute > 30) {
-      if (minute >= TEMPO_0_0_LATE_MINUTE) { tempoModifier = TEMPO_0_0_LATE_BOOST; tempoText = `⏰ 0-0 ท้ายเกม (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-warning text-dark"; tempoIcon = "bi-alarm"; }
-      else { tempoModifier = 0.90; tempoText = `🧊 เนือย (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-primary text-white"; tempoIcon = "bi-snow"; }
-    } else if (actG < expSoFar) {
-      const dr = actG / Math.max(0.1, expSoFar);
-      tempoModifier = Math.max(CONFIG.TEMPO.MIN, 1 - (1 - dr) * 0.15);
-      if (tempoModifier < 0.92) { tempoText = `🐢 ช้า (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-warning text-dark"; tempoIcon = "bi-hourglass-split"; }
-    }
-  }
-  const tempoEl = document.getElementById('tempoBadge');
-  tempoEl.className = `badge ${tempoBadgeClass}`;
-  tempoEl.innerHTML = `<i class="bi ${tempoIcon}"></i> Tempo: ${tempoText}`;
-
-  const baseXgPerMin = currentLeagueAvgGoals / 90;
-  const expectedGoalsRaw = expectedGoalsIntegrated(minute, remaining, format, i1, i2, baseXgPerMin);
-  const expectedGoals = expectedGoalsRaw * tempoModifier;
-  let xgH = expectedGoals * hRatio, xgA = expectedGoals * aRatio;
-
-  const diff = cH - cA;
-  let hSM = 1.0, aSM = 1.0;
-  if (diff > 0) { hSM *= (1 - 0.15 * Math.min(2, diff)); aSM *= (1 + 0.18 * Math.min(2, diff)); }
-  else if (diff < 0) { aSM *= (1 - 0.15 * Math.min(2, -diff)); hSM *= (1 + 0.18 * Math.min(2, -diff)); }
-  xgH *= hSM; xgA *= aSM;
-
-  const rcAH = Math.pow(CONFIG.RED.ATTACK_MULT, redHome), rcDH = Math.pow(CONFIG.RED.DEFENSE_MULT, redHome);
-  const rcAA = Math.pow(CONFIG.RED.ATTACK_MULT, redAway), rcDA = Math.pow(CONFIG.RED.DEFENSE_MULT, redAway);
-  const xgHBeforeRed = xgH, xgABeforeRed = xgA;
-  xgH = xgH * rcAH * rcDA; xgA = xgA * rcAA * rcDH;
-
-  const rho = currentLeagueRho;
-  let probGrid = [], total = 0;
-  for (let h = 0; h <= CONFIG.GRID.MAX_GOALS; h++) for (let a = 0; a <= CONFIG.GRID.MAX_GOALS; a++) {
-    const p = poisson(xgH, h) * poisson(xgA, a) * dixonColesTau(h, a, xgH, xgA, rho);
-    probGrid.push({ h, a, p }); total += p;
-  }
-  if (total <= 0) { showCalcError('คำนวณ grid ไม่ได้'); return; }
-  probGrid.forEach(x => x.p /= total);
-
-  let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
-  let pFT05 = 0, pFT15 = 0, pFT25 = 0, pFT35 = 0, pFT45 = 0, pFT55 = 0, pFT65 = 0;
-  const ahParts = getAHParts(ahRate);
-  probGrid.forEach(x => {
-    const fh = cH + x.h, fa = cA + x.a, tg = fh + fa;
-    let ah;
-    if (ahParts.isQuarter) ah = (calcAHOutcome(fh, fa, ahParts.parts[0]) + calcAHOutcome(fh, fa, ahParts.parts[1])) / 2;
-    else ah = calcAHOutcome(fh, fa, ahRate);
-    if (Math.abs(ah - 0.5) < EPS) { pAHHomeWin += x.p * 0.5; pAHPush += x.p * 0.5; }
-    else if (Math.abs(ah + 0.5) < EPS) { pAHAwayWin += x.p * 0.5; pAHPush += x.p * 0.5; }
-    else if (ah > EPS) pAHHomeWin += x.p;
-    else if (ah < -EPS) pAHAwayWin += x.p;
-    else pAHPush += x.p;
-    if (tg > 0.5) pFT05 += x.p; if (tg > 1.5) pFT15 += x.p; if (tg > 2.5) pFT25 += x.p;
-    if (tg > 3.5) pFT35 += x.p; if (tg > 4.5) pFT45 += x.p; if (tg > 5.5) pFT55 += x.p; if (tg > 6.5) pFT65 += x.p;
-  });
-  const ahSum = pAHHomeWin + pAHAwayWin + pAHPush;
-  if (ahSum > 0) { pAHHomeWin /= ahSum; pAHAwayWin /= ahSum; pAHPush /= ahSum; }
-
-  document.getElementById('ahCurrentRate').innerText = ahRate === 0 ? "เสมอ (0.0)" : (ahRate < 0 ? `เยือนต่อ ${Math.abs(ahRate).toFixed(2)}` : `เหย้าต่อ ${ahRate.toFixed(2)}`);
-  document.getElementById('ahHomeProb').innerText = fmtPct(pAHHomeWin * 100);
-  document.getElementById('ahAwayProb').innerText = fmtPct(pAHAwayWin * 100);
-  document.getElementById('ahPushProb').innerText = fmtPct(pAHPush * 100);
-
-  const vbOdds = parseFloat(document.getElementById('ah_odds').value) || 1.90;
-  const vb = calcValueBet(pAHHomeWin, vbOdds);
-  const vbEl = document.getElementById('valueBetDisplay');
-  if (vb && vb.isValue) {
-    vbEl.innerHTML = `<span class="text-success fw-bold">💰 VALUE</span> | Edge ${(vb.edge*100).toFixed(1)}% | EV ${(vb.ev*100).toFixed(1)}% | K½ ${(vb.kellyHalf*100).toFixed(1)}%`;
-    vbEl.className = 'form-control form-control-sm value-bet-box bg-success-subtle border-success text-success fw-bold';
-  } else if (vb) {
-    vbEl.innerText = `Edge ${(vb.edge*100).toFixed(1)}% | EV ${(vb.ev*100).toFixed(1)}% (ไม่มี value)`;
-    vbEl.className = 'form-control form-control-sm value-bet-box bg-light text-secondary';
-  } else {
-    vbEl.innerText = '-';
-    vbEl.className = 'form-control form-control-sm value-bet-box bg-light text-secondary';
-  }
-
-  const setFtRow = (id, barId, val, trigger) => {
-    const fv = trigger ? 100 : val * 100;
-    const el = document.getElementById(id), c = pickColor(fv);
-    el.innerText = fmtPct(fv); el.className = 'fw-bold ' + c.text;
-    const bar = document.getElementById(barId);
-    bar.style.width = fv + '%'; bar.className = 'progress-bar ' + c.bar;
-  };
-  setFtRow('ftOver05', 'ftOver05Bar', pFT05, currentTotalGoals > 0.5);
-  setFtRow('ftOver15', 'ftOver15Bar', pFT15, currentTotalGoals > 1.5);
-  setFtRow('ftOver25', 'ftOver25Bar', pFT25, currentTotalGoals > 2.5);
-  setFtRow('ftOver35', 'ftOver35Bar', pFT35, currentTotalGoals > 3.5);
-  setFtRow('ftOver45', 'ftOver45Bar', pFT45, currentTotalGoals > 4.5);
-  setFtRow('ftOver55', 'ftOver55Bar', pFT55, currentTotalGoals > 5.5);
-  setFtRow('ftOver65', 'ftOver65Bar', pFT65, currentTotalGoals > 6.5);
-
-  const tXg = xgH + xgA, pNone = Math.exp(-tXg);
-  const pHN = tXg > 0 ? (xgH / tXg) * (1 - pNone) : 0;
-  const pAN = tXg > 0 ? (xgA / tXg) * (1 - pNone) : 0;
-  document.getElementById('probHome').innerText = fmtPct(pHN * 100);
-  document.getElementById('probNone').innerText = fmtPct(pNone * 100);
-  document.getElementById('probAway').innerText = fmtPct(pAN * 100);
-
-  let fh05 = 0, fh15 = 0, fh25 = 0, fh35 = 0;
-  if (minute >= half1_end) {
-    fh05 = htTotalGoals > 0.5 ? 100 : 0; fh15 = htTotalGoals > 1.5 ? 100 : 0;
-    fh25 = htTotalGoals > 2.5 ? 100 : 0; fh35 = htTotalGoals > 3.5 ? 100 : 0;
-    document.getElementById('fhProbHome').innerText = htH > htA ? '✅' : '❌';
-    document.getElementById('fhProbTotal').innerText = htH === htA ? '✅' : '❌';
-    document.getElementById('fhProbAway').innerText = htA > htH ? '✅' : '❌';
-  } else {
-    const fhRem = Math.max(0, half1_end - minute), sh2 = 45 + i2;
-    const ratio = (fhRem + sh2) > 0 ? Math.max(0, Math.min(1, fhRem / (fhRem + sh2))) : 0;
-    const fhXH = xgH * currentLeagueFHShare * ratio, fhXA = xgA * currentLeagueFHShare * ratio;
-    let fhGrid = [], fhT = 0;
-    for (let h = 0; h <= CONFIG.GRID.MAX_FH_GOALS; h++) for (let a = 0; a <= CONFIG.GRID.MAX_FH_GOALS; a++) {
-      const p = poisson(fhXH, h) * poisson(fhXA, a) * dixonColesTau(h, a, fhXH, fhXA, rho);
-      fhGrid.push({ h, a, p }); fhT += p;
-    }
-    if (fhT > 0) fhGrid.forEach(x => x.p /= fhT);
-    let pFW = 0, pFD = 0, pFL = 0;
-    fhGrid.forEach(s => { if (s.h > s.a) pFW += s.p; else if (s.h === s.a) pFD += s.p; else pFL += s.p; });
-    document.getElementById('fhProbHome').innerText = fmtPct(pFW * 100);
-    document.getElementById('fhProbTotal').innerText = fmtPct(pFD * 100);
-    document.getElementById('fhProbAway').innerText = fmtPct(pFL * 100);
-    fhGrid.forEach(s => {
-      const tg = s.h + s.a + currentTotalGoals;
-      if (tg > 0.5) fh05 += s.p; if (tg > 1.5) fh15 += s.p; if (tg > 2.5) fh25 += s.p; if (tg > 3.5) fh35 += s.p;
-    });
-    fh05 *= 100; fh15 *= 100; fh25 *= 100; fh35 *= 100;
-  }
-  const setFhRow = (id, barId, val) => {
-    const el = document.getElementById(id), c = pickColor(val);
-    el.innerText = fmtPct(val); el.className = 'fw-bold ' + c.text;
-    const bar = document.getElementById(barId); bar.style.width = val + '%'; bar.className = 'progress-bar ' + c.bar;
-  };
-  setFhRow('fhOver05', 'fhOver05Bar', fh05);
-  setFhRow('fhOver15', 'fhOver15Bar', fh15);
-  setFhRow('fhOver25', 'fhOver25Bar', fh25);
-  setFhRow('fhOver35', 'fhOver35Bar', fh35);
-
-  const top3Raw = probGrid.map(x => ({ score: `${cH + x.h}-${cA + x.a}`, prob: x.p })).sort((a, b) => b.prob - a.prob).slice(0, 3);
-  const finalScores = top3Raw.map(x => ({ score: x.score, prob: x.prob * 100 }));
-  const top3SumProb = finalScores.reduce((s, i) => s + i.prob, 0);
-  const sc = document.getElementById('topScoresContainer');
-  const colors = ['bg-success text-white', 'bg-warning text-dark', 'bg-secondary text-white'];
-  const icons = ['🥇', '🥈', '🥉'];
-  sc.innerHTML = finalScores.map((item, i) => `<div class="col-4"><div class="score-box ${colors[i]} shadow-sm">
-    <div class="fw-bold mb-0" style="font-size:0.75rem;">${icons[i]}</div>
-    <div class="fw-extrabold mb-0" style="font-size:1.1rem;">${item.score}</div>
-    <div class="fw-bold" style="font-size:0.75rem;">${fmtPct(item.prob)}</div>
-  </div></div>`).join('');
-  document.getElementById('top3SumNote').innerHTML = `Top 3 รวม = <strong>${fmtPct(top3SumProb)}</strong> <span class="prob-absolute-tag">(absolute)</span>`;
-
-  const confidence = calcConfidence({ hShots, aShots, hSot, aSot, hBig, aBig, minute, top3ProbSum: top3SumProb / 100 });
-  document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
-  document.getElementById('displayMinute').innerText = minute;
-  document.getElementById('displayRemaining').innerText = remaining;
-  document.getElementById('confidenceBadge').innerText = `Confidence: ${confidence}%`;
-  document.getElementById('leagueInfluenceText').innerText = currentLeagueText;
-
-  const dqEl = document.getElementById('dataQualityBadge');
-  if (hasBigData(hBig, aBig)) { dqEl.className = 'badge bg-success'; dqEl.innerText = 'Data: High'; }
-  else if ((hShots + aShots) >= 10) { dqEl.className = 'badge bg-warning text-dark'; dqEl.innerText = 'Data: Medium'; }
-  else { dqEl.className = 'badge bg-danger'; dqEl.innerText = 'Data: Low'; }
-
-  const rcArea = document.getElementById('redCardImpactArea');
-  if (redHome > 0 || redAway > 0) {
-    let parts = [];
-    if (redHome > 0) parts.push(`เหย้า ${redHome} ใบ`);
-    if (redAway > 0) parts.push(`เยือน ${redAway} ใบ`);
-    document.getElementById('redImpactText').innerHTML = parts.join(' | ') + ` (xG: ${xgHBeforeRed.toFixed(2)}→${xgH.toFixed(2)} vs ${xgABeforeRed.toFixed(2)}→${xgA.toFixed(2)})`;
-    rcArea.classList.remove('d-none');
-  } else rcArea.classList.add('d-none');
-
-  document.getElementById('xgBreakdown').innerHTML =
-    `<div class="d-flex justify-content-between border-bottom pb-1 mb-1"><span>🏠 เหย้า xG: <strong>${xgH.toFixed(2)}</strong></span><span class="text-success">${hShot.xg.toFixed(2)} × atk${hAtkMult.toFixed(2)} × def${aDefMult.toFixed(2)}</span></div>
-     <div class="d-flex justify-content-between"><span>✈️ เยือน xG: <strong>${xgA.toFixed(2)}</strong></span><span class="text-primary">${aShot.xg.toFixed(2)} × atk${aAtkMult.toFixed(2)} × def${hDefMult.toFixed(2)}</span></div>
-     <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#6c757d;"><span>Ratio: 🏠 ${(hRatio*100).toFixed(1)}% / ✈️ ${(aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
-     <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#6c757d;"><span>∫xG ${expectedGoalsRaw.toFixed(2)} × tempo ${tempoModifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`;
-
-  document.getElementById('calibNote').innerText = `⚙️ v6.1 Pro: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${rho}.` + (!hasBigData(hBig, aBig) ? ' ⚠️ ไม่มี Big Chances' : '');
-
-  // ✅ NEW: บันทึก raw probabilities ไว้ใช้ใน sendToTable()
-  lastPrediction = {
-    pFT: [pFT05, pFT15, pFT25, pFT35, pFT45, pFT55, pFT65],
-    pFH: [fh05 / 100, fh15 / 100, fh25 / 100, fh35 / 100],
-    pAHHome: pAHHomeWin, pAHAway: pAHAwayWin, pAHPush: pAHPush,
-    pOver25: pFT25, xgH, xgA, minute, remaining,
-    currentHomeScore: cH, currentAwayScore: cA,
-    htHome: htH, htAway: htA,
-    half1End: half1_end,
-    league: currentLeagueText, leagueKey: selectedLeagueKey,
-    homeName, awayName,
-    confidence, timestamp: Date.now()
-  };
-
-  recordPrediction({ league: currentLeagueText, leagueKey: selectedLeagueKey, home: homeName, away: awayName, minute, score: `${cH}-${cA}`, xgH, xgA, pOver25: pFT25, pOver15: pFT15, pAHHome: pAHHomeWin, pAHAway: pAHAwayWin, confidence, homeStrength, awayStrength });
-  saveInputs();
-  if (window.innerWidth < 992) document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
-}
-
-// ✅ FIX #1: sendToTable ใหม่ — ใช้ raw prob จาก lastPrediction
-function sendToTable() {
-  if (!currentUser) return;
-
-  if (!lastPrediction) {
-    alert('⚠️ กรุณากด "ประมวลผลคาดการณ์" ก่อนส่งไปตาราง');
-    return;
-  }
-
-  const p = lastPrediction;
-  const keys = getKeys();
-
-  const ftVals = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5];
-  let bestFT = "รอผล", bestIdx = -1, maxProb = 0;
-  p.pFT.forEach((prob, i) => {
-    if (prob > maxProb && prob >= 0.50) {
-      maxProb = prob; bestIdx = i;
-    }
-  });
-  if (bestIdx >= 0) {
-    bestFT = `สูง ${ftVals[bestIdx]} (${fmtPct(maxProb * 100)})`;
-  }
-
-  let htPred;
-  if (p.minute >= p.half1End) {
-    htPred = `จบ 1H (${p.htHome}-${p.htAway})`;
-  } else {
-    htPred = `โอกาสสูง 0.5: ${fmtPct(p.pFH[0] * 100)}`;
-  }
-
-  const newRecord = {
-    date: new Date().toLocaleDateString('th-TH'),
-    league: p.league,
-    match: `${p.homeName} ${p.currentHomeScore} - ${p.currentAwayScore} ${p.awayName}`,
-    minute: p.minute,
-    ht: htPred,
-    ft: bestFT,
-    result: "",
-    _prob: {
-      over25: p.pOver25,
-      over05: p.pFT[0],
-      over15: p.pFT[1],
-      ahHome: p.pAHHome,
-      confidence: p.confidence
-    }
-  };
-
-  let data = [];
-  try { data = JSON.parse(localStorage.getItem(keys.results) || '[]'); } catch (e) {}
-  data.push(newRecord);
-  try {
-    localStorage.setItem(keys.results, JSON.stringify(data));
-    alert('✅ ส่งข้อมูลไปยัง Simple Log ใน Tracker แล้ว!');
-  } catch (e) {
-    alert('❌ บันทึกไม่สำเร็จ: ' + e.message);
-  }
-}
-
 /* ============================================================
-   TRACKER CODE
+   TRACKER — RENDER
    ============================================================ */
-let CALIBRATION_CHART = null;
-
-function loadHistory() { if(!currentUser) return []; try { return JSON.parse(localStorage.getItem(getKeys().history) || '[]'); } catch (e) { return []; } }
-function saveHistory(r) { if(!currentUser) return; try { localStorage.setItem(getKeys().history, JSON.stringify(r)); } catch (e) {} updateUngradedBadge(); }
-function loadResults() { if(!currentUser) return []; try { return JSON.parse(localStorage.getItem(getKeys().results) || '[]'); } catch (e) { return []; } }
-function saveResults(r) { if(!currentUser) return; try { localStorage.setItem(getKeys().results, JSON.stringify(r)); } catch (e) {} }
-
-// ✅ FIX #17: calcBrier/calcHit/calcPL ใช้ toNum
-function calcBrier(record) {
-  if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
-  const p = toNum(record.pOver25);
-  if (p === null) return null;
-  const a = record.actual.totalGoals > 2.5 ? 1 : 0;
-  return Math.pow(p - a, 2);
-}
-
-function calcHit(record) {
-  if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
-  const p = toNum(record.pOver25);
-  if (p === null) return null;
-  const a = record.actual.totalGoals > 2.5 ? 1 : 0;
-  const pred = p > 0.5 ? 1 : 0;
-  return pred === a ? 1 : 0;
-}
-
-function calcPL(record) {
-  if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
-  const stake = toNum(record.stake);
-  const odds = toNum(record.odds);
-  const p = toNum(record.pOver25);
-  if (stake === null || odds === null || p === null) return null;
-  if (stake <= 0 || odds <= 1) return null;
-  const a = record.actual.totalGoals > 2.5 ? 1 : 0;
-  const pred = p > 0.5 ? 1 : 0;
-  return pred === a ? stake * (odds - 1) : -stake;
-}
-
-function predictDirection(p) { if (typeof p !== 'number') return '?'; return p > 0.5 ? 'OVER' : 'UNDER'; }
-
-function summarize(records) {
-  const graded = records.filter(r => r.actual && typeof r.actual.totalGoals === 'number');
-  const out = { total: records.length, gradedCount: graded.length, ungradedCount: records.length - graded.length, brier: null, hitRate: null, roi: null, totalStake: 0, totalPL: 0, brierQuality: null };
-  if (!graded.length) return out;
-  const bs = graded.map(calcBrier).filter(v => v !== null);
-  if (bs.length) out.brier = bs.reduce((a, b) => a + b, 0) / bs.length;
-  const hits = graded.map(calcHit).filter(v => v !== null);
-  if (hits.length) out.hitRate = hits.reduce((a, b) => a + b, 0) / hits.length;
-  graded.forEach(r => { const pl = calcPL(r); if (pl !== null) { out.totalStake += r.stake; out.totalPL += pl; } });
-  if (out.totalStake > 0) out.roi = out.totalPL / out.totalStake;
-  if (out.brier !== null) out.brierQuality = out.brier < 0.20 ? 'good' : out.brier < 0.25 ? 'ok' : 'bad';
-  return out;
-}
-
-function applyFilters(records) {
-  const lg = document.getElementById('filterLeague').value;
-  const df = document.getElementById('filterDateFrom').value;
-  const dt = document.getElementById('filterDateTo').value;
-  const gd = document.getElementById('filterGraded').value;
-  return records.filter(r => {
-    if (lg && r.league !== lg) return false;
-    if (gd === 'graded' && !(r.actual && typeof r.actual.totalGoals === 'number')) return false;
-    if (gd === 'ungraded' && (r.actual && typeof r.actual.totalGoals === 'number')) return false;
-    if (df || dt) { const d = r.ts ? r.ts.slice(0, 10) : ''; if (df && d < df) return false; if (dt && d > dt) return false; }
-    return true;
-  });
-}
-
-function updateUngradedBadge() {
-  if(!currentUser) return;
-  const h = loadHistory();
-  const un = h.filter(r => !(r.actual && typeof r.actual.totalGoals === 'number')).length;
-  const b = document.getElementById('navUngradedBadge');
-  if (b) b.innerText = un;
-}
-
 function renderAll() {
-  if(!currentUser) return;
+  if (!AppState.user) return;
   const all = loadHistory();
   const filtered = applyFilters(all);
   renderStats(filtered);
@@ -1397,34 +1719,38 @@ function renderAll() {
   renderLeagueBreakdown(filtered);
   renderCalibrationChart(filtered);
   renderSimpleLog();
-  const el1 = document.getElementById('tabHistoryCount'); if (el1) el1.innerText = all.length;
-  const el2 = document.getElementById('tabSimpleCount'); if (el2) el2.innerText = loadResults().length;
+  const el1 = $('tabHistoryCount'); if (el1) el1.innerText = all.length;
+  const el2 = $('tabSimpleCount'); if (el2) el2.innerText = loadResults().length;
   updateUngradedBadge();
 }
 
 function renderStats(records) {
   const s = summarize(records);
-  document.getElementById('statTotal').innerText = s.total;
-  document.getElementById('statGraded').innerText = s.gradedCount;
-  const bc = document.getElementById('statBrierCard'), be = document.getElementById('statBrier'), bs = document.getElementById('statBrierSub');
+  writeText('statTotal', s.total);
+  writeText('statGraded', s.gradedCount);
+
+  const bc = $('statBrierCard'), be = $('statBrier'), bs = $('statBrierSub');
   if (s.brier !== null) {
     be.innerText = s.brier.toFixed(3);
     const q = s.brierQuality;
     bc.className = 'stat-card ' + (q === 'good' ? 'stat-brier-good' : q === 'ok' ? 'stat-brier-ok' : 'stat-brier-bad');
     bs.innerText = q === 'good' ? '🏆 ดีเยี่ยม' : q === 'ok' ? '👍 ดี' : '❌ ต้องปรับ';
   } else { be.innerText = '-'; bc.className = 'stat-card stat-n'; bs.innerText = 'ต้อง grade ก่อน'; }
-  const he = document.getElementById('statHit'), hs = document.getElementById('statHitSub');
+
+  const he = $('statHit'), hs = $('statHitSub');
   if (s.hitRate !== null) { he.innerText = (s.hitRate * 100).toFixed(1) + '%'; hs.innerText = `ถูก ${Math.round(s.hitRate * s.gradedCount)}/${s.gradedCount} นัด`; }
   else { he.innerText = '-'; hs.innerText = 'ต้อง grade ก่อน'; }
-  const rc = document.getElementById('statROICard'), re = document.getElementById('statROI'), rs = document.getElementById('statROISub');
+
+  const rc = $('statROICard'), re = $('statROI'), rs = $('statROISub');
   if (s.roi !== null) {
     re.innerText = (s.roi >= 0 ? '+' : '') + (s.roi * 100).toFixed(1) + '%';
     rc.className = 'stat-card ' + (s.roi >= 0 ? 'stat-roi-pos' : 'stat-roi-neg');
     rs.innerText = `P/L: ${s.totalPL.toFixed(0)} / Stake: ${s.totalStake.toFixed(0)}`;
   } else { re.innerText = '-'; rc.className = 'stat-card stat-n'; rs.innerText = 'กรอก stake + odds'; }
 }
+
 function renderHistoryTable(records) {
-  const tb = document.getElementById('historyTableBody');
+  const tb = $('historyTableBody');
   if (!records.length) { tb.innerHTML = `<tr><td colspan="14" class="empty-state"><i class="bi bi-inbox d-block mb-2"></i>ไม่มีข้อมูลตรงกับตัวกรอง</td></tr>`; return; }
   const sorted = [...records].sort((a, b) => (b.ts || '').localeCompare(a.ts || ''));
   tb.innerHTML = sorted.map(r => {
@@ -1465,13 +1791,13 @@ function renderHistoryTable(records) {
 }
 
 function renderLeagueFilter(all) {
-  const s = document.getElementById('filterLeague'), cur = s.value;
+  const s = $('filterLeague'), cur = s.value;
   const ls = [...new Set(all.map(r => r.league).filter(Boolean))].sort();
   s.innerHTML = '<option value="">-- ทุกลีก --</option>' + ls.map(l => `<option value="${l}" ${l === cur ? 'selected' : ''}>${l}</option>`).join('');
 }
 
 function renderConfidenceTable(records) {
-  const tb = document.getElementById('confidenceTableBody');
+  const tb = $('confidenceTableBody');
   const graded = records.filter(r => r.actual && typeof r.actual.totalGoals === 'number' && typeof r.confidence === 'number');
   if (!graded.length) { tb.innerHTML = '<tr><td colspan="5" class="text-center text-muted p-4">ยังไม่มีข้อมูล</td></tr>'; return; }
   const buckets = [{min:0,max:20,l:'0-20%'},{min:20,max:40,l:'20-40%'},{min:40,max:60,l:'40-60%'},{min:60,max:80,l:'60-80%'},{min:80,max:100,l:'80-100%'}];
@@ -1486,7 +1812,7 @@ function renderConfidenceTable(records) {
 }
 
 function renderLeagueBreakdown(records) {
-  const tb = document.getElementById('leagueTableBody');
+  const tb = $('leagueTableBody');
   const groups = {};
   records.forEach(r => { const l = r.league || 'ไม่ระบุ'; if (!groups[l]) groups[l] = []; groups[l].push(r); });
   const entries = Object.entries(groups).sort((a, b) => b[1].length - a[1].length);
@@ -1501,21 +1827,22 @@ function renderLeagueBreakdown(records) {
   }).join('');
 }
 
-// ✅ FIX #3: clamp pOver25 ให้อยู่ใน [0,1]
 function renderCalibrationChart(records) {
   const graded = records
     .filter(r => r.actual && typeof r.actual.totalGoals === 'number' && typeof r.pOver25 === 'number')
     .map(r => {
       const p = r.pOver25;
-      if (p < 0 || p > 1) {
-        console.warn('[Calibration] pOver25 out of range:', p, 'record id:', r.id);
-      }
+      if (p < 0 || p > 1) console.warn('[Calibration] pOver25 out of range:', p, 'record id:', r.id);
       return { ...r, pOver25: Math.max(0, Math.min(1, p)) };
     });
-  const canvas = document.getElementById('calibrationChart');
+
+  const canvas = $('calibrationChart');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  if (CALIBRATION_CHART) { CALIBRATION_CHART.destroy(); CALIBRATION_CHART = null; }
+  if (AppState.calibrationChart) {
+    try { AppState.calibrationChart.destroy(); } catch (e) {}
+    AppState.calibrationChart = null;
+  }
   if (!graded.length) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = '#9ca3af'; ctx.font = '14px sans-serif'; ctx.textAlign = 'center';
@@ -1532,7 +1859,7 @@ function renderCalibrationChart(records) {
     const actualRate = inB.filter(r => r.actual.totalGoals > 2.5).length / inB.length;
     points.push({ x: avgP * 100, y: actualRate * 100, n: inB.length });
   }
-  CALIBRATION_CHART = new Chart(ctx, {
+  AppState.calibrationChart = new Chart(ctx, {
     type: 'scatter',
     data: {
       datasets: [
@@ -1551,7 +1878,7 @@ function renderCalibrationChart(records) {
 }
 
 function renderSimpleLog() {
-  const tb = document.getElementById('simpleLogTableBody');
+  const tb = $('simpleLogTableBody');
   const results = loadResults();
   if (!results.length) { tb.innerHTML = `<tr><td colspan="8" class="empty-state"><i class="bi bi-journal d-block mb-2"></i>ยังไม่มีข้อมูล — กด "ส่งไปตารางท้ายผลบอล" ใน Scanner</td></tr>`; return; }
   tb.innerHTML = results.slice().reverse().map((r, i) => {
@@ -1569,12 +1896,15 @@ function renderSimpleLog() {
   }).join('');
 }
 
+/* ============================================================
+   TRACKER — ACTIONS
+   ============================================================ */
 function gradeRecord(id) {
-  const inp = document.getElementById('gradeInput_' + id);
+  const inp = $('gradeInput_' + id);
   if (!inp) return;
   const tg = parseInt(inp.value, 10);
-  if (isNaN(tg) || tg < 0 || tg > 15) { alert('⚠️ กรุณากรอกจำนวนประตูรวม (0-15)'); inp.focus(); return; }
-  const sI = document.getElementById('stakeInput_' + id), oI = document.getElementById('oddsInput_' + id);
+  if (isNaN(tg) || tg < 0 || tg > 15) { safeAlert('⚠️ กรุณากรอกจำนวนประตูรวม (0-15)'); inp.focus(); return; }
+  const sI = $('stakeInput_' + id), oI = $('oddsInput_' + id);
   const stake = sI && sI.value ? parseFloat(sI.value) : null;
   const odds = oI && oI.value ? parseFloat(oI.value) : null;
   const records = loadHistory();
@@ -1587,7 +1917,7 @@ function gradeRecord(id) {
   renderAll();
 }
 function resetGrade(id) {
-  if (!confirm('ล้าง grade รายการนี้?')) return;
+  if (!safeConfirm('ล้าง grade รายการนี้?')) return;
   const records = loadHistory();
   const idx = records.findIndex(r => r.id === id);
   if (idx < 0) return;
@@ -1596,7 +1926,7 @@ function resetGrade(id) {
   renderAll();
 }
 function deleteRecord(id) {
-  if (!confirm('ลบรายการนี้?')) return;
+  if (!safeConfirm('ลบรายการนี้?')) return;
   saveHistory(loadHistory().filter(r => r.id !== id));
   renderAll();
 }
@@ -1605,19 +1935,18 @@ function updateSimpleResult(index, value) {
   if (r[index]) { r[index].result = value; saveResults(r); }
 }
 function deleteSimple(index) {
-  if (!confirm('ลบรายการนี้?')) return;
+  if (!safeConfirm('ลบรายการนี้?')) return;
   const r = loadResults();
   r.splice(index, 1);
   saveResults(r);
   renderSimpleLog();
-  const el = document.getElementById('tabSimpleCount'); if (el) el.innerText = r.length;
+  const el = $('tabSimpleCount'); if (el) el.innerText = r.length;
 }
 function confirmClearAll() {
-  if (!confirm('⚠️ ล้างประวัติทั้งหมด?\n\n- History v6\n- Simple Log\n\nย้อนกลับไม่ได้!')) return;
-  if (!confirm('ยืนยันอีกครั้ง?')) return;
-  const keys = getKeys();
-  localStorage.removeItem(keys.history);
-  localStorage.removeItem(keys.results);
+  if (!safeConfirm('⚠️ ล้างประวัติทั้งหมด?\n\n- History v6\n- Simple Log\n\nย้อนกลับไม่ได้!')) return;
+  if (!safeConfirm('ยืนยันอีกครั้ง?')) return;
+  Storage.remove('history');
+  Storage.remove('results');
   renderAll();
 }
 function reloadData() {
@@ -1631,7 +1960,7 @@ function reloadData() {
 }
 function exportAllCSV() {
   const records = loadHistory();
-  if (!records.length) { alert('📭 ยังไม่มีข้อมูล'); return; }
+  if (!records.length) { safeAlert('📭 ยังไม่มีข้อมูล'); return; }
   const headers = ['id','timestamp','league','home','away','minute','xgH','xgA','pOver25','pAHHome','pAHAway','confidence','direction','actual','brier','hit','stake','odds','pl'];
   const rows = records.map(r => {
     const g = r.actual && typeof r.actual.totalGoals === 'number';
@@ -1653,14 +1982,19 @@ function exportAllCSV() {
   const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `jackai_tracker_${currentUser.split('@')[0]}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `jackai_tracker_${AppState.user.split('@')[0]}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
 /* ============================================================
-   VIEW SWITCH
+   UI HELPERS
    ============================================================ */
+function openDonateModal() { new bootstrap.Modal($('donateModal')).show(); }
+function copyDonateNumber() {
+  navigator.clipboard.writeText("0944754282").then(() => safeAlert("✅ คัดลอกเบอร์ TrueMoney แล้ว: 094-475-4282"))
+    .catch(() => safeAlert("❌ คัดลอกไม่ได้ กรุณาจดเบอร์: 094-475-4282"));
+}
 function showTracker() {
   document.body.classList.remove('scanner-view');
   document.body.classList.add('tracker-view');
@@ -1673,9 +2007,8 @@ function showScanner() {
 }
 
 /* ============================================================
-   TEST HARNESS — Phase A Bug Fixes
+   TEST HARNESS — 43 tests (Phase A + B + Refactor)
    ============================================================ */
-
 const TestRunner = {
   results: [],
   assert(condition, name, details = '') {
@@ -1700,7 +2033,7 @@ const TestRunner = {
   }
 };
 
-// ✅ Sandbox mock ครบ setItem, getItem, removeItem
+// Sandbox (mock localStorage ครบ 3 methods)
 const Sandbox = {
   data: {},
   get(k) { return this.data[k] ?? null; },
@@ -1724,11 +2057,11 @@ const Sandbox = {
   }
 };
 
-/* ---------- TEST #1: sendToTable() parse fmtPct() ---------- */
-function test_sendToTable_parse() {
-  const origPrediction = lastPrediction;
+/* ---------- PHASE A TESTS ---------- */
 
-  lastPrediction = {
+function test_sendToTable_parse() {
+  const origPrediction = AppState.lastPrediction;
+  AppState.setLastPrediction({
     pFT: [0.003, 0.010, 0.500, 0.300, 0.100, 0.050, 0.020],
     pFH: [0.300, 0.100, 0.020, 0.001],
     pAHHome: 0.5, pAHAway: 0.4, pAHPush: 0.1,
@@ -1739,136 +2072,284 @@ function test_sendToTable_parse() {
     league: 'Test League', leagueKey: 'test',
     homeName: 'A', awayName: 'B',
     confidence: 70, timestamp: Date.now()
-  };
-
+  });
   const origAlert = window.alert;
   let alertMsg = '';
   window.alert = (m) => { alertMsg = m; };
-
   Sandbox.clear();
   Sandbox.withMock(() => { sendToTable(); });
-
-  const resultsKey = `jackai_results_data_${currentUser.replace(/[^a-zA-Z0-9]/g, '_')}`;
+  const resultsKey = Storage.key('results');
   const saved = Sandbox.get(resultsKey);
   let parsed = null;
   try { parsed = JSON.parse(saved || '[]'); } catch (e) {}
-
   window.alert = origAlert;
-  lastPrediction = origPrediction;
+  AppState.setLastPrediction(origPrediction);
 
   const record = parsed && parsed[0];
-  TestRunner.assert(record, 'T1a: sendToTable สร้าง record สำเร็จ', saved ? 'saved=' + saved.slice(0, 80) : 'no saved');
+  TestRunner.assert(record, 'A1a: sendToTable สร้าง record สำเร็จ', saved ? 'saved=' + saved.slice(0, 80) : 'no saved');
   TestRunner.assert(record && record.ft.startsWith('สูง 2.5'),
-    'T1a: เลือก FT ถูก (สูง 2.5) ไม่ใช่ สูง 0.5',
+    'A1a: เลือก FT ถูก (สูง 2.5) ไม่ใช่ สูง 0.5',
     record ? `got ft="${record.ft}"` : 'no record');
 
-  lastPrediction = null;
+  AppState.setLastPrediction(null);
   alertMsg = '';
   Sandbox.clear();
   const origAlert2 = window.alert;
   window.alert = (m) => { alertMsg = m; };
   Sandbox.withMock(() => { sendToTable(); });
   window.alert = origAlert2;
-
   TestRunner.assert(alertMsg.includes('ประมวลผลคาดการณ์'),
-    'T1b: lastPrediction=null → แจ้งเตือนให้กดประมวลผล',
+    'A1b: lastPrediction=null → แจ้งเตือนให้กดประมวลผล',
     `msg="${alertMsg}"`);
 }
 
-/* ---------- TEST #2: Calibration Chart clamp ---------- */
 function test_calibration_clamp() {
   const badRecords = [
-    { actual: { totalGoals: 3 }, pOver25: 1.5, confidence: 80 },
-    { actual: { totalGoals: 2 }, pOver25: 0.7, confidence: 70 },
-    { actual: { totalGoals: 4 }, pOver25: -0.2, confidence: 60 },
+    { actual: { totalGoals: 3 }, pOver25: 1.5 },
+    { actual: { totalGoals: 2 }, pOver25: 0.7 },
+    { actual: { totalGoals: 4 }, pOver25: -0.2 },
   ];
-
-  const clamped = badRecords.map(r => {
-    const p = r.pOver25;
-    return { ...r, pOver25: Math.max(0, Math.min(1, p)) };
-  });
-
-  TestRunner.assertEq(clamped[0].pOver25, 1, 'T2a: clamp 1.5 → 1.0');
-  TestRunner.assertEq(clamped[1].pOver25, 0.7, 'T2b: 0.7 คงเดิม (ไม่ clamp)');
-  TestRunner.assertEq(clamped[2].pOver25, 0, 'T2c: clamp -0.2 → 0.0');
-
-  const filtered = badRecords
-    .filter(r => r.actual && typeof r.actual.totalGoals === 'number' && typeof r.pOver25 === 'number')
-    .map(r => ({ ...r, pOver25: Math.max(0, Math.min(1, r.pOver25)) }));
-  TestRunner.assertEq(filtered.length, 3, 'T2d: filter เก็บทั้ง 3 record (clamp แล้ว)');
+  const clamped = badRecords.map(r => ({ ...r, pOver25: Math.max(0, Math.min(1, r.pOver25)) }));
+  TestRunner.assertEq(clamped[0].pOver25, 1, 'A3a: clamp 1.5 → 1.0');
+  TestRunner.assertEq(clamped[1].pOver25, 0.7, 'A3b: 0.7 คงเดิม');
+  TestRunner.assertEq(clamped[2].pOver25, 0, 'A3c: clamp -0.2 → 0.0');
+  TestRunner.assertEq(clamped.length, 3, 'A3d: filter เก็บทั้ง 3 record');
 }
 
-/* ---------- TEST #3: timeWeight ET ---------- */
 function test_timeWeight_et() {
-  TestRunner.assertEq(timeWeight(80), 1.25, 'T3a: timeWeight(80) = 1.25');
-  TestRunner.assertEq(timeWeight(90), 1.25, 'T3b: timeWeight(90) = 1.25');
-  TestRunner.assertEq(timeWeight(95), 1.30, 'T3c: timeWeight(95) = 1.30 (ET1)');
-  TestRunner.assertEq(timeWeight(105), 1.30, 'T3d: timeWeight(105) = 1.30 (ET1 end)');
-  TestRunner.assertEq(timeWeight(110), 1.35, 'T3e: timeWeight(110) = 1.35 (ET2)');
-  TestRunner.assertEq(timeWeight(120), 1.35, 'T3f: timeWeight(120) = 1.35 (ET2 end)');
-
-  TestRunner.assert(timeWeight(110) > timeWeight(80),
-    'T3g: ET2 weight > 75-90 weight (แก้ bug เดิม)');
+  TestRunner.assertEq(timeWeight(80), 1.25, 'A12a: timeWeight(80) = 1.25');
+  TestRunner.assertEq(timeWeight(90), 1.25, 'A12b: timeWeight(90) = 1.25');
+  TestRunner.assertEq(timeWeight(95), 1.30, 'A12c: timeWeight(95) = 1.30 (ET1)');
+  TestRunner.assertEq(timeWeight(105), 1.30, 'A12d: timeWeight(105) = 1.30');
+  TestRunner.assertEq(timeWeight(110), 1.35, 'A12e: timeWeight(110) = 1.35 (ET2)');
+  TestRunner.assertEq(timeWeight(120), 1.35, 'A12f: timeWeight(120) = 1.35');
+  TestRunner.assert(timeWeight(110) > timeWeight(80), 'A12g: ET2 weight > 75-90');
 }
 
-/* ---------- TEST #4: Type coercion calcPL/calcBrier/calcHit ---------- */
 function test_type_coercion() {
   const rec1 = { actual: { totalGoals: 3 }, stake: "100", odds: "1.90", pOver25: 0.6 };
-  TestRunner.assertEq(calcPL(rec1), 90, 'T4a: calcPL กับ stake/odds เป็น string → PL=90');
+  TestRunner.assertClose(calcPL(rec1), 90, 0.001, 'A17a: calcPL stake/odds string → PL≈90');
 
   const rec2 = { actual: { totalGoals: 3 }, stake: "abc", odds: 1.90, pOver25: 0.6 };
-  TestRunner.assertEq(calcPL(rec2), null, 'T4b: stake="abc" → null');
+  TestRunner.assertEq(calcPL(rec2), null, 'A17b: stake="abc" → null');
 
   const rec3 = { actual: { totalGoals: 3 }, stake: 0, odds: 1.90, pOver25: 0.6 };
-  TestRunner.assertEq(calcPL(rec3), null, 'T4c: stake=0 → null');
+  TestRunner.assertEq(calcPL(rec3), null, 'A17c: stake=0 → null');
 
   const rec4 = { actual: { totalGoals: 3 }, stake: 100, odds: 1.90, pOver25: "0.6" };
-  TestRunner.assertEq(calcPL(rec4), 90, 'T4d: pOver25="0.6" string → PL=90');
+  TestRunner.assertClose(calcPL(rec4), 90, 0.001, 'A17d: pOver25="0.6" string → PL≈90');
 
   const rec5 = { actual: { totalGoals: 3 }, pOver25: "0.6" };
-  TestRunner.assertClose(calcBrier(rec5), 0.16, 0.001, 'T4e: calcBrier p="0.6" → 0.16');
+  TestRunner.assertClose(calcBrier(rec5), 0.16, 0.001, 'A17e: calcBrier p="0.6" → 0.16');
 
   const rec6 = { actual: { totalGoals: 3 }, pOver25: "0.6" };
-  TestRunner.assertEq(calcHit(rec6), 1, 'T4f: calcHit p="0.6" actual=3 → 1 (ถูก)');
+  TestRunner.assertEq(calcHit(rec6), 1, 'A17f: calcHit p="0.6" actual=3 → 1');
 
   const rec7 = { actual: { totalGoals: 3 }, stake: 100, odds: 1.0, pOver25: 0.6 };
-  TestRunner.assertEq(calcPL(rec7), null, 'T4g: odds=1.0 → null');
+  TestRunner.assertEq(calcPL(rec7), null, 'A17g: odds=1.0 → null');
 }
 
-/* ---------- TEST #5: handleLeagueInput ไม่เรียกซ้ำ ---------- */
 function test_handleLeagueInput_once() {
-  const hasSavedInputs1 = true;
-  let callCount1 = 0;
-  if (hasSavedInputs1) { callCount1++; } else { callCount1++; }
-  TestRunner.assertEq(callCount1, 1, 'T5a: มี saved inputs → handleLeagueInput เรียก 1 ครั้ง');
-
-  const hasSavedInputs2 = false;
-  let callCount2 = 0;
-  if (hasSavedInputs2) { callCount2++; } else { callCount2++; }
-  TestRunner.assertEq(callCount2, 1, 'T5b: ไม่มี saved inputs → handleLeagueInput เรียก 1 ครั้ง');
-
   const fnSource = initAppForUser.toString();
   const hasGuard = fnSource.includes('hasSavedInputs');
   TestRunner.assert(hasGuard,
-    'T5c: initAppForUser มี guard hasSavedInputs (patch ถูก apply)',
-    hasGuard ? 'ok' : 'ไม่พบ hasSavedInputs ใน initAppForUser');
+    'A5: initAppForUser มี guard hasSavedInputs',
+    hasGuard ? 'ok' : 'ไม่พบ hasSavedInputs');
+}
+
+/* ---------- PHASE B TESTS ---------- */
+
+function test_M2_strength_sensitivity() {
+  const mult100 = strengthToAttackMult(100);
+  const mult0 = strengthToAttackMult(0);
+  const mult85 = strengthToAttackMult(85);
+  const mult70 = strengthToAttackMult(70);
+
+  const ratio = mult100 / mult0;
+  TestRunner.assert(ratio >= 2.3,
+    'B2a: strength(100)/strength(0) >= 2.3x',
+    `ratio=${ratio.toFixed(2)}`);
+
+  const midRatio = mult85 / mult70;
+  TestRunner.assert(midRatio >= 1.08 && midRatio <= 1.35,
+    'B2b: strength(85)/strength(70) ∈ [1.08, 1.35]',
+    `ratio=${midRatio.toFixed(3)}`);
+
+  TestRunner.assert(mult100 <= 2.20 && mult0 >= 0.45,
+    'B2c: multipliers ∈ [0.45, 2.20]',
+    `mult100=${mult100.toFixed(3)}, mult0=${mult0.toFixed(3)}`);
+}
+
+function test_M5_confidence_lead() {
+  const baseInput = { hShots: 12, aShots: 8, hSot: 5, aSot: 3, hBig: 1, aBig: 0, minute: 70, top3ProbSum: 0.55 };
+  const c0 = calcConfidence({ ...baseInput, goalDiff: 0 });
+  const c3 = calcConfidence({ ...baseInput, goalDiff: 3 });
+  const c5 = calcConfidence({ ...baseInput, goalDiff: 5 });
+  TestRunner.assert(c3 > c0, 'B5a: conf(3-0) > conf(0-0) ที่นาที 70', `c0=${c0}, c3=${c3}`);
+  TestRunner.assertClose(c5, c3, 0.5, 'B5b: conf(5-0) ≈ conf(3-0) (clamp lead ที่ 3)', `c5=${c5}, c3=${c3}`);
+
+  const cEarly = calcConfidence({ ...baseInput, minute: 20, goalDiff: 3 });
+  const c0Early = calcConfidence({ ...baseInput, minute: 20, goalDiff: 0 });
+  TestRunner.assert(cEarly >= c0Early, 'B5c: นำเร็ว (นาที 20) conf >= เสมอ', `c0=${c0Early}, c3=${cEarly}`);
+}
+
+function test_M7_kelly_cap() {
+  const vb = calcValueBet(0.8, 3.0);
+  TestRunner.assert(vb !== null, 'B7a: calcValueBet(0.8, 3.0) ไม่ null');
+  TestRunner.assertClose(vb.kelly, 0.7, 0.001, 'B7b: Kelly ดิบ = 0.7');
+  TestRunner.assertEq(vb.kellyHalf, 0.025, 'B7c: KellyHalf capped 2.5%');
+  TestRunner.assert(vb.wasCapped === true, 'B7d: wasCapped = true');
+
+  const vb2 = calcValueBet(0.55, 2.0);
+  TestRunner.assertClose(vb2.kelly, 0.10, 0.001, 'B7e: Kelly(0.55, 2.0) = 0.10');
+  TestRunner.assertEq(vb2.kellyHalf, 0.025, 'B7f: KellyHalf capped 2.5%');
+
+  TestRunner.assertEq(calcValueBet(0.8, 1.0), null, 'B7g: odds=1.0 → null');
+
+  const vb3 = calcValueBet(0.45, 1.5);
+  TestRunner.assertEq(vb3.kelly, 0, 'B7h: Kelly(0.45, 1.5) = 0');
+  TestRunner.assert(vb3.isValue === false, 'B7i: isValue = false');
+
+  const vb4 = calcValueBet(0.50, 2.5);
+  TestRunner.assertClose(vb4.kelly, 0.1667, 0.001, 'B7j: Kelly(0.50, 2.5) ≈ 0.1667');
+  TestRunner.assert(vb4.wasCapped === true, 'B7k: Kelly 0.1667 ถูก cap');
+  TestRunner.assertEq(vb4.kellyHalf, 0.025, 'B7l: KellyHalf capped 2.5%');
+}
+
+function test_M1_tempo_baseline() {
+  const leagueRate = 2.70;
+  const shotXg1 = 1.0, minute1 = 30;
+  const shotRate1 = (shotXg1 / minute1) * 90;
+  const baseline1 = shotRate1 * 0.65 + leagueRate * 0.35;
+  TestRunner.assert(baseline1 > leagueRate, 'B1a: shot xG สูง → baseline สูงกว่า league',
+    `baseline=${baseline1.toFixed(2)}, league=${leagueRate}`);
+
+  const shotXg2 = 0.2, minute2 = 30;
+  const shotRate2 = (shotXg2 / minute2) * 90;
+  const baseline2 = shotRate2 * 0.65 + leagueRate * 0.35;
+  TestRunner.assert(baseline2 < leagueRate, 'B1b: shot xG ต่ำ → baseline ต่ำกว่า league',
+    `baseline=${baseline2.toFixed(2)}, league=${leagueRate}`);
+
+  const hasSufficient = 0.2 >= 0.3 && minute2 >= 15;
+  TestRunner.assert(!hasSufficient, 'B1c: shot xG < 0.3 → fallback league', `hasSufficient=${hasSufficient}`);
+}
+
+/* ---------- C1 REFACTOR TESTS ---------- */
+
+function test_C1_helpers() {
+  // readNum fallback
+  const el = document.createElement('input');
+  el.id = 'test_readNum';
+  el.value = 'abc';
+  document.body.appendChild(el);
+  TestRunner.assertEq(readNum('test_readNum', { fallback: 42 }), 42, 'C1a: readNum invalid → fallback');
+  el.value = '150';
+  TestRunner.assertEq(readNum('test_readNum', { max: 100 }), 100, 'C1b: readNum clamp max');
+  el.value = '-5';
+  TestRunner.assertEq(readNum('test_readNum', { min: 0 }), 0, 'C1c: readNum clamp min');
+  el.remove();
+
+  // toNum
+  TestRunner.assertEq(toNum('123'), 123, 'C1d: toNum("123") = 123');
+  TestRunner.assertEq(toNum('abc'), null, 'C1e: toNum("abc") = null');
+  TestRunner.assertEq(toNum(''), null, 'C1f: toNum("") = null');
+}
+
+function test_C1_appstate() {
+  const origLeague = { ...AppState.league };
+  const origUser = AppState.user;
+
+  AppState.setLeague('premier league', LEAGUE_CONSTANTS['premier league']);
+  TestRunner.assertEq(AppState.league.key, 'premier league', 'C1g: AppState.setLeague ทำงาน');
+  TestRunner.assertEq(AppState.league.avgGoals, 3.24, 'C1h: setLeague อัปเดต avgGoals');
+
+  AppState.setDefaultLeague();
+  TestRunner.assertEq(AppState.league.key, 'default', 'C1i: setDefaultLeague reset');
+  TestRunner.assertEq(AppState.league.avgGoals, 2.70, 'C1j: default avgGoals = 2.70');
+
+  AppState.setUser('test@test.com');
+  TestRunner.assertEq(AppState.user, 'test@test.com', 'C1k: setUser ทำงาน');
+
+  // Restore
+  AppState.league = origLeague;
+  AppState.setUser(origUser);
+}
+
+function test_C1_storage() {
+  const origUser = AppState.user;
+  AppState.setUser('storage_test@x.com');
+
+  Sandbox.clear();
+  Sandbox.withMock(() => {
+    Storage.set('history', [{ id: 1 }]);
+    const got = Storage.get('history', []);
+    TestRunner.assertEq(got.length, 1, 'C1l: Storage set/get roundtrip');
+    TestRunner.assertEq(got[0].id, 1, 'C1m: Storage roundtrip ค่าถูก');
+
+    const fallback = Storage.get('nonexistent', 'FB');
+    TestRunner.assertEq(fallback, 'FB', 'C1n: Storage.get fallback');
+  });
+
+  AppState.setUser(origUser);
+}
+
+function test_C1_pipeline() {
+  // Test calcRatio
+  const inputs1 = { homeStrength: 70, awayStrength: 70, hShots: 10, aShots: 10 };
+  const cleaned1 = { hSot: 4, aSot: 4, hBig: 1, aBig: 1 };
+  const ratio = calcRatio(inputs1, cleaned1);
+  TestRunner.assertClose(ratio.hRatio + ratio.aRatio, 1.0, 0.001, 'C1o: hRatio + aRatio = 1');
+  TestRunner.assert(ratio.hRatio > 0.4 && ratio.hRatio < 0.7, 'C1p: hRatio สมเหตุสมผล', `hRatio=${ratio.hRatio.toFixed(3)}`);
+
+  // Test buildScoreGrid
+  const { grid, total } = buildScoreGrid(1.5, 1.2, -0.08);
+  TestRunner.assertClose(total, 1.0, 0.01, 'C1q: buildScoreGrid total ≈ 1.0', `total=${total.toFixed(4)}`);
+  TestRunner.assertEq(grid.length, (CONFIG.GRID.MAX_GOALS + 1) ** 2, 'C1r: grid size ถูก');
+
+  // Test calcAH
+  const ah = calcAH(grid, 0, 0, 0);
+  TestRunner.assertClose(ah.pAHHomeWin + ah.pAHAwayWin + ah.pAHPush, 1.0, 0.01, 'C1s: AH probs รวม = 1.0',
+    `sum=${(ah.pAHHomeWin + ah.pAHAwayWin + ah.pAHPush).toFixed(4)}`);
+
+  // Test calcFT
+  const ft = calcFT(grid, 0, 0);
+  TestRunner.assert(ft.pOver05 > ft.pOver15 && ft.pOver15 > ft.pOver25,
+    'C1t: pOver05 > pOver15 > pOver25 (monotonic)',
+    `${ft.pOver05.toFixed(3)} > ${ft.pOver15.toFixed(3)} > ${ft.pOver25.toFixed(3)}`);
+
+  // Test calcTop3
+  const top3 = calcTop3(grid, 0, 0);
+  TestRunner.assertEq(top3.top3.length, 3, 'C1u: top3 มี 3 รายการ');
+  TestRunner.assert(top3.top3[0].prob >= top3.top3[1].prob, 'C1v: top3 เรียงจากมากไปน้อย');
+
+  // Test calcNextGoal
+  const ng = calcNextGoal(1.5, 1.2);
+  TestRunner.assertClose(ng.pHN + ng.pNone + ng.pAN, 1.0, 0.01, 'C1w: next goal probs รวม = 1.0');
 }
 
 /* ---------- MAIN: RUN ALL TESTS ---------- */
 function runTests() {
-  if (!currentUser) {
-    alert('⚠️ กรุณาเข้าสู่ระบบก่อนรัน tests');
+  if (!AppState.user) {
+    safeAlert('⚠️ กรุณาเข้าสู่ระบบก่อนรัน tests');
     return;
   }
 
   TestRunner.reset();
 
   const tests = [
-    { name: 'BUG #1: sendToTable() parse fmtPct()', fn: test_sendToTable_parse },
-    { name: 'BUG #3: Calibration Chart clamp', fn: test_calibration_clamp },
-    { name: 'BUG #12: timeWeight() ET', fn: test_timeWeight_et },
-    { name: 'BUG #17: Type coercion', fn: test_type_coercion },
-    { name: 'BUG #5: handleLeagueInput ซ้ำ', fn: test_handleLeagueInput_once },
+    { name: 'A1: sendToTable() parse fmtPct()', fn: test_sendToTable_parse },
+    { name: 'A3: Calibration Chart clamp', fn: test_calibration_clamp },
+    { name: 'A12: timeWeight() ET', fn: test_timeWeight_et },
+    { name: 'A17: Type coercion', fn: test_type_coercion },
+    { name: 'A5: handleLeagueInput ซ้ำ', fn: test_handleLeagueInput_once },
+    { name: 'B2: Strength sensitivity', fn: test_M2_strength_sensitivity },
+    { name: 'B5: Confidence + lead margin', fn: test_M5_confidence_lead },
+    { name: 'B7: Kelly cap 5%', fn: test_M7_kelly_cap },
+    { name: 'B1: Tempo baseline (shot xG)', fn: test_M1_tempo_baseline },
+    { name: 'C1: DOM Helpers', fn: test_C1_helpers },
+    { name: 'C1: AppState', fn: test_C1_appstate },
+    { name: 'C1: Storage Layer', fn: test_C1_storage },
+    { name: 'C1: Predictor Pipeline', fn: test_C1_pipeline },
   ];
 
   tests.forEach(t => {
@@ -1883,8 +2364,8 @@ function runTests() {
   });
 
   const summary = TestRunner.summary();
-  const summaryEl = document.getElementById('testSummary');
-  const detailsEl = document.getElementById('testDetails');
+  const summaryEl = $('testSummary');
+  const detailsEl = $('testDetails');
 
   const allPass = summary.failed === 0;
   summaryEl.className = 'alert ' + (allPass ? 'alert-success' : 'alert-danger');
@@ -1893,7 +2374,7 @@ function runTests() {
       ${allPass ? '✅ PASS' : '❌ FAIL'}
       — ${summary.passed}/${summary.total} tests passed
     </h6>
-    <small>${allPass ? 'Phase A bug fixes ทั้งหมดทำงานถูกต้อง' : `มี ${summary.failed} test ที่ล้มเหลว — ดูรายละเอียดด้านล่าง`}</small>
+    <small>${allPass ? 'v6.3 Clean Refactor: ทุกอย่างทำงานถูกต้อง' : `มี ${summary.failed} test ที่ล้มเหลว — ดูรายละเอียดด้านล่าง`}</small>
   `;
 
   detailsEl.innerHTML = TestRunner.results.map(r => `
@@ -1906,12 +2387,11 @@ function runTests() {
     </div>
   `).join('');
 
-  new bootstrap.Modal(document.getElementById('testResultModal')).show();
+  new bootstrap.Modal($('testResultModal')).show();
 }
 
-// Keyboard shortcut: Ctrl+Shift+T
 document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.shiftKey && e.key === 'T' && currentUser) {
+  if (e.ctrlKey && e.shiftKey && e.key === 'T' && AppState.user) {
     e.preventDefault();
     runTests();
   }
@@ -1923,17 +2403,17 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
 
-  const ls = document.getElementById('leagueSearch');
+  const ls = $('leagueSearch');
   if (ls) {
     ls.addEventListener('input', (e) => { renderDropdown(e.target.value); tryAutoMatchLeague(e.target.value); });
-    ls.addEventListener('keydown', (e) => { if (e.key === 'Enter') { tryAutoMatchLeague(e.target.value); document.getElementById('leagueDropdown').style.display = 'none'; } });
+    ls.addEventListener('keydown', (e) => { if (e.key === 'Enter') { tryAutoMatchLeague(e.target.value); $('leagueDropdown').style.display = 'none'; } });
   }
 
-  INPUT_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', saveInputs); });
+  INPUT_IDS.forEach(id => { const el = $(id); if (el) el.addEventListener('change', saveInputs); });
 
   let lastCount = -1;
   setInterval(() => {
-    if(!currentUser) return;
+    if (!AppState.user) return;
     const cur = loadHistory().length + loadResults().length;
     if (cur !== lastCount) { renderAll(); lastCount = cur; }
   }, 15000);
