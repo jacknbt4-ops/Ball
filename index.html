@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Suite v6.0 — Scanner + Tracker</title>
+<title>⚽ JackAI Suite v6.1 — Login Edition</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -18,6 +18,25 @@ body.scanner-view #appScanner { display:flex; flex-direction:column; flex:1; ove
 body.scanner-view #appTracker { display:none; }
 body.tracker-view #appScanner { display:none; }
 body.tracker-view #appTracker { display:block; }
+
+/* ========== LOGIN OVERLAY ========== */
+#loginOverlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 99999;
+}
+.login-box {
+    background: #ffffff; padding: 40px 30px; border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 400px;
+    text-align: center;
+}
+.login-box .icon { font-size: 3rem; color: #10b981; margin-bottom: 15px; }
+.login-box h3 { font-weight: 800; color: #1e293b; margin-bottom: 5px; }
+.login-box p { color: #64748b; font-size: 0.85rem; margin-bottom: 25px; }
+.login-box input { margin-bottom: 20px; padding: 12px 15px; font-size: 1rem; border-radius: 8px; }
+.btn-login { background: #10b981; color: white; font-weight: bold; font-size: 1rem; padding: 12px; border-radius: 8px; border: none; width: 100%; transition: 0.2s; }
+.btn-login:hover { background: #059669; transform: translateY(-2px); }
 
 /* ========== SCANNER STYLES ========== */
 .navbar-custom { height:50px; flex-shrink:0; background:#fff; border-bottom:1px solid #dee2e6; }
@@ -73,12 +92,13 @@ body.tracker-view #appTracker { display:block; }
 .value-bet-box { border-radius:6px; padding:4px 6px; font-size:0.65rem; text-align:center; height:32px; line-height:22px; overflow:hidden; }
 .btn-view-switch { background:linear-gradient(135deg,#6366f1,#4f46e5); color:#fff; border:none; font-weight:700; border-radius:20px; padding:5px 14px; font-size:0.75rem; box-shadow:0 2px 6px rgba(79,70,229,0.35); transition:transform 0.15s; }
 .btn-view-switch:hover { transform:translateY(-1px); color:#fff; }
+.user-badge { background: #e2e8f0; color: #334155; font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
 ::-webkit-scrollbar { width:4px; height:4px; }
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:#ced4da; border-radius:10px; }
 ::-webkit-scrollbar-thumb:hover { background:#adb5bd; }
 
-/* ========== TRACKER STYLES (scoped #appTracker) ========== */
+/* ========== TRACKER STYLES ========== */
 body.tracker-view::-webkit-scrollbar { width:8px; }
 body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4px; }
 #appTracker ::-webkit-scrollbar { width:6px; height:6px; }
@@ -123,6 +143,17 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
 </head>
 <body class="scanner-view">
 
+<!-- ========== LOGIN OVERLAY ========== -->
+<div id="loginOverlay">
+    <div class="login-box">
+        <i class="bi bi-shield-lock-fill icon"></i>
+        <h3>JackAI Suite</h3>
+        <p>กรุณาเข้าสู่ระบบด้วยอีเมลของคุณ<br>เพื่อแยกประวัติการทำนาย</p>
+        <input type="email" id="loginEmail" class="form-control" placeholder="example@email.com" autocomplete="off">
+        <button class="btn-login" onclick="handleLogin()"><i class="bi bi-box-arrow-in-right"></i> เข้าสู่ระบบ</button>
+    </div>
+</div>
+
 <!-- ============================================================
      APP: SCANNER
      ============================================================ -->
@@ -134,12 +165,16 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
         <span class="badge bg-success" style="font-size:0.55rem;">PRO</span>
       </span>
       <div class="d-flex align-items-center gap-2 ms-auto">
+        <span class="user-badge d-none d-md-block"><i class="bi bi-person-circle"></i> <span id="displayUserEmailScan">-</span></span>
         <button class="btn btn-view-switch" onclick="showTracker()">
           <i class="bi bi-graph-up"></i> Tracker
           <span class="badge bg-danger ms-1" id="navUngradedBadge" style="font-size:0.55rem;">0</span>
         </button>
         <button class="btn btn-donate mb-0" onclick="openDonateModal()">
           <i class="bi bi-heart-fill text-white"></i> สนับสนุน
+        </button>
+        <button class="btn btn-sm btn-outline-danger" onclick="handleLogout()" title="ออกจากระบบ">
+          <i class="bi bi-box-arrow-right"></i>
         </button>
       </div>
     </div>
@@ -372,10 +407,12 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
         <i class="bi bi-clipboard-data text-danger"></i> JackAI Tracker
         <span class="badge bg-danger" style="font-size:0.6rem; vertical-align:middle;">GRADE</span>
       </span>
-      <div class="d-flex gap-2">
+      <div class="d-flex gap-2 align-items-center">
+        <span class="user-badge d-none d-md-block"><i class="bi bi-person-circle"></i> <span id="displayUserEmailTrack">-</span></span>
         <button class="btn btn-view-switch" onclick="showScanner()"><i class="bi bi-arrow-left"></i> กลับ Scanner</button>
         <button class="btn btn-sm btn-outline-primary" onclick="reloadData()"><i class="bi bi-arrow-clockwise"></i> รีโหลด</button>
         <button class="btn btn-sm btn-outline-success" onclick="exportAllCSV()"><i class="bi bi-download"></i> Export CSV</button>
+        <button class="btn btn-sm btn-outline-danger" onclick="handleLogout()" title="ออกจากระบบ"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </nav>
@@ -460,14 +497,82 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
 
 <script>
 /* ============================================================
-   JackAI Suite v6.0 — Combined Script
+   AUTHENTICATION & STORAGE MANAGER
    ============================================================ */
+let currentUser = '';
+const USER_SESSION_KEY = 'jackai_active_user';
 
-/* ========== SHARED CONSTANTS ========== */
-const HISTORY_KEY = 'jackai_history_v6';
-const RESULTS_KEY = 'jackai_results_data';
+// ฟังก์ชันดึง Key ของ LocalStorage ตามชื่อ User
+function getKeys() {
+    const userSuffix = currentUser ? `_${currentUser.replace(/[^a-zA-Z0-9]/g, '_')}` : '';
+    return {
+        history: `jackai_history_v6${userSuffix}`,
+        results: `jackai_results_data${userSuffix}`,
+        inputs: `jackai_inputs_v6${userSuffix}`
+    };
+}
 
-/* ========== SCANNER CONFIG ========== */
+function handleLogin() {
+    const emailInput = document.getElementById('loginEmail');
+    const email = emailInput.value.trim().toLowerCase();
+    
+    // ตรวจสอบรูปแบบอีเมลเบื้องต้น
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert('⚠️ กรุณากรอกอีเมลให้ถูกต้อง (เช่น example@gmail.com)');
+        emailInput.focus();
+        return;
+    }
+    
+    // บันทึก Session
+    currentUser = email;
+    localStorage.setItem(USER_SESSION_KEY, currentUser);
+    
+    // อัปเดต UI
+    initAppForUser();
+}
+
+function handleLogout() {
+    if(!confirm('คุณต้องการออกจากระบบใช่หรือไม่?\n(ข้อมูลการทำนายของคุณจะยังถูกบันทึกไว้)')) return;
+    localStorage.removeItem(USER_SESSION_KEY);
+    location.reload();
+}
+
+function checkAuth() {
+    const savedUser = localStorage.getItem(USER_SESSION_KEY);
+    if (savedUser) {
+        currentUser = savedUser;
+        document.getElementById('loginOverlay').style.display = 'none';
+        initAppForUser();
+    } else {
+        document.getElementById('loginOverlay').style.display = 'flex';
+        document.getElementById('loginEmail').focus();
+    }
+}
+
+function initAppForUser() {
+    // แสดงอีเมลบน Navbar
+    document.getElementById('displayUserEmailScan').innerText = currentUser;
+    document.getElementById('displayUserEmailTrack').innerText = currentUser;
+    
+    // ซ่อน Overlay
+    document.getElementById('loginOverlay').style.display = 'none';
+    
+    // โหลดข้อมูลของ User คนนี้
+    restoreInputs();
+    handleLeagueInput();
+    updateUngradedBadge();
+    renderAll();
+}
+
+// กด Enter เพื่อ Login
+document.getElementById('loginEmail').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') handleLogin();
+});
+
+/* ============================================================
+   SHARED CONSTANTS & CONFIG
+   ============================================================ */
 const CONFIG = {
   XG: { BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20, OFF_TARGET: 0.030 },
   STRENGTH: { SENSITIVITY: 0.0060, MIN_MULT: 0.55, MAX_MULT: 1.80, BAYES_SHRINK: 0.85 },
@@ -527,7 +632,6 @@ const LEAGUE_CONSTANTS = {
   'j2 league': { name: "เจลีก J2", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
   'k league 1': { name: "เคลีก 1 เกาหลีใต้", goals: 2.55, mod: 0.94, rho: -0.09, fh: 0.43 },
   'k league 2': { name: "เคลีก 2 เกาหลีใต้", goals: 2.40, mod: 0.90, rho: -0.10, fh: 0.42 },
-  // ลีกจีน
   'chinese super league': { name: "ไชนีส ซูเปอร์ ลีก (中超)", goals: 3.05, mod: 1.12, rho: -0.06, fh: 0.46 },
   'china league one': { name: "ไชน่า ลีก วัน (中甲)", goals: 2.60, mod: 0.98, rho: -0.08, fh: 0.44 },
   'china league two': { name: "ไชน่า ลีก ทู (中乙)", goals: 2.40, mod: 0.92, rho: -0.09, fh: 0.43 },
@@ -543,7 +647,6 @@ const LEAGUE_CONSTANTS = {
   'macau liga de elite': { name: "มาเก๊า ลีกา เด อีลิท", goals: 3.10, mod: 1.15, rho: -0.05, fh: 0.46 },
   'macau first division': { name: "มาเก๊า เฟิร์ส ดิวิชั่น", goals: 2.80, mod: 1.05, rho: -0.07, fh: 0.44 },
   'taiwan football premier league': { name: "ไต้หวัน ฟุตบอล พรีเมียร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.44 },
-  // U23 International
   'international football championship u23': { name: "อินเตอร์เนชั่นแนล ฟุตบอล แชมเปี้ยนชิพ U23", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.44 },
   'afc u23 asian cup': { name: "เอเอฟซี U23 เอเชียน คัพ", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.43 },
   'afc u23 championship': { name: "เอเอฟซี U23 แชมเปี้ยนชิพ", goals: 2.42, mod: 0.91, rho: -0.10, fh: 0.43 },
@@ -553,7 +656,6 @@ const LEAGUE_CONSTANTS = {
   'uefa u21 euro': { name: "ยูฟ่า U21 ยูโร", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.45 },
   'waff u23': { name: "WAFF U23 แชมเปี้ยนชิพ", goals: 2.40, mod: 0.90, rho: -0.10, fh: 0.43 },
   'international friendly u23': { name: "กระชับมิตรทีมชาติ U23", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
-  // เอเชีย/อื่นๆ
   'indian super league': { name: "อินเดีย ซูเปอร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
   'karnataka super division': { name: "อินเดีย คาร์นาตากา ซูเปอร์ ดิวิชั่น", goals: 3.20, mod: 1.12, rho: -0.06, fh: 0.45 },
   'bangalore a division': { name: "อินเดีย บังคลอร์ A ดิวิชั่น", goals: 3.10, mod: 1.11, rho: -0.06, fh: 0.45 },
@@ -569,7 +671,6 @@ const LEAGUE_CONSTANTS = {
   'kuwait premier league': { name: "คูเวต พรีเมียร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
   'vietnam league 1': { name: "เวียดนาม ลีก 1", goals: 2.35, mod: 0.88, rho: -0.10, fh: 0.42 },
   'indonesia super league': { name: "อินโดนีเซีย ซูเปอร์ ลีก", goals: 2.80, mod: 1.08, rho: -0.06, fh: 0.45 },
-  // อเมริกาใต้/กลาง
   'bolivia primera division': { name: "โบลิเวีย ปริมารา ดิวิชั่น", goals: 2.97, mod: 1.10, rho: -0.06, fh: 0.45 },
   'chile primera division': { name: "ชิลี ปริมารา ดิวิชั่น", goals: 2.76, mod: 1.02, rho: -0.07, fh: 0.45 },
   'peru liga 1': { name: "เปรู ลีกา 1", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
@@ -772,16 +873,18 @@ function calcConfidence({ hShots, aShots, hSot, aSot, hBig, aBig, minute, top3Pr
 function hasBigData(hBig, aBig) { return (hBig + aBig) > 0; }
 
 function recordPrediction(pred) {
+  const keys = getKeys();
   let h = [];
-  try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
+  try { h = JSON.parse(localStorage.getItem(keys.history) || '[]'); } catch (e) {}
   h.push({ id: Date.now(), ts: new Date().toISOString(), ...pred, actual: null });
   if (h.length > 500) h = h.slice(-500);
-  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch (e) {}
+  try { localStorage.setItem(keys.history, JSON.stringify(h)); } catch (e) {}
   updateUngradedBadge();
 }
 function calcBrierScore() {
+  const keys = getKeys();
   let h = [];
-  try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
+  try { h = JSON.parse(localStorage.getItem(keys.history) || '[]'); } catch (e) {}
   const graded = h.filter(p => p.actual && typeof p.actual.totalGoals === 'number');
   if (!graded.length) return { n: 0, brier: null, total: h.length };
   let sum = 0;
@@ -795,18 +898,20 @@ function showBrierScore() {
   alert(`📊 Brier Score (Over/Under 2.5)\n\nN = ${n} (จาก ${total})\nBrier = ${brier.toFixed(4)}\n${q}`);
 }
 function gradePrediction(id, totalGoals) {
+  const keys = getKeys();
   let h = [];
-  try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
+  try { h = JSON.parse(localStorage.getItem(keys.history) || '[]'); } catch (e) {}
   const i = h.findIndex(p => p.id === id);
   if (i < 0) { alert('❌ ไม่พบ record'); return; }
   h[i].actual = { totalGoals };
-  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch (e) {}
+  try { localStorage.setItem(keys.history, JSON.stringify(h)); } catch (e) {}
   alert(`✅ Grade บันทึกแล้ว: ${totalGoals} ประตู`);
   updateUngradedBadge();
 }
 function exportHistoryCSV() {
+  const keys = getKeys();
   let h = [];
-  try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
+  try { h = JSON.parse(localStorage.getItem(keys.history) || '[]'); } catch (e) {}
   if (!h.length) { alert('📭 ยังไม่มีประวัติ'); return; }
   const headers = ['id','ts','league','home','away','minute','score','xgH','xgA','pOver25','pAHHome','pAHAway','confidence','actualOver25','actualTotal'];
   const rows = h.map(p => [
@@ -820,22 +925,25 @@ function exportHistoryCSV() {
   const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `jackai_history_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `jackai_history_${currentUser.split('@')[0]}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
 /* ========== SCANNER STORAGE ========== */
-const STORAGE_KEY = 'jackai_inputs_v6';
 const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight','ah_odds'];
 function saveInputs() {
+  if(!currentUser) return;
+  const keys = getKeys();
   const data = {};
   INPUT_IDS.forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value; });
   data['selectedLeagueKey'] = selectedLeagueKey;
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+  try { localStorage.setItem(keys.inputs, JSON.stringify(data)); } catch (e) {}
 }
 function restoreInputs() {
+  if(!currentUser) return;
+  const keys = getKeys();
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(keys.inputs);
     if (!raw) return;
     const data = JSON.parse(raw);
     INPUT_IDS.forEach(id => { if (data[id] !== undefined && document.getElementById(id)) document.getElementById(id).value = data[id]; });
@@ -844,12 +952,14 @@ function restoreInputs() {
 }
 function resetInputs() {
   if (!confirm('ล้างข้อมูลและโหลดค่าเริ่มต้นใหม่?')) return;
-  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  const keys = getKeys();
+  try { localStorage.removeItem(keys.inputs); } catch (e) {}
   location.reload();
 }
 
 /* ========== SCANNER MAIN ========== */
 function predictMatch() {
+  if(!currentUser) return;
   clearCalcError();
   const homeName = document.getElementById('home_name').value.trim() || 'ทีมเหย้า';
   const awayName = document.getElementById('away_name').value.trim() || 'ทีมเยือน';
@@ -1099,6 +1209,8 @@ function predictMatch() {
 }
 
 function sendToTable() {
+  if(!currentUser) return;
+  const keys = getKeys();
   const homeName = document.getElementById('home_name').value.trim() || 'ทีมเหย้า';
   const awayName = document.getElementById('away_name').value.trim() || 'ทีมเยือน';
   const cH = document.getElementById('current_home_score').value || '0';
@@ -1117,9 +1229,9 @@ function sendToTable() {
   else htPred = `โอกาสสูง 0.5: ${document.getElementById('fhOver05').innerText}`;
   const newRecord = { date: new Date().toLocaleDateString('th-TH'), league, match: `${homeName} ${cH} - ${cA} ${awayName}`, minute, ht: htPred, ft: bestFT, result: "" };
   let data = [];
-  try { data = JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]'); } catch(e) {}
+  try { data = JSON.parse(localStorage.getItem(keys.results) || '[]'); } catch(e) {}
   data.push(newRecord);
-  localStorage.setItem(RESULTS_KEY, JSON.stringify(data));
+  localStorage.setItem(keys.results, JSON.stringify(data));
   alert('✅ ส่งข้อมูลไปยัง Simple Log ใน Tracker แล้ว!');
 }
 
@@ -1128,10 +1240,10 @@ function sendToTable() {
    ============================================================ */
 let CALIBRATION_CHART = null;
 
-function loadHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) { return []; } }
-function saveHistory(r) { try { localStorage.setItem(HISTORY_KEY, JSON.stringify(r)); } catch (e) {} updateUngradedBadge(); }
-function loadResults() { try { return JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]'); } catch (e) { return []; } }
-function saveResults(r) { try { localStorage.setItem(RESULTS_KEY, JSON.stringify(r)); } catch (e) {} }
+function loadHistory() { if(!currentUser) return []; try { return JSON.parse(localStorage.getItem(getKeys().history) || '[]'); } catch (e) { return []; } }
+function saveHistory(r) { if(!currentUser) return; try { localStorage.setItem(getKeys().history, JSON.stringify(r)); } catch (e) {} updateUngradedBadge(); }
+function loadResults() { if(!currentUser) return []; try { return JSON.parse(localStorage.getItem(getKeys().results) || '[]'); } catch (e) { return []; } }
+function saveResults(r) { if(!currentUser) return; try { localStorage.setItem(getKeys().results, JSON.stringify(r)); } catch (e) {} }
 
 function calcBrier(record) {
   if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
@@ -1184,6 +1296,7 @@ function applyFilters(records) {
 }
 
 function updateUngradedBadge() {
+  if(!currentUser) return;
   const h = loadHistory();
   const un = h.filter(r => !(r.actual && typeof r.actual.totalGoals === 'number')).length;
   const b = document.getElementById('navUngradedBadge');
@@ -1191,6 +1304,7 @@ function updateUngradedBadge() {
 }
 
 function renderAll() {
+  if(!currentUser) return;
   const all = loadHistory();
   const filtered = applyFilters(all);
   renderStats(filtered);
@@ -1410,8 +1524,9 @@ function deleteSimple(index) {
 function confirmClearAll() {
   if (!confirm('⚠️ ล้างประวัติทั้งหมด?\n\n- History v6\n- Simple Log\n\nย้อนกลับไม่ได้!')) return;
   if (!confirm('ยืนยันอีกครั้ง?')) return;
-  localStorage.removeItem(HISTORY_KEY);
-  localStorage.removeItem(RESULTS_KEY);
+  const keys = getKeys();
+  localStorage.removeItem(keys.history);
+  localStorage.removeItem(keys.results);
   renderAll();
 }
 function reloadData() {
@@ -1447,7 +1562,7 @@ function exportAllCSV() {
   const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `jackai_tracker_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `jackai_tracker_${currentUser.split('@')[0]}_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
@@ -1470,18 +1585,22 @@ function showScanner() {
    INIT
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
-  restoreInputs();
-  handleLeagueInput();
-  INPUT_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', saveInputs); });
+  // เริ่มต้นระบบ Auth ก่อน
+  checkAuth();
+
+  // ถ้า Login สำเร็จแล้วค่อยผูก Event
   const ls = document.getElementById('leagueSearch');
   if (ls) {
     ls.addEventListener('input', (e) => { renderDropdown(e.target.value); tryAutoMatchLeague(e.target.value); });
     ls.addEventListener('keydown', (e) => { if (e.key === 'Enter') { tryAutoMatchLeague(e.target.value); document.getElementById('leagueDropdown').style.display = 'none'; } });
   }
-  updateUngradedBadge();
-  renderAll();
+  
+  INPUT_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', saveInputs); });
+
+  // Auto refresh หน้า Tracker ทุก 15 วินาที
   let lastCount = -1;
   setInterval(() => {
+    if(!currentUser) return;
     const cur = loadHistory().length + loadResults().length;
     if (cur !== lastCount) { renderAll(); lastCount = cur; }
   }, 15000);
