@@ -1,402 +1,488 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚽ JackAI Scanner v6.0 Pro</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-        body { background-color: #f8f9fa; color: #212529; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, system-ui, -apple-system, Roboto; display: flex; flex-direction: column; font-size: 0.85rem; }
-        .navbar-custom { height: 50px; flex-shrink: 0; background-color: #ffffff; border-bottom: 1px solid #dee2e6; }
-        .main-container { flex: 1; padding: 10px; display: flex; gap: 10px; height: calc(100vh - 50px); box-sizing: border-box; overflow: hidden; }
-        .left-panel { width: 410px; min-width: 410px; height: 100%; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; overflow-x: hidden; }
-        .right-panel { flex: 1; height: 100%; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; overflow-x: hidden; }
-        
-        @media (max-width: 991.98px) {
-            html, body { overflow: auto; height: auto; }
-            .main-container { flex-direction: column; height: auto; overflow: visible; }
-            .left-panel, .right-panel { width: 100% !important; min-width: 100% !important; height: auto !important; overflow-y: visible !important; }
-        }
-        .card { background-color: #ffffff; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); color: #212529; }
-        .card-body { padding: 12px; }
-        .form-control-sm, .form-select-sm { padding: 4px 8px; font-size: 0.85rem; background-color: #ffffff; border: 1px solid #ced4da; color: #212529; font-family: 'Segoe UI', Tahoma, sans-serif; border-radius: 6px; }
-        .form-select-sm { font-weight: 600; }
-        .stat-grid label { font-size: 0.72rem; margin-bottom: 2px; color: #6c757d; display: block; }
-        .stat-grid input { text-align: center; font-weight: 700; height: 32px; font-family: 'Segoe UI', Tahoma, sans-serif; border-radius: 6px; font-size: 0.95rem; }
-        .red-card-box { border: 1px solid #f5c2c7; background: #f8d7da; border-radius: 8px; padding: 4px 6px; }
-        .red-card-input { border-color: #dc3545 !important; font-weight: 700; color: #dc3545; height: 28px; text-align: center; font-family: 'Segoe UI', Tahoma, sans-serif; border-radius: 6px; font-size: 0.9rem; }
-        .next-goal-card { border-radius: 6px; padding: 5px; text-align: center; border: 1px solid; }
-        .ng-none { background: #e2e3e5; border-color: #d3d6d8; color: #383d41; }
-        .ng-home { background: #d4edda; border-color: #c3e6cb; color: #155724; }
-        .ng-away { background: #cce5ff; border-color: #b8daff; color: #004085; }
-        .fh-card { border-radius: 6px; padding: 5px; text-align: center; border: 1px solid; }
-        .fh-home { background: #d4edda; border-color: #c3e6cb; color: #155724; }
-        .fh-total { background: #fff3cd; border-color: #ffeeba; color: #856404; }
-        .fh-away { background: #cce5ff; border-color: #b8daff; color: #004085; }
-        .score-box { border-radius: 8px; padding: 5px; text-align: center; color: white; }
-        .bg-orange { background-color: #fd7e14 !important; }
-        .text-orange { color: #fd7e14 !important; }
-        .fw-extrabold { font-weight: 800; }
-        .warn-box { background: #fff3cd; border: 1px solid #ffecb5; border-radius: 4px; padding: 4px 8px; font-size: 0.75rem; color: #856404; }
-        .xh-highlight { font-size: 0.7rem; background: #e9ecef; padding: 5px; border-radius: 6px; border: 1px solid #ced4da; color: #495057; }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #adb5bd; }
-        .btn-predict { background-color: #dc3545; color: white; border-radius: 8px; padding: 10px; font-size: 1rem; font-weight: bold; border: none; box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3); transition: all 0.2s; }
-        .btn-predict:hover { background-color: #c82333; color: white; }
-        .rating-box { border: 1px solid #cfe2ff; background: #e7f1ff; border-radius: 6px; padding: 4px 6px; }
-        .rating-box input { border-color: #0d6efd !important; font-weight: 700; color: #0d6efd; height: 26px; text-align: center; }
-        .calib-note { font-size: 0.65rem; color: #6c757d; font-style: italic; }
-        .auto-box { border: 1px dashed #fd7e14; background: #fff3cd; border-radius: 6px; padding: 6px; margin-bottom: 8px; }
-        .auto-label { font-size: 0.7rem; font-weight: bold; color: #d39e00; }
-        .top3-sum-note { font-size: 0.65rem; color: #6c757d; padding-top: 4px; border-top: 1px dashed #dee2e6; margin-top: 4px; }
-        .prob-absolute-tag { font-size: 0.55rem; opacity: 0.7; }
-        .debug-badge { font-size: 0.55rem; background: #6c757d; color: #fff; padding: 1px 5px; border-radius: 3px; }
-        .ht-score-box { border: 1px solid #ffc107; background: #fffbeb; border-radius: 6px; padding: 6px; }
-        .league-dropdown { position: absolute; z-index: 1000; max-height: 250px; overflow-y: auto; width: 100%; background: #fff; border: 1px solid #ced4da; border-radius: 0 0 6px 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: none; }
-        .league-item { padding: 6px 10px; cursor: pointer; font-size: 0.8rem; border-bottom: 1px solid #f1f3f5; }
-        .league-item:hover { background-color: #e9ecef; }
-        .league-item small { color: #6c757d; font-size: 0.7rem; display: block; }
-        .btn-donate { background: linear-gradient(45deg, #ff8a00, #e52e71); color: white; border: none; font-weight: bold; border-radius: 20px; padding: 3px 12px; font-size: 0.75rem; box-shadow: 0 2px 5px rgba(229, 46, 113, 0.4); transition: transform 0.2s; }
-        .btn-donate:hover { transform: scale(1.05); color: white; }
-        .donate-box { border: 2px dashed #e52e71; border-radius: 12px; padding: 20px; background: #fff0f5; }
-        .value-bet-box { border-radius: 6px; padding: 4px 6px; font-size: 0.65rem; text-align: center; height: 32px; line-height: 22px; overflow: hidden; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚽ JackAI Suite v6.0 — Scanner + Tracker</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ========== BASE ========== */
+html { margin:0; padding:0; width:100%; height:100%; }
+body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif; font-size:0.85rem; color:#212529; }
+body.scanner-view { height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-direction:column; }
+body.tracker-view { min-height:100vh; overflow:auto; background:#f0f2f5; display:block; }
+body.scanner-view #appScanner { display:flex; flex-direction:column; flex:1; overflow:hidden; }
+body.scanner-view #appTracker { display:none; }
+body.tracker-view #appScanner { display:none; }
+body.tracker-view #appTracker { display:block; }
+
+/* ========== SCANNER STYLES ========== */
+.navbar-custom { height:50px; flex-shrink:0; background:#fff; border-bottom:1px solid #dee2e6; }
+.main-container { flex:1; padding:10px; display:flex; gap:10px; height:calc(100vh - 50px); box-sizing:border-box; overflow:hidden; }
+.left-panel { width:410px; min-width:410px; height:100%; display:flex; flex-direction:column; gap:8px; overflow-y:auto; overflow-x:hidden; }
+.right-panel { flex:1; height:100%; display:flex; flex-direction:column; gap:8px; overflow-y:auto; overflow-x:hidden; }
+@media (max-width:991.98px){
+  body.scanner-view { height:auto; overflow:auto; }
+  body.scanner-view #appScanner { height:auto; overflow:visible; }
+  .main-container { flex-direction:column; height:auto; overflow:visible; }
+  .left-panel, .right-panel { width:100% !important; min-width:100% !important; height:auto !important; overflow-y:visible !important; }
+}
+.card { background:#fff; border:1px solid #dee2e6; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.02); color:#212529; }
+.card-body { padding:12px; }
+.form-control-sm, .form-select-sm { padding:4px 8px; font-size:0.85rem; background:#fff; border:1px solid #ced4da; color:#212529; font-family:'Segoe UI',Tahoma,sans-serif; border-radius:6px; }
+.form-select-sm { font-weight:600; }
+.stat-grid label { font-size:0.72rem; margin-bottom:2px; color:#6c757d; display:block; }
+.stat-grid input { text-align:center; font-weight:700; height:32px; font-family:'Segoe UI',Tahoma,sans-serif; border-radius:6px; font-size:0.95rem; }
+.red-card-box { border:1px solid #f5c2c7; background:#f8d7da; border-radius:8px; padding:4px 6px; }
+.red-card-input { border-color:#dc3545 !important; font-weight:700; color:#dc3545; height:28px; text-align:center; font-family:'Segoe UI',Tahoma,sans-serif; border-radius:6px; font-size:0.9rem; }
+.next-goal-card { border-radius:6px; padding:5px; text-align:center; border:1px solid; }
+.ng-none { background:#e2e3e5; border-color:#d3d6d8; color:#383d41; }
+.ng-home { background:#d4edda; border-color:#c3e6cb; color:#155724; }
+.ng-away { background:#cce5ff; border-color:#b8daff; color:#004085; }
+.fh-card { border-radius:6px; padding:5px; text-align:center; border:1px solid; }
+.fh-home { background:#d4edda; border-color:#c3e6cb; color:#155724; }
+.fh-total { background:#fff3cd; border-color:#ffeeba; color:#856404; }
+.fh-away { background:#cce5ff; border-color:#b8daff; color:#004085; }
+.score-box { border-radius:8px; padding:5px; text-align:center; color:#fff; }
+.bg-orange { background-color:#fd7e14 !important; }
+.text-orange { color:#fd7e14 !important; }
+.fw-extrabold { font-weight:800; }
+.warn-box { background:#fff3cd; border:1px solid #ffecb5; border-radius:4px; padding:4px 8px; font-size:0.75rem; color:#856404; }
+.xh-highlight { font-size:0.7rem; background:#e9ecef; padding:5px; border-radius:6px; border:1px solid #ced4da; color:#495057; }
+.btn-predict { background:#dc3545; color:#fff; border-radius:8px; padding:10px; font-size:1rem; font-weight:bold; border:none; box-shadow:0 2px 4px rgba(220,53,69,0.3); transition:all 0.2s; }
+.btn-predict:hover { background:#c82333; color:#fff; }
+.rating-box { border:1px solid #cfe2ff; background:#e7f1ff; border-radius:6px; padding:4px 6px; }
+.rating-box input { border-color:#0d6efd !important; font-weight:700; color:#0d6efd; height:26px; text-align:center; }
+.calib-note { font-size:0.65rem; color:#6c757d; font-style:italic; }
+.auto-box { border:1px dashed #fd7e14; background:#fff3cd; border-radius:6px; padding:6px; margin-bottom:8px; }
+.auto-label { font-size:0.7rem; font-weight:bold; color:#d39e00; }
+.top3-sum-note { font-size:0.65rem; color:#6c757d; padding-top:4px; border-top:1px dashed #dee2e6; margin-top:4px; }
+.prob-absolute-tag { font-size:0.55rem; opacity:0.7; }
+.debug-badge { font-size:0.55rem; background:#6c757d; color:#fff; padding:1px 5px; border-radius:3px; }
+.ht-score-box { border:1px solid #ffc107; background:#fffbeb; border-radius:6px; padding:6px; }
+.league-dropdown { position:absolute; z-index:1000; max-height:250px; overflow-y:auto; width:100%; background:#fff; border:1px solid #ced4da; border-radius:0 0 6px 6px; box-shadow:0 4px 6px rgba(0,0,0,0.1); display:none; }
+.league-item { padding:6px 10px; cursor:pointer; font-size:0.8rem; border-bottom:1px solid #f1f3f5; }
+.league-item:hover { background:#e9ecef; }
+.league-item small { color:#6c757d; font-size:0.7rem; display:block; }
+.btn-donate { background:linear-gradient(45deg,#ff8a00,#e52e71); color:#fff; border:none; font-weight:bold; border-radius:20px; padding:3px 12px; font-size:0.75rem; box-shadow:0 2px 5px rgba(229,46,113,0.4); transition:transform 0.2s; }
+.btn-donate:hover { transform:scale(1.05); color:#fff; }
+.donate-box { border:2px dashed #e52e71; border-radius:12px; padding:20px; background:#fff0f5; }
+.value-bet-box { border-radius:6px; padding:4px 6px; font-size:0.65rem; text-align:center; height:32px; line-height:22px; overflow:hidden; }
+.btn-view-switch { background:linear-gradient(135deg,#6366f1,#4f46e5); color:#fff; border:none; font-weight:700; border-radius:20px; padding:5px 14px; font-size:0.75rem; box-shadow:0 2px 6px rgba(79,70,229,0.35); transition:transform 0.15s; }
+.btn-view-switch:hover { transform:translateY(-1px); color:#fff; }
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:#ced4da; border-radius:10px; }
+::-webkit-scrollbar-thumb:hover { background:#adb5bd; }
+
+/* ========== TRACKER STYLES (scoped #appTracker) ========== */
+body.tracker-view::-webkit-scrollbar { width:8px; }
+body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4px; }
+#appTracker ::-webkit-scrollbar { width:6px; height:6px; }
+#appTracker ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4px; }
+#appTracker { padding-bottom:20px; }
+#appTracker .stat-card { border-radius:12px; padding:16px; color:#fff; box-shadow:0 3px 10px rgba(0,0,0,0.1); }
+#appTracker .stat-card .label { font-size:0.72rem; opacity:0.9; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+#appTracker .stat-card .value { font-size:1.9rem; font-weight:800; margin:2px 0; }
+#appTracker .stat-card .sub { font-size:0.68rem; opacity:0.85; }
+#appTracker .stat-brier-good { background:linear-gradient(135deg,#10b981,#059669); }
+#appTracker .stat-brier-ok { background:linear-gradient(135deg,#f59e0b,#d97706); }
+#appTracker .stat-brier-bad { background:linear-gradient(135deg,#ef4444,#dc2626); }
+#appTracker .stat-hit { background:linear-gradient(135deg,#3b82f6,#2563eb); }
+#appTracker .stat-roi-pos { background:linear-gradient(135deg,#10b981,#059669); }
+#appTracker .stat-roi-neg { background:linear-gradient(135deg,#ef4444,#dc2626); }
+#appTracker .stat-total { background:linear-gradient(135deg,#6366f1,#4f46e5); }
+#appTracker .stat-n { background:linear-gradient(135deg,#6b7280,#4b5563); }
+#appTracker .card { border:none; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); background:#fff; }
+#appTracker .table-sm { font-size:0.78rem; }
+#appTracker .table-sm th { background:#f8f9fa; font-weight:700; color:#495057; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.3px; position:sticky; top:0; z-index:10; }
+#appTracker .table-sm td { vertical-align:middle; }
+#appTracker .grade-input { width:55px; text-align:center; font-weight:700; }
+#appTracker .btn-grade { font-size:0.68rem; padding:2px 6px; }
+#appTracker .row-graded { background-color:#f0fdf4 !important; }
+#appTracker .row-correct { background-color:#dcfce7 !important; }
+#appTracker .row-wrong { background-color:#fee2e2 !important; }
+#appTracker .badge-brier-good { background:#10b981; }
+#appTracker .badge-brier-ok { background:#f59e0b; }
+#appTracker .badge-brier-bad { background:#ef4444; }
+#appTracker .explanation-box { background:#fffbeb; border-left:4px solid #f59e0b; border-radius:6px; padding:10px 14px; font-size:0.78rem; }
+#appTracker .info-pill { font-size:0.65rem; padding:2px 8px; border-radius:10px; }
+#appTracker .filter-bar { background:#fff; border-radius:12px; padding:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+#appTracker .chart-container { position:relative; height:280px; }
+#appTracker .empty-state { padding:60px 20px; text-align:center; color:#6b7280; }
+#appTracker .empty-state i { font-size:4rem; opacity:0.3; }
+#appTracker .league-pill { font-size:0.65rem; padding:1px 6px; border-radius:8px; background:#e0e7ff; color:#3730a3; }
+#appTracker .nav-tabs .nav-link { font-size:0.85rem; font-weight:600; color:#6b7280; border:none; border-bottom:2px solid transparent; }
+#appTracker .nav-tabs .nav-link.active { color:#dc2626; border-bottom-color:#dc2626; background:transparent; }
+#appTracker .tooltip-icon { cursor:help; opacity:0.7; }
+#appTracker .table-responsive { max-height:550px; overflow-y:auto; }
+</style>
 </head>
-<body>
-    <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
-        <div class="container-fluid d-flex align-items-center gap-2">
-            <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">
-                <i class="bi bi-dribbble" style="font-size: 1.15rem; color: #198754; vertical-align: -2px;"></i> JackAI Scanner v6.0 <span class="badge bg-success" style="font-size:0.55rem;">PRO</span>
-            </span>
-            <button class="btn btn-donate mb-0" onclick="openDonateModal()">
-                <i class="bi bi-heart-fill text-white"></i> สนับสนุน
-            </button>
-        </div>
-    </nav>
+<body class="scanner-view">
 
-    <div class="main-container">
-        <div class="left-panel">
-            <div class="card card-body">
-                <div class="row g-2 mb-2">
-                    <div class="col-6"><input type="text" id="home_name" class="form-control form-control-sm border-success fw-bold text-success" value="ทีมเหย้า" placeholder="ทีมเหย้า" style="border-width: 2px;"></div>
-                    <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary" value="ทีมเยือน" placeholder="ทีมเยือน" style="border-width: 2px;"></div>
-                </div>
+<!-- ============================================================
+     APP: SCANNER
+     ============================================================ -->
+<div id="appScanner">
+  <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
+    <div class="container-fluid d-flex align-items-center gap-2">
+      <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">
+        <i class="bi bi-dribbble" style="font-size:1.15rem; color:#198754; vertical-align:-2px;"></i> JackAI Scanner v6.0
+        <span class="badge bg-success" style="font-size:0.55rem;">PRO</span>
+      </span>
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <button class="btn btn-view-switch" onclick="showTracker()">
+          <i class="bi bi-graph-up"></i> Tracker
+          <span class="badge bg-danger ms-1" id="navUngradedBadge" style="font-size:0.55rem;">0</span>
+        </button>
+        <button class="btn btn-donate mb-0" onclick="openDonateModal()">
+          <i class="bi bi-heart-fill text-white"></i> สนับสนุน
+        </button>
+      </div>
+    </div>
+  </nav>
 
-                <div class="auto-box">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="auto-label"><i class="bi bi-magic"></i> ประเมินความแข็งแกร่งอัตโนมัติ</span>
-                        <button class="btn btn-sm btn-warning py-0 px-2" style="font-size:0.65rem;" onclick="autoEstimateStrength()">คำนวณ</button>
-                    </div>
-                    <div class="row g-1">
-                        <div class="col-6">
-                            <label style="font-size:0.65rem; color:#6c757d;">ราคาต่อรอง AH (เหย้า)</label>
-                            <input type="number" id="auto_ah" class="form-control form-control-sm text-center" value="0" step="0.25" placeholder="เช่น -0.5, 0.75">
-                        </div>
-                        <div class="col-6">
-                            <label style="font-size:0.65rem; color:#6c757d;">น้ำหนักสถิติสด (%)</label>
-                            <input type="number" id="auto_live_weight" class="form-control form-control-sm text-center" value="30" min="0" max="100">
-                        </div>
-                    </div>
-                    <div id="autoResult" class="mt-1" style="font-size:0.65rem; color:#856404; display:none;"></div>
-                </div>
-
-                <div class="row g-2 mb-2">
-                    <div class="col-6">
-                        <label class="text-success fw-bold" style="font-size:0.68rem;">🏠 ความแข็งแกร่งเหย้า (0-100)</label>
-                        <div class="rating-box"><input type="number" id="home_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div>
-                    </div>
-                    <div class="col-6">
-                        <label class="text-primary fw-bold" style="font-size:0.68rem;">✈️ ความแข็งแกร่งเยือน (0-100)</label>
-                        <div class="rating-box"><input type="number" id="away_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div>
-                    </div>
-                </div>
-
-                <div class="row g-2 mb-1">
-                    <div class="col-7 position-relative">
-                        <input type="text" id="leagueSearch" class="form-control form-control-sm text-info fw-bold" placeholder="-- พิมพ์ชื่อลีกเพื่อค้นหา --" autocomplete="off">
-                        <div id="leagueDropdown" class="league-dropdown"></div>
-                    </div>
-                    <div class="col-5">
-                        <select id="handicapSelect" class="form-select form-select-sm text-warning fw-bold">
-                            <option value="0">AH: 0.0</option>
-                            <option value="0.25">AH: 0.25</option>
-                            <option value="0.5">AH: 0.5</option>
-                            <option value="0.75">AH: 0.75</option>
-                            <option value="1.0">AH: 1.0</option>
-                            <option value="1.25">AH: 1.25</option>
-                            <option value="1.5">AH: 1.5</option>
-                            <option value="1.75">AH: 1.75</option>
-                            <option value="2.0">AH: 2.0</option>
-                            <option value="-0.25">AH: -0.25</option>
-                            <option value="-0.5">AH: -0.5</option>
-                            <option value="-0.75">AH: -0.75</option>
-                            <option value="-1.0">AH: -1.0</option>
-                            <option value="-1.25">AH: -1.25</option>
-                            <option value="-1.5">AH: -1.5</option>
-                            <option value="-1.75">AH: -1.75</option>
-                            <option value="-2.0">AH: -2.0</option>
-                        </select>
-                    </div>
-                </div>
-                <div id="leagueResult" class="mb-3 mt-1" style="font-size: 0.7rem;">
-                    <span class="text-warning fw-bold">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม) กด Enter หรือคลิกเลือกลีก</span>
-                </div>
-
-                <div class="row g-2 mb-2 ht-score-box">
-                    <div class="col-12 text-center text-warning fw-bold" style="font-size:0.75rem;"><i class="bi bi-clock-history"></i> สกอร์ครึ่งแรก (HT Score) *สำคัญถ้าแข่งผ่าน 45 นาทีแล้ว</div>
-                    <div class="col-6"><div class="stat-grid text-center"><label class="text-success">เหย้า (HT)</label><input type="number" id="ht_home_score" class="form-control form-control-sm text-success" value="0" min="0"></div></div>
-                    <div class="col-6"><div class="stat-grid text-center"><label class="text-primary">เยือน (HT)</label><input type="number" id="ht_away_score" class="form-control form-control-sm text-primary" value="0" min="0"></div></div>
-                </div>
-
-                <div class="row g-2 mb-2">
-                    <div class="col-3"><div class="stat-grid text-center"><label>นาที</label><input type="number" id="match_minute" class="form-control form-control-sm text-danger" value="0" min="0" max="120"></div></div>
-                    <div class="col-3"><div class="stat-grid text-center"><label class="text-warning">ทด 1H</label><input type="number" id="injury_1" class="form-control form-control-sm text-warning" value="0" min="0" max="15"></div></div>
-                    <div class="col-3"><div class="stat-grid text-center"><label class="text-warning">ทด 2H</label><input type="number" id="injury_2" class="form-control form-control-sm text-warning" value="0" min="0" max="15"></div></div>
-                    <div class="col-3"><div class="stat-grid text-center"><label class="text-info">รูปแบบ</label>
-                        <select id="match_format" class="form-select form-select-sm text-info fw-bold" style="padding: 4px 2px; height: 32px; font-size: 0.75rem;">
-                            <option value="90">90 นาที</option>
-                            <option value="120">120 นาที</option>
-                        </select>
-                    </div></div>
-                </div>
-
-                <div class="row g-2 mb-3">
-                    <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เหย้า</label><input type="number" id="current_home_score" class="form-control form-control-sm text-success" value="0" min="0"></div></div>
-                    <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เยือน</label><input type="number" id="current_away_score" class="form-control form-control-sm text-primary" value="0" min="0"></div></div>
-                    <div class="col-4">
-                        <div class="red-card-box d-flex gap-2 h-100 align-items-end pb-1 px-2">
-                            <div class="flex-fill text-center"><label class="text-danger fw-bold" style="font-size: 0.7rem; margin-bottom: 2px;">แดง🏠</label><input type="number" id="red_home" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
-                            <div class="flex-fill text-center"><label class="text-danger fw-bold" style="font-size: 0.7rem; margin-bottom: 2px;">แดง✈️</label><input type="number" id="red_away" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row g-2 mb-3">
-                    <div class="col-6 border-end">
-                        <div class="text-success fw-bold text-center mb-2 pb-1 border-bottom" style="font-size: 0.8rem;">🏠 เหย้า</div>
-                        <div class="stat-grid d-flex flex-column gap-2">
-                            <div><label>ยิงทั้งหมด</label><input type="number" id="h_shots" class="form-control form-control-sm" value="0" min="0"></div>
-                            <div><label class="text-danger fw-bold">ยิงตรงกรอบ</label><input type="number" id="h_sot" class="form-control form-control-sm border-danger" value="0" min="0" style="border-width: 2px;"></div>
-                            <div><label class="text-warning fw-bold">Big Chances</label><input type="number" id="h_big" class="form-control form-control-sm border-warning" value="0" min="0" style="border-width: 2px;"></div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="text-primary fw-bold text-center mb-2 pb-1 border-bottom" style="font-size: 0.8rem;">✈️ เยือน</div>
-                        <div class="stat-grid d-flex flex-column gap-2">
-                            <div><label>ยิงทั้งหมด</label><input type="number" id="a_shots" class="form-control form-control-sm" value="0" min="0"></div>
-                            <div><label class="text-danger fw-bold">ยิงตรงกรอบ</label><input type="number" id="a_sot" class="form-control form-control-sm border-danger" value="0" min="0" style="border-width: 2px;"></div>
-                            <div><label class="text-warning fw-bold">Big Chances</label><input type="number" id="a_big" class="form-control form-control-sm border-warning" value="0" min="0" style="border-width: 2px;"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="button" class="btn btn-predict w-100 mb-0 mt-2" onclick="predictMatch()">
-                    <i class="bi bi-cpu"></i> ประมวลผลคาดการณ์
-                </button>
-                <button type="button" class="btn btn-outline-secondary w-100 mt-2 py-1" style="font-size:0.75rem;" onclick="resetInputs()">
-                    <i class="bi bi-arrow-counterclockwise"></i> รีเซ็ตข้อมูล
-                </button>
-                <div id="calcError" class="alert alert-danger py-1 mb-0 d-none mt-2" style="font-size: 0.75rem;"><strong>⚠️ ไม่สามารถคำนวณได้:</strong> <span id="calcErrorText"></span></div>
-            </div>
+  <div class="main-container">
+    <div class="left-panel">
+      <div class="card card-body">
+        <div class="row g-2 mb-2">
+          <div class="col-6"><input type="text" id="home_name" class="form-control form-control-sm border-success fw-bold text-success" value="ทีมเหย้า" placeholder="ทีมเหย้า" style="border-width:2px;"></div>
+          <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary" value="ทีมเยือน" placeholder="ทีมเยือน" style="border-width:2px;"></div>
         </div>
 
-        <div class="right-panel">
-            <div id="resultsArea" class="d-flex flex-column gap-2 h-100 d-none">
-                <div class="card p-2 bg-white text-dark text-center position-relative border">
-                    <h5 class="fw-bold mb-0" id="resultTitle" style="font-size: 1.1rem;">ทีมเหย้า 0 - 0 ทีมเยือน</h5>
-                    <div class="text-warning mb-1" style="font-size: 0.75rem;">นาทีที่ <span id="displayMinute">45</span> (เหลือ <span id="displayRemaining">45</span> นาที)</div>
-                    <div class="d-flex justify-content-center gap-1 flex-wrap">
-                        <span class="badge bg-secondary" id="leagueInfluenceText" style="font-size: 0.65rem;">ลีกมาตรฐาน</span>
-                        <span class="badge bg-info text-dark" id="confidenceBadge" style="font-size: 0.65rem;">Confidence: -</span>
-                        <span class="badge bg-secondary" id="tempoBadge" style="font-size: 0.65rem;"><i class="bi bi-speedometer2"></i> Tempo: ปกติ</span>
-                        <span class="badge bg-success" id="dataQualityBadge" style="font-size: 0.65rem;">Data: -</span>
-                    </div>
-                </div>
-
-                <div id="inputWarning" class="warn-box d-none py-1"><strong>⚠️ คำเตือน:</strong> <span id="inputWarningText"></span></div>
-                <div id="redCardImpactArea" class="alert alert-danger py-1 mb-0 d-none" style="font-size: 0.75rem;"><strong>🟥 ใบแดง:</strong> <span id="redImpactText"></span></div>
-
-                <div class="card p-2">
-                    <h6 class="fw-bold text-warning mb-1 text-center" style="font-size: 0.8rem;">Live Asian Handicap Probs</h6>
-                    <div class="p-1 bg-light rounded border text-center mb-1">
-                        <div class="text-secondary" style="font-size: 0.65rem;">อัตราต่อรอง</div>
-                        <div class="fw-extrabold text-dark mb-0" style="font-size: 1rem;" id="ahCurrentRate">0.0</div>
-                    </div>
-                    <div class="row g-1 text-center">
-                        <div class="col-6"><div class="p-1 rounded bg-success-subtle border border-success"><div class="text-success fw-bold" style="font-size: 0.7rem;">เหย้าชนะราคา</div><div class="fw-bold text-success mb-0" style="font-size: 1rem;" id="ahHomeProb">0%</div></div></div>
-                        <div class="col-6"><div class="p-1 rounded bg-primary-subtle border border-primary"><div class="text-primary fw-bold" style="font-size: 0.7rem;">เยือนชนะราคา</div><div class="fw-bold text-primary mb-0" style="font-size: 1rem;" id="ahAwayProb">0%</div></div></div>
-                    </div>
-                    <div class="text-center text-muted mt-1" style="font-size: 0.65rem;">เสมอราคา (Push): <span id="ahPushProb" class="fw-bold">0%</span></div>
-
-                    <div class="mt-2 pt-2 border-top">
-                        <div class="row g-1">
-                            <div class="col-6">
-                                <label style="font-size:0.62rem; color:#6c757d;">💰 ราคา AH เหย้า (Decimal)</label>
-                                <input type="number" id="ah_odds" class="form-control form-control-sm text-center" step="0.01" value="1.90" min="1.01" style="height: 32px;">
-                            </div>
-                            <div class="col-6">
-                                <label style="font-size:0.62rem; color:#6c757d;">Value / Kelly</label>
-                                <div id="valueBetDisplay" class="form-control form-control-sm value-bet-box bg-light">-</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card p-2">
-                    <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size: 0.8rem;">🎯 สกอร์จบเกมที่เป็นไปได้สูง (Top 3)</h6>
-                    <div class="row g-1 text-center" id="topScoresContainer"></div>
-                    <div class="top3-sum-note text-center" id="top3SumNote"></div>
-                </div>
-
-                <div class="row g-2">
-                    <div class="col-md-6">
-                        <div class="card p-2 h-100">
-                            <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size: 0.8rem;">ครึ่งแรก 45 นาที</h6>
-                            <div class="row g-1 text-center">
-                                <div class="col-4"><div class="fh-card fh-home"><div class="fw-bold" style="font-size: 0.7rem;">เหย้า</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="fhProbHome">0%</div></div></div>
-                                <div class="col-4"><div class="fh-card fh-total"><div class="fw-bold" style="font-size: 0.7rem;">เสมอ</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="fhProbTotal">0%</div></div></div>
-                                <div class="col-4"><div class="fh-card fh-away"><div class="fw-bold" style="font-size: 0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="fhProbAway">0%</div></div></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card p-2 h-100">
-                            <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size: 0.8rem;">⚽ ประตูถัดไป</h6>
-                            <div class="row g-1 text-center">
-                                <div class="col-4"><div class="next-goal-card ng-home"><div class="fw-bold" style="font-size: 0.7rem;">เหย้า</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probHome">0%</div></div></div>
-                                <div class="col-4"><div class="next-goal-card ng-none"><div class="fw-bold" style="font-size: 0.7rem;">ไม่มี</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probNone">0%</div></div></div>
-                                <div class="col-4"><div class="next-goal-card ng-away"><div class="fw-bold" style="font-size: 0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size: 0.9rem;" id="probAway">0%</div></div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row g-2">
-                    <div class="col-md-6">
-                        <div class="card p-2 h-100">
-                            <h6 class="fw-bold text-secondary mb-2" style="font-size: 0.8rem;">โอกาสเกิดประตูครึ่งแรก</h6>
-                            <div class="row g-2">
-                                <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 0.5</span><span id="fhOver05">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="fhOver05Bar" style="width: 0%"></div></div></div>
-                                <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 1.5</span><span id="fhOver15">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="fhOver15Bar" style="width: 0%"></div></div></div>
-                                <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 2.5</span><span id="fhOver25">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="fhOver25Bar" style="width: 0%"></div></div></div>
-                                <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 3.5</span><span id="fhOver35">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="fhOver35Bar" style="width: 0%"></div></div></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card p-2 h-100">
-                            <h6 class="fw-bold text-secondary mb-2" style="font-size: 0.8rem;">โอกาสเกิดประตูเต็มเวลา</h6>
-                            <div class="row g-2">
-                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 0.5</span><span id="ftOver05">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver05Bar" style="width: 0%"></div></div></div>
-                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 1.5</span><span id="ftOver15">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver15Bar" style="width: 0%"></div></div></div>
-                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 2.5</span><span id="ftOver25">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver25Bar" style="width: 0%"></div></div></div>
-                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 3.5</span><span id="ftOver35">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver35Bar" style="width: 0%"></div></div></div>
-                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 4.5</span><span id="ftOver45">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver45Bar" style="width: 0%"></div></div></div>
-                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 5.5</span><span id="ftOver55">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver55Bar" style="width: 0%"></div></div></div>
-                                <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size: 0.75rem;"><span>สูง 6.5</span><span id="ftOver65">0%</span></div><div class="progress mb-1" style="height: 4px; background-color: #e9ecef;"><div class="progress-bar" id="ftOver65Bar" style="width: 0%"></div></div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="xh-highlight text-muted mb-2" id="xgBreakdown">-</div>
-                <div class="calib-note mb-2 px-1" id="calibNote"></div>
-
-                <button type="button" class="btn btn-info w-100 mb-2 text-white fw-bold" style="background-color: #0ea5e9; border: none;" onclick="sendToTable()">
-                    <i class="bi bi-send-fill"></i> ส่งผลทำนายไปยังตารางท้ายผลบอล
-                </button>
-                <div class="d-flex gap-2 mb-2">
-                    <button type="button" class="btn btn-sm btn-outline-primary flex-fill" onclick="exportHistoryCSV()" style="font-size:0.72rem;">
-                        <i class="bi bi-download"></i> Export History CSV
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-success flex-fill" onclick="showBrierScore()" style="font-size:0.72rem;">
-                        <i class="bi bi-graph-up"></i> Backtest (Brier)
-                    </button>
-                </div>
-            </div>
-
-            <div id="emptyState" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted card border p-5 bg-white">
-                <i class="bi bi-cpu-fill text-secondary mb-3" style="font-size: 4rem; opacity: 0.3;"></i>
-                <h6 class="text-dark">กรอกข้อมูลสถิติ และเลือกลีก แล้วกดประมวลผล</h6>
-                <p class="text-secondary" style="font-size: 0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้ (v6.0 Pro)</p>
-            </div>
+        <div class="auto-box">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="auto-label"><i class="bi bi-magic"></i> ประเมินความแข็งแกร่งอัตโนมัติ</span>
+            <button class="btn btn-sm btn-warning py-0 px-2" style="font-size:0.65rem;" onclick="autoEstimateStrength()">คำนวณ</button>
+          </div>
+          <div class="row g-1">
+            <div class="col-6"><label style="font-size:0.65rem; color:#6c757d;">ราคาต่อรอง AH (เหย้า)</label><input type="number" id="auto_ah" class="form-control form-control-sm text-center" value="0" step="0.25" placeholder="เช่น -0.5, 0.75"></div>
+            <div class="col-6"><label style="font-size:0.65rem; color:#6c757d;">น้ำหนักสถิติสด (%)</label><input type="number" id="auto_live_weight" class="form-control form-control-sm text-center" value="30" min="0" max="100"></div>
+          </div>
+          <div id="autoResult" class="mt-1" style="font-size:0.65rem; color:#856404; display:none;"></div>
         </div>
+
+        <div class="row g-2 mb-2">
+          <div class="col-6"><label class="text-success fw-bold" style="font-size:0.68rem;">🏠 ความแข็งแกร่งเหย้า (0-100)</label><div class="rating-box"><input type="number" id="home_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div></div>
+          <div class="col-6"><label class="text-primary fw-bold" style="font-size:0.68rem;">✈️ ความแข็งแกร่งเยือน (0-100)</label><div class="rating-box"><input type="number" id="away_strength" class="form-control form-control-sm" value="70" min="0" max="100"></div></div>
+        </div>
+
+        <div class="row g-2 mb-1">
+          <div class="col-7 position-relative">
+            <input type="text" id="leagueSearch" class="form-control form-control-sm text-info fw-bold" placeholder="-- พิมพ์ชื่อลีกเพื่อค้นหา --" autocomplete="off">
+            <div id="leagueDropdown" class="league-dropdown"></div>
+          </div>
+          <div class="col-5">
+            <select id="handicapSelect" class="form-select form-select-sm text-warning fw-bold">
+              <option value="0">AH: 0.0</option><option value="0.25">AH: 0.25</option><option value="0.5">AH: 0.5</option><option value="0.75">AH: 0.75</option>
+              <option value="1.0">AH: 1.0</option><option value="1.25">AH: 1.25</option><option value="1.5">AH: 1.5</option><option value="1.75">AH: 1.75</option><option value="2.0">AH: 2.0</option>
+              <option value="-0.25">AH: -0.25</option><option value="-0.5">AH: -0.5</option><option value="-0.75">AH: -0.75</option><option value="-1.0">AH: -1.0</option>
+              <option value="-1.25">AH: -1.25</option><option value="-1.5">AH: -1.5</option><option value="-1.75">AH: -1.75</option><option value="-2.0">AH: -2.0</option>
+            </select>
+          </div>
+        </div>
+        <div id="leagueResult" class="mb-3 mt-1" style="font-size:0.7rem;"><span class="text-warning fw-bold">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span></div>
+
+        <div class="row g-2 mb-2 ht-score-box">
+          <div class="col-12 text-center text-warning fw-bold" style="font-size:0.75rem;"><i class="bi bi-clock-history"></i> สกอร์ครึ่งแรก (HT) *สำคัญถ้าแข่งผ่าน 45 นาที</div>
+          <div class="col-6"><div class="stat-grid text-center"><label class="text-success">เหย้า (HT)</label><input type="number" id="ht_home_score" class="form-control form-control-sm text-success" value="0" min="0"></div></div>
+          <div class="col-6"><div class="stat-grid text-center"><label class="text-primary">เยือน (HT)</label><input type="number" id="ht_away_score" class="form-control form-control-sm text-primary" value="0" min="0"></div></div>
+        </div>
+
+        <div class="row g-2 mb-2">
+          <div class="col-3"><div class="stat-grid text-center"><label>นาที</label><input type="number" id="match_minute" class="form-control form-control-sm text-danger" value="0" min="0" max="120"></div></div>
+          <div class="col-3"><div class="stat-grid text-center"><label class="text-warning">ทด 1H</label><input type="number" id="injury_1" class="form-control form-control-sm text-warning" value="0" min="0" max="15"></div></div>
+          <div class="col-3"><div class="stat-grid text-center"><label class="text-warning">ทด 2H</label><input type="number" id="injury_2" class="form-control form-control-sm text-warning" value="0" min="0" max="15"></div></div>
+          <div class="col-3"><div class="stat-grid text-center"><label class="text-info">รูปแบบ</label>
+            <select id="match_format" class="form-select form-select-sm text-info fw-bold" style="padding:4px 2px; height:32px; font-size:0.75rem;">
+              <option value="90">90 นาที</option><option value="120">120 นาที</option>
+            </select>
+          </div></div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เหย้า</label><input type="number" id="current_home_score" class="form-control form-control-sm text-success" value="0" min="0"></div></div>
+          <div class="col-4"><div class="stat-grid text-center"><label>สกอร์เยือน</label><input type="number" id="current_away_score" class="form-control form-control-sm text-primary" value="0" min="0"></div></div>
+          <div class="col-4"><div class="red-card-box d-flex gap-2 h-100 align-items-end pb-1 px-2">
+            <div class="flex-fill text-center"><label class="text-danger fw-bold" style="font-size:0.7rem; margin-bottom:2px;">แดง🏠</label><input type="number" id="red_home" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
+            <div class="flex-fill text-center"><label class="text-danger fw-bold" style="font-size:0.7rem; margin-bottom:2px;">แดง✈️</label><input type="number" id="red_away" class="form-control form-control-sm red-card-input" value="0" min="0" max="5"></div>
+          </div></div>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6 border-end">
+            <div class="text-success fw-bold text-center mb-2 pb-1 border-bottom" style="font-size:0.8rem;">🏠 เหย้า</div>
+            <div class="stat-grid d-flex flex-column gap-2">
+              <div><label>ยิงทั้งหมด</label><input type="number" id="h_shots" class="form-control form-control-sm" value="0" min="0"></div>
+              <div><label class="text-danger fw-bold">ยิงตรงกรอบ</label><input type="number" id="h_sot" class="form-control form-control-sm border-danger" value="0" min="0" style="border-width:2px;"></div>
+              <div><label class="text-warning fw-bold">Big Chances</label><input type="number" id="h_big" class="form-control form-control-sm border-warning" value="0" min="0" style="border-width:2px;"></div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="text-primary fw-bold text-center mb-2 pb-1 border-bottom" style="font-size:0.8rem;">✈️ เยือน</div>
+            <div class="stat-grid d-flex flex-column gap-2">
+              <div><label>ยิงทั้งหมด</label><input type="number" id="a_shots" class="form-control form-control-sm" value="0" min="0"></div>
+              <div><label class="text-danger fw-bold">ยิงตรงกรอบ</label><input type="number" id="a_sot" class="form-control form-control-sm border-danger" value="0" min="0" style="border-width:2px;"></div>
+              <div><label class="text-warning fw-bold">Big Chances</label><input type="number" id="a_big" class="form-control form-control-sm border-warning" value="0" min="0" style="border-width:2px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-predict w-100 mb-0 mt-2" onclick="predictMatch()"><i class="bi bi-cpu"></i> ประมวลผลคาดการณ์</button>
+        <button type="button" class="btn btn-outline-secondary w-100 mt-2 py-1" style="font-size:0.75rem;" onclick="resetInputs()"><i class="bi bi-arrow-counterclockwise"></i> รีเซ็ตข้อมูล</button>
+        <div id="calcError" class="alert alert-danger py-1 mb-0 d-none mt-2" style="font-size:0.75rem;"><strong>⚠️ ไม่สามารถคำนวณได้:</strong> <span id="calcErrorText"></span></div>
+      </div>
     </div>
 
-    <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-danger text-white border-0">
-                    <h5 class="modal-title fw-bold" id="donateModalLabel"><i class="bi bi-heart-fill text-warning"></i> สนับสนุนผู้พัฒนา</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center p-4">
-                    <p class="mb-3 text-secondary">หากโปรแกรม JackAI Scanner นี้มีประโยชน์กับคุณ <br>คุณสามารถเลี้ยงกาแฟหรือสนับสนุนค่าพัฒนาได้ที่:</p>
-                    <div class="donate-box text-center mb-3">
-                        <div class="mb-3">
-                            <img src="https://www.truemoney.com/wp-content/uploads/2023/02/truemoney_logo_1x.png" alt="TrueMoney" style="height: 40px; object-fit: contain;" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/TrueMoney_Logo.svg/512px-TrueMoney_Logo.svg.png'">
-                        </div>
-                        <h6 class="fw-bold text-dark mb-1">พร้อมเพย์ / ทรูมันนี่ วอลเล็ท</h6>
-                        <h4 class="fw-extrabold text-danger mb-3">094-475-4282</h4>
-                        <button class="btn btn-outline-danger fw-bold w-100" onclick="copyDonateNumber()">
-                            <i class="bi bi-clipboard-check"></i> คัดลอกเบอร์โอนเงิน
-                        </button>
-                    </div>
-                    <small class="text-muted">ขอบคุณที่สนับสนุนครับ ❤️</small>
-                </div>
-            </div>
+    <div class="right-panel">
+      <div id="resultsArea" class="d-flex flex-column gap-2 h-100 d-none">
+        <div class="card p-2 bg-white text-dark text-center position-relative border">
+          <h5 class="fw-bold mb-0" id="resultTitle" style="font-size:1.1rem;">ทีมเหย้า 0 - 0 ทีมเยือน</h5>
+          <div class="text-warning mb-1" style="font-size:0.75rem;">นาทีที่ <span id="displayMinute">45</span> (เหลือ <span id="displayRemaining">45</span> นาที)</div>
+          <div class="d-flex justify-content-center gap-1 flex-wrap">
+            <span class="badge bg-secondary" id="leagueInfluenceText" style="font-size:0.65rem;">ลีกมาตรฐาน</span>
+            <span class="badge bg-info text-dark" id="confidenceBadge" style="font-size:0.65rem;">Confidence: -</span>
+            <span class="badge bg-secondary" id="tempoBadge" style="font-size:0.65rem;"><i class="bi bi-speedometer2"></i> Tempo: ปกติ</span>
+            <span class="badge bg-success" id="dataQualityBadge" style="font-size:0.65rem;">Data: -</span>
+          </div>
         </div>
+        <div id="inputWarning" class="warn-box d-none py-1"><strong>⚠️ คำเตือน:</strong> <span id="inputWarningText"></span></div>
+        <div id="redCardImpactArea" class="alert alert-danger py-1 mb-0 d-none" style="font-size:0.75rem;"><strong>🟥 ใบแดง:</strong> <span id="redImpactText"></span></div>
+
+        <div class="card p-2">
+          <h6 class="fw-bold text-warning mb-1 text-center" style="font-size:0.8rem;">Live Asian Handicap Probs</h6>
+          <div class="p-1 bg-light rounded border text-center mb-1">
+            <div class="text-secondary" style="font-size:0.65rem;">อัตราต่อรอง</div>
+            <div class="fw-extrabold text-dark mb-0" style="font-size:1rem;" id="ahCurrentRate">0.0</div>
+          </div>
+          <div class="row g-1 text-center">
+            <div class="col-6"><div class="p-1 rounded bg-success-subtle border border-success"><div class="text-success fw-bold" style="font-size:0.7rem;">เหย้าชนะราคา</div><div class="fw-bold text-success mb-0" style="font-size:1rem;" id="ahHomeProb">0%</div></div></div>
+            <div class="col-6"><div class="p-1 rounded bg-primary-subtle border border-primary"><div class="text-primary fw-bold" style="font-size:0.7rem;">เยือนชนะราคา</div><div class="fw-bold text-primary mb-0" style="font-size:1rem;" id="ahAwayProb">0%</div></div></div>
+          </div>
+          <div class="text-center text-muted mt-1" style="font-size:0.65rem;">เสมอราคา (Push): <span id="ahPushProb" class="fw-bold">0%</span></div>
+          <div class="mt-2 pt-2 border-top">
+            <div class="row g-1">
+              <div class="col-6"><label style="font-size:0.62rem; color:#6c757d;">💰 ราคา AH เหย้า (Decimal)</label><input type="number" id="ah_odds" class="form-control form-control-sm text-center" step="0.01" value="1.90" min="1.01" style="height:32px;"></div>
+              <div class="col-6"><label style="font-size:0.62rem; color:#6c757d;">Value / Kelly</label><div id="valueBetDisplay" class="form-control form-control-sm value-bet-box bg-light">-</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card p-2">
+          <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size:0.8rem;">🎯 สกอร์จบเกมที่เป็นไปได้สูง (Top 3)</h6>
+          <div class="row g-1 text-center" id="topScoresContainer"></div>
+          <div class="top3-sum-note text-center" id="top3SumNote"></div>
+        </div>
+
+        <div class="row g-2">
+          <div class="col-md-6"><div class="card p-2 h-100">
+            <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size:0.8rem;">ครึ่งแรก 45 นาที</h6>
+            <div class="row g-1 text-center">
+              <div class="col-4"><div class="fh-card fh-home"><div class="fw-bold" style="font-size:0.7rem;">เหย้า</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="fhProbHome">0%</div></div></div>
+              <div class="col-4"><div class="fh-card fh-total"><div class="fw-bold" style="font-size:0.7rem;">เสมอ</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="fhProbTotal">0%</div></div></div>
+              <div class="col-4"><div class="fh-card fh-away"><div class="fw-bold" style="font-size:0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="fhProbAway">0%</div></div></div>
+            </div>
+          </div></div>
+          <div class="col-md-6"><div class="card p-2 h-100">
+            <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size:0.8rem;">⚽ ประตูถัดไป</h6>
+            <div class="row g-1 text-center">
+              <div class="col-4"><div class="next-goal-card ng-home"><div class="fw-bold" style="font-size:0.7rem;">เหย้า</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="probHome">0%</div></div></div>
+              <div class="col-4"><div class="next-goal-card ng-none"><div class="fw-bold" style="font-size:0.7rem;">ไม่มี</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="probNone">0%</div></div></div>
+              <div class="col-4"><div class="next-goal-card ng-away"><div class="fw-bold" style="font-size:0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="probAway">0%</div></div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="row g-2">
+          <div class="col-md-6"><div class="card p-2 h-100">
+            <h6 class="fw-bold text-secondary mb-2" style="font-size:0.8rem;">โอกาสเกิดประตูครึ่งแรก</h6>
+            <div class="row g-2">
+              <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 0.5</span><span id="fhOver05">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="fhOver05Bar" style="width:0%"></div></div></div>
+              <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 1.5</span><span id="fhOver15">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="fhOver15Bar" style="width:0%"></div></div></div>
+              <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 2.5</span><span id="fhOver25">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="fhOver25Bar" style="width:0%"></div></div></div>
+              <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 3.5</span><span id="fhOver35">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="fhOver35Bar" style="width:0%"></div></div></div>
+            </div>
+          </div></div>
+          <div class="col-md-6"><div class="card p-2 h-100">
+            <h6 class="fw-bold text-secondary mb-2" style="font-size:0.8rem;">โอกาสเกิดประตูเต็มเวลา</h6>
+            <div class="row g-2">
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>0.5</span><span id="ftOver05">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="ftOver05Bar" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>1.5</span><span id="ftOver15">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="ftOver15Bar" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>2.5</span><span id="ftOver25">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="ftOver25Bar" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>3.5</span><span id="ftOver35">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="ftOver35Bar" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>4.5</span><span id="ftOver45">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="ftOver45Bar" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>5.5</span><span id="ftOver55">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="ftOver55Bar" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>6.5</span><span id="ftOver65">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="ftOver65Bar" style="width:0%"></div></div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="xh-highlight text-muted mb-2" id="xgBreakdown">-</div>
+        <div class="calib-note mb-2 px-1" id="calibNote"></div>
+        <button type="button" class="btn btn-info w-100 mb-2 text-white fw-bold" style="background:#0ea5e9; border:none;" onclick="sendToTable()"><i class="bi bi-send-fill"></i> ส่งผลทำนายไปยังตารางท้ายผลบอล</button>
+        <div class="d-flex gap-2 mb-2">
+          <button type="button" class="btn btn-sm btn-outline-primary flex-fill" onclick="exportHistoryCSV()" style="font-size:0.72rem;"><i class="bi bi-download"></i> Export History CSV</button>
+          <button type="button" class="btn btn-sm btn-outline-success flex-fill" onclick="showBrierScore()" style="font-size:0.72rem;"><i class="bi bi-graph-up"></i> Backtest (Brier)</button>
+        </div>
+        <div class="text-center mb-2">
+          <button class="btn btn-sm btn-view-switch" onclick="showTracker()"><i class="bi bi-graph-up-arrow"></i> เปิด Tracker Dashboard →</button>
+        </div>
+      </div>
+
+      <div id="emptyState" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted card border p-5 bg-white">
+        <i class="bi bi-cpu-fill text-secondary mb-3" style="font-size:4rem; opacity:0.3;"></i>
+        <h6 class="text-dark">กรอกข้อมูลสถิติ และเลือกลีก แล้วกดประมวลผล</h6>
+        <p class="text-secondary" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้ (v6.0 Pro)</p>
+      </div>
     </div>
+  </div>
+
+  <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-danger text-white border-0">
+          <h5 class="modal-title fw-bold" id="donateModalLabel"><i class="bi bi-heart-fill text-warning"></i> สนับสนุนผู้พัฒนา</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center p-4">
+          <p class="mb-3 text-secondary">หากโปรแกรม JackAI Scanner นี้มีประโยชน์กับคุณ</p>
+          <div class="donate-box text-center mb-3">
+            <div class="mb-3"><img src="https://www.truemoney.com/wp-content/uploads/2023/02/truemoney_logo_1x.png" alt="TrueMoney" style="height:40px; object-fit:contain;" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/TrueMoney_Logo.svg/512px-TrueMoney_Logo.svg.png'"></div>
+            <h6 class="fw-bold text-dark mb-1">พร้อมเพย์ / ทรูมันนี่ วอลเล็ท</h6>
+            <h4 class="fw-extrabold text-danger mb-3">094-475-4282</h4>
+            <button class="btn btn-outline-danger fw-bold w-100" onclick="copyDonateNumber()"><i class="bi bi-clipboard-check"></i> คัดลอกเบอร์โอนเงิน</button>
+          </div>
+          <small class="text-muted">ขอบคุณที่สนับสนุนครับ ❤️</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     APP: TRACKER
+     ============================================================ -->
+<div id="appTracker">
+  <nav class="navbar navbar-light bg-white shadow-sm px-3 mb-3" style="border-bottom:1px solid #dee2e6;">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1 fs-5 fw-bold">
+        <i class="bi bi-clipboard-data text-danger"></i> JackAI Tracker
+        <span class="badge bg-danger" style="font-size:0.6rem; vertical-align:middle;">GRADE</span>
+      </span>
+      <div class="d-flex gap-2">
+        <button class="btn btn-view-switch" onclick="showScanner()"><i class="bi bi-arrow-left"></i> กลับ Scanner</button>
+        <button class="btn btn-sm btn-outline-primary" onclick="reloadData()"><i class="bi bi-arrow-clockwise"></i> รีโหลด</button>
+        <button class="btn btn-sm btn-outline-success" onclick="exportAllCSV()"><i class="bi bi-download"></i> Export CSV</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid px-3 pb-4">
+    <div class="explanation-box mb-3">
+      <strong><i class="bi bi-info-circle-fill text-warning"></i> 3 ตัวชี้วัด:</strong>
+      <div class="row mt-1 g-2">
+        <div class="col-md-4"><span class="badge bg-primary">Grade</span> = บันทึกผลจริงหลังเกมจบ <span class="text-muted">(ใส่ประตูรวมที่เกิดจริง)</span></div>
+        <div class="col-md-4"><span class="badge bg-success">Brier Score</span> = "เกรดเฉลี่ย" ของการทาย <span class="text-muted">(ยิ่งต่ำยิ่งเก่ง — &lt;0.20 = ดีเยี่ยม)</span></div>
+        <div class="col-md-4"><span class="badge bg-info">Hit Rate</span> = "จำนวนข้อที่ถูก" <span class="text-muted">(หลอกได้ — ถูกข้อง่ายแต่พลาดข้อใหญ่)</span></div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+      <div class="col-6 col-md-4 col-lg-2"><div class="stat-card stat-total"><div class="label"><i class="bi bi-collection"></i> Total</div><div class="value" id="statTotal">0</div><div class="sub">รายการทั้งหมด</div></div></div>
+      <div class="col-6 col-md-4 col-lg-2"><div class="stat-card stat-n"><div class="label"><i class="bi bi-check2-square"></i> Graded</div><div class="value" id="statGraded">0</div><div class="sub">ที่กรอกผลแล้ว</div></div></div>
+      <div class="col-6 col-md-4 col-lg-2"><div class="stat-card" id="statBrierCard"><div class="label"><i class="bi bi-award"></i> Brier Score <i class="bi bi-question-circle tooltip-icon" title="ค่าเฉลี่ย squared error (ยิ่งต่ำยิ่งดี)"></i></div><div class="value" id="statBrier">-</div><div class="sub" id="statBrierSub">ต้อง grade ก่อน</div></div></div>
+      <div class="col-6 col-md-4 col-lg-2"><div class="stat-card stat-hit"><div class="label"><i class="bi bi-bullseye"></i> Hit Rate <i class="bi bi-question-circle tooltip-icon" title="% ที่ทายทิศทางถูก (หลอกได้)"></i></div><div class="value" id="statHit">-</div><div class="sub" id="statHitSub">ต้อง grade ก่อน</div></div></div>
+      <div class="col-12 col-md-6 col-lg-4"><div class="stat-card" id="statROICard"><div class="label"><i class="bi bi-cash-stack"></i> ROI (Over/Under 2.5) <i class="bi bi-question-circle tooltip-icon" title="ต้องกรอก stake + odds"></i></div><div class="value" id="statROI">-</div><div class="sub" id="statROISub">กรอก stake + odds</div></div></div>
+    </div>
+
+    <div class="filter-bar mb-3">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-3"><label class="form-label mb-1" style="font-size:0.7rem; font-weight:700;">🏆 ลีก</label><select id="filterLeague" class="form-select form-select-sm" onchange="renderAll()"><option value="">-- ทุกลีก --</option></select></div>
+        <div class="col-md-2"><label class="form-label mb-1" style="font-size:0.7rem; font-weight:700;">📅 จาก</label><input type="date" id="filterDateFrom" class="form-control form-control-sm" onchange="renderAll()"></div>
+        <div class="col-md-2"><label class="form-label mb-1" style="font-size:0.7rem; font-weight:700;">📅 ถึง</label><input type="date" id="filterDateTo" class="form-control form-control-sm" onchange="renderAll()"></div>
+        <div class="col-md-2"><label class="form-label mb-1" style="font-size:0.7rem; font-weight:700;">⚙️ สถานะ</label><select id="filterGraded" class="form-select form-select-sm" onchange="renderAll()"><option value="all">ทั้งหมด</option><option value="ungraded">ยังไม่ grade</option><option value="graded">Grade แล้ว</option></select></div>
+        <div class="col-md-3 text-end"><button class="btn btn-sm btn-outline-danger w-100" onclick="confirmClearAll()" style="font-size:0.72rem;"><i class="bi bi-trash"></i> ล้างประวัติทั้งหมด</button></div>
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs mb-3" id="mainTabs" role="tablist">
+      <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabHistory" type="button"><i class="bi bi-clock-history"></i> ประวัติ <span class="badge bg-secondary" id="tabHistoryCount">0</span></button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAnalysis" type="button"><i class="bi bi-graph-up"></i> วิเคราะห์</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabSimpleLog" type="button"><i class="bi bi-journal-text"></i> Simple Log <span class="badge bg-secondary" id="tabSimpleCount">0</span></button></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="tabHistory" role="tabpanel">
+        <div class="card"><div class="card-body p-0"><div class="table-responsive">
+          <table class="table table-sm table-hover mb-0">
+            <thead><tr><th style="width:80px;">วันที่</th><th>คู่แข่ง</th><th style="width:100px;">ลีก</th><th style="width:50px;">นาที</th><th style="width:80px;">pOver2.5</th><th style="width:65px;">Conf</th><th style="width:65px;">ทาย</th><th style="width:65px;">ผลจริง</th><th style="width:60px;">Stake</th><th style="width:60px;">Odds</th><th style="width:70px;">Brier</th><th style="width:80px;">P/L</th><th style="width:60px;">Grade</th><th style="width:40px;"></th></tr></thead>
+            <tbody id="historyTableBody"><tr><td colspan="14" class="empty-state"><i class="bi bi-inbox d-block mb-2"></i>ยังไม่มีข้อมูล — ไปที่ Scanner กด "ประมวลผล"</td></tr></tbody>
+          </table>
+        </div></div></div>
+        <div class="mt-2 text-muted" style="font-size:0.72rem;"><i class="bi bi-lightbulb"></i> <strong>วิธี Grade:</strong> ใส่จำนวนประตูรวมที่เกิดจริงในช่อง "ผลจริง" → กรอก Stake + Odds (ถ้าต้องการ ROI) → กด ✓</div>
+      </div>
+
+      <div class="tab-pane fade" id="tabAnalysis" role="tabpanel">
+        <div class="row g-3">
+          <div class="col-md-6"><div class="card h-100">
+            <div class="card-header bg-white"><strong><i class="bi bi-bar-chart-line text-primary"></i> Calibration Chart</strong><div class="text-muted" style="font-size:0.7rem;">จุดบนเส้นทแยง = ทำนายตรงความจริง</div></div>
+            <div class="card-body"><div class="chart-container"><canvas id="calibrationChart"></canvas></div></div>
+          </div></div>
+          <div class="col-md-6"><div class="card h-100">
+            <div class="card-header bg-white"><strong><i class="bi bi-trophy text-warning"></i> Confidence Bucket</strong></div>
+            <div class="card-body p-0"><div class="table-responsive" style="max-height:300px;">
+              <table class="table table-sm mb-0"><thead><tr><th>Confidence</th><th class="text-center">N</th><th class="text-center">ทายเฉลี่ย</th><th class="text-center">ถูกจริง</th><th class="text-center">Brier</th></tr></thead><tbody id="confidenceTableBody"><tr><td colspan="5" class="text-center text-muted p-4">ยังไม่มีข้อมูล</td></tr></tbody></table>
+            </div></div>
+          </div></div>
+          <div class="col-12"><div class="card">
+            <div class="card-header bg-white"><strong><i class="bi bi-pie-chart text-success"></i> สรุปตามลีก</strong></div>
+            <div class="card-body p-0"><div class="table-responsive" style="max-height:400px;">
+              <table class="table table-sm mb-0"><thead><tr><th>ลีก</th><th class="text-center">Total</th><th class="text-center">Graded</th><th class="text-center">Hit Rate</th><th class="text-center">Brier Score</th><th class="text-center">คุณภาพ</th></tr></thead><tbody id="leagueTableBody"><tr><td colspan="6" class="text-center text-muted p-4">ยังไม่มีข้อมูล</td></tr></tbody></table>
+            </div></div>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="tabSimpleLog" role="tabpanel">
+        <div class="card">
+          <div class="card-header bg-white"><strong><i class="bi bi-journal-text"></i> Simple Log</strong><div class="text-muted" style="font-size:0.7rem;">จากปุ่ม "ส่งไปตารางท้ายผลบอล" (ไม่มี probability → ไม่คำนวณ Brier)</div></div>
+          <div class="card-body p-0"><div class="table-responsive">
+            <table class="table table-sm mb-0"><thead><tr><th style="width:80px;">วันที่</th><th>ลีก</th><th>คู่แข่ง</th><th class="text-center">นาที</th><th>HT</th><th>FT</th><th>ผลจริง</th><th style="width:40px;"></th></tr></thead><tbody id="simpleLogTableBody"><tr><td colspan="8" class="empty-state"><i class="bi bi-journal d-block mb-2"></i>ยังไม่มีข้อมูล</td></tr></tbody></table>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ============================================================
-   JackAI Scanner v6.0 Pro
-   - Attack + Defense multipliers (Strength สมมาตร)
-   - Bayesian shrinkage
-   - Empirical time weighting
-   - Structural confidence
-   - Value Bet + Kelly
-   - History + Brier + CSV
-   - Fix 120-min ET rate
-   - 🇨🇳 ลีกจีน 16 รายการ
-   - 🌍 U23 International 9 รายการ
+   JackAI Suite v6.0 — Combined Script
    ============================================================ */
 
-/* ---------- CONFIG ---------- */
-const CONFIG = {
-    XG: { BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20, OFF_TARGET: 0.030 },
-    STRENGTH: {
-        SENSITIVITY: 0.0060, MIN_MULT: 0.55, MAX_MULT: 1.80,
-        BAYES_SHRINK: 0.85,
-    },
-    HOME_ADV: { SHARE: 0.55, SHOTS_FOR_FULL_WEIGHT: 20 },
-    RED: { ATTACK_MULT: 0.78, DEFENSE_MULT: 1.18 },
-    TEMPO: {
-        MIN: 0.85, MAX: 1.30,
-        ET_RATE_MULT: 0.75,
-        LATE_0_0_MINUTE: 75, LATE_0_0_BOOST: 1.05,
-    },
-    INTEGRATION_STEPS: 30,
-    GRID: { MAX_GOALS: 15, MAX_FH_GOALS: 8, LAPLACE_SMOOTH: 0.35, RHO_DEFAULT: -0.08 },
-    CONFIDENCE: {
-        BASE: 0.25,
-        W_SAMPLE: 0.30, W_QUALITY: 0.25, W_AGREEMENT: 0.20,
-        W_MINUTE: 0.15, W_ACCURACY: 0.10,
-        SHRINK: 0.92,
-    },
-    LIMITS: { INJURY_MAX: 15, MINUTE_MAX: 120, RED_MAX: 5 },
-};
+/* ========== SHARED CONSTANTS ========== */
+const HISTORY_KEY = 'jackai_history_v6';
+const RESULTS_KEY = 'jackai_results_data';
 
+/* ========== SCANNER CONFIG ========== */
+const CONFIG = {
+  XG: { BIG_CHANCE: 0.34, SOT_NON_BIG: 0.20, OFF_TARGET: 0.030 },
+  STRENGTH: { SENSITIVITY: 0.0060, MIN_MULT: 0.55, MAX_MULT: 1.80, BAYES_SHRINK: 0.85 },
+  HOME_ADV: { SHARE: 0.55, SHOTS_FOR_FULL_WEIGHT: 20 },
+  RED: { ATTACK_MULT: 0.78, DEFENSE_MULT: 1.18 },
+  TEMPO: { MIN: 0.85, MAX: 1.30, ET_RATE_MULT: 0.75, LATE_0_0_MINUTE: 75, LATE_0_0_BOOST: 1.05 },
+  INTEGRATION_STEPS: 30,
+  GRID: { MAX_GOALS: 15, MAX_FH_GOALS: 8, LAPLACE_SMOOTH: 0.35, RHO_DEFAULT: -0.08 },
+  CONFIDENCE: { BASE: 0.25, W_SAMPLE: 0.30, W_QUALITY: 0.25, W_AGREEMENT: 0.20, W_MINUTE: 0.15, W_ACCURACY: 0.10, SHRINK: 0.92 },
+  LIMITS: { INJURY_MAX: 15, MINUTE_MAX: 120, RED_MAX: 5 }
+};
 const EPS = 0.001;
 const TEMPO_0_0_LATE_MINUTE = CONFIG.TEMPO.LATE_0_0_MINUTE;
 const TEMPO_0_0_LATE_BOOST = CONFIG.TEMPO.LATE_0_0_BOOST;
-
-const FACT = [1];
-for (let i = 1; i <= 30; i++) FACT[i] = FACT[i-1] * i;
+const FACT = [1]; for (let i = 1; i <= 30; i++) FACT[i] = FACT[i-1] * i;
 
 let currentLeagueText = "ลีกมาตรฐาน";
 let currentLeagueAvgGoals = 2.70;
@@ -404,941 +490,1002 @@ let currentLeagueRho = CONFIG.GRID.RHO_DEFAULT;
 let currentLeagueFHShare = 0.44;
 let selectedLeagueKey = 'default';
 
-/* ---------- LEAGUE CONSTANTS ---------- */
+/* ========== LEAGUE CONSTANTS ========== */
 const LEAGUE_CONSTANTS = {
-    'premier league': { name: "พรีเมียร์ลีกอังกฤษ", goals: 3.24, mod: 1.20, rho: -0.05, fh: 0.46 },
-    'championship': { name: "แชมเปี้ยนชิพ อังกฤษ", goals: 2.68, mod: 0.98, rho: -0.07, fh: 0.45 },
-    'la liga': { name: "ลาลีกา สเปน", goals: 2.58, mod: 0.95, rho: -0.09, fh: 0.44 },
-    'bundesliga': { name: "บุนเดสลีกา เยอรมัน", goals: 3.42, mod: 1.25, rho: -0.04, fh: 0.47 },
-    'bundesliga 2': { name: "บุนเดสลีกา 2 เยอรมัน", goals: 2.95, mod: 1.10, rho: -0.06, fh: 0.46 },
-    'serie a': { name: "เซเรียอา อิตาลี", goals: 2.62, mod: 0.96, rho: -0.09, fh: 0.44 },
-    'ligue 1': { name: "ลีกเอิง ฝรั่งเศส", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.44 },
-    'eredivisie': { name: "เอเรดิวิซี เนเธอร์แลนด์", goals: 3.15, mod: 1.15, rho: -0.05, fh: 0.46 },
-    'primeira liga': { name: "ไพรม์ยร่าลีกา โปรตุเกส", goals: 2.62, mod: 0.97, rho: -0.09, fh: 0.43 },
-    'jupiler pro league': { name: "จูปิแลร์ โปรลีก เบลเยียม", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
-    'super league greece': { name: "ซูเปอร์ลีก กรีซ", goals: 2.35, mod: 0.87, rho: -0.10, fh: 0.42 },
-    'swiss super league': { name: "สวิส ซูเปอร์ลีก", goals: 3.05, mod: 1.13, rho: -0.05, fh: 0.46 },
-    'austrian bundesliga': { name: "ออสเตรีย บุนเดสลีกา", goals: 2.95, mod: 1.09, rho: -0.06, fh: 0.45 },
-    'poland liga 3': { name: "โปแลนด์ ลีกา 3", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.44 },
-    'poland ekstraklasa': { name: "โปแลนด์ เอ๊กสแตร๊กลาซ่า", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
-    'armenia premier league': { name: "อาร์มีเนีย พรีเมียร์ ลีก", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.43 },
-    'ukraine premier league': { name: "ยูเครน พรีเมียร์ ลีก", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
-    'north macedonia first league': { name: "นอร์ท มาซิโดเนีย เฟิร์ส ลีก", goals: 2.60, mod: 0.98, rho: -0.09, fh: 0.43 },
-    'romania liga 3': { name: "โรมาเนีย ลีกา 3", goals: 2.65, mod: 1.00, rho: -0.08, fh: 0.44 },
-    'romania superliga': { name: "โรมาเนีย ซูเปอร์ลีกา", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.43 },
-    'slovenia division 2': { name: "สโลวีเนีย ดิวิชั่น 2", goals: 2.80, mod: 1.05, rho: -0.07, fh: 0.45 },
-    'croatia prva liga': { name: "โครเอเชีย พีอาร์วีเอ ลีก้า", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.43 },
-    'croatia superliga': { name: "โครเอเชีย ซูเปอร์ลีกา", goals: 2.65, mod: 1.00, rho: -0.08, fh: 0.44 },
-    'russia premier league': { name: "รัสเซีย พรีเมียร์ ลีก", goals: 2.60, mod: 0.98, rho: -0.09, fh: 0.43 },
-    'turkish super lig': { name: "ตรุกี ซุปเปอร์ ลีก", goals: 2.90, mod: 1.08, rho: -0.06, fh: 0.45 },
-    'denmark division 1': { name: "เดนมาร์ก ดิวิชั่น 1", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
-    'cyprus division 1': { name: "ไซปรัส ดิวิชั่น 1", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.43 },
-    'czech national football league': { name: "เช็ก เนชั่นแนล ฟุตบอล ลีก", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.44 },
-    'azerbaijan premier league': { name: "อาร์เซอร์ไบจัน พรีเมียร์ ลีก", goals: 2.40, mod: 0.92, rho: -0.10, fh: 0.42 },
-    'uzbekistan super league': { name: "อุซเบกิสถาน ซุปเปอร์ ลีก", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
-    
-    'thai league': { name: "ไทยลีก", goals: 2.95, mod: 1.10, rho: -0.06, fh: 0.46 },
-    'j1 league': { name: "เจลีก J1", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
-    'j2 league': { name: "เจลีก J2", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
-    'k league 1': { name: "เคลีก 1 เกาหลีใต้", goals: 2.55, mod: 0.94, rho: -0.09, fh: 0.43 },
-    'k league 2': { name: "เคลีก 2 เกาหลีใต้", goals: 2.40, mod: 0.90, rho: -0.10, fh: 0.42 },
-    
-    /* ========== 🇨🇳 ลีกประเทศจีน ========== */
-    'chinese super league': { name: "ไชนีส ซูเปอร์ ลีก (中超)", goals: 3.05, mod: 1.12, rho: -0.06, fh: 0.46 },
-    'china league one': { name: "ไชน่า ลีก วัน (中甲)", goals: 2.60, mod: 0.98, rho: -0.08, fh: 0.44 },
-    'china league two': { name: "ไชน่า ลีก ทู (中乙)", goals: 2.40, mod: 0.92, rho: -0.09, fh: 0.43 },
-    'china league 1': { name: "ไชน่า ลีก 1 (เดิม)", goals: 2.50, mod: 0.92, rho: -0.09, fh: 0.43 },
-    'china fa cup': { name: "ไชน่า เอฟเอ คัพ (足协杯)", goals: 2.85, mod: 1.08, rho: -0.06, fh: 0.45 },
-    'china super cup': { name: "ไชน่า ซูเปอร์ คัพ (超级杯)", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
-    'china champions league': { name: "ไชน่า แชมเปี้ยนส์ ลีก", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
-    'chinese womens super league': { name: "ไชนีส วีเมนส์ ซูเปอร์ ลีก (女超)", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.44 },
-    'china womens league one': { name: "ไชน่า วีเมนส์ ลีก วัน (女甲)", goals: 2.60, mod: 0.98, rho: -0.08, fh: 0.44 },
-    'hong kong premier league': { name: "ฮ่องกง พรีเมียร์ ลีก", goals: 2.95, mod: 1.10, rho: -0.06, fh: 0.46 },
-    'hong kong first division': { name: "ฮ่องกง เฟิร์ส ดิวิชั่น", goals: 2.70, mod: 1.00, rho: -0.07, fh: 0.45 },
-    'hong kong fa cup': { name: "ฮ่องกง เอฟเอ คัพ", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
-    'macau liga de elite': { name: "มาเก๊า ลีกา เด อีลิท", goals: 3.10, mod: 1.15, rho: -0.05, fh: 0.46 },
-    'macau first division': { name: "มาเก๊า เฟิร์ส ดิวิชั่น", goals: 2.80, mod: 1.05, rho: -0.07, fh: 0.44 },
-    'taiwan football premier league': { name: "ไต้หวัน ฟุตบอล พรีเมียร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.44 },
-    
-    /* ========== 🌍 U23/U21 International ========== */
-    'international football championship u23': { name: "อินเตอร์เนชั่นแนล ฟุตบอล แชมเปี้ยนชิพ U23", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.44 },
-    'afc u23 asian cup': { name: "เอเอฟซี U23 เอเชียน คัพ", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.43 },
-    'afc u23 championship': { name: "เอเอฟซี U23 แชมเปี้ยนชิพ", goals: 2.42, mod: 0.91, rho: -0.10, fh: 0.43 },
-    'olympic games men': { name: "โอลิมปิกเกมส์ ชาย (U23)", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
-    'toulon tournament': { name: "ตูลง ทัวร์นาเมนต์ (U23)", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.44 },
-    'south american u23': { name: "โคนเมโบล U23 (อเมริกาใต้)", goals: 2.60, mod: 0.98, rho: -0.08, fh: 0.44 },
-    'uefa u21 euro': { name: "ยูฟ่า U21 ยูโร", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.45 },
-    'waff u23': { name: "WAFF U23 แชมเปี้ยนชิพ", goals: 2.40, mod: 0.90, rho: -0.10, fh: 0.43 },
-    'international friendly u23': { name: "กระชับมิตรทีมชาติ U23", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
-    
-    'indian super league': { name: "อินเดีย ซูเปอร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
-    'karnataka super division': { name: "อินเดีย คาร์นาตากา ซูเปอร์ ดิวิชั่น", goals: 3.20, mod: 1.12, rho: -0.06, fh: 0.45 },
-    'bangalore a division': { name: "อินเดีย บังคลอร์ A ดิวิชั่น", goals: 3.10, mod: 1.11, rho: -0.06, fh: 0.45 },
-    'i-league 3': { name: "อินเดีย ไอ-ลีก 3", goals: 3.21, mod: 1.12, rho: -0.06, fh: 0.45 },
-    'bangalore super division': { name: "อินเดีย บังคลอร์ ซูเปอร์ ดิวิชั่น (BDFA)", goals: 3.15, mod: 1.10, rho: -0.06, fh: 0.45 },
-    'india football league': { name: "อินเดีย ฟุตบอล ลีก", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
-    'israel liga alif': { name: "อิสราเอล ลีกา อลีฟ", goals: 2.40, mod: 0.92, rho: -0.10, fh: 0.42 },
-    'israel liga leumit': { name: "อิสราเอล ลีกา ลีมิต", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.43 },
-    'saudi division 2': { name: "ซาอุฯ ดิวิชั่น 2", goals: 2.60, mod: 1.00, rho: -0.08, fh: 0.44 },
-    'saudi division 1': { name: "ซาอุดิ อาระเบีย ดิวิชั่น 1", goals: 2.70, mod: 1.02, rho: -0.07, fh: 0.45 },
-    'uae division 1': { name: "ยูเออี ดิวิชั่น 1", goals: 3.10, mod: 1.15, rho: -0.05, fh: 0.46 },
-    'qatar stars league': { name: "กาตาร์ สตาร์ ลีก", goals: 3.10, mod: 1.15, rho: -0.05, fh: 0.46 },
-    'kuwait premier league': { name: "คูเวต พรีเมียร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
-    'vietnam league 1': { name: "เวียดนาม ลีก 1", goals: 2.35, mod: 0.88, rho: -0.10, fh: 0.42 },
-    'indonesia super league': { name: "อินโดนีเซีย ซูเปอร์ ลีก", goals: 2.80, mod: 1.08, rho: -0.06, fh: 0.45 },
-    
-    'bolivia primera division': { name: "โบลิเวีย ปริมารา ดิวิชั่น", goals: 2.97, mod: 1.10, rho: -0.06, fh: 0.45 },
-    'chile primera division': { name: "ชิลี ปริมารา ดิวิชั่น", goals: 2.76, mod: 1.02, rho: -0.07, fh: 0.45 },
-    'peru liga 1': { name: "เปรู ลีกา 1", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
-    'ecuador liga pro': { name: "เอกวาดอร์ ลีกาโปร", goals: 2.62, mod: 0.97, rho: -0.08, fh: 0.44 },
-    'brazil serie a': { name: "บราซิล ซีรี่ส์ เอ", goals: 2.52, mod: 0.93, rho: -0.09, fh: 0.43 },
-    'brazil serie b': { name: "บราซิล ซีรี่ส์ บี", goals: 2.35, mod: 0.88, rho: -0.09, fh: 0.42 },
-    'uruguay primera division': { name: "อุรุกวัย ปริมารา ดิวิชั่น", goals: 2.43, mod: 0.90, rho: -0.10, fh: 0.42 },
-    'venezuela primera division': { name: "เวเนซุเอลา ปริมารา ดิวิชั่น", goals: 2.41, mod: 0.89, rho: -0.10, fh: 0.42 },
-    'paraguay primera division': { name: "ปารากวัย ปริมารา ดิวิชั่น", goals: 2.33, mod: 0.86, rho: -0.11, fh: 0.41 },
-    'colombia primera a': { name: "โคลอมเบีย ปริมารา เอ", goals: 2.16, mod: 0.80, rho: -0.12, fh: 0.40 },
-    'liga profesional': { name: "อาร์เจนตินา ลีกา โปรเฟสชันนัล", goals: 1.94, mod: 0.72, rho: -0.13, fh: 0.39 },
-    
-    'mexico liga de expansion': { name: "เม็กซิโก ลีกา เด เอ็กซ์แพนชั่น", goals: 2.60, mod: 0.95, rho: -0.08, fh: 0.44 },
-    'costa rica primera division': { name: "คอสตาริก้า พรีเมียร์ ดิวิชั่น", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
-    'el salvador primera division': { name: "เอล ซัลวาดอร์ พรีเมียร์ ดิวิชั่น", goals: 2.40, mod: 0.92, rho: -0.08, fh: 0.43 },
-    'honduras liga nacional': { name: "ฮอนดูลาส ลีก้า นาเชียนยอล", goals: 2.55, mod: 0.95, rho: -0.08, fh: 0.44 },
-    'guatemala liga nacional': { name: "กัวเตมาลา ลีกา นาซิอองนาล", goals: 2.45, mod: 0.93, rho: -0.08, fh: 0.43 },
-
-    'mls': { name: "เมเจอร์ลีกซอกเกอร์ (MLS)", goals: 3.12, mod: 1.14, rho: -0.05, fh: 0.46 },
-    'a league': { name: "เอ-ลีก ออสเตรเลีย", goals: 3.05, mod: 1.12, rho: -0.05, fh: 0.46 },
-    'australia championship': { name: "ออสเตรเลีย แชมเปี้ยนชิพ", goals: 2.90, mod: 1.08, rho: -0.07, fh: 0.45 },
-    'morocco botola pro': { name: "โมรอคโค โบโตลา โปร", goals: 2.20, mod: 0.85, rho: -0.11, fh: 0.41 },
-    'egypt cup': { name: "อียิปต์ คัพ", goals: 2.30, mod: 0.85, rho: -0.11, fh: 0.41 },
-    
-    'uefa europa': { name: "ยูฟ่า ยูโรปา ลีก", goals: 2.80, mod: 1.00, rho: -0.07, fh: 0.45 },
-    'uefa conference': { name: "ยูฟ่า คอนเฟอเรนซ์", goals: 2.75, mod: 1.00, rho: -0.07, fh: 0.45 },
-    'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
+  'premier league': { name: "พรีเมียร์ลีกอังกฤษ", goals: 3.24, mod: 1.20, rho: -0.05, fh: 0.46 },
+  'championship': { name: "แชมเปี้ยนชิพ อังกฤษ", goals: 2.68, mod: 0.98, rho: -0.07, fh: 0.45 },
+  'la liga': { name: "ลาลีกา สเปน", goals: 2.58, mod: 0.95, rho: -0.09, fh: 0.44 },
+  'bundesliga': { name: "บุนเดสลีกา เยอรมัน", goals: 3.42, mod: 1.25, rho: -0.04, fh: 0.47 },
+  'bundesliga 2': { name: "บุนเดสลีกา 2 เยอรมัน", goals: 2.95, mod: 1.10, rho: -0.06, fh: 0.46 },
+  'serie a': { name: "เซเรียอา อิตาลี", goals: 2.62, mod: 0.96, rho: -0.09, fh: 0.44 },
+  'ligue 1': { name: "ลีกเอิง ฝรั่งเศส", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.44 },
+  'eredivisie': { name: "เอเรดิวิซี เนเธอร์แลนด์", goals: 3.15, mod: 1.15, rho: -0.05, fh: 0.46 },
+  'primeira liga': { name: "ไพรม์ยร่าลีกา โปรตุเกส", goals: 2.62, mod: 0.97, rho: -0.09, fh: 0.43 },
+  'jupiler pro league': { name: "จูปิแลร์ โปรลีก เบลเยียม", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
+  'super league greece': { name: "ซูเปอร์ลีก กรีซ", goals: 2.35, mod: 0.87, rho: -0.10, fh: 0.42 },
+  'swiss super league': { name: "สวิส ซูเปอร์ลีก", goals: 3.05, mod: 1.13, rho: -0.05, fh: 0.46 },
+  'austrian bundesliga': { name: "ออสเตรีย บุนเดสลีกา", goals: 2.95, mod: 1.09, rho: -0.06, fh: 0.45 },
+  'poland liga 3': { name: "โปแลนด์ ลีกา 3", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.44 },
+  'poland ekstraklasa': { name: "โปแลนด์ เอ๊กสแตร๊กลาซ่า", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
+  'armenia premier league': { name: "อาร์มีเนีย พรีเมียร์ ลีก", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.43 },
+  'ukraine premier league': { name: "ยูเครน พรีเมียร์ ลีก", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
+  'north macedonia first league': { name: "นอร์ท มาซิโดเนีย เฟิร์ส ลีก", goals: 2.60, mod: 0.98, rho: -0.09, fh: 0.43 },
+  'romania liga 3': { name: "โรมาเนีย ลีกา 3", goals: 2.65, mod: 1.00, rho: -0.08, fh: 0.44 },
+  'romania superliga': { name: "โรมาเนีย ซูเปอร์ลีกา", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.43 },
+  'slovenia division 2': { name: "สโลวีเนีย ดิวิชั่น 2", goals: 2.80, mod: 1.05, rho: -0.07, fh: 0.45 },
+  'croatia prva liga': { name: "โครเอเชีย พีอาร์วีเอ ลีก้า", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.43 },
+  'croatia superliga': { name: "โครเอเชีย ซูเปอร์ลีกา", goals: 2.65, mod: 1.00, rho: -0.08, fh: 0.44 },
+  'russia premier league': { name: "รัสเซีย พรีเมียร์ ลีก", goals: 2.60, mod: 0.98, rho: -0.09, fh: 0.43 },
+  'turkish super lig': { name: "ตรุกี ซุปเปอร์ ลีก", goals: 2.90, mod: 1.08, rho: -0.06, fh: 0.45 },
+  'denmark division 1': { name: "เดนมาร์ก ดิวิชั่น 1", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
+  'cyprus division 1': { name: "ไซปรัส ดิวิชั่น 1", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.43 },
+  'czech national football league': { name: "เช็ก เนชั่นแนล ฟุตบอล ลีก", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.44 },
+  'azerbaijan premier league': { name: "อาร์เซอร์ไบจัน พรีเมียร์ ลีก", goals: 2.40, mod: 0.92, rho: -0.10, fh: 0.42 },
+  'uzbekistan super league': { name: "อุซเบกิสถาน ซุปเปอร์ ลีก", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
+  'thai league': { name: "ไทยลีก", goals: 2.95, mod: 1.10, rho: -0.06, fh: 0.46 },
+  'j1 league': { name: "เจลีก J1", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
+  'j2 league': { name: "เจลีก J2", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.42 },
+  'k league 1': { name: "เคลีก 1 เกาหลีใต้", goals: 2.55, mod: 0.94, rho: -0.09, fh: 0.43 },
+  'k league 2': { name: "เคลีก 2 เกาหลีใต้", goals: 2.40, mod: 0.90, rho: -0.10, fh: 0.42 },
+  // ลีกจีน
+  'chinese super league': { name: "ไชนีส ซูเปอร์ ลีก (中超)", goals: 3.05, mod: 1.12, rho: -0.06, fh: 0.46 },
+  'china league one': { name: "ไชน่า ลีก วัน (中甲)", goals: 2.60, mod: 0.98, rho: -0.08, fh: 0.44 },
+  'china league two': { name: "ไชน่า ลีก ทู (中乙)", goals: 2.40, mod: 0.92, rho: -0.09, fh: 0.43 },
+  'china league 1': { name: "ไชน่า ลีก 1 (เดิม)", goals: 2.50, mod: 0.92, rho: -0.09, fh: 0.43 },
+  'china fa cup': { name: "ไชน่า เอฟเอ คัพ (足协杯)", goals: 2.85, mod: 1.08, rho: -0.06, fh: 0.45 },
+  'china super cup': { name: "ไชน่า ซูเปอร์ คัพ (超级杯)", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
+  'china champions league': { name: "ไชน่า แชมเปี้ยนส์ ลีก", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
+  'chinese womens super league': { name: "ไชนีส วีเมนส์ ซูเปอร์ ลีก (女超)", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.44 },
+  'china womens league one': { name: "ไชน่า วีเมนส์ ลีก วัน (女甲)", goals: 2.60, mod: 0.98, rho: -0.08, fh: 0.44 },
+  'hong kong premier league': { name: "ฮ่องกง พรีเมียร์ ลีก", goals: 2.95, mod: 1.10, rho: -0.06, fh: 0.46 },
+  'hong kong first division': { name: "ฮ่องกง เฟิร์ส ดิวิชั่น", goals: 2.70, mod: 1.00, rho: -0.07, fh: 0.45 },
+  'hong kong fa cup': { name: "ฮ่องกง เอฟเอ คัพ", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
+  'macau liga de elite': { name: "มาเก๊า ลีกา เด อีลิท", goals: 3.10, mod: 1.15, rho: -0.05, fh: 0.46 },
+  'macau first division': { name: "มาเก๊า เฟิร์ส ดิวิชั่น", goals: 2.80, mod: 1.05, rho: -0.07, fh: 0.44 },
+  'taiwan football premier league': { name: "ไต้หวัน ฟุตบอล พรีเมียร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.44 },
+  // U23 International
+  'international football championship u23': { name: "อินเตอร์เนชั่นแนล ฟุตบอล แชมเปี้ยนชิพ U23", goals: 2.55, mod: 0.95, rho: -0.09, fh: 0.44 },
+  'afc u23 asian cup': { name: "เอเอฟซี U23 เอเชียน คัพ", goals: 2.45, mod: 0.92, rho: -0.10, fh: 0.43 },
+  'afc u23 championship': { name: "เอเอฟซี U23 แชมเปี้ยนชิพ", goals: 2.42, mod: 0.91, rho: -0.10, fh: 0.43 },
+  'olympic games men': { name: "โอลิมปิกเกมส์ ชาย (U23)", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
+  'toulon tournament': { name: "ตูลง ทัวร์นาเมนต์ (U23)", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.44 },
+  'south american u23': { name: "โคนเมโบล U23 (อเมริกาใต้)", goals: 2.60, mod: 0.98, rho: -0.08, fh: 0.44 },
+  'uefa u21 euro': { name: "ยูฟ่า U21 ยูโร", goals: 2.70, mod: 1.00, rho: -0.08, fh: 0.45 },
+  'waff u23': { name: "WAFF U23 แชมเปี้ยนชิพ", goals: 2.40, mod: 0.90, rho: -0.10, fh: 0.43 },
+  'international friendly u23': { name: "กระชับมิตรทีมชาติ U23", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
+  // เอเชีย/อื่นๆ
+  'indian super league': { name: "อินเดีย ซูเปอร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
+  'karnataka super division': { name: "อินเดีย คาร์นาตากา ซูเปอร์ ดิวิชั่น", goals: 3.20, mod: 1.12, rho: -0.06, fh: 0.45 },
+  'bangalore a division': { name: "อินเดีย บังคลอร์ A ดิวิชั่น", goals: 3.10, mod: 1.11, rho: -0.06, fh: 0.45 },
+  'i-league 3': { name: "อินเดีย ไอ-ลีก 3", goals: 3.21, mod: 1.12, rho: -0.06, fh: 0.45 },
+  'bangalore super division': { name: "อินเดีย บังคลอร์ ซูเปอร์ ดิวิชั่น (BDFA)", goals: 3.15, mod: 1.10, rho: -0.06, fh: 0.45 },
+  'india football league': { name: "อินเดีย ฟุตบอล ลีก", goals: 2.75, mod: 1.02, rho: -0.07, fh: 0.45 },
+  'israel liga alif': { name: "อิสราเอล ลีกา อลีฟ", goals: 2.40, mod: 0.92, rho: -0.10, fh: 0.42 },
+  'israel liga leumit': { name: "อิสราเอล ลีกา ลีมิต", goals: 2.50, mod: 0.95, rho: -0.09, fh: 0.43 },
+  'saudi division 2': { name: "ซาอุฯ ดิวิชั่น 2", goals: 2.60, mod: 1.00, rho: -0.08, fh: 0.44 },
+  'saudi division 1': { name: "ซาอุดิ อาระเบีย ดิวิชั่น 1", goals: 2.70, mod: 1.02, rho: -0.07, fh: 0.45 },
+  'uae division 1': { name: "ยูเออี ดิวิชั่น 1", goals: 3.10, mod: 1.15, rho: -0.05, fh: 0.46 },
+  'qatar stars league': { name: "กาตาร์ สตาร์ ลีก", goals: 3.10, mod: 1.15, rho: -0.05, fh: 0.46 },
+  'kuwait premier league': { name: "คูเวต พรีเมียร์ ลีก", goals: 2.85, mod: 1.05, rho: -0.07, fh: 0.45 },
+  'vietnam league 1': { name: "เวียดนาม ลีก 1", goals: 2.35, mod: 0.88, rho: -0.10, fh: 0.42 },
+  'indonesia super league': { name: "อินโดนีเซีย ซูเปอร์ ลีก", goals: 2.80, mod: 1.08, rho: -0.06, fh: 0.45 },
+  // อเมริกาใต้/กลาง
+  'bolivia primera division': { name: "โบลิเวีย ปริมารา ดิวิชั่น", goals: 2.97, mod: 1.10, rho: -0.06, fh: 0.45 },
+  'chile primera division': { name: "ชิลี ปริมารา ดิวิชั่น", goals: 2.76, mod: 1.02, rho: -0.07, fh: 0.45 },
+  'peru liga 1': { name: "เปรู ลีกา 1", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
+  'ecuador liga pro': { name: "เอกวาดอร์ ลีกาโปร", goals: 2.62, mod: 0.97, rho: -0.08, fh: 0.44 },
+  'brazil serie a': { name: "บราซิล ซีรี่ส์ เอ", goals: 2.52, mod: 0.93, rho: -0.09, fh: 0.43 },
+  'brazil serie b': { name: "บราซิล ซีรี่ส์ บี", goals: 2.35, mod: 0.88, rho: -0.09, fh: 0.42 },
+  'uruguay primera division': { name: "อุรุกวัย ปริมารา ดิวิชั่น", goals: 2.43, mod: 0.90, rho: -0.10, fh: 0.42 },
+  'venezuela primera division': { name: "เวเนซุเอลา ปริมารา ดิวิชั่น", goals: 2.41, mod: 0.89, rho: -0.10, fh: 0.42 },
+  'paraguay primera division': { name: "ปารากวัย ปริมารา ดิวิชั่น", goals: 2.33, mod: 0.86, rho: -0.11, fh: 0.41 },
+  'colombia primera a': { name: "โคลอมเบีย ปริมารา เอ", goals: 2.16, mod: 0.80, rho: -0.12, fh: 0.40 },
+  'liga profesional': { name: "อาร์เจนตินา ลีกา โปรเฟสชันนัล", goals: 1.94, mod: 0.72, rho: -0.13, fh: 0.39 },
+  'mexico liga de expansion': { name: "เม็กซิโก ลีกา เด เอ็กซ์แพนชั่น", goals: 2.60, mod: 0.95, rho: -0.08, fh: 0.44 },
+  'costa rica primera division': { name: "คอสตาริก้า พรีเมียร์ ดิวิชั่น", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 },
+  'el salvador primera division': { name: "เอล ซัลวาดอร์ พรีเมียร์ ดิวิชั่น", goals: 2.40, mod: 0.92, rho: -0.08, fh: 0.43 },
+  'honduras liga nacional': { name: "ฮอนดูลาส ลีก้า นาเชียนยอล", goals: 2.55, mod: 0.95, rho: -0.08, fh: 0.44 },
+  'guatemala liga nacional': { name: "กัวเตมาลา ลีกา นาซิอองนาล", goals: 2.45, mod: 0.93, rho: -0.08, fh: 0.43 },
+  'mls': { name: "เมเจอร์ลีกซอกเกอร์ (MLS)", goals: 3.12, mod: 1.14, rho: -0.05, fh: 0.46 },
+  'a league': { name: "เอ-ลีก ออสเตรเลีย", goals: 3.05, mod: 1.12, rho: -0.05, fh: 0.46 },
+  'australia championship': { name: "ออสเตรเลีย แชมเปี้ยนชิพ", goals: 2.90, mod: 1.08, rho: -0.07, fh: 0.45 },
+  'morocco botola pro': { name: "โมรอคโค โบโตลา โปร", goals: 2.20, mod: 0.85, rho: -0.11, fh: 0.41 },
+  'egypt cup': { name: "อียิปต์ คัพ", goals: 2.30, mod: 0.85, rho: -0.11, fh: 0.41 },
+  'uefa europa': { name: "ยูฟ่า ยูโรปา ลีก", goals: 2.80, mod: 1.00, rho: -0.07, fh: 0.45 },
+  'uefa conference': { name: "ยูฟ่า คอนเฟอเรนซ์", goals: 2.75, mod: 1.00, rho: -0.07, fh: 0.45 },
+  'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
 };
 
-/* ---------- UTILITIES ---------- */
-function openDonateModal() {
-    new bootstrap.Modal(document.getElementById('donateModal')).show();
-}
-
+/* ========== SCANNER UTILITIES ========== */
+function openDonateModal() { new bootstrap.Modal(document.getElementById('donateModal')).show(); }
 function copyDonateNumber() {
-    navigator.clipboard.writeText("0944754282").then(() => {
-        alert("✅ คัดลอกเบอร์ TrueMoney แล้วครับ: 094-475-4282");
-    }).catch(() => {
-        alert("❌ ไม่สามารถคัดลอกได้ กรุณาจดเบอร์: 094-475-4282");
-    });
+  navigator.clipboard.writeText("0944754282").then(() => alert("✅ คัดลอกเบอร์ TrueMoney แล้ว: 094-475-4282"))
+    .catch(() => alert("❌ คัดลอกไม่ได้ กรุณาจดเบอร์: 094-475-4282"));
 }
-
-function fmtPct(val) {
-    if (val < 0.5) return '<0.5%';
-    if (val > 99.5) return '>99.5%';
-    return val.toFixed(0) + '%';
-}
-
+function fmtPct(v) { if (v < 0.5) return '<0.5%'; if (v > 99.5) return '>99.5%'; return v.toFixed(0) + '%'; }
 function poisson(lambda, k) {
-    if (lambda <= 0) return k === 0 ? 1 : 0;
-    if (lambda < 30) return Math.exp(-lambda) * Math.pow(lambda, k) / FACT[k];
-    let logFk = 0; for (let i = 2; i <= k; i++) logFk += Math.log(i);
-    return Math.exp(-lambda + k * Math.log(lambda) - logFk);
+  if (lambda <= 0) return k === 0 ? 1 : 0;
+  if (lambda < 30) return Math.exp(-lambda) * Math.pow(lambda, k) / FACT[k];
+  let logFk = 0; for (let i = 2; i <= k; i++) logFk += Math.log(i);
+  return Math.exp(-lambda + k * Math.log(lambda) - logFk);
 }
-
 function dixonColesTau(h, a, lH, lA, rho) {
-    let tau = 1;
-    if (h === 0 && a === 0) tau = 1 - lH * lA * rho;
-    else if (h === 0 && a === 1) tau = 1 + lH * rho;
-    else if (h === 1 && a === 0) tau = 1 + lA * rho;
-    else if (h === 1 && a === 1) tau = 1 - rho;
-    return Math.max(0.01, tau);
+  let tau = 1;
+  if (h === 0 && a === 0) tau = 1 - lH * lA * rho;
+  else if (h === 0 && a === 1) tau = 1 + lH * rho;
+  else if (h === 1 && a === 0) tau = 1 + lA * rho;
+  else if (h === 1 && a === 1) tau = 1 - rho;
+  return Math.max(0.01, tau);
 }
-
 function timeWeight(minute) {
-    if (minute <= 15) return 0.80;
-    if (minute <= 30) return 0.88;
-    if (minute <= 45) return 0.95;
-    if (minute <= 60) return 1.00;
-    if (minute <= 75) return 1.10;
-    if (minute <= 90) return 1.25;
-    return 1.00;
+  if (minute <= 15) return 0.80;
+  if (minute <= 30) return 0.88;
+  if (minute <= 45) return 0.95;
+  if (minute <= 60) return 1.00;
+  if (minute <= 75) return 1.10;
+  if (minute <= 90) return 1.25;
+  return 1.00;
 }
-
 function expectedGoalsIntegrated(minute, remaining, format, i1, i2, basePerMin) {
-    if (remaining <= 0) return 0;
-    const n = CONFIG.INTEGRATION_STEPS;
-    const dt = remaining / n;
-    const half2_end = 90 + i1 + i2;
-    let sum = 0;
-    for (let i = 0; i < n; i++) {
-        const t = minute + (i + 0.5) * dt;
-        let rate = basePerMin;
-        if (format === "120" && t > half2_end) rate *= CONFIG.TEMPO.ET_RATE_MULT;
-        sum += rate * timeWeight(t) * dt;
-    }
-    return sum;
+  if (remaining <= 0) return 0;
+  const n = CONFIG.INTEGRATION_STEPS, dt = remaining / n, half2_end = 90 + i1 + i2;
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    const t = minute + (i + 0.5) * dt;
+    let rate = basePerMin;
+    if (format === "120" && t > half2_end) rate *= CONFIG.TEMPO.ET_RATE_MULT;
+    sum += rate * timeWeight(t) * dt;
+  }
+  return sum;
 }
-
 function pickColor(pct) {
-    if (pct >= 65) return { bar: 'bg-success', text: 'text-success' };
-    if (pct >= 35) return { bar: 'bg-warning', text: 'text-warning' };
-    if (pct >= 15) return { bar: 'bg-orange',  text: 'text-orange' };
-    return { bar: 'bg-danger', text: 'text-danger' };
+  if (pct >= 65) return { bar: 'bg-success', text: 'text-success' };
+  if (pct >= 35) return { bar: 'bg-warning', text: 'text-warning' };
+  if (pct >= 15) return { bar: 'bg-orange', text: 'text-orange' };
+  return { bar: 'bg-danger', text: 'text-danger' };
 }
-
-function showCalcError(msg) {
-    document.getElementById('calcErrorText').innerText = msg;
-    document.getElementById('calcError').classList.remove('d-none');
-}
+function showCalcError(msg) { document.getElementById('calcErrorText').innerText = msg; document.getElementById('calcError').classList.remove('d-none'); }
 function clearCalcError() { document.getElementById('calcError').classList.add('d-none'); }
 
-/* ---------- LEAGUE UI ---------- */
 function tryAutoMatchLeague(query) {
-    if (!query || query.trim().length < 2) return;
-    const q = query.trim().toLowerCase();
-    const exact = Object.entries(LEAGUE_CONSTANTS).find(([key, val]) =>
-        val.name.toLowerCase() === q || key === q
-    );
-    if (exact && selectedLeagueKey !== exact[0]) {
-        selectedLeagueKey = exact[0];
-        handleLeagueInput();
-    }
+  if (!query || query.trim().length < 2) return;
+  const q = query.trim().toLowerCase();
+  const exact = Object.entries(LEAGUE_CONSTANTS).find(([key, val]) => val.name.toLowerCase() === q || key === q);
+  if (exact && selectedLeagueKey !== exact[0]) { selectedLeagueKey = exact[0]; handleLeagueInput(); }
 }
-
 function renderDropdown(query = '') {
-    const dropdown = document.getElementById('leagueDropdown');
-    dropdown.innerHTML = '';
-    const lowerQuery = query.toLowerCase();
-    if (query.trim() === '') { dropdown.style.display = 'none'; return; }
-
-    const filtered = Object.entries(LEAGUE_CONSTANTS).filter(([key, val]) =>
-        val.name.toLowerCase().includes(lowerQuery) || key.includes(lowerQuery)
-    );
-
-    if (filtered.length === 0) {
-        dropdown.innerHTML = '<div class="league-item text-muted">ไม่พบลีกที่ค้นหา</div>';
-    } else {
-        filtered.slice(0, 50).forEach(([key, val]) => {
-            const item = document.createElement('div');
-            item.className = 'league-item';
-            item.innerHTML = `<strong>${val.name}</strong> <small class="d-inline">(${key})</small>`;
-            item.onclick = () => {
-                document.getElementById('leagueSearch').value = val.name;
-                selectedLeagueKey = key;
-                dropdown.style.display = 'none';
-                handleLeagueInput();
-                saveInputs();
-            };
-            dropdown.appendChild(item);
-        });
-    }
-    dropdown.style.display = 'block';
+  const dropdown = document.getElementById('leagueDropdown');
+  dropdown.innerHTML = '';
+  const lq = query.toLowerCase();
+  if (query.trim() === '') { dropdown.style.display = 'none'; return; }
+  const filtered = Object.entries(LEAGUE_CONSTANTS).filter(([k, v]) => v.name.toLowerCase().includes(lq) || k.includes(lq));
+  if (filtered.length === 0) dropdown.innerHTML = '<div class="league-item text-muted">ไม่พบลีกที่ค้นหา</div>';
+  else filtered.slice(0, 50).forEach(([key, val]) => {
+    const item = document.createElement('div');
+    item.className = 'league-item';
+    item.innerHTML = `<strong>${val.name}</strong> <small class="d-inline">(${key})</small>`;
+    item.onclick = () => {
+      document.getElementById('leagueSearch').value = val.name;
+      selectedLeagueKey = key; dropdown.style.display = 'none';
+      handleLeagueInput(); saveInputs();
+    };
+    dropdown.appendChild(item);
+  });
+  dropdown.style.display = 'block';
 }
-
 document.addEventListener('click', (e) => {
-    if (!e.target.closest('#leagueSearch') && !e.target.closest('#leagueDropdown')) {
-        document.getElementById('leagueDropdown').style.display = 'none';
-    }
+  const dd = document.getElementById('leagueDropdown');
+  if (dd && !e.target.closest('#leagueSearch') && !e.target.closest('#leagueDropdown')) dd.style.display = 'none';
 });
-
 function handleLeagueInput() {
-    const resultEl = document.getElementById('leagueResult');
-    if (selectedLeagueKey === 'default' || !LEAGUE_CONSTANTS[selectedLeagueKey]) {
-        currentLeagueAvgGoals = 2.70;
-        currentLeagueText = "ลีกมาตรฐาน";
-        currentLeagueRho = CONFIG.GRID.RHO_DEFAULT;
-        currentLeagueFHShare = 0.44;
-        resultEl.innerHTML = '<span class="text-warning fw-bold" style="font-size: 0.65rem;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม, ρ=-0.08) พิมพ์ชื่อลีกให้ตรงแล้วกด Enter</span>';
-    } else {
-        const v = LEAGUE_CONSTANTS[selectedLeagueKey];
-        currentLeagueAvgGoals = v.goals;
-        currentLeagueText = v.name;
-        currentLeagueRho = v.rho;
-        currentLeagueFHShare = v.fh;
-        resultEl.innerHTML = `<span class="text-info fw-bold" style="font-size: 0.65rem;"><i class="bi bi-check-circle-fill"></i> ${v.name} (${v.goals} ประตู/เกม, ρ=${v.rho}, ครึ่งแรก ${(v.fh*100).toFixed(0)}%)</span>`;
-    }
+  const el = document.getElementById('leagueResult');
+  if (selectedLeagueKey === 'default' || !LEAGUE_CONSTANTS[selectedLeagueKey]) {
+    currentLeagueAvgGoals = 2.70; currentLeagueText = "ลีกมาตรฐาน";
+    currentLeagueRho = CONFIG.GRID.RHO_DEFAULT; currentLeagueFHShare = 0.44;
+    el.innerHTML = '<span class="text-warning fw-bold" style="font-size:0.65rem;">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>';
+  } else {
+    const v = LEAGUE_CONSTANTS[selectedLeagueKey];
+    currentLeagueAvgGoals = v.goals; currentLeagueText = v.name;
+    currentLeagueRho = v.rho; currentLeagueFHShare = v.fh;
+    el.innerHTML = `<span class="text-info fw-bold" style="font-size:0.65rem;"><i class="bi bi-check-circle-fill"></i> ${v.name} (${v.goals} ประตู/เกม, ρ=${v.rho}, ครึ่งแรก ${(v.fh*100).toFixed(0)}%)</span>`;
+  }
 }
-
-/* ---------- MATH ---------- */
-function calcAHOutcome(finalH, finalA, handicap) {
-    const net = finalH - finalA - handicap;
-    if (net > EPS) return 1;
-    if (net < -EPS) return -1;
-    return 0;
+function calcAHOutcome(fh, fa, h) { const n = fh - fa - h; if (n > EPS) return 1; if (n < -EPS) return -1; return 0; }
+function getAHParts(ah) {
+  const absH = Math.abs(ah), frac = absH - Math.floor(absH);
+  const q = Math.abs(frac - 0.25) < EPS || Math.abs(frac - 0.75) < EPS;
+  if (!q) return { isQuarter: false, parts: [ah] };
+  let h1, h2;
+  if (Math.abs(frac - 0.25) < EPS) { h1 = Math.floor(absH); h2 = Math.floor(absH) + 0.5; }
+  else { h1 = Math.floor(absH) + 0.5; h2 = Math.ceil(absH); }
+  if (ah < 0) { h1 = -h1; h2 = -h2; }
+  return { isQuarter: true, parts: [h1, h2] };
 }
-
-function getAHParts(ahRate) {
-    const absH = Math.abs(ahRate);
-    const frac = absH - Math.floor(absH);
-    const isQuarter = Math.abs(frac - 0.25) < EPS || Math.abs(frac - 0.75) < EPS;
-    if (!isQuarter) return { isQuarter: false, parts: [ahRate] };
-    let h1, h2;
-    if (Math.abs(frac - 0.25) < EPS) { h1 = Math.floor(absH); h2 = Math.floor(absH) + 0.5; }
-    else { h1 = Math.floor(absH) + 0.5; h2 = Math.ceil(absH); }
-    if (ahRate < 0) { h1 = -h1; h2 = -h2; }
-    return { isQuarter: true, parts: [h1, h2] };
-}
-
 function calcShotXg(sot, big, shots) {
-    big = Math.min(big, sot);
-    const sotNonBig = Math.max(0, sot - big);
-    const offTarget = Math.max(0, shots - sot);
-    const xg = big * CONFIG.XG.BIG_CHANCE + sotNonBig * CONFIG.XG.SOT_NON_BIG + offTarget * CONFIG.XG.OFF_TARGET;
-    return { xg, sotNonBig, offTarget };
+  big = Math.min(big, sot);
+  const sotNonBig = Math.max(0, sot - big), offTarget = Math.max(0, shots - sot);
+  const xg = big * CONFIG.XG.BIG_CHANCE + sotNonBig * CONFIG.XG.SOT_NON_BIG + offTarget * CONFIG.XG.OFF_TARGET;
+  return { xg, sotNonBig, offTarget };
 }
-
 function strengthToAttackMult(s) {
-    const raw = Math.exp(CONFIG.STRENGTH.SENSITIVITY * (s - 70));
-    const shrunk = 1 + (raw - 1) * CONFIG.STRENGTH.BAYES_SHRINK;
-    return Math.max(CONFIG.STRENGTH.MIN_MULT, Math.min(CONFIG.STRENGTH.MAX_MULT, shrunk));
+  const raw = Math.exp(CONFIG.STRENGTH.SENSITIVITY * (s - 70));
+  const shrunk = 1 + (raw - 1) * CONFIG.STRENGTH.BAYES_SHRINK;
+  return Math.max(CONFIG.STRENGTH.MIN_MULT, Math.min(CONFIG.STRENGTH.MAX_MULT, shrunk));
 }
-function strengthToDefenseMult(s) {
-    return 1 / strengthToAttackMult(s);
-}
-
-function getTotalMatchTime(format, i1, i2) {
-    return (format === "90") ? (90 + i1 + i2) : (120 + i1 + i2);
-}
-
+function strengthToDefenseMult(s) { return 1 / strengthToAttackMult(s); }
+function getTotalMatchTime(format, i1, i2) { return (format === "90") ? (90 + i1 + i2) : (120 + i1 + i2); }
 function calculateRemaining(minute, i1, i2, format) {
-    const half1_end = 45 + i1;
-    const half2_end = 90 + i1 + i2;
-    const et1_end = 105 + i1;
-    const et2_end = 120 + i1 + i2;
-    let remaining = 0;
-    if (format === "90") {
-        if (minute <= half1_end) remaining = (half1_end - minute) + (45 + i2);
-        else if (minute <= half2_end) remaining = half2_end - minute;
-    } else {
-        if (minute <= half1_end) remaining = (half1_end - minute) + (45 + i2) + 30;
-        else if (minute <= half2_end) remaining = (half2_end - minute) + 30;
-        else if (minute <= et1_end) remaining = (et1_end - minute) + (15 + i2);
-        else if (minute <= et2_end) remaining = et2_end - minute;
-    }
-    return { remaining, half1_end, half2_end, et1_end, et2_end };
+  const h1e = 45 + i1, h2e = 90 + i1 + i2, et1e = 105 + i1, et2e = 120 + i1 + i2;
+  let r = 0;
+  if (format === "90") { if (minute <= h1e) r = (h1e - minute) + (45 + i2); else if (minute <= h2e) r = h2e - minute; }
+  else { if (minute <= h1e) r = (h1e - minute) + (45 + i2) + 30; else if (minute <= h2e) r = (h2e - minute) + 30; else if (minute <= et1e) r = (et1e - minute) + (15 + i2); else if (minute <= et2e) r = et2e - minute; }
+  return { remaining: r, half1_end: h1e, half2_end: h2e, et1_end: et1e, et2_end: et2e };
 }
-
 function autoEstimateStrength() {
-    const ah = parseFloat(document.getElementById('auto_ah').value) || 0;
-    const ahImpact = -ah * 15;
-    const homeBase = Math.max(20, Math.min(95, 70 + ahImpact));
-    const awayBase = Math.max(20, Math.min(95, 70 - ahImpact));
-
-    const minute = Math.min(120, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
-    const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
-    const cA = Math.max(0, parseInt(document.getElementById('current_away_score').value, 10) || 0);
-    const hShots = Math.max(0, parseInt(document.getElementById('h_shots').value, 10) || 0);
-    const aShots = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
-    const hSot = Math.max(0, parseInt(document.getElementById('h_sot').value, 10) || 0);
-    const aSot = Math.max(0, parseInt(document.getElementById('a_sot').value, 10) || 0);
-
-    let liveAdjHome = 0, liveAdjAway = 0;
-    if (minute > 0) {
-        liveAdjHome += (cH - cA) * 2.0;
-        liveAdjAway -= (cH - cA) * 2.0;
-        liveAdjHome += (hShots - aShots) * 0.5;
-        liveAdjAway -= (hShots - aShots) * 0.5;
-        liveAdjHome += (hSot - aSot) * 0.8;
-        liveAdjAway -= (hSot - aSot) * 0.8;
-    }
-
-    const liveWeight = Math.min(100, Math.max(0, parseFloat(document.getElementById('auto_live_weight').value) || 30)) / 100;
-    const baseWeight = 1 - liveWeight;
-
-    const finalHome = Math.max(20, Math.min(95, homeBase * baseWeight + (homeBase + liveAdjHome) * liveWeight));
-    const finalAway = Math.max(20, Math.min(95, awayBase * baseWeight + (awayBase + liveAdjAway) * liveWeight));
-
-    document.getElementById('home_strength').value = Math.round(finalHome);
-    document.getElementById('away_strength').value = Math.round(finalAway);
-
-    const el = document.getElementById('autoResult');
-    el.style.display = 'block';
-    el.innerHTML = `🏠 <strong>${Math.round(finalHome)}</strong> (Base ${homeBase.toFixed(0)} ${liveAdjHome>=0?'+':''}${liveAdjHome.toFixed(1)} Live) &nbsp;|&nbsp; ✈️ <strong>${Math.round(finalAway)}</strong> (Base ${awayBase.toFixed(0)} ${liveAdjAway>=0?'+':''}${liveAdjAway.toFixed(1)} Live)`;
-    saveInputs();
+  const ah = parseFloat(document.getElementById('auto_ah').value) || 0;
+  const ahImpact = -ah * 15;
+  const homeBase = Math.max(20, Math.min(95, 70 + ahImpact));
+  const awayBase = Math.max(20, Math.min(95, 70 - ahImpact));
+  const minute = Math.min(120, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
+  const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
+  const cA = Math.max(0, parseInt(document.getElementById('current_away_score').value, 10) || 0);
+  const hShots = Math.max(0, parseInt(document.getElementById('h_shots').value, 10) || 0);
+  const aShots = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
+  const hSot = Math.max(0, parseInt(document.getElementById('h_sot').value, 10) || 0);
+  const aSot = Math.max(0, parseInt(document.getElementById('a_sot').value, 10) || 0);
+  let lh = 0, la = 0;
+  if (minute > 0) {
+    lh += (cH - cA) * 2.0; la -= (cH - cA) * 2.0;
+    lh += (hShots - aShots) * 0.5; la -= (hShots - aShots) * 0.5;
+    lh += (hSot - aSot) * 0.8; la -= (hSot - aSot) * 0.8;
+  }
+  const lw = Math.min(100, Math.max(0, parseFloat(document.getElementById('auto_live_weight').value) || 30)) / 100;
+  const bw = 1 - lw;
+  const fh = Math.max(20, Math.min(95, homeBase * bw + (homeBase + lh) * lw));
+  const fa = Math.max(20, Math.min(95, awayBase * bw + (awayBase + la) * lw));
+  document.getElementById('home_strength').value = Math.round(fh);
+  document.getElementById('away_strength').value = Math.round(fa);
+  const el = document.getElementById('autoResult');
+  el.style.display = 'block';
+  el.innerHTML = `🏠 <strong>${Math.round(fh)}</strong> (Base ${homeBase.toFixed(0)} ${lh>=0?'+':''}${lh.toFixed(1)}) &nbsp;|&nbsp; ✈️ <strong>${Math.round(fa)}</strong> (Base ${awayBase.toFixed(0)} ${la>=0?'+':''}${la.toFixed(1)})`;
+  saveInputs();
 }
-
-/* ---------- VALUE BET / KELLY ---------- */
-function calcValueBet(modelProb, decimalOdds) {
-    if (decimalOdds <= 1) return null;
-    const implied = 1 / decimalOdds;
-    const ev = (modelProb * decimalOdds) - 1;
-    const b = decimalOdds - 1;
-    const kelly = b > 0 ? (b * modelProb - (1 - modelProb)) / b : 0;
-    return {
-        implied, edge: modelProb - implied, ev,
-        kelly, kellyHalf: kelly / 2,
-        isValue: ev > 0.02 && kelly > 0.02,
-    };
+function calcValueBet(mp, odds) {
+  if (odds <= 1) return null;
+  const imp = 1 / odds, ev = (mp * odds) - 1, b = odds - 1;
+  const kelly = b > 0 ? (b * mp - (1 - mp)) / b : 0;
+  return { implied: imp, edge: mp - imp, ev, kelly, kellyHalf: kelly / 2, isValue: ev > 0.02 && kelly > 0.02 };
 }
-
-/* ---------- CONFIDENCE ---------- */
 function calcConfidence({ hShots, aShots, hSot, aSot, hBig, aBig, minute, top3ProbSum }) {
-    const totalShots = hShots + aShots;
-    const sampleScore = Math.min(1, totalShots / 25);
-    const accuracy = totalShots > 0 ? (hSot + aSot) / totalShots : 0;
-    const hasBig = (hBig + aBig) > 0;
-    const qualityScore = hasBig ? 1.0 : 0.6;
-    const minuteScore = Math.min(1, minute / 75);
-    const agreementScore = Math.min(1, top3ProbSum / 0.65);
-
-    const C = CONFIG.CONFIDENCE;
-    const composite =
-        C.W_SAMPLE * sampleScore +
-        C.W_QUALITY * qualityScore +
-        C.W_AGREEMENT * agreementScore +
-        C.W_MINUTE * minuteScore +
-        C.W_ACCURACY * accuracy;
-
-    const raw = (C.BASE + (1 - C.BASE) * composite) * C.SHRINK * 100;
-    return Math.round(Math.max(0, Math.min(100, raw)));
+  const total = hShots + aShots;
+  const sSample = Math.min(1, total / 25);
+  const acc = total > 0 ? (hSot + aSot) / total : 0;
+  const hasBig = (hBig + aBig) > 0;
+  const qScore = hasBig ? 1.0 : 0.6;
+  const mScore = Math.min(1, minute / 75);
+  const aScore = Math.min(1, top3ProbSum / 0.65);
+  const C = CONFIG.CONFIDENCE;
+  const comp = C.W_SAMPLE * sSample + C.W_QUALITY * qScore + C.W_AGREEMENT * aScore + C.W_MINUTE * mScore + C.W_ACCURACY * acc;
+  const raw = (C.BASE + (1 - C.BASE) * comp) * C.SHRINK * 100;
+  return Math.round(Math.max(0, Math.min(100, raw)));
 }
-
-/* ---------- HISTORY / BRIER / EXPORT ---------- */
-const HISTORY_KEY = 'jackai_history_v6';
-
-function recordPrediction(pred) {
-    let h = [];
-    try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
-    h.push({ id: Date.now(), ts: new Date().toISOString(), ...pred, actual: null });
-    if (h.length > 500) h = h.slice(-500);
-    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch (e) {}
-}
-
-function calcBrierScore() {
-    let h = [];
-    try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
-    const graded = h.filter(p => p.actual && typeof p.actual.totalGoals === 'number');
-    if (!graded.length) return { n: 0, brier: null, total: h.length };
-    let sum = 0;
-    graded.forEach(p => {
-        const predicted = p.pOver25 || 0;
-        const actual = p.actual.totalGoals > 2.5 ? 1 : 0;
-        sum += Math.pow(predicted - actual, 2);
-    });
-    return { n: graded.length, brier: sum / graded.length, total: h.length };
-}
-
-function showBrierScore() {
-    const { n, brier, total } = calcBrierScore();
-    if (n === 0) {
-        alert(`📊 ยังไม่มีผลที่ grade\n\nทั้งหมด ${total} records (ยังไม่ grade)\n\n👉 ใช้ฟังก์ชัน gradePrediction(id, totalGoals) ใน console เพื่อ grade`);
-        return;
-    }
-    const quality = brier < 0.20 ? '🏆 ดีเยี่ยม' : brier < 0.25 ? '✅ ดี' : brier < 0.30 ? '⚠️ พอใช้' : '❌ ต้องปรับ';
-    alert(`📊 Brier Score (Over/Under 2.5)\n\nN = ${n} records (จาก ${total})\nBrier = ${brier.toFixed(4)}\n${quality}\n\n(ยิ่งต่ำยิ่งดี, < 0.20 = ดีมาก)`);
-}
-
-function gradePrediction(id, totalGoals) {
-    let h = [];
-    try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
-    const idx = h.findIndex(p => p.id === id);
-    if (idx < 0) { alert('❌ ไม่พบ record'); return; }
-    h[idx].actual = { totalGoals };
-    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch (e) {}
-    alert(`✅ Grade บันทึกแล้ว: Total ${totalGoals} ประตู`);
-}
-
-function exportHistoryCSV() {
-    let h = [];
-    try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
-    if (!h.length) { alert('📭 ยังไม่มีประวัติ — กดประมวลผลก่อน'); return; }
-    const headers = ['id','ts','league','home','away','minute','score','xgH','xgA','pOver25','pAHHome','pAHAway','confidence','actualOver25','actualTotal'];
-    const rows = h.map(p => [
-        p.id, p.ts, `"${p.league||''}"`, `"${p.home||''}"`, `"${p.away||''}"`, p.minute,
-        `"${p.score||''}"`,
-        (p.xgH ?? '').toFixed ? p.xgH.toFixed(2) : '',
-        (p.xgA ?? '').toFixed ? p.xgA.toFixed(2) : '',
-        p.pOver25 != null ? p.pOver25.toFixed(4) : '',
-        p.pAHHome != null ? p.pAHHome.toFixed(4) : '',
-        p.pAHAway != null ? p.pAHAway.toFixed(4) : '',
-        p.confidence ?? '',
-        p.actual ? (p.actual.totalGoals > 2.5 ? 1 : 0) : '',
-        p.actual ? p.actual.totalGoals : '',
-    ]);
-    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `jackai_history_${new Date().toISOString().slice(0,10)}.csv`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-}
-
-/* ---------- STORAGE ---------- */
-const STORAGE_KEY = 'jackai_inputs_v6';
-const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight','ah_odds'];
-
-function saveInputs() {
-    const data = {};
-    INPUT_IDS.forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value; });
-    data['selectedLeagueKey'] = selectedLeagueKey;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
-}
-
-function restoreInputs() {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return;
-        const data = JSON.parse(raw);
-        INPUT_IDS.forEach(id => { if (data[id] !== undefined && document.getElementById(id)) document.getElementById(id).value = data[id]; });
-        if (data['selectedLeagueKey']) {
-            selectedLeagueKey = data['selectedLeagueKey'];
-            handleLeagueInput();
-        }
-    } catch (e) {}
-}
-
-function resetInputs() {
-    if (!confirm('ล้างข้อมูลทั้งหมดและโหลดค่าเริ่มต้นใหม่?')) return;
-    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-    location.reload();
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    restoreInputs();
-    handleLeagueInput();
-    INPUT_IDS.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('change', saveInputs);
-    });
-    const leagueSearch = document.getElementById('leagueSearch');
-    leagueSearch.addEventListener('input', (e) => {
-        renderDropdown(e.target.value);
-        tryAutoMatchLeague(e.target.value);
-    });
-    leagueSearch.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            tryAutoMatchLeague(e.target.value);
-            document.getElementById('leagueDropdown').style.display = 'none';
-        }
-    });
-});
-
-/* ============================================================
-   MAIN PREDICTION
-   ============================================================ */
-function predictMatch() {
-    clearCalcError();
-
-    const homeName = document.getElementById('home_name').value.trim() || 'ทีมเหย้า';
-    const awayName = document.getElementById('away_name').value.trim() || 'ทีมเยือน';
-    const homeStrength = Math.min(100, Math.max(0, parseFloat(document.getElementById('home_strength').value) || 70));
-    const awayStrength = Math.min(100, Math.max(0, parseFloat(document.getElementById('away_strength').value) || 70));
-
-    const minute = Math.min(CONFIG.LIMITS.MINUTE_MAX, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
-    const i1 = Math.min(CONFIG.LIMITS.INJURY_MAX, Math.max(0, parseInt(document.getElementById('injury_1').value, 10) || 0));
-    const i2 = Math.min(CONFIG.LIMITS.INJURY_MAX, Math.max(0, parseInt(document.getElementById('injury_2').value, 10) || 0));
-    const format = document.getElementById('match_format').value;
-
-    const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
-    const cA = Math.max(0, parseInt(document.getElementById('current_away_score').value, 10) || 0);
-    const currentTotalGoals = cH + cA;
-
-    const htH = Math.max(0, parseInt(document.getElementById('ht_home_score').value, 10) || 0);
-    const htA = Math.max(0, parseInt(document.getElementById('ht_away_score').value, 10) || 0);
-    const htTotalGoals = htH + htA;
-
-    const redHome = Math.min(CONFIG.LIMITS.RED_MAX, Math.max(0, parseInt(document.getElementById('red_home').value, 10) || 0));
-    const redAway = Math.min(CONFIG.LIMITS.RED_MAX, Math.max(0, parseInt(document.getElementById('red_away').value, 10) || 0));
-    const ahRate = parseFloat(document.getElementById('handicapSelect').value) || 0;
-
-    let hShotsRaw = Math.max(0, parseInt(document.getElementById('h_shots').value, 10) || 0);
-    let aShotsRaw = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
-    let hSotRaw = Math.max(0, parseInt(document.getElementById('h_sot').value, 10) || 0);
-    let aSotRaw = Math.max(0, parseInt(document.getElementById('a_sot').value, 10) || 0);
-    let hBigRaw = Math.max(0, parseInt(document.getElementById('h_big').value, 10) || 0);
-    let aBigRaw = Math.max(0, parseInt(document.getElementById('a_big').value, 10) || 0);
-
-    const totalMatchTime = getTotalMatchTime(format, i1, i2);
-    const timeData = calculateRemaining(minute, i1, i2, format);
-    const remaining = timeData.remaining;
-    const half1_end = timeData.half1_end;
-
-    if (remaining === 0) { showCalcError('การแข่งขันจบลงแล้ว (ไม่มีเวลาทดเจ็บหรือต่อเวลาเหลือ)'); return; }
-
-    const inputWarnings = [];
-    if (hSotRaw > hShotsRaw) { inputWarnings.push(`SOT เหย้า (${hSotRaw}) > ยิงทั้งหมด — ปรับให้เท่ากัน`); hSotRaw = hShotsRaw; }
-    if (aSotRaw > aShotsRaw) { inputWarnings.push(`SOT เยือน (${aSotRaw}) > ยิงทั้งหมด — ปรับให้เท่ากัน`); aSotRaw = aShotsRaw; }
-    if (hBigRaw > hSotRaw) { inputWarnings.push(`Big Chance เหย้า (${hBigRaw}) > SOT — ปรับให้เท่ากัน`); hBigRaw = hSotRaw; }
-    if (aBigRaw > aSotRaw) { inputWarnings.push(`Big Chance เยือน (${aBigRaw}) > SOT — ปรับให้เท่ากัน`); aBigRaw = aSotRaw; }
-
-    const hSot = hSotRaw, aSot = aSotRaw, hShots = hShotsRaw, aShots = aShotsRaw;
-    const hBig = hBigRaw, aBig = aBigRaw;
-
-    if (hShots + aShots === 0) { showCalcError('กรุณาระบุจำนวนการยิงอย่างน้อย 1 ฝั่งก่อนทำการประมวลผล'); return; }
-
-    document.getElementById('emptyState').classList.add('d-none');
-    document.getElementById('resultsArea').classList.remove('d-none');
-    document.getElementById('resultsArea').classList.add('d-flex');
-
-    const warnBox = document.getElementById('inputWarning');
-    if (inputWarnings.length > 0) { document.getElementById('inputWarningText').innerText = inputWarnings.join(' | '); warnBox.classList.remove('d-none'); }
-    else warnBox.classList.add('d-none');
-
-    const hShot = calcShotXg(hSot, hBig, hShots);
-    const aShot = calcShotXg(aSot, aBig, aShots);
-
-    const hAtkMult = strengthToAttackMult(homeStrength);
-    const hDefMult = strengthToDefenseMult(homeStrength);
-    const aAtkMult = strengthToAttackMult(awayStrength);
-    const aDefMult = strengthToDefenseMult(awayStrength);
-
-    const hAttackNet = hShot.xg * hAtkMult * aDefMult;
-    const aAttackNet = aShot.xg * aAtkMult * hDefMult;
-
-    const smoothedH = hAttackNet + CONFIG.GRID.LAPLACE_SMOOTH;
-    const smoothedA = aAttackNet + CONFIG.GRID.LAPLACE_SMOOTH;
-    const shotRatio = smoothedH / (smoothedH + smoothedA);
-
-    const shotWeight = Math.min(1, (hShots + aShots) / CONFIG.HOME_ADV.SHOTS_FOR_FULL_WEIGHT);
-    const hRatio = shotWeight * shotRatio + (1 - shotWeight) * CONFIG.HOME_ADV.SHARE;
-    const aRatio = 1 - hRatio;
-
-    /* ===== Tempo ===== */
-    let tempoModifier = 1.0, tempoText = "ปกติ", tempoBadgeClass = "bg-secondary", tempoIcon = "bi-speedometer2";
-    if (minute >= 15) {
-        const effectiveMinute = Math.min(minute, totalMatchTime);
-        const tempo90Equiv = Math.min(effectiveMinute, 90) + Math.max(0, effectiveMinute - 90) * CONFIG.TEMPO.ET_RATE_MULT;
-        const expectedGoalsSoFar = Math.max(0.1, (currentLeagueAvgGoals / 90) * tempo90Equiv);
-        const actualGoals = currentTotalGoals;
-        if (actualGoals > expectedGoalsSoFar) {
-            const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
-            tempoModifier = Math.min(CONFIG.TEMPO.MAX, 1 + (diffRatio - 1) * 0.15);
-            if (tempoModifier > 1.08) { tempoText = `🔥 ดุเดือด (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-danger text-white"; tempoIcon = "bi-fire"; }
-        } else if (actualGoals === 0 && minute > 30) {
-            if (minute >= TEMPO_0_0_LATE_MINUTE) {
-                tempoModifier = TEMPO_0_0_LATE_BOOST;
-                tempoText = `⏰ ท้ายเกม 0-0 เปิดเกม (x${tempoModifier.toFixed(2)})`;
-                tempoBadgeClass = "bg-warning text-dark"; tempoIcon = "bi-alarm";
-            } else {
-                tempoModifier = 0.90;
-                tempoText = `🧊 เนือย (x${tempoModifier.toFixed(2)})`;
-                tempoBadgeClass = "bg-primary text-white"; tempoIcon = "bi-snow";
-            }
-        } else if (actualGoals < expectedGoalsSoFar) {
-            const diffRatio = actualGoals / Math.max(0.1, expectedGoalsSoFar);
-            tempoModifier = Math.max(CONFIG.TEMPO.MIN, 1 - (1 - diffRatio) * 0.15);
-            if (tempoModifier < 0.92) { tempoText = `🐢 ช้า (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-warning text-dark"; tempoIcon = "bi-hourglass-split"; }
-        }
-    }
-    const tempoEl = document.getElementById('tempoBadge');
-    tempoEl.className = `badge ${tempoBadgeClass}`;
-    tempoEl.innerHTML = `<i class="bi ${tempoIcon}"></i> Tempo: ${tempoText}`;
-
-    /* ===== Expected Goals ===== */
-    const baseXgPerMin = currentLeagueAvgGoals / 90;
-    const expectedGoalsRaw = expectedGoalsIntegrated(minute, remaining, format, i1, i2, baseXgPerMin);
-    const expectedGoals = expectedGoalsRaw * tempoModifier;
-
-    let xgH = expectedGoals * hRatio;
-    let xgA = expectedGoals * aRatio;
-
-    /* ===== State ===== */
-    const diff = cH - cA;
-    let hStateMod = 1.0, aStateMod = 1.0;
-    if (diff > 0) { hStateMod *= (1 - 0.15 * Math.min(2, diff)); aStateMod *= (1 + 0.18 * Math.min(2, diff)); }
-    else if (diff < 0) { aStateMod *= (1 - 0.15 * Math.min(2, -diff)); hStateMod *= (1 + 0.18 * Math.min(2, -diff)); }
-    xgH *= hStateMod; xgA *= aStateMod;
-
-    /* ===== Red card ===== */
-    const rcAttackHome = Math.pow(CONFIG.RED.ATTACK_MULT, redHome);
-    const rcDefenseHome = Math.pow(CONFIG.RED.DEFENSE_MULT, redHome);
-    const rcAttackAway = Math.pow(CONFIG.RED.ATTACK_MULT, redAway);
-    const rcDefenseAway = Math.pow(CONFIG.RED.DEFENSE_MULT, redAway);
-    const xgHBeforeRed = xgH, xgABeforeRed = xgA;
-    xgH = xgH * rcAttackHome * rcDefenseAway;
-    xgA = xgA * rcAttackAway * rcDefenseHome;
-
-    /* ===== Grid ===== */
-    const rho = currentLeagueRho;
-    let probGrid = [], total = 0;
-    for (let h = 0; h <= CONFIG.GRID.MAX_GOALS; h++) {
-        for (let a = 0; a <= CONFIG.GRID.MAX_GOALS; a++) {
-            const p = poisson(xgH, h) * poisson(xgA, a) * dixonColesTau(h, a, xgH, xgA, rho);
-            probGrid.push({ h, a, p });
-            total += p;
-        }
-    }
-    if (total <= 0) { showCalcError('ไม่สามารถคำนวณ probability grid ได้'); return; }
-    probGrid.forEach(x => x.p /= total);
-
-    /* ===== AH / Over ===== */
-    let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
-    let pFTOver05 = 0, pFTOver15 = 0, pFTOver25 = 0, pFTOver35 = 0, pFTOver45 = 0, pFTOver55 = 0, pFTOver65 = 0;
-    const ahParts = getAHParts(ahRate);
-
-    probGrid.forEach(x => {
-        const finalH = cH + x.h, finalA = cA + x.a;
-        const totalFTGoals = finalH + finalA;
-        let ahOutcome;
-        if (ahParts.isQuarter) {
-            ahOutcome = (calcAHOutcome(finalH, finalA, ahParts.parts[0]) + calcAHOutcome(finalH, finalA, ahParts.parts[1])) / 2;
-        } else { ahOutcome = calcAHOutcome(finalH, finalA, ahRate); }
-
-        if (Math.abs(ahOutcome - 0.5) < EPS) { pAHHomeWin += x.p * 0.5; pAHPush += x.p * 0.5; }
-        else if (Math.abs(ahOutcome + 0.5) < EPS) { pAHAwayWin += x.p * 0.5; pAHPush += x.p * 0.5; }
-        else if (ahOutcome > EPS) { pAHHomeWin += x.p; }
-        else if (ahOutcome < -EPS) { pAHAwayWin += x.p; }
-        else { pAHPush += x.p; }
-
-        if (totalFTGoals > 0.5) pFTOver05 += x.p;
-        if (totalFTGoals > 1.5) pFTOver15 += x.p;
-        if (totalFTGoals > 2.5) pFTOver25 += x.p;
-        if (totalFTGoals > 3.5) pFTOver35 += x.p;
-        if (totalFTGoals > 4.5) pFTOver45 += x.p;
-        if (totalFTGoals > 5.5) pFTOver55 += x.p;
-        if (totalFTGoals > 6.5) pFTOver65 += x.p;
-    });
-
-    const ahSum = pAHHomeWin + pAHAwayWin + pAHPush;
-    if (ahSum > 0) { pAHHomeWin /= ahSum; pAHAwayWin /= ahSum; pAHPush /= ahSum; }
-
-    document.getElementById('ahCurrentRate').innerText = ahRate === 0
-        ? "เสมอ (0.0)"
-        : (ahRate < 0 ? `เยือนต่อ ${Math.abs(ahRate).toFixed(2)}` : `เหย้าต่อ ${ahRate.toFixed(2)}`);
-    document.getElementById('ahHomeProb').innerText = fmtPct(pAHHomeWin * 100);
-    document.getElementById('ahAwayProb').innerText = fmtPct(pAHAwayWin * 100);
-    document.getElementById('ahPushProb').innerText = fmtPct(pAHPush * 100);
-
-    /* ===== Value Bet ===== */
-    const vbOdds = parseFloat(document.getElementById('ah_odds').value) || 1.90;
-    const vb = calcValueBet(pAHHomeWin, vbOdds);
-    const vbEl = document.getElementById('valueBetDisplay');
-    if (vb && vb.isValue) {
-        vbEl.innerHTML = `<span class="text-success fw-bold">💰 VALUE</span> | Edge ${(vb.edge*100).toFixed(1)}% | EV ${(vb.ev*100).toFixed(1)}% | K½ ${(vb.kellyHalf*100).toFixed(1)}%`;
-        vbEl.className = 'form-control form-control-sm value-bet-box bg-success-subtle border-success text-success fw-bold';
-    } else if (vb) {
-        vbEl.innerText = `Edge ${(vb.edge*100).toFixed(1)}% | EV ${(vb.ev*100).toFixed(1)}% (ไม่มี value)`;
-        vbEl.className = 'form-control form-control-sm value-bet-box bg-light text-secondary';
-    } else {
-        vbEl.innerText = '-';
-        vbEl.className = 'form-control form-control-sm value-bet-box bg-light text-secondary';
-    }
-
-    const setFtRow = (id, barId, val, actualTrigger) => {
-        const finalVal = actualTrigger ? 100.0 : val * 100;
-        const el = document.getElementById(id);
-        const c = pickColor(finalVal);
-        el.innerText = fmtPct(finalVal);
-        el.className = 'fw-bold ' + c.text;
-        const bar = document.getElementById(barId);
-        bar.style.width = finalVal + '%';
-        bar.className = 'progress-bar ' + c.bar;
-    };
-    setFtRow('ftOver05', 'ftOver05Bar', pFTOver05, currentTotalGoals > 0.5);
-    setFtRow('ftOver15', 'ftOver15Bar', pFTOver15, currentTotalGoals > 1.5);
-    setFtRow('ftOver25', 'ftOver25Bar', pFTOver25, currentTotalGoals > 2.5);
-    setFtRow('ftOver35', 'ftOver35Bar', pFTOver35, currentTotalGoals > 3.5);
-    setFtRow('ftOver45', 'ftOver45Bar', pFTOver45, currentTotalGoals > 4.5);
-    setFtRow('ftOver55', 'ftOver55Bar', pFTOver55, currentTotalGoals > 5.5);
-    setFtRow('ftOver65', 'ftOver65Bar', pFTOver65, currentTotalGoals > 6.5);
-
-    const totalXg = xgH + xgA;
-    const pNone = Math.exp(-totalXg);
-    const pHomeNext = totalXg > 0 ? (xgH / totalXg) * (1 - pNone) : 0;
-    const pAwayNext = totalXg > 0 ? (xgA / totalXg) * (1 - pNone) : 0;
-    document.getElementById('probHome').innerText = fmtPct(pHomeNext * 100);
-    document.getElementById('probNone').innerText = fmtPct(pNone * 100);
-    document.getElementById('probAway').innerText = fmtPct(pAwayNext * 100);
-
-    /* ===== FH probs ===== */
-    let fhOver05 = 0, fhOver15 = 0, fhOver25 = 0, fhOver35 = 0;
-    if (minute >= half1_end) {
-        fhOver05 = htTotalGoals > 0.5 ? 100 : 0;
-        fhOver15 = htTotalGoals > 1.5 ? 100 : 0;
-        fhOver25 = htTotalGoals > 2.5 ? 100 : 0;
-        fhOver35 = htTotalGoals > 3.5 ? 100 : 0;
-        document.getElementById('fhProbHome').innerText = htH > htA ? '✅' : '❌';
-        document.getElementById('fhProbTotal').innerText = htH === htA ? '✅' : '❌';
-        document.getElementById('fhProbAway').innerText = htA > htH ? '✅' : '❌';
-    } else {
-        const fhRemaining = Math.max(0, half1_end - minute);
-        const secondHalfTotal = 45 + i2;
-        const fhTotalSpan = fhRemaining + secondHalfTotal;
-        const fhTimeRatio = fhTotalSpan > 0 ? Math.max(0, Math.min(1, fhRemaining / fhTotalSpan)) : 0;
-        const fhXgHome = xgH * currentLeagueFHShare * fhTimeRatio;
-        const fhXgAway = xgA * currentLeagueFHShare * fhTimeRatio;
-
-        let fhGrid = [], fhTotal = 0;
-        for (let h = 0; h <= CONFIG.GRID.MAX_FH_GOALS; h++) {
-            for (let a = 0; a <= CONFIG.GRID.MAX_FH_GOALS; a++) {
-                const p = poisson(fhXgHome, h) * poisson(fhXgAway, a) * dixonColesTau(h, a, fhXgHome, fhXgAway, rho);
-                fhGrid.push({ h, a, p });
-                fhTotal += p;
-            }
-        }
-        if (fhTotal > 0) fhGrid.forEach(x => x.p /= fhTotal);
-
-        let pFHWin = 0, pFHDraw = 0, pFHLose = 0;
-        fhGrid.forEach(s => {
-            if (s.h > s.a) pFHWin += s.p;
-            else if (s.h === s.a) pFHDraw += s.p;
-            else pFHLose += s.p;
-        });
-        document.getElementById('fhProbHome').innerText = fmtPct(pFHWin * 100);
-        document.getElementById('fhProbTotal').innerText = fmtPct(pFHDraw * 100);
-        document.getElementById('fhProbAway').innerText = fmtPct(pFHLose * 100);
-
-        fhGrid.forEach(s => {
-            const totalG = s.h + s.a + currentTotalGoals;
-            if (totalG > 0.5) fhOver05 += s.p;
-            if (totalG > 1.5) fhOver15 += s.p;
-            if (totalG > 2.5) fhOver25 += s.p;
-            if (totalG > 3.5) fhOver35 += s.p;
-        });
-        fhOver05 *= 100; fhOver15 *= 100; fhOver25 *= 100; fhOver35 *= 100;
-    }
-
-    const setFhRow = (id, barId, val) => {
-        const el = document.getElementById(id);
-        const c = pickColor(val);
-        el.innerText = fmtPct(val);
-        el.className = 'fw-bold ' + c.text;
-        const bar = document.getElementById(barId);
-        bar.style.width = val + '%';
-        bar.className = 'progress-bar ' + c.bar;
-    };
-    setFhRow('fhOver05', 'fhOver05Bar', fhOver05);
-    setFhRow('fhOver15', 'fhOver15Bar', fhOver15);
-    setFhRow('fhOver25', 'fhOver25Bar', fhOver25);
-    setFhRow('fhOver35', 'fhOver35Bar', fhOver35);
-
-    /* ===== Top 3 ===== */
-    const top3Raw = probGrid.map(x => ({ score: `${cH + x.h}-${cA + x.a}`, prob: x.p }))
-        .sort((a, b) => b.prob - a.prob).slice(0, 3);
-    const finalScores = top3Raw.map(x => ({ score: x.score, prob: x.prob * 100 }));
-    const top3SumProb = finalScores.reduce((s, i) => s + i.prob, 0);
-
-    const scoreContainer = document.getElementById('topScoresContainer');
-    const colors = ['bg-success text-white', 'bg-warning text-dark', 'bg-secondary text-white'];
-    const icons = ['🥇', '🥈', '🥉'];
-    scoreContainer.innerHTML = finalScores.map((item, i) =>
-        `<div class="col-4"><div class="score-box ${colors[i]} shadow-sm">
-            <div class="fw-bold mb-0" style="font-size: 0.75rem;">${icons[i]}</div>
-            <div class="fw-extrabold mb-0" style="font-size: 1.1rem;">${item.score}</div>
-            <div class="fw-bold" style="font-size: 0.75rem;">${fmtPct(item.prob)}</div>
-        </div></div>`
-    ).join('');
-    document.getElementById('top3SumNote').innerHTML = `Top 3 รวมกัน = <strong>${fmtPct(top3SumProb)}</strong> ของทั้งหมด <span class="prob-absolute-tag">(absolute probability)</span>`;
-
-    const confidence = calcConfidence({
-        hShots, aShots, hSot, aSot, hBig, aBig, minute,
-        top3ProbSum: top3SumProb / 100,
-    });
-
-    document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
-    document.getElementById('displayMinute').innerText = minute;
-    document.getElementById('displayRemaining').innerText = remaining;
-    document.getElementById('confidenceBadge').innerText = `Confidence: ${confidence}%`;
-    document.getElementById('leagueInfluenceText').innerText = currentLeagueText;
-
-    const dqEl = document.getElementById('dataQualityBadge');
-    if (hasBigData(hBig, aBig)) { dqEl.className = 'badge bg-success'; dqEl.innerText = 'Data: High'; }
-    else if ((hShots + aShots) >= 10) { dqEl.className = 'badge bg-warning text-dark'; dqEl.innerText = 'Data: Medium'; }
-    else { dqEl.className = 'badge bg-danger'; dqEl.innerText = 'Data: Low'; }
-
-    const rcArea = document.getElementById('redCardImpactArea');
-    if (redHome > 0 || redAway > 0) {
-        let parts = [];
-        if (redHome > 0) parts.push(`เหย้า ${redHome} ใบ`);
-        if (redAway > 0) parts.push(`เยือน ${redAway} ใบ`);
-        document.getElementById('redImpactText').innerHTML = parts.join(' | ') +
-            ` (xG: ${xgHBeforeRed.toFixed(2)}→${xgH.toFixed(2)} vs ${xgABeforeRed.toFixed(2)}→${xgA.toFixed(2)})`;
-        rcArea.classList.remove('d-none');
-    } else rcArea.classList.add('d-none');
-
-    document.getElementById('xgBreakdown').innerHTML =
-        `<div class="d-flex justify-content-between border-bottom pb-1 mb-1">
-            <span>🏠 เหย้า xG: <strong>${xgH.toFixed(2)}</strong></span>
-            <span class="text-success">${hShot.xg.toFixed(2)} × atk${hAtkMult.toFixed(2)} × def${aDefMult.toFixed(2)}</span>
-        </div>
-        <div class="d-flex justify-content-between">
-            <span>✈️ เยือน xG: <strong>${xgA.toFixed(2)}</strong></span>
-            <span class="text-primary">${aShot.xg.toFixed(2)} × atk${aAtkMult.toFixed(2)} × def${hDefMult.toFixed(2)}</span>
-        </div>
-        <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#6c757d;">
-            <span>Ratio: 🏠 ${(hRatio*100).toFixed(1)}% / ✈️ ${(aRatio*100).toFixed(1)}% (shotW=${shotWeight.toFixed(2)})</span>
-            <span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span>
-        </div>
-        <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#6c757d;">
-            <span>∫xG ${expectedGoalsRaw.toFixed(2)} × tempo ${tempoModifier.toFixed(2)}</span>
-            <span class="debug-badge">conf = ${confidence}%</span>
-        </div>`;
-
-    const calibNote = document.getElementById('calibNote');
-    let note = `⚙️ v6.0 Pro: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${rho}; atk/def split. `;
-    if (!hasBigData(hBig, aBig)) note += '⚠️ ไม่มี Big Chances → xG อาจคลาดเคลื่อน ±10–15%';
-    calibNote.innerText = note;
-
-    recordPrediction({
-        league: currentLeagueText,
-        leagueKey: selectedLeagueKey,
-        home: homeName, away: awayName,
-        minute,
-        score: `${cH}-${cA}`,
-        xgH, xgA,
-        pOver25: pFTOver25,
-        pOver15: pFTOver15,
-        pAHHome: pAHHomeWin,
-        pAHAway: pAHAwayWin,
-        confidence,
-        homeStrength, awayStrength,
-    });
-
-    saveInputs();
-    if (window.innerWidth < 992) document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
-}
-
 function hasBigData(hBig, aBig) { return (hBig + aBig) > 0; }
 
-/* ---------- SEND TO TABLE ---------- */
-function sendToTable() {
-    const homeName = document.getElementById('home_name').value.trim() || 'ทีมเหย้า';
-    const awayName = document.getElementById('away_name').value.trim() || 'ทีมเยือน';
-    const cH = document.getElementById('current_home_score').value || '0';
-    const cA = document.getElementById('current_away_score').value || '0';
-    const minute = document.getElementById('match_minute').value || '0';
-    const league = document.getElementById('leagueInfluenceText').innerText;
-
-    let bestFT = "รอผล";
-    let maxProb = 0;
-    const ftOverIds = ['ftOver05', 'ftOver15', 'ftOver25', 'ftOver35', 'ftOver45', 'ftOver55', 'ftOver65'];
-    const ftValues = ['0.5', '1.5', '2.5', '3.5', '4.5', '5.5', '6.5'];
-    
-    ftOverIds.forEach((id, index) => {
-        const textVal = document.getElementById(id).innerText.replace('%', '').replace('>', '').replace('<', '');
-        const prob = parseFloat(textVal) || 0;
-        if (prob > maxProb && prob >= 50) {
-            maxProb = prob;
-            bestFT = `สูง ${ftValues[index]} (${prob}%)`;
-        }
-    });
-
-    let htPred = "รอผล";
-    const htHome = document.getElementById('ht_home_score').value || '0';
-    const htAway = document.getElementById('ht_away_score').value || '0';
-    if (parseInt(minute) >= 45) {
-        htPred = `จบ 1H (${htHome}-${htAway})`;
-    } else {
-        htPred = `โอกาสสูง 0.5: ${document.getElementById('fhOver05').innerText}`;
-    }
-
-    const newRecord = {
-        date: new Date().toLocaleDateString('th-TH'),
-        league: league,
-        match: `${homeName} ${cH} - ${cA} ${awayName}`,
-        minute: minute,
-        ht: htPred,
-        ft: bestFT,
-        result: ""
-    };
-
-    let saved = localStorage.getItem('jackai_results_data');
-    let data = [];
-    try { data = saved ? JSON.parse(saved) : []; } catch(e) { data = []; }
-    
-    data.push(newRecord);
-    localStorage.setItem('jackai_results_data', JSON.stringify(data));
-
-    alert('✅ ส่งข้อมูลไปยังตารางท้ายผลบอลเรียบร้อยแล้ว!\n\n👉 กรุณาเปิดไฟล์ "ตารางท้ายผลบอล.html" เพื่อดูข้อมูล\n(ข้อมูลจะอยู่แถวล่างสุด)');
+function recordPrediction(pred) {
+  let h = [];
+  try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
+  h.push({ id: Date.now(), ts: new Date().toISOString(), ...pred, actual: null });
+  if (h.length > 500) h = h.slice(-500);
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch (e) {}
+  updateUngradedBadge();
 }
+function calcBrierScore() {
+  let h = [];
+  try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
+  const graded = h.filter(p => p.actual && typeof p.actual.totalGoals === 'number');
+  if (!graded.length) return { n: 0, brier: null, total: h.length };
+  let sum = 0;
+  graded.forEach(p => { const a = p.actual.totalGoals > 2.5 ? 1 : 0; sum += Math.pow((p.pOver25 || 0) - a, 2); });
+  return { n: graded.length, brier: sum / graded.length, total: h.length };
+}
+function showBrierScore() {
+  const { n, brier, total } = calcBrierScore();
+  if (n === 0) { alert(`📊 ยังไม่มีผลที่ grade\n\nทั้งหมด ${total} records\n\n👉 ใช้แท็บ Tracker เพื่อ grade ผ่าน UI`); return; }
+  const q = brier < 0.20 ? '🏆 ดีเยี่ยม' : brier < 0.25 ? '✅ ดี' : brier < 0.30 ? '⚠️ พอใช้' : '❌ ต้องปรับ';
+  alert(`📊 Brier Score (Over/Under 2.5)\n\nN = ${n} (จาก ${total})\nBrier = ${brier.toFixed(4)}\n${q}`);
+}
+function gradePrediction(id, totalGoals) {
+  let h = [];
+  try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
+  const i = h.findIndex(p => p.id === id);
+  if (i < 0) { alert('❌ ไม่พบ record'); return; }
+  h[i].actual = { totalGoals };
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch (e) {}
+  alert(`✅ Grade บันทึกแล้ว: ${totalGoals} ประตู`);
+  updateUngradedBadge();
+}
+function exportHistoryCSV() {
+  let h = [];
+  try { h = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
+  if (!h.length) { alert('📭 ยังไม่มีประวัติ'); return; }
+  const headers = ['id','ts','league','home','away','minute','score','xgH','xgA','pOver25','pAHHome','pAHAway','confidence','actualOver25','actualTotal'];
+  const rows = h.map(p => [
+    p.id, p.ts, `"${p.league||''}"`, `"${p.home||''}"`, `"${p.away||''}"`, p.minute, `"${p.score||''}"`,
+    (p.xgH ?? '').toFixed ? p.xgH.toFixed(2) : '', (p.xgA ?? '').toFixed ? p.xgA.toFixed(2) : '',
+    p.pOver25 != null ? p.pOver25.toFixed(4) : '', p.pAHHome != null ? p.pAHHome.toFixed(4) : '',
+    p.pAHAway != null ? p.pAHAway.toFixed(4) : '', p.confidence ?? '',
+    p.actual ? (p.actual.totalGoals > 2.5 ? 1 : 0) : '', p.actual ? p.actual.totalGoals : ''
+  ]);
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `jackai_history_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+/* ========== SCANNER STORAGE ========== */
+const STORAGE_KEY = 'jackai_inputs_v6';
+const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight','ah_odds'];
+function saveInputs() {
+  const data = {};
+  INPUT_IDS.forEach(id => { const el = document.getElementById(id); if (el) data[id] = el.value; });
+  data['selectedLeagueKey'] = selectedLeagueKey;
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+}
+function restoreInputs() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    INPUT_IDS.forEach(id => { if (data[id] !== undefined && document.getElementById(id)) document.getElementById(id).value = data[id]; });
+    if (data['selectedLeagueKey']) { selectedLeagueKey = data['selectedLeagueKey']; handleLeagueInput(); }
+  } catch (e) {}
+}
+function resetInputs() {
+  if (!confirm('ล้างข้อมูลและโหลดค่าเริ่มต้นใหม่?')) return;
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  location.reload();
+}
+
+/* ========== SCANNER MAIN ========== */
+function predictMatch() {
+  clearCalcError();
+  const homeName = document.getElementById('home_name').value.trim() || 'ทีมเหย้า';
+  const awayName = document.getElementById('away_name').value.trim() || 'ทีมเยือน';
+  const homeStrength = Math.min(100, Math.max(0, parseFloat(document.getElementById('home_strength').value) || 70));
+  const awayStrength = Math.min(100, Math.max(0, parseFloat(document.getElementById('away_strength').value) || 70));
+  const minute = Math.min(CONFIG.LIMITS.MINUTE_MAX, Math.max(0, parseInt(document.getElementById('match_minute').value, 10) || 0));
+  const i1 = Math.min(CONFIG.LIMITS.INJURY_MAX, Math.max(0, parseInt(document.getElementById('injury_1').value, 10) || 0));
+  const i2 = Math.min(CONFIG.LIMITS.INJURY_MAX, Math.max(0, parseInt(document.getElementById('injury_2').value, 10) || 0));
+  const format = document.getElementById('match_format').value;
+  const cH = Math.max(0, parseInt(document.getElementById('current_home_score').value, 10) || 0);
+  const cA = Math.max(0, parseInt(document.getElementById('current_away_score').value, 10) || 0);
+  const currentTotalGoals = cH + cA;
+  const htH = Math.max(0, parseInt(document.getElementById('ht_home_score').value, 10) || 0);
+  const htA = Math.max(0, parseInt(document.getElementById('ht_away_score').value, 10) || 0);
+  const htTotalGoals = htH + htA;
+  const redHome = Math.min(CONFIG.LIMITS.RED_MAX, Math.max(0, parseInt(document.getElementById('red_home').value, 10) || 0));
+  const redAway = Math.min(CONFIG.LIMITS.RED_MAX, Math.max(0, parseInt(document.getElementById('red_away').value, 10) || 0));
+  const ahRate = parseFloat(document.getElementById('handicapSelect').value) || 0;
+  let hShotsRaw = Math.max(0, parseInt(document.getElementById('h_shots').value, 10) || 0);
+  let aShotsRaw = Math.max(0, parseInt(document.getElementById('a_shots').value, 10) || 0);
+  let hSotRaw = Math.max(0, parseInt(document.getElementById('h_sot').value, 10) || 0);
+  let aSotRaw = Math.max(0, parseInt(document.getElementById('a_sot').value, 10) || 0);
+  let hBigRaw = Math.max(0, parseInt(document.getElementById('h_big').value, 10) || 0);
+  let aBigRaw = Math.max(0, parseInt(document.getElementById('a_big').value, 10) || 0);
+  const totalMatchTime = getTotalMatchTime(format, i1, i2);
+  const timeData = calculateRemaining(minute, i1, i2, format);
+  const remaining = timeData.remaining, half1_end = timeData.half1_end;
+  if (remaining === 0) { showCalcError('การแข่งขันจบลงแล้ว'); return; }
+  const inputWarnings = [];
+  if (hSotRaw > hShotsRaw) { inputWarnings.push(`SOT เหย้า > ยิงทั้งหมด`); hSotRaw = hShotsRaw; }
+  if (aSotRaw > aShotsRaw) { inputWarnings.push(`SOT เยือน > ยิงทั้งหมด`); aSotRaw = aShotsRaw; }
+  if (hBigRaw > hSotRaw) { inputWarnings.push(`Big เหย้า > SOT`); hBigRaw = hSotRaw; }
+  if (aBigRaw > aSotRaw) { inputWarnings.push(`Big เยือน > SOT`); aBigRaw = aSotRaw; }
+  const hSot = hSotRaw, aSot = aSotRaw, hShots = hShotsRaw, aShots = aShotsRaw, hBig = hBigRaw, aBig = aBigRaw;
+  if (hShots + aShots === 0) { showCalcError('กรุณาระบุการยิงอย่างน้อย 1 ครั้ง'); return; }
+  document.getElementById('emptyState').classList.add('d-none');
+  document.getElementById('resultsArea').classList.remove('d-none');
+  document.getElementById('resultsArea').classList.add('d-flex');
+  const warnBox = document.getElementById('inputWarning');
+  if (inputWarnings.length > 0) { document.getElementById('inputWarningText').innerText = inputWarnings.join(' | '); warnBox.classList.remove('d-none'); }
+  else warnBox.classList.add('d-none');
+
+  const hShot = calcShotXg(hSot, hBig, hShots);
+  const aShot = calcShotXg(aSot, aBig, aShots);
+  const hAtkMult = strengthToAttackMult(homeStrength), hDefMult = strengthToDefenseMult(homeStrength);
+  const aAtkMult = strengthToAttackMult(awayStrength), aDefMult = strengthToDefenseMult(awayStrength);
+  const hAttackNet = hShot.xg * hAtkMult * aDefMult;
+  const aAttackNet = aShot.xg * aAtkMult * hDefMult;
+  const smoothedH = hAttackNet + CONFIG.GRID.LAPLACE_SMOOTH;
+  const smoothedA = aAttackNet + CONFIG.GRID.LAPLACE_SMOOTH;
+  const shotRatio = smoothedH / (smoothedH + smoothedA);
+  const shotWeight = Math.min(1, (hShots + aShots) / CONFIG.HOME_ADV.SHOTS_FOR_FULL_WEIGHT);
+  const hRatio = shotWeight * shotRatio + (1 - shotWeight) * CONFIG.HOME_ADV.SHARE;
+  const aRatio = 1 - hRatio;
+
+  let tempoModifier = 1.0, tempoText = "ปกติ", tempoBadgeClass = "bg-secondary", tempoIcon = "bi-speedometer2";
+  if (minute >= 15) {
+    const effMin = Math.min(minute, totalMatchTime);
+    const tempo90Equiv = Math.min(effMin, 90) + Math.max(0, effMin - 90) * CONFIG.TEMPO.ET_RATE_MULT;
+    const expSoFar = Math.max(0.1, (currentLeagueAvgGoals / 90) * tempo90Equiv);
+    const actG = currentTotalGoals;
+    if (actG > expSoFar) {
+      const dr = actG / Math.max(0.1, expSoFar);
+      tempoModifier = Math.min(CONFIG.TEMPO.MAX, 1 + (dr - 1) * 0.15);
+      if (tempoModifier > 1.08) { tempoText = `🔥 ดุเดือด (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-danger text-white"; tempoIcon = "bi-fire"; }
+    } else if (actG === 0 && minute > 30) {
+      if (minute >= TEMPO_0_0_LATE_MINUTE) { tempoModifier = TEMPO_0_0_LATE_BOOST; tempoText = `⏰ 0-0 ท้ายเกม (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-warning text-dark"; tempoIcon = "bi-alarm"; }
+      else { tempoModifier = 0.90; tempoText = `🧊 เนือย (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-primary text-white"; tempoIcon = "bi-snow"; }
+    } else if (actG < expSoFar) {
+      const dr = actG / Math.max(0.1, expSoFar);
+      tempoModifier = Math.max(CONFIG.TEMPO.MIN, 1 - (1 - dr) * 0.15);
+      if (tempoModifier < 0.92) { tempoText = `🐢 ช้า (x${tempoModifier.toFixed(2)})`; tempoBadgeClass = "bg-warning text-dark"; tempoIcon = "bi-hourglass-split"; }
+    }
+  }
+  const tempoEl = document.getElementById('tempoBadge');
+  tempoEl.className = `badge ${tempoBadgeClass}`;
+  tempoEl.innerHTML = `<i class="bi ${tempoIcon}"></i> Tempo: ${tempoText}`;
+
+  const baseXgPerMin = currentLeagueAvgGoals / 90;
+  const expectedGoalsRaw = expectedGoalsIntegrated(minute, remaining, format, i1, i2, baseXgPerMin);
+  const expectedGoals = expectedGoalsRaw * tempoModifier;
+  let xgH = expectedGoals * hRatio, xgA = expectedGoals * aRatio;
+
+  const diff = cH - cA;
+  let hSM = 1.0, aSM = 1.0;
+  if (diff > 0) { hSM *= (1 - 0.15 * Math.min(2, diff)); aSM *= (1 + 0.18 * Math.min(2, diff)); }
+  else if (diff < 0) { aSM *= (1 - 0.15 * Math.min(2, -diff)); hSM *= (1 + 0.18 * Math.min(2, -diff)); }
+  xgH *= hSM; xgA *= aSM;
+
+  const rcAH = Math.pow(CONFIG.RED.ATTACK_MULT, redHome), rcDH = Math.pow(CONFIG.RED.DEFENSE_MULT, redHome);
+  const rcAA = Math.pow(CONFIG.RED.ATTACK_MULT, redAway), rcDA = Math.pow(CONFIG.RED.DEFENSE_MULT, redAway);
+  const xgHBeforeRed = xgH, xgABeforeRed = xgA;
+  xgH = xgH * rcAH * rcDA; xgA = xgA * rcAA * rcDH;
+
+  const rho = currentLeagueRho;
+  let probGrid = [], total = 0;
+  for (let h = 0; h <= CONFIG.GRID.MAX_GOALS; h++) for (let a = 0; a <= CONFIG.GRID.MAX_GOALS; a++) {
+    const p = poisson(xgH, h) * poisson(xgA, a) * dixonColesTau(h, a, xgH, xgA, rho);
+    probGrid.push({ h, a, p }); total += p;
+  }
+  if (total <= 0) { showCalcError('คำนวณ grid ไม่ได้'); return; }
+  probGrid.forEach(x => x.p /= total);
+
+  let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
+  let pFT05 = 0, pFT15 = 0, pFT25 = 0, pFT35 = 0, pFT45 = 0, pFT55 = 0, pFT65 = 0;
+  const ahParts = getAHParts(ahRate);
+  probGrid.forEach(x => {
+    const fh = cH + x.h, fa = cA + x.a, tg = fh + fa;
+    let ah;
+    if (ahParts.isQuarter) ah = (calcAHOutcome(fh, fa, ahParts.parts[0]) + calcAHOutcome(fh, fa, ahParts.parts[1])) / 2;
+    else ah = calcAHOutcome(fh, fa, ahRate);
+    if (Math.abs(ah - 0.5) < EPS) { pAHHomeWin += x.p * 0.5; pAHPush += x.p * 0.5; }
+    else if (Math.abs(ah + 0.5) < EPS) { pAHAwayWin += x.p * 0.5; pAHPush += x.p * 0.5; }
+    else if (ah > EPS) pAHHomeWin += x.p;
+    else if (ah < -EPS) pAHAwayWin += x.p;
+    else pAHPush += x.p;
+    if (tg > 0.5) pFT05 += x.p; if (tg > 1.5) pFT15 += x.p; if (tg > 2.5) pFT25 += x.p;
+    if (tg > 3.5) pFT35 += x.p; if (tg > 4.5) pFT45 += x.p; if (tg > 5.5) pFT55 += x.p; if (tg > 6.5) pFT65 += x.p;
+  });
+  const ahSum = pAHHomeWin + pAHAwayWin + pAHPush;
+  if (ahSum > 0) { pAHHomeWin /= ahSum; pAHAwayWin /= ahSum; pAHPush /= ahSum; }
+
+  document.getElementById('ahCurrentRate').innerText = ahRate === 0 ? "เสมอ (0.0)" : (ahRate < 0 ? `เยือนต่อ ${Math.abs(ahRate).toFixed(2)}` : `เหย้าต่อ ${ahRate.toFixed(2)}`);
+  document.getElementById('ahHomeProb').innerText = fmtPct(pAHHomeWin * 100);
+  document.getElementById('ahAwayProb').innerText = fmtPct(pAHAwayWin * 100);
+  document.getElementById('ahPushProb').innerText = fmtPct(pAHPush * 100);
+
+  const vbOdds = parseFloat(document.getElementById('ah_odds').value) || 1.90;
+  const vb = calcValueBet(pAHHomeWin, vbOdds);
+  const vbEl = document.getElementById('valueBetDisplay');
+  if (vb && vb.isValue) {
+    vbEl.innerHTML = `<span class="text-success fw-bold">💰 VALUE</span> | Edge ${(vb.edge*100).toFixed(1)}% | EV ${(vb.ev*100).toFixed(1)}% | K½ ${(vb.kellyHalf*100).toFixed(1)}%`;
+    vbEl.className = 'form-control form-control-sm value-bet-box bg-success-subtle border-success text-success fw-bold';
+  } else if (vb) {
+    vbEl.innerText = `Edge ${(vb.edge*100).toFixed(1)}% | EV ${(vb.ev*100).toFixed(1)}% (ไม่มี value)`;
+    vbEl.className = 'form-control form-control-sm value-bet-box bg-light text-secondary';
+  } else {
+    vbEl.innerText = '-';
+    vbEl.className = 'form-control form-control-sm value-bet-box bg-light text-secondary';
+  }
+
+  const setFtRow = (id, barId, val, trigger) => {
+    const fv = trigger ? 100 : val * 100;
+    const el = document.getElementById(id), c = pickColor(fv);
+    el.innerText = fmtPct(fv); el.className = 'fw-bold ' + c.text;
+    const bar = document.getElementById(barId);
+    bar.style.width = fv + '%'; bar.className = 'progress-bar ' + c.bar;
+  };
+  setFtRow('ftOver05', 'ftOver05Bar', pFT05, currentTotalGoals > 0.5);
+  setFtRow('ftOver15', 'ftOver15Bar', pFT15, currentTotalGoals > 1.5);
+  setFtRow('ftOver25', 'ftOver25Bar', pFT25, currentTotalGoals > 2.5);
+  setFtRow('ftOver35', 'ftOver35Bar', pFT35, currentTotalGoals > 3.5);
+  setFtRow('ftOver45', 'ftOver45Bar', pFT45, currentTotalGoals > 4.5);
+  setFtRow('ftOver55', 'ftOver55Bar', pFT55, currentTotalGoals > 5.5);
+  setFtRow('ftOver65', 'ftOver65Bar', pFT65, currentTotalGoals > 6.5);
+
+  const tXg = xgH + xgA, pNone = Math.exp(-tXg);
+  const pHN = tXg > 0 ? (xgH / tXg) * (1 - pNone) : 0;
+  const pAN = tXg > 0 ? (xgA / tXg) * (1 - pNone) : 0;
+  document.getElementById('probHome').innerText = fmtPct(pHN * 100);
+  document.getElementById('probNone').innerText = fmtPct(pNone * 100);
+  document.getElementById('probAway').innerText = fmtPct(pAN * 100);
+
+  let fh05 = 0, fh15 = 0, fh25 = 0, fh35 = 0;
+  if (minute >= half1_end) {
+    fh05 = htTotalGoals > 0.5 ? 100 : 0; fh15 = htTotalGoals > 1.5 ? 100 : 0;
+    fh25 = htTotalGoals > 2.5 ? 100 : 0; fh35 = htTotalGoals > 3.5 ? 100 : 0;
+    document.getElementById('fhProbHome').innerText = htH > htA ? '✅' : '❌';
+    document.getElementById('fhProbTotal').innerText = htH === htA ? '✅' : '❌';
+    document.getElementById('fhProbAway').innerText = htA > htH ? '✅' : '❌';
+  } else {
+    const fhRem = Math.max(0, half1_end - minute), sh2 = 45 + i2;
+    const ratio = (fhRem + sh2) > 0 ? Math.max(0, Math.min(1, fhRem / (fhRem + sh2))) : 0;
+    const fhXH = xgH * currentLeagueFHShare * ratio, fhXA = xgA * currentLeagueFHShare * ratio;
+    let fhGrid = [], fhT = 0;
+    for (let h = 0; h <= CONFIG.GRID.MAX_FH_GOALS; h++) for (let a = 0; a <= CONFIG.GRID.MAX_FH_GOALS; a++) {
+      const p = poisson(fhXH, h) * poisson(fhXA, a) * dixonColesTau(h, a, fhXH, fhXA, rho);
+      fhGrid.push({ h, a, p }); fhT += p;
+    }
+    if (fhT > 0) fhGrid.forEach(x => x.p /= fhT);
+    let pFW = 0, pFD = 0, pFL = 0;
+    fhGrid.forEach(s => { if (s.h > s.a) pFW += s.p; else if (s.h === s.a) pFD += s.p; else pFL += s.p; });
+    document.getElementById('fhProbHome').innerText = fmtPct(pFW * 100);
+    document.getElementById('fhProbTotal').innerText = fmtPct(pFD * 100);
+    document.getElementById('fhProbAway').innerText = fmtPct(pFL * 100);
+    fhGrid.forEach(s => {
+      const tg = s.h + s.a + currentTotalGoals;
+      if (tg > 0.5) fh05 += s.p; if (tg > 1.5) fh15 += s.p; if (tg > 2.5) fh25 += s.p; if (tg > 3.5) fh35 += s.p;
+    });
+    fh05 *= 100; fh15 *= 100; fh25 *= 100; fh35 *= 100;
+  }
+  const setFhRow = (id, barId, val) => {
+    const el = document.getElementById(id), c = pickColor(val);
+    el.innerText = fmtPct(val); el.className = 'fw-bold ' + c.text;
+    const bar = document.getElementById(barId); bar.style.width = val + '%'; bar.className = 'progress-bar ' + c.bar;
+  };
+  setFhRow('fhOver05', 'fhOver05Bar', fh05);
+  setFhRow('fhOver15', 'fhOver15Bar', fh15);
+  setFhRow('fhOver25', 'fhOver25Bar', fh25);
+  setFhRow('fhOver35', 'fhOver35Bar', fh35);
+
+  const top3Raw = probGrid.map(x => ({ score: `${cH + x.h}-${cA + x.a}`, prob: x.p })).sort((a, b) => b.prob - a.prob).slice(0, 3);
+  const finalScores = top3Raw.map(x => ({ score: x.score, prob: x.prob * 100 }));
+  const top3SumProb = finalScores.reduce((s, i) => s + i.prob, 0);
+  const sc = document.getElementById('topScoresContainer');
+  const colors = ['bg-success text-white', 'bg-warning text-dark', 'bg-secondary text-white'];
+  const icons = ['🥇', '🥈', '🥉'];
+  sc.innerHTML = finalScores.map((item, i) => `<div class="col-4"><div class="score-box ${colors[i]} shadow-sm">
+    <div class="fw-bold mb-0" style="font-size:0.75rem;">${icons[i]}</div>
+    <div class="fw-extrabold mb-0" style="font-size:1.1rem;">${item.score}</div>
+    <div class="fw-bold" style="font-size:0.75rem;">${fmtPct(item.prob)}</div>
+  </div></div>`).join('');
+  document.getElementById('top3SumNote').innerHTML = `Top 3 รวม = <strong>${fmtPct(top3SumProb)}</strong> <span class="prob-absolute-tag">(absolute)</span>`;
+
+  const confidence = calcConfidence({ hShots, aShots, hSot, aSot, hBig, aBig, minute, top3ProbSum: top3SumProb / 100 });
+  document.getElementById('resultTitle').innerText = `${homeName} ${cH} - ${cA} ${awayName}`;
+  document.getElementById('displayMinute').innerText = minute;
+  document.getElementById('displayRemaining').innerText = remaining;
+  document.getElementById('confidenceBadge').innerText = `Confidence: ${confidence}%`;
+  document.getElementById('leagueInfluenceText').innerText = currentLeagueText;
+
+  const dqEl = document.getElementById('dataQualityBadge');
+  if (hasBigData(hBig, aBig)) { dqEl.className = 'badge bg-success'; dqEl.innerText = 'Data: High'; }
+  else if ((hShots + aShots) >= 10) { dqEl.className = 'badge bg-warning text-dark'; dqEl.innerText = 'Data: Medium'; }
+  else { dqEl.className = 'badge bg-danger'; dqEl.innerText = 'Data: Low'; }
+
+  const rcArea = document.getElementById('redCardImpactArea');
+  if (redHome > 0 || redAway > 0) {
+    let parts = [];
+    if (redHome > 0) parts.push(`เหย้า ${redHome} ใบ`);
+    if (redAway > 0) parts.push(`เยือน ${redAway} ใบ`);
+    document.getElementById('redImpactText').innerHTML = parts.join(' | ') + ` (xG: ${xgHBeforeRed.toFixed(2)}→${xgH.toFixed(2)} vs ${xgABeforeRed.toFixed(2)}→${xgA.toFixed(2)})`;
+    rcArea.classList.remove('d-none');
+  } else rcArea.classList.add('d-none');
+
+  document.getElementById('xgBreakdown').innerHTML =
+    `<div class="d-flex justify-content-between border-bottom pb-1 mb-1"><span>🏠 เหย้า xG: <strong>${xgH.toFixed(2)}</strong></span><span class="text-success">${hShot.xg.toFixed(2)} × atk${hAtkMult.toFixed(2)} × def${aDefMult.toFixed(2)}</span></div>
+     <div class="d-flex justify-content-between"><span>✈️ เยือน xG: <strong>${xgA.toFixed(2)}</strong></span><span class="text-primary">${aShot.xg.toFixed(2)} × atk${aAtkMult.toFixed(2)} × def${hDefMult.toFixed(2)}</span></div>
+     <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#6c757d;"><span>Ratio: 🏠 ${(hRatio*100).toFixed(1)}% / ✈️ ${(aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
+     <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#6c757d;"><span>∫xG ${expectedGoalsRaw.toFixed(2)} × tempo ${tempoModifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`;
+
+  document.getElementById('calibNote').innerText = `⚙️ v6.0 Pro: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${rho}.` + (!hasBigData(hBig, aBig) ? ' ⚠️ ไม่มี Big Chances' : '');
+
+  recordPrediction({ league: currentLeagueText, leagueKey: selectedLeagueKey, home: homeName, away: awayName, minute, score: `${cH}-${cA}`, xgH, xgA, pOver25: pFT25, pOver15: pFT15, pAHHome: pAHHomeWin, pAHAway: pAHAwayWin, confidence, homeStrength, awayStrength });
+  saveInputs();
+  if (window.innerWidth < 992) document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+}
+
+function sendToTable() {
+  const homeName = document.getElementById('home_name').value.trim() || 'ทีมเหย้า';
+  const awayName = document.getElementById('away_name').value.trim() || 'ทีมเยือน';
+  const cH = document.getElementById('current_home_score').value || '0';
+  const cA = document.getElementById('current_away_score').value || '0';
+  const minute = document.getElementById('match_minute').value || '0';
+  const league = document.getElementById('leagueInfluenceText').innerText;
+  let bestFT = "รอผล", maxProb = 0;
+  const ftIds = ['ftOver05','ftOver15','ftOver25','ftOver35','ftOver45','ftOver55','ftOver65'];
+  const ftVals = ['0.5','1.5','2.5','3.5','4.5','5.5','6.5'];
+  ftIds.forEach((id, i) => {
+    const p = parseFloat(document.getElementById(id).innerText.replace('%','').replace('>','').replace('<','')) || 0;
+    if (p > maxProb && p >= 50) { maxProb = p; bestFT = `สูง ${ftVals[i]} (${p}%)`; }
+  });
+  let htPred = "รอผล";
+  if (parseInt(minute) >= 45) htPred = `จบ 1H (${document.getElementById('ht_home_score').value||'0'}-${document.getElementById('ht_away_score').value||'0'})`;
+  else htPred = `โอกาสสูง 0.5: ${document.getElementById('fhOver05').innerText}`;
+  const newRecord = { date: new Date().toLocaleDateString('th-TH'), league, match: `${homeName} ${cH} - ${cA} ${awayName}`, minute, ht: htPred, ft: bestFT, result: "" };
+  let data = [];
+  try { data = JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]'); } catch(e) {}
+  data.push(newRecord);
+  localStorage.setItem(RESULTS_KEY, JSON.stringify(data));
+  alert('✅ ส่งข้อมูลไปยัง Simple Log ใน Tracker แล้ว!');
+}
+
+/* ============================================================
+   TRACKER CODE
+   ============================================================ */
+let CALIBRATION_CHART = null;
+
+function loadHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) { return []; } }
+function saveHistory(r) { try { localStorage.setItem(HISTORY_KEY, JSON.stringify(r)); } catch (e) {} updateUngradedBadge(); }
+function loadResults() { try { return JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]'); } catch (e) { return []; } }
+function saveResults(r) { try { localStorage.setItem(RESULTS_KEY, JSON.stringify(r)); } catch (e) {} }
+
+function calcBrier(record) {
+  if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
+  if (typeof record.pOver25 !== 'number') return null;
+  const a = record.actual.totalGoals > 2.5 ? 1 : 0;
+  return Math.pow(record.pOver25 - a, 2);
+}
+function calcHit(record) {
+  if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
+  if (typeof record.pOver25 !== 'number') return null;
+  const a = record.actual.totalGoals > 2.5 ? 1 : 0;
+  const p = record.pOver25 > 0.5 ? 1 : 0;
+  return p === a ? 1 : 0;
+}
+function calcPL(record) {
+  if (!record.actual || !record.stake || !record.odds) return null;
+  if (record.odds <= 1) return null;
+  const a = record.actual.totalGoals > 2.5 ? 1 : 0;
+  const p = record.pOver25 > 0.5 ? 1 : 0;
+  return p === a ? record.stake * (record.odds - 1) : -record.stake;
+}
+function predictDirection(p) { if (typeof p !== 'number') return '?'; return p > 0.5 ? 'OVER' : 'UNDER'; }
+
+function summarize(records) {
+  const graded = records.filter(r => r.actual && typeof r.actual.totalGoals === 'number');
+  const out = { total: records.length, gradedCount: graded.length, ungradedCount: records.length - graded.length, brier: null, hitRate: null, roi: null, totalStake: 0, totalPL: 0, brierQuality: null };
+  if (!graded.length) return out;
+  const bs = graded.map(calcBrier).filter(v => v !== null);
+  if (bs.length) out.brier = bs.reduce((a, b) => a + b, 0) / bs.length;
+  const hits = graded.map(calcHit).filter(v => v !== null);
+  if (hits.length) out.hitRate = hits.reduce((a, b) => a + b, 0) / hits.length;
+  graded.forEach(r => { const pl = calcPL(r); if (pl !== null) { out.totalStake += r.stake; out.totalPL += pl; } });
+  if (out.totalStake > 0) out.roi = out.totalPL / out.totalStake;
+  if (out.brier !== null) out.brierQuality = out.brier < 0.20 ? 'good' : out.brier < 0.25 ? 'ok' : 'bad';
+  return out;
+}
+
+function applyFilters(records) {
+  const lg = document.getElementById('filterLeague').value;
+  const df = document.getElementById('filterDateFrom').value;
+  const dt = document.getElementById('filterDateTo').value;
+  const gd = document.getElementById('filterGraded').value;
+  return records.filter(r => {
+    if (lg && r.league !== lg) return false;
+    if (gd === 'graded' && !(r.actual && typeof r.actual.totalGoals === 'number')) return false;
+    if (gd === 'ungraded' && (r.actual && typeof r.actual.totalGoals === 'number')) return false;
+    if (df || dt) { const d = r.ts ? r.ts.slice(0, 10) : ''; if (df && d < df) return false; if (dt && d > dt) return false; }
+    return true;
+  });
+}
+
+function updateUngradedBadge() {
+  const h = loadHistory();
+  const un = h.filter(r => !(r.actual && typeof r.actual.totalGoals === 'number')).length;
+  const b = document.getElementById('navUngradedBadge');
+  if (b) b.innerText = un;
+}
+
+function renderAll() {
+  const all = loadHistory();
+  const filtered = applyFilters(all);
+  renderStats(filtered);
+  renderHistoryTable(filtered);
+  renderLeagueFilter(all);
+  renderConfidenceTable(filtered);
+  renderLeagueBreakdown(filtered);
+  renderCalibrationChart(filtered);
+  renderSimpleLog();
+  const el1 = document.getElementById('tabHistoryCount'); if (el1) el1.innerText = all.length;
+  const el2 = document.getElementById('tabSimpleCount'); if (el2) el2.innerText = loadResults().length;
+  updateUngradedBadge();
+}
+
+function renderStats(records) {
+  const s = summarize(records);
+  document.getElementById('statTotal').innerText = s.total;
+  document.getElementById('statGraded').innerText = s.gradedCount;
+  const bc = document.getElementById('statBrierCard'), be = document.getElementById('statBrier'), bs = document.getElementById('statBrierSub');
+  if (s.brier !== null) {
+    be.innerText = s.brier.toFixed(3);
+    const q = s.brierQuality;
+    bc.className = 'stat-card ' + (q === 'good' ? 'stat-brier-good' : q === 'ok' ? 'stat-brier-ok' : 'stat-brier-bad');
+    bs.innerText = q === 'good' ? '🏆 ดีเยี่ยม' : q === 'ok' ? '👍 ดี' : '❌ ต้องปรับ';
+  } else { be.innerText = '-'; bc.className = 'stat-card stat-n'; bs.innerText = 'ต้อง grade ก่อน'; }
+  const he = document.getElementById('statHit'), hs = document.getElementById('statHitSub');
+  if (s.hitRate !== null) { he.innerText = (s.hitRate * 100).toFixed(1) + '%'; hs.innerText = `ถูก ${Math.round(s.hitRate * s.gradedCount)}/${s.gradedCount} นัด`; }
+  else { he.innerText = '-'; hs.innerText = 'ต้อง grade ก่อน'; }
+  const rc = document.getElementById('statROICard'), re = document.getElementById('statROI'), rs = document.getElementById('statROISub');
+  if (s.roi !== null) {
+    re.innerText = (s.roi >= 0 ? '+' : '') + (s.roi * 100).toFixed(1) + '%';
+    rc.className = 'stat-card ' + (s.roi >= 0 ? 'stat-roi-pos' : 'stat-roi-neg');
+    rs.innerText = `P/L: ${s.totalPL.toFixed(0)} / Stake: ${s.totalStake.toFixed(0)}`;
+  } else { re.innerText = '-'; rc.className = 'stat-card stat-n'; rs.innerText = 'กรอก stake + odds'; }
+}
+
+function renderHistoryTable(records) {
+  const tb = document.getElementById('historyTableBody');
+  if (!records.length) { tb.innerHTML = `<tr><td colspan="14" class="empty-state"><i class="bi bi-inbox d-block mb-2"></i>ไม่มีข้อมูลตรงกับตัวกรอง</td></tr>`; return; }
+  const sorted = [...records].sort((a, b) => (b.ts || '').localeCompare(a.ts || ''));
+  tb.innerHTML = sorted.map(r => {
+    const date = r.ts ? new Date(r.ts).toLocaleDateString('th-TH', { day:'2-digit', month:'2-digit' }) : '?';
+    const graded = r.actual && typeof r.actual.totalGoals === 'number';
+    const isCorrect = graded && calcHit(r) === 1;
+    const rowClass = graded ? (isCorrect ? 'row-correct' : 'row-wrong') : '';
+    const pOver = typeof r.pOver25 === 'number' ? (r.pOver25 * 100).toFixed(0) + '%' : '-';
+    const conf = r.confidence != null ? r.confidence + '%' : '-';
+    const dir = predictDirection(r.pOver25);
+    const dirBadge = dir === 'OVER' ? '<span class="badge bg-warning text-dark">OVER</span>' : dir === 'UNDER' ? '<span class="badge bg-secondary">UNDER</span>' : '-';
+    const actualDisplay = graded ? `<span class="fw-bold ${r.actual.totalGoals > 2.5 ? 'text-success' : 'text-danger'}">${r.actual.totalGoals}</span>` : `<input type="number" min="0" max="15" class="form-control form-control-sm grade-input" id="gradeInput_${r.id}" placeholder="?">`;
+    const brier = graded ? calcBrier(r) : null;
+    const brierDisplay = brier !== null ? `<span class="badge ${brier < 0.10 ? 'badge-brier-good' : brier < 0.25 ? 'badge-brier-ok' : 'badge-brier-bad'}">${brier.toFixed(3)}</span>` : '-';
+    const pl = calcPL(r);
+    const plDisplay = pl !== null ? `<span class="fw-bold ${pl >= 0 ? 'text-success' : 'text-danger'}">${pl >= 0 ? '+' : ''}${pl.toFixed(1)}</span>` : '-';
+    const stake = r.stake != null ? r.stake : '';
+    const odds = r.odds != null ? r.odds.toFixed(2) : '';
+    const action = graded ? `<button class="btn btn-sm btn-outline-warning btn-grade" onclick="resetGrade(${r.id})" title="ล้าง"><i class="bi bi-arrow-counterclockwise"></i></button>`
+                          : `<button class="btn btn-sm btn-success btn-grade" onclick="gradeRecord(${r.id})" title="บันทึก"><i class="bi bi-check2"></i></button>`;
+    return `<tr class="${rowClass}" id="row_${r.id}">
+      <td><small>${date}</small></td>
+      <td><small><strong>${r.home||'?'}</strong> vs <strong>${r.away||'?'}</strong></small></td>
+      <td><span class="league-pill">${r.league||'-'}</span></td>
+      <td class="text-center"><small>${r.minute||0}'</small></td>
+      <td class="text-center"><span class="fw-bold">${pOver}</span></td>
+      <td class="text-center"><small>${conf}</small></td>
+      <td class="text-center">${dirBadge}</td>
+      <td class="text-center">${actualDisplay}</td>
+      <td class="text-center"><input type="number" min="0" step="10" class="form-control form-control-sm grade-input" id="stakeInput_${r.id}" value="${stake}" placeholder="0" style="width:50px;"></td>
+      <td class="text-center"><input type="number" min="1.01" step="0.01" class="form-control form-control-sm grade-input" id="oddsInput_${r.id}" value="${odds}" placeholder="1.9" style="width:55px;"></td>
+      <td class="text-center">${brierDisplay}</td>
+      <td class="text-center">${plDisplay}</td>
+      <td class="text-center">${action}</td>
+      <td class="text-center"><button class="btn btn-sm btn-outline-danger btn-grade" onclick="deleteRecord(${r.id})" title="ลบ"><i class="bi bi-x"></i></button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderLeagueFilter(all) {
+  const s = document.getElementById('filterLeague'), cur = s.value;
+  const ls = [...new Set(all.map(r => r.league).filter(Boolean))].sort();
+  s.innerHTML = '<option value="">-- ทุกลีก --</option>' + ls.map(l => `<option value="${l}" ${l === cur ? 'selected' : ''}>${l}</option>`).join('');
+}
+
+function renderConfidenceTable(records) {
+  const tb = document.getElementById('confidenceTableBody');
+  const graded = records.filter(r => r.actual && typeof r.actual.totalGoals === 'number' && typeof r.confidence === 'number');
+  if (!graded.length) { tb.innerHTML = '<tr><td colspan="5" class="text-center text-muted p-4">ยังไม่มีข้อมูล</td></tr>'; return; }
+  const buckets = [{min:0,max:20,l:'0-20%'},{min:20,max:40,l:'20-40%'},{min:40,max:60,l:'40-60%'},{min:60,max:80,l:'60-80%'},{min:80,max:100,l:'80-100%'}];
+  tb.innerHTML = buckets.map(b => {
+    const inB = graded.filter(r => r.confidence >= b.min && r.confidence < b.max);
+    if (!inB.length) return `<tr><td>${b.l}</td><td colspan="4" class="text-center text-muted"><small>ไม่มีข้อมูล</small></td></tr>`;
+    const avgP = inB.reduce((s, r) => s + (r.pOver25 || 0), 0) / inB.length;
+    const hr = inB.filter(r => calcHit(r) === 1).length / inB.length;
+    const br = inB.map(calcBrier).filter(v => v !== null).reduce((a, b) => a + b, 0) / inB.length;
+    return `<tr><td><strong>${b.l}</strong></td><td class="text-center">${inB.length}</td><td class="text-center">${(avgP*100).toFixed(0)}%</td><td class="text-center">${(hr*100).toFixed(0)}%</td><td class="text-center"><span class="badge ${br < 0.20 ? 'badge-brier-good' : br < 0.25 ? 'badge-brier-ok' : 'badge-brier-bad'}">${br.toFixed(3)}</span></td></tr>`;
+  }).join('');
+}
+
+function renderLeagueBreakdown(records) {
+  const tb = document.getElementById('leagueTableBody');
+  const groups = {};
+  records.forEach(r => { const l = r.league || 'ไม่ระบุ'; if (!groups[l]) groups[l] = []; groups[l].push(r); });
+  const entries = Object.entries(groups).sort((a, b) => b[1].length - a[1].length);
+  if (!entries.length) { tb.innerHTML = '<tr><td colspan="6" class="text-center text-muted p-4">ยังไม่มีข้อมูล</td></tr>'; return; }
+  tb.innerHTML = entries.map(([lg, recs]) => {
+    const s = summarize(recs);
+    const q = s.brier === null ? '<span class="badge bg-secondary">-</span>'
+      : s.brier < 0.20 ? '<span class="badge badge-brier-good">🏆 ดีเยี่ยม</span>'
+      : s.brier < 0.25 ? '<span class="badge badge-brier-ok">👍 ดี</span>'
+      : '<span class="badge badge-brier-bad">❌ ต้องปรับ</span>';
+    return `<tr><td><span class="league-pill">${lg}</span></td><td class="text-center">${s.total}</td><td class="text-center">${s.gradedCount}</td><td class="text-center">${s.hitRate !== null ? (s.hitRate*100).toFixed(0) + '%' : '-'}</td><td class="text-center">${s.brier !== null ? '<strong>' + s.brier.toFixed(3) + '</strong>' : '-'}</td><td class="text-center">${q}</td></tr>`;
+  }).join('');
+}
+
+function renderCalibrationChart(records) {
+  const graded = records.filter(r => r.actual && typeof r.actual.totalGoals === 'number' && typeof r.pOver25 === 'number');
+  const canvas = document.getElementById('calibrationChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (CALIBRATION_CHART) { CALIBRATION_CHART.destroy(); CALIBRATION_CHART = null; }
+  if (!graded.length) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#9ca3af'; ctx.font = '14px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('ยังไม่มีข้อมูลที่ grade', canvas.width / 2, canvas.height / 2);
+    return;
+  }
+  const buckets = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
+  const points = [];
+  for (let i = 0; i < buckets.length - 1; i++) {
+    const mn = buckets[i], mx = buckets[i + 1];
+    const inB = graded.filter(r => r.pOver25 >= mn && r.pOver25 < (i === buckets.length - 2 ? mx + 0.001 : mx));
+    if (!inB.length) continue;
+    const avgP = inB.reduce((s, r) => s + r.pOver25, 0) / inB.length;
+    const actualRate = inB.filter(r => r.actual.totalGoals > 2.5).length / inB.length;
+    points.push({ x: avgP * 100, y: actualRate * 100, n: inB.length });
+  }
+  CALIBRATION_CHART = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [
+        { label: 'Perfect', data: [{x:0,y:0},{x:100,y:100}], borderColor: '#94a3b8', borderDash: [6, 4], borderWidth: 2, pointRadius: 0, showLine: true },
+        { label: 'โมเดลจริง', data: points, backgroundColor: '#3b82f6', borderColor: '#1e40af', borderWidth: 2, pointRadius: points.map(p => Math.max(8, Math.min(20, Math.sqrt(p.n) * 4))), pointHoverRadius: 12, showLine: true, tension: 0.2 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { x: { min: 0, max: 100, title: { display: true, text: 'ความน่าจะเป็นที่ทำนาย (%)', font: { size: 11 } }, ticks: { callback: v => v + '%', font: { size: 10 } } },
+                y: { min: 0, max: 100, title: { display: true, text: 'อัตราที่เกิดจริง (%)', font: { size: 11 } }, ticks: { callback: v => v + '%', font: { size: 10 } } } },
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } },
+        tooltip: { callbacks: { label: (c) => { const p = c.raw; return `ทาย ${p.x.toFixed(0)}% → จริง ${p.y.toFixed(0)}%` + (p.n ? ` (N=${p.n})` : ''); } } } }
+    }
+  });
+}
+
+function renderSimpleLog() {
+  const tb = document.getElementById('simpleLogTableBody');
+  const results = loadResults();
+  if (!results.length) { tb.innerHTML = `<tr><td colspan="8" class="empty-state"><i class="bi bi-journal d-block mb-2"></i>ยังไม่มีข้อมูล — กด "ส่งไปตารางท้ายผลบอล" ใน Scanner</td></tr>`; return; }
+  tb.innerHTML = results.slice().reverse().map((r, i) => {
+    const realIdx = results.length - 1 - i;
+    return `<tr>
+      <td><small>${r.date || '-'}</small></td>
+      <td><span class="league-pill">${r.league || '-'}</span></td>
+      <td><small>${r.match || '-'}</small></td>
+      <td class="text-center"><small>${r.minute || 0}'</small></td>
+      <td><small>${r.ht || '-'}</small></td>
+      <td><small>${r.ft || '-'}</small></td>
+      <td><input type="text" class="form-control form-control-sm" style="width:70px; font-size:0.7rem;" value="${r.result || ''}" placeholder="ผลจริง" onchange="updateSimpleResult(${realIdx}, this.value)"></td>
+      <td class="text-center"><button class="btn btn-sm btn-outline-danger btn-grade" onclick="deleteSimple(${realIdx})"><i class="bi bi-x"></i></button></td>
+    </tr>`;
+  }).join('');
+}
+
+function gradeRecord(id) {
+  const inp = document.getElementById('gradeInput_' + id);
+  if (!inp) return;
+  const tg = parseInt(inp.value, 10);
+  if (isNaN(tg) || tg < 0 || tg > 15) { alert('⚠️ กรุณากรอกจำนวนประตูรวม (0-15)'); inp.focus(); return; }
+  const sI = document.getElementById('stakeInput_' + id), oI = document.getElementById('oddsInput_' + id);
+  const stake = sI && sI.value ? parseFloat(sI.value) : null;
+  const odds = oI && oI.value ? parseFloat(oI.value) : null;
+  const records = loadHistory();
+  const idx = records.findIndex(r => r.id === id);
+  if (idx < 0) return;
+  records[idx].actual = { totalGoals: tg };
+  if (stake !== null && stake >= 0) records[idx].stake = stake;
+  if (odds !== null && odds > 1) records[idx].odds = odds;
+  saveHistory(records);
+  renderAll();
+}
+function resetGrade(id) {
+  if (!confirm('ล้าง grade รายการนี้?')) return;
+  const records = loadHistory();
+  const idx = records.findIndex(r => r.id === id);
+  if (idx < 0) return;
+  records[idx].actual = null;
+  saveHistory(records);
+  renderAll();
+}
+function deleteRecord(id) {
+  if (!confirm('ลบรายการนี้?')) return;
+  saveHistory(loadHistory().filter(r => r.id !== id));
+  renderAll();
+}
+function updateSimpleResult(index, value) {
+  const r = loadResults();
+  if (r[index]) { r[index].result = value; saveResults(r); }
+}
+function deleteSimple(index) {
+  if (!confirm('ลบรายการนี้?')) return;
+  const r = loadResults();
+  r.splice(index, 1);
+  saveResults(r);
+  renderSimpleLog();
+  const el = document.getElementById('tabSimpleCount'); if (el) el.innerText = r.length;
+}
+function confirmClearAll() {
+  if (!confirm('⚠️ ล้างประวัติทั้งหมด?\n\n- History v6\n- Simple Log\n\nย้อนกลับไม่ได้!')) return;
+  if (!confirm('ยืนยันอีกครั้ง?')) return;
+  localStorage.removeItem(HISTORY_KEY);
+  localStorage.removeItem(RESULTS_KEY);
+  renderAll();
+}
+function reloadData() {
+  renderAll();
+  const t = document.createElement('div');
+  t.className = 'position-fixed bottom-0 end-0 m-3 alert alert-success shadow';
+  t.style.zIndex = 9999;
+  t.innerHTML = '<i class="bi bi-check-circle-fill"></i> รีโหลดแล้ว';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
+}
+function exportAllCSV() {
+  const records = loadHistory();
+  if (!records.length) { alert('📭 ยังไม่มีข้อมูล'); return; }
+  const headers = ['id','timestamp','league','home','away','minute','xgH','xgA','pOver25','pAHHome','pAHAway','confidence','direction','actual','brier','hit','stake','odds','pl'];
+  const rows = records.map(r => {
+    const g = r.actual && typeof r.actual.totalGoals === 'number';
+    return [r.id, r.ts || '', `"${r.league||''}"`, `"${r.home||''}"`, `"${r.away||''}"`, r.minute||0,
+      r.xgH != null ? r.xgH.toFixed(3) : '', r.xgA != null ? r.xgA.toFixed(3) : '',
+      r.pOver25 != null ? r.pOver25.toFixed(4) : '', r.pAHHome != null ? r.pAHHome.toFixed(4) : '',
+      r.pAHAway != null ? r.pAHAway.toFixed(4) : '', r.confidence ?? '',
+      predictDirection(r.pOver25), g ? r.actual.totalGoals : '',
+      g ? calcBrier(r).toFixed(4) : '', g ? calcHit(r) : '',
+      r.stake ?? '', r.odds ?? '', calcPL(r) != null ? calcPL(r).toFixed(2) : ''];
+  });
+  const s = summarize(records);
+  const extra = [[], ['=== SUMMARY ==='], ['Total', s.total], ['Graded', s.gradedCount],
+    ['Brier', s.brier != null ? s.brier.toFixed(4) : 'N/A'],
+    ['Hit Rate', s.hitRate != null ? (s.hitRate*100).toFixed(2) + '%' : 'N/A'],
+    ['ROI', s.roi != null ? (s.roi*100).toFixed(2) + '%' : 'N/A'],
+    ['Export', new Date().toISOString()]];
+  const csv = [headers.join(','), ...rows.map(r => r.join(',')), ...extra.map(r => r.join(','))].join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `jackai_tracker_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+/* ============================================================
+   VIEW SWITCH
+   ============================================================ */
+function showTracker() {
+  document.body.classList.remove('scanner-view');
+  document.body.classList.add('tracker-view');
+  renderAll();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+function showScanner() {
+  document.body.classList.remove('tracker-view');
+  document.body.classList.add('scanner-view');
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  restoreInputs();
+  handleLeagueInput();
+  INPUT_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', saveInputs); });
+  const ls = document.getElementById('leagueSearch');
+  if (ls) {
+    ls.addEventListener('input', (e) => { renderDropdown(e.target.value); tryAutoMatchLeague(e.target.value); });
+    ls.addEventListener('keydown', (e) => { if (e.key === 'Enter') { tryAutoMatchLeague(e.target.value); document.getElementById('leagueDropdown').style.display = 'none'; } });
+  }
+  updateUngradedBadge();
+  renderAll();
+  let lastCount = -1;
+  setInterval(() => {
+    const cur = loadHistory().length + loadResults().length;
+    if (cur !== lastCount) { renderAll(); lastCount = cur; }
+  }, 15000);
+});
 </script>
 </body>
 </html>
