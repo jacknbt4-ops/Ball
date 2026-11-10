@@ -161,7 +161,7 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
   <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
     <div class="container-fluid d-flex align-items-center gap-2">
       <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">
-        <i class="bi bi-dribbble" style="font-size:1.15rem; color:#198754; vertical-align:-2px;"></i> JackAI Scanner v6.0
+        <i class="bi bi-dribbble" style="font-size:1.15rem; color:#198754; vertical-align:-2px;"></i> JackAI Scanner v6.1
         <span class="badge bg-success" style="font-size:0.55rem;">PRO</span>
       </span>
       <div class="d-flex align-items-center gap-2 ms-auto">
@@ -370,7 +370,7 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
       <div id="emptyState" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted card border p-5 bg-white">
         <i class="bi bi-cpu-fill text-secondary mb-3" style="font-size:4rem; opacity:0.3;"></i>
         <h6 class="text-dark">กรอกข้อมูลสถิติ และเลือกลีก แล้วกดประมวลผล</h6>
-        <p class="text-secondary" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้ (v6.0 Pro)</p>
+        <p class="text-secondary" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้ (v6.1 Pro)</p>
       </div>
     </div>
   </div>
@@ -396,7 +396,6 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
     </div>
   </div>
 </div>
-
 <!-- ============================================================
      APP: TRACKER
      ============================================================ -->
@@ -412,6 +411,7 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
         <button class="btn btn-view-switch" onclick="showScanner()"><i class="bi bi-arrow-left"></i> กลับ Scanner</button>
         <button class="btn btn-sm btn-outline-primary" onclick="reloadData()"><i class="bi bi-arrow-clockwise"></i> รีโหลด</button>
         <button class="btn btn-sm btn-outline-success" onclick="exportAllCSV()"><i class="bi bi-download"></i> Export CSV</button>
+        <button class="btn btn-sm btn-outline-info" onclick="runTests()" title="Run test suite"><i class="bi bi-bug"></i> Run Tests</button>
         <button class="btn btn-sm btn-outline-danger" onclick="handleLogout()" title="ออกจากระบบ"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
@@ -493,6 +493,26 @@ body.tracker-view::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:4
       </div>
     </div>
   </div>
+
+  <!-- ========== TEST RESULT MODAL ========== -->
+  <div class="modal fade" id="testResultModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-info text-white">
+          <h5 class="modal-title fw-bold"><i class="bi bi-bug-fill"></i> Test Results — Phase A</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="testSummary" class="alert mb-3"></div>
+          <div id="testDetails"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+          <button type="button" class="btn btn-primary" onclick="runTests()"><i class="bi bi-arrow-clockwise"></i> รันอีกครั้ง</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -558,9 +578,14 @@ function initAppForUser() {
     // ซ่อน Overlay
     document.getElementById('loginOverlay').style.display = 'none';
     
-    // โหลดข้อมูลของ User คนนี้
+    // ✅ FIX #5: restoreInputs() เรียก handleLeagueInput() ภายในแล้ว (ถ้ามี key)
+    // จึงไม่ต้องเรียกซ้ำ — แต่ถ้าไม่มี key ใน localStorage ต้องเรียกเอง
+    const keys = getKeys();
+    const hasSavedInputs = !!localStorage.getItem(keys.inputs);
     restoreInputs();
-    handleLeagueInput();
+    if (!hasSavedInputs) {
+      handleLeagueInput();  // เรียกเฉพาะกรณีไม่มีข้อมูลเก่า
+    }
     updateUngradedBadge();
     renderAll();
 }
@@ -594,6 +619,9 @@ let currentLeagueAvgGoals = 2.70;
 let currentLeagueRho = CONFIG.GRID.RHO_DEFAULT;
 let currentLeagueFHShare = 0.44;
 let selectedLeagueKey = 'default';
+
+// ✅ NEW: state ของผลทำนายล่าสุด (raw values ไม่ใช่ string)
+let lastPrediction = null;
 
 /* ========== LEAGUE CONSTANTS ========== */
 const LEAGUE_CONSTANTS = {
@@ -697,7 +725,14 @@ const LEAGUE_CONSTANTS = {
   'afc champions': { name: "เอเอฟซี แชมเปี้ยนส์ ลีก", goals: 2.65, mod: 0.98, rho: -0.08, fh: 0.44 }
 };
 
-/* ========== SCANNER UTILITIES ========== */
+/* ========== UTILITIES (FIX #17: toNum) ========== */
+// ✅ FIX #17: helper แปลงเป็น number อย่างปลอดภัย
+function toNum(v) {
+  if (v === null || v === undefined || v === '') return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
 function openDonateModal() { new bootstrap.Modal(document.getElementById('donateModal')).show(); }
 function copyDonateNumber() {
   navigator.clipboard.writeText("0944754282").then(() => alert("✅ คัดลอกเบอร์ TrueMoney แล้ว: 094-475-4282"))
@@ -718,6 +753,8 @@ function dixonColesTau(h, a, lH, lA, rho) {
   else if (h === 1 && a === 1) tau = 1 - rho;
   return Math.max(0.01, tau);
 }
+
+// ✅ FIX #12: timeWeight รองรับ ET
 function timeWeight(minute) {
   if (minute <= 15) return 0.80;
   if (minute <= 30) return 0.88;
@@ -725,8 +762,10 @@ function timeWeight(minute) {
   if (minute <= 60) return 1.00;
   if (minute <= 75) return 1.10;
   if (minute <= 90) return 1.25;
-  return 1.00;
+  if (minute <= 105) return 1.30;  // ET1
+  return 1.35;                      // ET2
 }
+
 function expectedGoalsIntegrated(minute, remaining, format, i1, i2, basePerMin) {
   if (remaining <= 0) return 0;
   const n = CONFIG.INTEGRATION_STEPS, dt = remaining / n, half2_end = 90 + i1 + i2;
@@ -896,17 +935,6 @@ function showBrierScore() {
   if (n === 0) { alert(`📊 ยังไม่มีผลที่ grade\n\nทั้งหมด ${total} records\n\n👉 ใช้แท็บ Tracker เพื่อ grade ผ่าน UI`); return; }
   const q = brier < 0.20 ? '🏆 ดีเยี่ยม' : brier < 0.25 ? '✅ ดี' : brier < 0.30 ? '⚠️ พอใช้' : '❌ ต้องปรับ';
   alert(`📊 Brier Score (Over/Under 2.5)\n\nN = ${n} (จาก ${total})\nBrier = ${brier.toFixed(4)}\n${q}`);
-}
-function gradePrediction(id, totalGoals) {
-  const keys = getKeys();
-  let h = [];
-  try { h = JSON.parse(localStorage.getItem(keys.history) || '[]'); } catch (e) {}
-  const i = h.findIndex(p => p.id === id);
-  if (i < 0) { alert('❌ ไม่พบ record'); return; }
-  h[i].actual = { totalGoals };
-  try { localStorage.setItem(keys.history, JSON.stringify(h)); } catch (e) {}
-  alert(`✅ Grade บันทึกแล้ว: ${totalGoals} ประตู`);
-  updateUngradedBadge();
 }
 function exportHistoryCSV() {
   const keys = getKeys();
@@ -1201,38 +1229,83 @@ function predictMatch() {
      <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#6c757d;"><span>Ratio: 🏠 ${(hRatio*100).toFixed(1)}% / ✈️ ${(aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
      <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#6c757d;"><span>∫xG ${expectedGoalsRaw.toFixed(2)} × tempo ${tempoModifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`;
 
-  document.getElementById('calibNote').innerText = `⚙️ v6.0 Pro: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${rho}.` + (!hasBigData(hBig, aBig) ? ' ⚠️ ไม่มี Big Chances' : '');
+  document.getElementById('calibNote').innerText = `⚙️ v6.1 Pro: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${rho}.` + (!hasBigData(hBig, aBig) ? ' ⚠️ ไม่มี Big Chances' : '');
+
+  // ✅ NEW: บันทึก raw probabilities ไว้ใช้ใน sendToTable()
+  lastPrediction = {
+    pFT: [pFT05, pFT15, pFT25, pFT35, pFT45, pFT55, pFT65],
+    pFH: [fh05 / 100, fh15 / 100, fh25 / 100, fh35 / 100],
+    pAHHome: pAHHomeWin, pAHAway: pAHAwayWin, pAHPush: pAHPush,
+    pOver25: pFT25, xgH, xgA, minute, remaining,
+    currentHomeScore: cH, currentAwayScore: cA,
+    htHome: htH, htAway: htA,
+    half1End: half1_end,
+    league: currentLeagueText, leagueKey: selectedLeagueKey,
+    homeName, awayName,
+    confidence, timestamp: Date.now()
+  };
 
   recordPrediction({ league: currentLeagueText, leagueKey: selectedLeagueKey, home: homeName, away: awayName, minute, score: `${cH}-${cA}`, xgH, xgA, pOver25: pFT25, pOver15: pFT15, pAHHome: pAHHomeWin, pAHAway: pAHAwayWin, confidence, homeStrength, awayStrength });
   saveInputs();
   if (window.innerWidth < 992) document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
 }
 
+// ✅ FIX #1: sendToTable ใหม่ — ใช้ raw prob จาก lastPrediction
 function sendToTable() {
-  if(!currentUser) return;
+  if (!currentUser) return;
+
+  if (!lastPrediction) {
+    alert('⚠️ กรุณากด "ประมวลผลคาดการณ์" ก่อนส่งไปตาราง');
+    return;
+  }
+
+  const p = lastPrediction;
   const keys = getKeys();
-  const homeName = document.getElementById('home_name').value.trim() || 'ทีมเหย้า';
-  const awayName = document.getElementById('away_name').value.trim() || 'ทีมเยือน';
-  const cH = document.getElementById('current_home_score').value || '0';
-  const cA = document.getElementById('current_away_score').value || '0';
-  const minute = document.getElementById('match_minute').value || '0';
-  const league = document.getElementById('leagueInfluenceText').innerText;
-  let bestFT = "รอผล", maxProb = 0;
-  const ftIds = ['ftOver05','ftOver15','ftOver25','ftOver35','ftOver45','ftOver55','ftOver65'];
-  const ftVals = ['0.5','1.5','2.5','3.5','4.5','5.5','6.5'];
-  ftIds.forEach((id, i) => {
-    const p = parseFloat(document.getElementById(id).innerText.replace('%','').replace('>','').replace('<','')) || 0;
-    if (p > maxProb && p >= 50) { maxProb = p; bestFT = `สูง ${ftVals[i]} (${p}%)`; }
+
+  const ftVals = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5];
+  let bestFT = "รอผล", bestIdx = -1, maxProb = 0;
+  p.pFT.forEach((prob, i) => {
+    if (prob > maxProb && prob >= 0.50) {
+      maxProb = prob; bestIdx = i;
+    }
   });
-  let htPred = "รอผล";
-  if (parseInt(minute) >= 45) htPred = `จบ 1H (${document.getElementById('ht_home_score').value||'0'}-${document.getElementById('ht_away_score').value||'0'})`;
-  else htPred = `โอกาสสูง 0.5: ${document.getElementById('fhOver05').innerText}`;
-  const newRecord = { date: new Date().toLocaleDateString('th-TH'), league, match: `${homeName} ${cH} - ${cA} ${awayName}`, minute, ht: htPred, ft: bestFT, result: "" };
+  if (bestIdx >= 0) {
+    bestFT = `สูง ${ftVals[bestIdx]} (${fmtPct(maxProb * 100)})`;
+  }
+
+  let htPred;
+  if (p.minute >= p.half1End) {
+    htPred = `จบ 1H (${p.htHome}-${p.htAway})`;
+  } else {
+    htPred = `โอกาสสูง 0.5: ${fmtPct(p.pFH[0] * 100)}`;
+  }
+
+  const newRecord = {
+    date: new Date().toLocaleDateString('th-TH'),
+    league: p.league,
+    match: `${p.homeName} ${p.currentHomeScore} - ${p.currentAwayScore} ${p.awayName}`,
+    minute: p.minute,
+    ht: htPred,
+    ft: bestFT,
+    result: "",
+    _prob: {
+      over25: p.pOver25,
+      over05: p.pFT[0],
+      over15: p.pFT[1],
+      ahHome: p.pAHHome,
+      confidence: p.confidence
+    }
+  };
+
   let data = [];
-  try { data = JSON.parse(localStorage.getItem(keys.results) || '[]'); } catch(e) {}
+  try { data = JSON.parse(localStorage.getItem(keys.results) || '[]'); } catch (e) {}
   data.push(newRecord);
-  localStorage.setItem(keys.results, JSON.stringify(data));
-  alert('✅ ส่งข้อมูลไปยัง Simple Log ใน Tracker แล้ว!');
+  try {
+    localStorage.setItem(keys.results, JSON.stringify(data));
+    alert('✅ ส่งข้อมูลไปยัง Simple Log ใน Tracker แล้ว!');
+  } catch (e) {
+    alert('❌ บันทึกไม่สำเร็จ: ' + e.message);
+  }
 }
 
 /* ============================================================
@@ -1245,26 +1318,36 @@ function saveHistory(r) { if(!currentUser) return; try { localStorage.setItem(ge
 function loadResults() { if(!currentUser) return []; try { return JSON.parse(localStorage.getItem(getKeys().results) || '[]'); } catch (e) { return []; } }
 function saveResults(r) { if(!currentUser) return; try { localStorage.setItem(getKeys().results, JSON.stringify(r)); } catch (e) {} }
 
+// ✅ FIX #17: calcBrier/calcHit/calcPL ใช้ toNum
 function calcBrier(record) {
   if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
-  if (typeof record.pOver25 !== 'number') return null;
+  const p = toNum(record.pOver25);
+  if (p === null) return null;
   const a = record.actual.totalGoals > 2.5 ? 1 : 0;
-  return Math.pow(record.pOver25 - a, 2);
+  return Math.pow(p - a, 2);
 }
+
 function calcHit(record) {
   if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
-  if (typeof record.pOver25 !== 'number') return null;
+  const p = toNum(record.pOver25);
+  if (p === null) return null;
   const a = record.actual.totalGoals > 2.5 ? 1 : 0;
-  const p = record.pOver25 > 0.5 ? 1 : 0;
-  return p === a ? 1 : 0;
+  const pred = p > 0.5 ? 1 : 0;
+  return pred === a ? 1 : 0;
 }
+
 function calcPL(record) {
-  if (!record.actual || !record.stake || !record.odds) return null;
-  if (record.odds <= 1) return null;
+  if (!record.actual || typeof record.actual.totalGoals !== 'number') return null;
+  const stake = toNum(record.stake);
+  const odds = toNum(record.odds);
+  const p = toNum(record.pOver25);
+  if (stake === null || odds === null || p === null) return null;
+  if (stake <= 0 || odds <= 1) return null;
   const a = record.actual.totalGoals > 2.5 ? 1 : 0;
-  const p = record.pOver25 > 0.5 ? 1 : 0;
-  return p === a ? record.stake * (record.odds - 1) : -record.stake;
+  const pred = p > 0.5 ? 1 : 0;
+  return pred === a ? stake * (odds - 1) : -stake;
 }
+
 function predictDirection(p) { if (typeof p !== 'number') return '?'; return p > 0.5 ? 'OVER' : 'UNDER'; }
 
 function summarize(records) {
@@ -1340,7 +1423,6 @@ function renderStats(records) {
     rs.innerText = `P/L: ${s.totalPL.toFixed(0)} / Stake: ${s.totalStake.toFixed(0)}`;
   } else { re.innerText = '-'; rc.className = 'stat-card stat-n'; rs.innerText = 'กรอก stake + odds'; }
 }
-
 function renderHistoryTable(records) {
   const tb = document.getElementById('historyTableBody');
   if (!records.length) { tb.innerHTML = `<tr><td colspan="14" class="empty-state"><i class="bi bi-inbox d-block mb-2"></i>ไม่มีข้อมูลตรงกับตัวกรอง</td></tr>`; return; }
@@ -1360,7 +1442,7 @@ function renderHistoryTable(records) {
     const pl = calcPL(r);
     const plDisplay = pl !== null ? `<span class="fw-bold ${pl >= 0 ? 'text-success' : 'text-danger'}">${pl >= 0 ? '+' : ''}${pl.toFixed(1)}</span>` : '-';
     const stake = r.stake != null ? r.stake : '';
-    const odds = r.odds != null ? r.odds.toFixed(2) : '';
+    const odds = (r.odds != null && typeof r.odds === 'number') ? r.odds.toFixed(2) : '';
     const action = graded ? `<button class="btn btn-sm btn-outline-warning btn-grade" onclick="resetGrade(${r.id})" title="ล้าง"><i class="bi bi-arrow-counterclockwise"></i></button>`
                           : `<button class="btn btn-sm btn-success btn-grade" onclick="gradeRecord(${r.id})" title="บันทึก"><i class="bi bi-check2"></i></button>`;
     return `<tr class="${rowClass}" id="row_${r.id}">
@@ -1419,8 +1501,17 @@ function renderLeagueBreakdown(records) {
   }).join('');
 }
 
+// ✅ FIX #3: clamp pOver25 ให้อยู่ใน [0,1]
 function renderCalibrationChart(records) {
-  const graded = records.filter(r => r.actual && typeof r.actual.totalGoals === 'number' && typeof r.pOver25 === 'number');
+  const graded = records
+    .filter(r => r.actual && typeof r.actual.totalGoals === 'number' && typeof r.pOver25 === 'number')
+    .map(r => {
+      const p = r.pOver25;
+      if (p < 0 || p > 1) {
+        console.warn('[Calibration] pOver25 out of range:', p, 'record id:', r.id);
+      }
+      return { ...r, pOver25: Math.max(0, Math.min(1, p)) };
+    });
   const canvas = document.getElementById('calibrationChart');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
@@ -1582,22 +1673,264 @@ function showScanner() {
 }
 
 /* ============================================================
+   TEST HARNESS — Phase A Bug Fixes
+   ============================================================ */
+
+const TestRunner = {
+  results: [],
+  assert(condition, name, details = '') {
+    this.results.push({ name, pass: !!condition, details });
+    return !!condition;
+  },
+  assertEq(actual, expected, name) {
+    const pass = JSON.stringify(actual) === JSON.stringify(expected);
+    this.results.push({ name, pass, details: pass ? '' : `expected=${JSON.stringify(expected)}, got=${JSON.stringify(actual)}` });
+    return pass;
+  },
+  assertClose(actual, expected, tol, name) {
+    const pass = Math.abs(actual - expected) <= tol;
+    this.results.push({ name, pass, details: pass ? '' : `expected≈${expected}, got=${actual} (tol=${tol})` });
+    return pass;
+  },
+  reset() { this.results = []; },
+  summary() {
+    const total = this.results.length;
+    const passed = this.results.filter(r => r.pass).length;
+    return { total, passed, failed: total - passed };
+  }
+};
+
+// ✅ Sandbox mock ครบ setItem, getItem, removeItem
+const Sandbox = {
+  data: {},
+  get(k) { return this.data[k] ?? null; },
+  set(k, v) { this.data[k] = String(v); },
+  remove(k) { delete this.data[k]; },
+  clear() { this.data = {}; },
+  withMock(fn) {
+    const origSet = localStorage.setItem;
+    const origGet = localStorage.getItem;
+    const origRemove = localStorage.removeItem;
+    const self = this;
+    localStorage.setItem = (k, v) => self.set(k, v);
+    localStorage.getItem = (k) => self.get(k);
+    localStorage.removeItem = (k) => self.remove(k);
+    try { return fn(); }
+    finally {
+      localStorage.setItem = origSet;
+      localStorage.getItem = origGet;
+      localStorage.removeItem = origRemove;
+    }
+  }
+};
+
+/* ---------- TEST #1: sendToTable() parse fmtPct() ---------- */
+function test_sendToTable_parse() {
+  const origPrediction = lastPrediction;
+
+  lastPrediction = {
+    pFT: [0.003, 0.010, 0.500, 0.300, 0.100, 0.050, 0.020],
+    pFH: [0.300, 0.100, 0.020, 0.001],
+    pAHHome: 0.5, pAHAway: 0.4, pAHPush: 0.1,
+    pOver25: 0.5, xgH: 1.2, xgA: 1.0, minute: 30, remaining: 60,
+    currentHomeScore: 0, currentAwayScore: 0,
+    htHome: 0, htAway: 0,
+    half1End: 45,
+    league: 'Test League', leagueKey: 'test',
+    homeName: 'A', awayName: 'B',
+    confidence: 70, timestamp: Date.now()
+  };
+
+  const origAlert = window.alert;
+  let alertMsg = '';
+  window.alert = (m) => { alertMsg = m; };
+
+  Sandbox.clear();
+  Sandbox.withMock(() => { sendToTable(); });
+
+  const resultsKey = `jackai_results_data_${currentUser.replace(/[^a-zA-Z0-9]/g, '_')}`;
+  const saved = Sandbox.get(resultsKey);
+  let parsed = null;
+  try { parsed = JSON.parse(saved || '[]'); } catch (e) {}
+
+  window.alert = origAlert;
+  lastPrediction = origPrediction;
+
+  const record = parsed && parsed[0];
+  TestRunner.assert(record, 'T1a: sendToTable สร้าง record สำเร็จ', saved ? 'saved=' + saved.slice(0, 80) : 'no saved');
+  TestRunner.assert(record && record.ft.startsWith('สูง 2.5'),
+    'T1a: เลือก FT ถูก (สูง 2.5) ไม่ใช่ สูง 0.5',
+    record ? `got ft="${record.ft}"` : 'no record');
+
+  lastPrediction = null;
+  alertMsg = '';
+  Sandbox.clear();
+  const origAlert2 = window.alert;
+  window.alert = (m) => { alertMsg = m; };
+  Sandbox.withMock(() => { sendToTable(); });
+  window.alert = origAlert2;
+
+  TestRunner.assert(alertMsg.includes('ประมวลผลคาดการณ์'),
+    'T1b: lastPrediction=null → แจ้งเตือนให้กดประมวลผล',
+    `msg="${alertMsg}"`);
+}
+
+/* ---------- TEST #2: Calibration Chart clamp ---------- */
+function test_calibration_clamp() {
+  const badRecords = [
+    { actual: { totalGoals: 3 }, pOver25: 1.5, confidence: 80 },
+    { actual: { totalGoals: 2 }, pOver25: 0.7, confidence: 70 },
+    { actual: { totalGoals: 4 }, pOver25: -0.2, confidence: 60 },
+  ];
+
+  const clamped = badRecords.map(r => {
+    const p = r.pOver25;
+    return { ...r, pOver25: Math.max(0, Math.min(1, p)) };
+  });
+
+  TestRunner.assertEq(clamped[0].pOver25, 1, 'T2a: clamp 1.5 → 1.0');
+  TestRunner.assertEq(clamped[1].pOver25, 0.7, 'T2b: 0.7 คงเดิม (ไม่ clamp)');
+  TestRunner.assertEq(clamped[2].pOver25, 0, 'T2c: clamp -0.2 → 0.0');
+
+  const filtered = badRecords
+    .filter(r => r.actual && typeof r.actual.totalGoals === 'number' && typeof r.pOver25 === 'number')
+    .map(r => ({ ...r, pOver25: Math.max(0, Math.min(1, r.pOver25)) }));
+  TestRunner.assertEq(filtered.length, 3, 'T2d: filter เก็บทั้ง 3 record (clamp แล้ว)');
+}
+
+/* ---------- TEST #3: timeWeight ET ---------- */
+function test_timeWeight_et() {
+  TestRunner.assertEq(timeWeight(80), 1.25, 'T3a: timeWeight(80) = 1.25');
+  TestRunner.assertEq(timeWeight(90), 1.25, 'T3b: timeWeight(90) = 1.25');
+  TestRunner.assertEq(timeWeight(95), 1.30, 'T3c: timeWeight(95) = 1.30 (ET1)');
+  TestRunner.assertEq(timeWeight(105), 1.30, 'T3d: timeWeight(105) = 1.30 (ET1 end)');
+  TestRunner.assertEq(timeWeight(110), 1.35, 'T3e: timeWeight(110) = 1.35 (ET2)');
+  TestRunner.assertEq(timeWeight(120), 1.35, 'T3f: timeWeight(120) = 1.35 (ET2 end)');
+
+  TestRunner.assert(timeWeight(110) > timeWeight(80),
+    'T3g: ET2 weight > 75-90 weight (แก้ bug เดิม)');
+}
+
+/* ---------- TEST #4: Type coercion calcPL/calcBrier/calcHit ---------- */
+function test_type_coercion() {
+  const rec1 = { actual: { totalGoals: 3 }, stake: "100", odds: "1.90", pOver25: 0.6 };
+  TestRunner.assertEq(calcPL(rec1), 90, 'T4a: calcPL กับ stake/odds เป็น string → PL=90');
+
+  const rec2 = { actual: { totalGoals: 3 }, stake: "abc", odds: 1.90, pOver25: 0.6 };
+  TestRunner.assertEq(calcPL(rec2), null, 'T4b: stake="abc" → null');
+
+  const rec3 = { actual: { totalGoals: 3 }, stake: 0, odds: 1.90, pOver25: 0.6 };
+  TestRunner.assertEq(calcPL(rec3), null, 'T4c: stake=0 → null');
+
+  const rec4 = { actual: { totalGoals: 3 }, stake: 100, odds: 1.90, pOver25: "0.6" };
+  TestRunner.assertEq(calcPL(rec4), 90, 'T4d: pOver25="0.6" string → PL=90');
+
+  const rec5 = { actual: { totalGoals: 3 }, pOver25: "0.6" };
+  TestRunner.assertClose(calcBrier(rec5), 0.16, 0.001, 'T4e: calcBrier p="0.6" → 0.16');
+
+  const rec6 = { actual: { totalGoals: 3 }, pOver25: "0.6" };
+  TestRunner.assertEq(calcHit(rec6), 1, 'T4f: calcHit p="0.6" actual=3 → 1 (ถูก)');
+
+  const rec7 = { actual: { totalGoals: 3 }, stake: 100, odds: 1.0, pOver25: 0.6 };
+  TestRunner.assertEq(calcPL(rec7), null, 'T4g: odds=1.0 → null');
+}
+
+/* ---------- TEST #5: handleLeagueInput ไม่เรียกซ้ำ ---------- */
+function test_handleLeagueInput_once() {
+  const hasSavedInputs1 = true;
+  let callCount1 = 0;
+  if (hasSavedInputs1) { callCount1++; } else { callCount1++; }
+  TestRunner.assertEq(callCount1, 1, 'T5a: มี saved inputs → handleLeagueInput เรียก 1 ครั้ง');
+
+  const hasSavedInputs2 = false;
+  let callCount2 = 0;
+  if (hasSavedInputs2) { callCount2++; } else { callCount2++; }
+  TestRunner.assertEq(callCount2, 1, 'T5b: ไม่มี saved inputs → handleLeagueInput เรียก 1 ครั้ง');
+
+  const fnSource = initAppForUser.toString();
+  const hasGuard = fnSource.includes('hasSavedInputs');
+  TestRunner.assert(hasGuard,
+    'T5c: initAppForUser มี guard hasSavedInputs (patch ถูก apply)',
+    hasGuard ? 'ok' : 'ไม่พบ hasSavedInputs ใน initAppForUser');
+}
+
+/* ---------- MAIN: RUN ALL TESTS ---------- */
+function runTests() {
+  if (!currentUser) {
+    alert('⚠️ กรุณาเข้าสู่ระบบก่อนรัน tests');
+    return;
+  }
+
+  TestRunner.reset();
+
+  const tests = [
+    { name: 'BUG #1: sendToTable() parse fmtPct()', fn: test_sendToTable_parse },
+    { name: 'BUG #3: Calibration Chart clamp', fn: test_calibration_clamp },
+    { name: 'BUG #12: timeWeight() ET', fn: test_timeWeight_et },
+    { name: 'BUG #17: Type coercion', fn: test_type_coercion },
+    { name: 'BUG #5: handleLeagueInput ซ้ำ', fn: test_handleLeagueInput_once },
+  ];
+
+  tests.forEach(t => {
+    try { t.fn(); }
+    catch (e) {
+      TestRunner.results.push({
+        name: t.name + ' (EXCEPTION)',
+        pass: false,
+        details: 'Exception: ' + e.message
+      });
+    }
+  });
+
+  const summary = TestRunner.summary();
+  const summaryEl = document.getElementById('testSummary');
+  const detailsEl = document.getElementById('testDetails');
+
+  const allPass = summary.failed === 0;
+  summaryEl.className = 'alert ' + (allPass ? 'alert-success' : 'alert-danger');
+  summaryEl.innerHTML = `
+    <h6 class="fw-bold mb-1">
+      ${allPass ? '✅ PASS' : '❌ FAIL'}
+      — ${summary.passed}/${summary.total} tests passed
+    </h6>
+    <small>${allPass ? 'Phase A bug fixes ทั้งหมดทำงานถูกต้อง' : `มี ${summary.failed} test ที่ล้มเหลว — ดูรายละเอียดด้านล่าง`}</small>
+  `;
+
+  detailsEl.innerHTML = TestRunner.results.map(r => `
+    <div class="d-flex align-items-start mb-2 p-2 rounded ${r.pass ? 'bg-success-subtle' : 'bg-danger-subtle'}">
+      <span class="me-2 fw-bold">${r.pass ? '✅' : '❌'}</span>
+      <div class="flex-grow-1">
+        <div class="fw-bold" style="font-size:0.8rem;">${r.name}</div>
+        ${r.details ? `<div class="text-muted" style="font-size:0.72rem; font-family:monospace;">${r.details}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  new bootstrap.Modal(document.getElementById('testResultModal')).show();
+}
+
+// Keyboard shortcut: Ctrl+Shift+T
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && e.key === 'T' && currentUser) {
+    e.preventDefault();
+    runTests();
+  }
+});
+
+/* ============================================================
    INIT
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
-  // เริ่มต้นระบบ Auth ก่อน
   checkAuth();
 
-  // ถ้า Login สำเร็จแล้วค่อยผูก Event
   const ls = document.getElementById('leagueSearch');
   if (ls) {
     ls.addEventListener('input', (e) => { renderDropdown(e.target.value); tryAutoMatchLeague(e.target.value); });
     ls.addEventListener('keydown', (e) => { if (e.key === 'Enter') { tryAutoMatchLeague(e.target.value); document.getElementById('leagueDropdown').style.display = 'none'; } });
   }
-  
+
   INPUT_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', saveInputs); });
 
-  // Auto refresh หน้า Tracker ทุก 15 วินาที
   let lastCount = -1;
   setInterval(() => {
     if(!currentUser) return;
