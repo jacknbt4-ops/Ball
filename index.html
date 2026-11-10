@@ -82,7 +82,6 @@ body { height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-dir
 .btn-donate { background:linear-gradient(45deg,#ff8a00,#e52e71); color:#fff; border:none; font-weight:bold; border-radius:20px; padding:3px 12px; font-size:0.75rem; box-shadow:0 2px 5px rgba(229,46,113,0.4); transition:transform 0.2s; }
 .btn-donate:hover { transform:scale(1.05); color:#fff; }
 .donate-box { border:2px dashed #e52e71; border-radius:12px; padding:20px; background:#fff0f5; }
-.value-bet-box { border-radius:6px; padding:4px 6px; font-size:0.65rem; text-align:center; height:32px; line-height:22px; overflow:hidden; }
 .user-badge { background: #e2e8f0; color: #334155; font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
 ::-webkit-scrollbar { width:4px; height:4px; }
 ::-webkit-scrollbar-track { background:transparent; }
@@ -243,12 +242,6 @@ body { height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-dir
             <div class="col-6"><div class="p-1 rounded bg-primary-subtle border border-primary"><div class="text-primary fw-bold" style="font-size:0.7rem;">เยือนชนะราคา</div><div class="fw-bold text-primary mb-0" style="font-size:1rem;" id="ahAwayProb">0%</div></div></div>
           </div>
           <div class="text-center text-muted mt-1" style="font-size:0.65rem;">เสมอราคา (Push): <span id="ahPushProb" class="fw-bold">0%</span></div>
-          <div class="mt-2 pt-2 border-top">
-            <div class="row g-1">
-              <div class="col-6"><label style="font-size:0.62rem; color:#6c757d;">💰 ราคา AH เหย้า (Decimal)</label><input type="number" id="ah_odds" class="form-control form-control-sm text-center" step="0.01" value="1.90" min="1.01" style="height:32px;"></div>
-              <div class="col-6"><label style="font-size:0.62rem; color:#6c757d;">Value / Kelly</label><div id="valueBetDisplay" class="form-control form-control-sm value-bet-box bg-light">-</div></div>
-            </div>
-          </div>
         </div>
 
         <div class="card p-2">
@@ -380,7 +373,7 @@ const AppState = {
 };
 
 /* ============================================================
-   C1-3: STORAGE LAYER (ใช้เฉพาะ Session + Inputs)
+   C1-3: STORAGE LAYER
    ============================================================ */
 const USER_SESSION_KEY = 'jackai_active_user';
 const Storage = {
@@ -538,14 +531,6 @@ function calcConfidence({ hShots, aShots, hSot, aSot, hBig, aBig, minute, top3Pr
   return Math.round(Math.max(0, Math.min(100, raw)));
 }
 function hasBigData(hBig, aBig) { return (hBig + aBig) > 0; }
-function calcValueBet(mp, odds) {
-  if (odds <= 1) return null;
-  const imp = 1 / odds, ev = (mp * odds) - 1, b = odds - 1;
-  const kelly = b > 0 ? Math.max(0, (b * mp - (1 - mp)) / b) : 0;
-  const kellyCapped = Math.min(kelly, CONFIG.KELLY.CAP);
-  const kellyHalf = Math.min(kelly / 2, CONFIG.KELLY.CAP / 2);
-  return { implied: imp, edge: mp - imp, ev, kelly, kellyCapped, kellyHalf, wasCapped: kelly > CONFIG.KELLY.CAP, isValue: ev > 0.02 && kelly > 0.02 };
-}
 
 /* ============================================================
    ERROR UI
@@ -656,7 +641,7 @@ function handleLeagueInput() {
 /* ============================================================
    INPUTS SAVE/RESTORE
    ============================================================ */
-const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight','ah_odds'];
+const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
 
 function saveInputs() {
   if (!AppState.user) return;
@@ -745,7 +730,6 @@ function readMatchInputs() {
     aSot: readNum('a_sot', { min: 0, integer: true, fallback: 0 }),
     hBig: readNum('h_big', { min: 0, integer: true, fallback: 0 }),
     aBig: readNum('a_big', { min: 0, integer: true, fallback: 0 }),
-    ahOdds: readNum('ah_odds', { min: 1.01, fallback: 1.90 }),
   };
 }
 
@@ -825,7 +809,6 @@ function calcExpectedGoals(inputs, ratio, tempo) {
   let xgH = expectedGoals * ratio.hRatio;
   let xgA = expectedGoals * ratio.aRatio;
 
-  // Score effect
   const diff = inputs.cH - inputs.cA;
   let hSM = 1.0, aSM = 1.0;
   const SE = CONFIG.SCORE_EFFECT;
@@ -838,7 +821,6 @@ function calcExpectedGoals(inputs, ratio, tempo) {
   }
   xgH *= hSM; xgA *= aSM;
 
-  // Red cards
   const rcAH = Math.pow(CONFIG.RED.ATTACK_MULT, inputs.redHome), rcDH = Math.pow(CONFIG.RED.DEFENSE_MULT, inputs.redHome);
   const rcAA = Math.pow(CONFIG.RED.ATTACK_MULT, inputs.redAway), rcDA = Math.pow(CONFIG.RED.DEFENSE_MULT, inputs.redAway);
   const xgHBeforeRed = xgH, xgABeforeRed = xgA;
@@ -946,23 +928,12 @@ function calcNextGoal(xgH, xgA) {
 }
 
 function renderPrediction(result) {
-  const { inputs, xgH, xgA, ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, valueBet, timeData } = result;
+  const { inputs, xgH, xgA, ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, timeData } = result;
 
   writeText('ahCurrentRate', inputs.ahRate === 0 ? 'เสมอ (0.0)' : (inputs.ahRate < 0 ? `เยือนต่อ ${Math.abs(inputs.ahRate).toFixed(2)}` : `เหย้าต่อ ${inputs.ahRate.toFixed(2)}`));
   writeText('ahHomeProb', fmtPct(ah.pAHHomeWin * 100));
   writeText('ahAwayProb', fmtPct(ah.pAHAwayWin * 100));
   writeText('ahPushProb', fmtPct(ah.pAHPush * 100));
-
-  const vbEl = $('valueBetDisplay');
-  if (valueBet && valueBet.isValue) {
-    const capNote = valueBet.wasCapped ? ' ⚠️' : '';
-    vbEl.innerHTML = `<span class="text-success fw-bold">💰 VALUE</span> | Edge ${(valueBet.edge*100).toFixed(1)}% | EV ${(valueBet.ev*100).toFixed(1)}% | K½ ${(valueBet.kellyHalf*100).toFixed(1)}%${capNote}`;
-    vbEl.className = 'form-control form-control-sm value-bet-box bg-success-subtle border-success text-success fw-bold';
-    vbEl.title = valueBet.wasCapped ? `Kelly ดิบ = ${(valueBet.kelly*100).toFixed(1)}% → cap 5%` : `แนะนำเดิมพัน ${(valueBet.kellyHalf*100).toFixed(1)}% ของ bankroll`;
-  } else if (valueBet) {
-    vbEl.innerText = `Edge ${(valueBet.edge*100).toFixed(1)}% | EV ${(valueBet.ev*100).toFixed(1)}% (ไม่มี value)`;
-    vbEl.className = 'form-control form-control-sm value-bet-box bg-light text-secondary'; vbEl.title = '';
-  } else { vbEl.innerText = '-'; vbEl.className = 'form-control form-control-sm value-bet-box bg-light text-secondary'; vbEl.title = ''; }
 
   const setFtRow = (id, barId, val, trigger) => {
     const fv = trigger ? 100 : val * 100, el = $(id), c = pickColor(fv);
@@ -1077,11 +1048,10 @@ function predictMatch() {
     hShots: inputs.hShots, aShots: inputs.aShots, hSot: cleaned.hSot, aSot: cleaned.aSot,
     hBig: cleaned.hBig, aBig: cleaned.aBig, minute: inputs.minute, top3ProbSum: top3.sum / 100, goalDiff: inputs.cH - inputs.cA,
   });
-  const valueBet = calcValueBet(ah.pAHHomeWin, inputs.ahOdds);
 
   const result = {
     inputs, xgH: { before: eg.xgHBeforeRed, after: eg.xgH }, xgA: { before: eg.xgABeforeRed, after: eg.xgA },
-    ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, valueBet, timeData: eg.timeData, expectedGoalsRaw: eg.expectedGoalsRaw,
+    ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, timeData: eg.timeData, expectedGoalsRaw: eg.expectedGoalsRaw,
   };
 
   renderPrediction(result);
