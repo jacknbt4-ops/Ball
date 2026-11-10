@@ -33,8 +33,8 @@ body { height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-dir
 .btn-login:hover { background: #059669; transform: translateY(-2px); }
 
 /* ========== SCANNER STYLES ========== */
-.navbar-custom { height:50px; flex-shrink:0; background:#fff; border-bottom:1px solid #dee2e6; }
-.main-container { flex:1; padding:10px; display:flex; gap:10px; height:calc(100vh - 50px); box-sizing:border-box; overflow:hidden; }
+.navbar-custom { height:60px; flex-shrink:0; background:#fff; border-bottom:1px solid #dee2e6; }
+.main-container { flex:1; padding:10px; display:flex; gap:10px; height:calc(100vh - 60px); box-sizing:border-box; overflow:hidden; }
 .left-panel { width:410px; min-width:410px; height:100%; display:flex; flex-direction:column; gap:8px; overflow-y:auto; overflow-x:hidden; }
 .right-panel { flex:1; height:100%; display:flex; flex-direction:column; gap:8px; overflow-y:auto; overflow-x:hidden; }
 @media (max-width:991.98px){
@@ -87,6 +87,9 @@ body { height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-dir
 ::-webkit-scrollbar-track { background:transparent; }
 ::-webkit-scrollbar-thumb { background:#ced4da; border-radius:10px; }
 ::-webkit-scrollbar-thumb:hover { background:#adb5bd; }
+
+/* Logo Container */
+.logo-container { display: flex; align-items: center; gap: 5px; }
 </style>
 </head>
 <body>
@@ -94,8 +97,24 @@ body { height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-dir
 <!-- ========== LOGIN OVERLAY ========== -->
 <div id="loginOverlay">
     <div class="login-box">
-        <i class="bi bi-shield-lock-fill icon"></i>
-        <h3>JackAI Scanner</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" width="200" height="46" style="margin-bottom: 15px;">
+            <defs>
+                <linearGradient id="speedGradLogin" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#ef4444" />
+                    <stop offset="100%" stop-color="#f97316" />
+                </linearGradient>
+            </defs>
+            <g transform="translate(5, 5)">
+                <path d="M 0 15 L 20 15 L 30 25 L 45 25" fill="none" stroke="url(#speedGradLogin)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M 0 25 L 15 25 L 25 35 L 45 35" fill="none" stroke="url(#speedGradLogin)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" />
+                <path d="M 5 35 L 15 35 L 25 45 L 40 45" fill="none" stroke="url(#speedGradLogin)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" />
+                <circle cx="30" cy="20" r="12" fill="#fff" stroke="#1e293b" stroke-width="2" />
+                <polygon points="30,12 36,16 34,23 26,23 24,16" fill="#1e293b" />
+            </g>
+            <text x="65" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="#1e293b" letter-spacing="-1">Jack</text>
+            <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGradLogin)" letter-spacing="-1">AI</text>
+            <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
+        </svg>
         <p>กรุณาเข้าสู่ระบบด้วยอีเมลของคุณ<br>(ข้อมูลจะถูกบันทึกไว้ในเครื่องนี้)</p>
         <input type="email" id="loginEmail" class="form-control" placeholder="example@email.com" autocomplete="off">
         <button class="btn-login" onclick="handleLogin()"><i class="bi bi-box-arrow-in-right"></i> เข้าสู่ระบบ</button>
@@ -108,10 +127,31 @@ body { height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-dir
 <div id="appScanner">
   <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
     <div class="container-fluid d-flex align-items-center gap-2">
-      <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold">
-        <i class="bi bi-dribbble" style="font-size:1.15rem; color:#198754; vertical-align:-2px;"></i> JackAI Scanner v6.4
-        <span class="badge bg-success" style="font-size:0.55rem;">Standalone</span>
+      
+      <!-- 🚀 โลโก้แบบที่ 6: Motion & Speed -->
+      <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold logo-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" width="210" height="48" style="margin-top: 5px;">
+          <defs>
+            <linearGradient id="speedGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ef4444" />
+              <stop offset="100%" stop-color="#f97316" />
+            </linearGradient>
+          </defs>
+          <g transform="translate(5, 5)">
+            <path d="M 0 15 L 20 15 L 30 25 L 45 25" fill="none" stroke="url(#speedGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M 0 25 L 15 25 L 25 35 L 45 35" fill="none" stroke="url(#speedGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" />
+            <path d="M 5 35 L 15 35 L 25 45 L 40 45" fill="none" stroke="url(#speedGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" />
+            <circle cx="30" cy="20" r="12" fill="#fff" stroke="#1e293b" stroke-width="2" />
+            <polygon points="30,12 36,16 34,23 26,23 24,16" fill="#1e293b" />
+          </g>
+          <text x="65" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="#1e293b" letter-spacing="-1">Jack</text>
+          <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
+          <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
+        </svg>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">Standalone</span>
       </span>
+      <!-- สิ้นสุดโลโก้ -->
+
       <div class="d-flex align-items-center gap-2 ms-auto">
         <span class="user-badge d-none d-md-block"><i class="bi bi-person-circle"></i> <span id="displayUserEmailScan">-</span></span>
         <button class="btn btn-donate mb-0" onclick="openDonateModal()">
