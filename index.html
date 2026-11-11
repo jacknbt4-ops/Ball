@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v6.6 - World Edition</title>
+<title>⚽ JackAI Scanner v6.7 - World + Women</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -143,7 +143,7 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
           <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
           <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v6.6</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v6.7</span>
       </span>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
@@ -342,7 +342,7 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
       <div id="emptyState" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted card border p-5 bg-white">
         <i class="bi bi-cpu-fill text-secondary mb-3" style="font-size:4rem; opacity:0.3;"></i>
         <h6 class="text-dark">กรอกข้อมูลสถิติ และเลือกลีก แล้วกดประมวลผล</h6>
-        <p class="text-secondary" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้ (v6.6 — World Edition)</p>
+        <p class="text-secondary" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้ (v6.7 — World + Women)</p>
       </div>
     </div>
   </div>
@@ -400,7 +400,7 @@ const AppState = {
 const USER_SESSION_KEY = 'jackai_active_user';
 const Storage = {
   _userSuffix() { return AppState.user ? `_${AppState.user.replace(/[^a-zA-Z0-9]/g, '_')}` : ''; },
-  key(type) { const map = { inputs: `jackai_inputs_v66${this._userSuffix()}` }; return map[type] || null; },
+  key(type) { const map = { inputs: `jackai_inputs_v67${this._userSuffix()}` }; return map[type] || null; },
   get(type, fallback = []) { const k = this.key(type); if (!k) return fallback; try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; } },
   set(type, data) { const k = this.key(type); if (!k) return false; try { localStorage.setItem(k, JSON.stringify(data)); return true; } catch (e) { return false; } },
   remove(type) { const k = this.key(type); if (!k) return; try { localStorage.removeItem(k); } catch (e) {} },
@@ -428,9 +428,9 @@ const TEMPO_0_0_LATE_MINUTE = CONFIG.TEMPO.LATE_0_0_MINUTE;
 const TEMPO_0_0_LATE_BOOST = CONFIG.TEMPO.LATE_0_0_BOOST;
 const FACT = [1]; for (let i = 1; i <= 30; i++) FACT[i] = FACT[i-1] * i;
 
-/* ========== LEAGUE CONSTANTS (v6.6 — 67 leagues, world-wide) ========== */
+/* ========== LEAGUE CONSTANTS (v6.7 — 81 leagues: World + Women) ========== */
 const LEAGUE_CONSTANTS = {
-  // ═══ ยุโรปหลัก (เดิม) ═══
+  // ═══ ยุโรปหลัก ═══
   'premier league':      { name: "พรีเมียร์ลีกอังกฤษ", goals: 3.24, rho: -0.10, fh: 0.46, flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', aliases: ['epl','premier','england','eng','pl','พรีเมียร์'] },
   'championship':        { name: "แชมเปี้ยนชิพ อังกฤษ", goals: 2.68, rho: -0.09, fh: 0.45, flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', aliases: ['champ','efl','championship england'] },
   'la liga':             { name: "ลาลีกา สเปน", goals: 2.58, rho: -0.12, fh: 0.44, flag: '🇪🇸', aliases: ['laliga','spain','esp','ลาลีกา'] },
@@ -439,16 +439,18 @@ const LEAGUE_CONSTANTS = {
   'ligue 1':             { name: "ลีกเอิง ฝรั่งเศส", goals: 2.70, rho: -0.11, fh: 0.44, flag: '🇫🇷', aliases: ['ligue1','france','fra','l1','ลีกเอิง'] },
   'eredivisie':          { name: "เอเรดิวิซี เนเธอร์แลนด์", goals: 3.15, rho: -0.08, fh: 0.46, flag: '🇳🇱', aliases: ['ere','netherlands','ned','holland','dutch','ered'] },
 
-  // ═══ เอเชีย (เดิม) ═══
+  // ═══ เอเชียเดิม ═══
   'thai league':         { name: "ไทยลีก", goals: 2.95, rho: -0.09, fh: 0.46, flag: '🇹🇭', aliases: ['thai','t1','thailand','tl','ไทย'] },
   'j1 league':           { name: "เจลีก J1", goals: 2.65, rho: -0.11, fh: 0.44, flag: '🇯🇵', aliases: ['j1','japan','jpn','jleague','เจ'] },
 
-  // ═══ อเมริกา (เดิม) ═══
+  // ═══ อเมริกาเดิม ═══
   'mls':                 { name: "เมเจอร์ลีกซอกเกอร์", goals: 3.12, rho: -0.08, fh: 0.46, flag: '🇺🇸', aliases: ['usa','us','america','major league soccer','เมเจอร์'] },
   'colombia cup':        { name: "โคลัมเบีย คัพ", goals: 2.55, rho: -0.11, fh: 0.44, flag: '🇨🇴', aliases: ['colombia','col','copa colombia','copacol','โคลัมเบีย'] },
   'uruguay cup':         { name: "อุรุกวัย คัพ", goals: 2.55, rho: -0.11, fh: 0.44, flag: '🇺🇾', aliases: ['uruguay','uru','ury','copa uruguay','copauru','อุรุกวัย'] },
   'brazil copa fmf':     { name: "บราซิล โคปา FMF", goals: 2.70, rho: -0.09, fh: 0.45, flag: '🇧🇷', aliases: ['brazil','brasil','bra','copa fmf','fmf','copafmf','บราซิล'] },
   'el salvador primera': { name: "เอล ซัลวาดอร์ พรีเมียร์ ดิวิชั่น", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇸🇻', aliases: ['el salvador','salvador','slv','esa','elsalvador','primera','เอลซัลวาดอร์'] },
+
+  // ═══ อเมริกาใต้ลีกหลัก ═══
   'brasileirao serie a': { name: "บราซิเลเรียว เซเรีย อา", goals: 2.45, rho: -0.10, fh: 0.44, flag: '🇧🇷', aliases: ['brasileirao','brazil a','brasil a','brasileirao a','bra-a','บราซิเลเรียว'] },
   'brasileirao serie b': { name: "บราซิเลเรียว เซเรีย บี", goals: 2.35, rho: -0.11, fh: 0.44, flag: '🇧🇷', aliases: ['brasileirao b','brazil b','brasil b','serie b bra','bra-b'] },
   'argentina primera':   { name: "อาร์เจนตินา พรีเมรา", goals: 2.30, rho: -0.13, fh: 0.43, flag: '🇦🇷', aliases: ['argentina','arg','liga profesional','lpf','primera arg','อาร์เจน'] },
@@ -461,17 +463,19 @@ const LEAGUE_CONSTANTS = {
   'venezuela primera':   { name: "เวเนซุเอลา พรีเมรา", goals: 2.40, rho: -0.11, fh: 0.44, flag: '🇻🇪', aliases: ['venezuela','ven','primera ven','liga ven','เวเน'] },
   'colombia primera a':  { name: "โคลอมเบีย พรีเมรา เอ", goals: 2.35, rho: -0.12, fh: 0.44, flag: '🇨🇴', aliases: ['colombia a','liga betplay','primera a col','col-a','betplay'] },
   'uruguay primera':     { name: "อุรุกวัย พรีเมรา", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇺🇾', aliases: ['uruguay primera','primera uru','uru-a'] },
+
+  // ═══ ถ้วยในประเทศ ═══
   'copa do brasil':      { name: "โคปา โด บราซิล", goals: 2.60, rho: -0.10, fh: 0.45, flag: '🇧🇷', aliases: ['copa brasil','brazil cup','copa do bra','cdb'] },
   'copa argentina':      { name: "โคปา อาร์เจนตินา", goals: 2.30, rho: -0.13, fh: 0.43, flag: '🇦🇷', aliases: ['arg cup','copa arg','argentina cup'] },
   'copa chile':          { name: "โคปา ชิลี", goals: 2.70, rho: -0.09, fh: 0.45, flag: '🇨🇱', aliases: ['chile cup','copa chi','chi cup'] },
   'copa paraguay':       { name: "โคปา ปารากวัย", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇵🇾', aliases: ['par cup','copa par','paraguay cup'] },
   'copa bolivia':        { name: "โคปา โบลิเวีย", goals: 2.80, rho: -0.09, fh: 0.46, flag: '🇧🇴', aliases: ['bol cup','copa bol','bolivia cup'] },
+
+  // ═══ ถ้วยทวีป ═══
   'copa libertadores':   { name: "โคปา ลิเบอร์ตาดอเรส", goals: 2.40, rho: -0.12, fh: 0.43, flag: '🏆', aliases: ['libertadores','liberta','conmebol libertadores','lib','ลิเบอร์'] },
   'copa sudamericana':   { name: "โคปา ซูดาเมริกานา", goals: 2.55, rho: -0.10, fh: 0.44, flag: '🏆', aliases: ['sudamericana','suda','conmebol sudamericana','sud','ซูดา'] },
 
-  // ═══════════════════════════════════════════════
-  //   🆕 ยุโรปขยาย (16 ลีก)
-  // ═══════════════════════════════════════════════
+  // ═══ ยุโรปขยาย ═══
   'primeira liga':          { name: "พรีเมรา ลีกา โปรตุเกส", goals: 2.65, rho: -0.10, fh: 0.45, flag: '🇵🇹', aliases: ['portugal','por','liga portugal','primeira','โปรตุเกส'] },
   'super lig':              { name: "ซูเปอร์ลีก ตุรกี", goals: 2.95, rho: -0.08, fh: 0.46, flag: '🇹🇷', aliases: ['turkey','tur','superlig','turkiye','ตุรกี'] },
   'belgian pro league':     { name: "เบลเจี้ยน โปรลีก", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇧🇪', aliases: ['belgium','bel','jupiler','pro league bel','เบลเยียม'] },
@@ -489,9 +493,7 @@ const LEAGUE_CONSTANTS = {
   'champions league':       { name: "ยูฟ่า แชมเปี้ยนส์ลีก", goals: 2.90, rho: -0.08, fh: 0.46, flag: '🏆', aliases: ['ucl','uefa cl','cl','champions','ยูซีแอล'] },
   'europa league':          { name: "ยูฟ่า ยูโรปาลีก", goals: 2.75, rho: -0.09, fh: 0.45, flag: '🏆', aliases: ['uel','uefa el','el','europa','ยูโรปา'] },
 
-  // ═══════════════════════════════════════════════
-  //   🆕 เอเชียขยาย (10 ลีก)
-  // ═══════════════════════════════════════════════
+  // ═══ เอเชียขยาย ═══
   'k league 1':             { name: "เคลีก 1 เกาหลี", goals: 2.55, rho: -0.10, fh: 0.45, flag: '🇰🇷', aliases: ['kleague','korea','kor','k league','เกาหลี'] },
   'k league 2':             { name: "เคลีก 2 เกาหลี", goals: 2.60, rho: -0.10, fh: 0.45, flag: '🇰🇷', aliases: ['kleague2','korea2','kor2','k2','เกาหลี 2'] },
   'chinese super league':   { name: "ไชนีส ซูเปอร์ลีก", goals: 2.90, rho: -0.08, fh: 0.46, flag: '🇨🇳', aliases: ['csl','china','chn','chinese','จีน'] },
@@ -503,9 +505,7 @@ const LEAGUE_CONSTANTS = {
   'v-league 1':             { name: "วีลีก 1 เวียดนาม", goals: 2.55, rho: -0.10, fh: 0.45, flag: '🇻🇳', aliases: ['vleague','vietnam','vie','viet','เวียดนาม'] },
   'afc champions league':   { name: "เอเอฟซี แชมเปี้ยนส์ลีก", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🏆', aliases: ['acl','afc cl','afc','เอเอฟซี'] },
 
-  // ═══════════════════════════════════════════════
-  //   🆕 แอฟริกา (8 ลีก)
-  // ═══════════════════════════════════════════════
+  // ═══ แอฟริกา ═══
   'egyptian premier league': { name: "อียิปต์ พรีเมียร์ลีก", goals: 2.20, rho: -0.13, fh: 0.43, flag: '🇪🇬', aliases: ['egypt','egy','egypl','อียิปต์'] },
   'south african psl':       { name: "แอฟริกาใต้ พีเอสแอล", goals: 2.35, rho: -0.11, fh: 0.44, flag: '🇿🇦', aliases: ['psl','south africa','rsa','saf','แอฟริกาใต้'] },
   'moroccan botola':         { name: "โมร็อกโก โบทอลา", goals: 2.25, rho: -0.12, fh: 0.43, flag: '🇲🇦', aliases: ['morocco','mar','botola','โมร็อกโก'] },
@@ -514,6 +514,66 @@ const LEAGUE_CONSTANTS = {
   'nigerian npfl':           { name: "ไนจีเรีย เอ็นพีเอฟแอล", goals: 2.30, rho: -0.12, fh: 0.44, flag: '🇳🇬', aliases: ['nigeria','nga','npfl','ไนจีเรีย'] },
   'caf champions league':    { name: "ซีเอเอฟ แชมเปี้ยนส์ลีก", goals: 2.20, rho: -0.13, fh: 0.43, flag: '🏆', aliases: ['caf cl','cafcl','caf champions','caf','ซีเอเอฟ'] },
   'caf confederation cup':   { name: "ซีเอเอฟ คอนเฟเดอเรชั่น คัพ", goals: 2.30, rho: -0.12, fh: 0.44, flag: '🏆', aliases: ['caf cc','confederation','caf confed','คอนเฟด'] },
+
+  // ═══════════════════════════════════════════════════════════
+  //   🌸 WOMEN'S FOOTBALL (14 ลีกหญิง)
+  // ═══════════════════════════════════════════════════════════
+  'liga mx femenil': {
+    name: "เม็กซิโก พรีเมรา ดิวิชั่น หญิง", goals: 3.10, rho: -0.08, fh: 0.47, flag: '🇲🇽',
+    aliases: ['liga mx femenil','mexico women','mex women','mex fem','liga mx fem','women liga mx','mx femenil','femenil','mexico femenil','หญิง','เม็กซิโกหญิง','บอลหญิงเม็กซิโก']
+  },
+  'nwsl': {
+    name: "เอ็นดับเบิลยูเอสแอล สหรัฐ", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇺🇸',
+    aliases: ['nwsl','usa women','us women','usa w','national womens soccer league','หญิง','สหรัฐหญิง','บอลหญิงสหรัฐ']
+  },
+  'wsl': {
+    name: "ดับเบิลยูเอสแอล อังกฤษ (หญิง)", goals: 3.05, rho: -0.08, fh: 0.47, flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+    aliases: ['wsl','women super league','england women','eng w','eng women','barclays wsl','women epl','หญิง','อังกฤษหญิง','บอลหญิงอังกฤษ']
+  },
+  'liga f': {
+    name: "ลีกา เอฟ สเปน (หญิง)", goals: 2.90, rho: -0.09, fh: 0.46, flag: '🇪🇸',
+    aliases: ['liga f','spain women','esp w','esp women','primera iberdrola','liga iberdrola','หญิง','สเปนหญิง','บอลหญิงสเปน']
+  },
+  'd1 feminine': {
+    name: "ดิวิชั่น 1 เฟมินีน ฝรั่งเศส", goals: 3.20, rho: -0.07, fh: 0.47, flag: '🇫🇷',
+    aliases: ['d1 feminine','d1f','france women','fra w','fra women','division 1 women','หญิง','ฝรั่งเศสหญิง','บอลหญิงฝรั่งเศส']
+  },
+  'frauen bundesliga': {
+    name: "ฟราเอิน บุนเดสลีกา เยอรมัน", goals: 3.15, rho: -0.08, fh: 0.47, flag: '🇩🇪',
+    aliases: ['frauen bundesliga','women bundesliga','germany women','ger w','ger women','frauen','หญิง','เยอรมันหญิง','บอลหญิงเยอรมัน']
+  },
+  'serie a femminile': {
+    name: "เซเรียอา เฟมมิไนเล่ อิตาลี", goals: 2.95, rho: -0.09, fh: 0.46, flag: '🇮🇹',
+    aliases: ['serie a femminile','women serie a','italy women','ita w','ita women','serie a women','หญิง','อิตาลีหญิง','บอลหญิงอิตาลี']
+  },
+  'damallsvenskan': {
+    name: "ดามอลสเวนสกัน สวีเดน (หญิง)", goals: 3.05, rho: -0.08, fh: 0.47, flag: '🇸🇪',
+    aliases: ['damallsvenskan','sweden women','swe w','swe women','หญิง','สวีเดนหญิง','บอลหญิงสวีเดน']
+  },
+  'toppserien': {
+    name: "ทอปเซเรียน นอร์เวย์ (หญิง)", goals: 3.10, rho: -0.08, fh: 0.47, flag: '🇳🇴',
+    aliases: ['toppserien','norway women','nor w','nor women','หญิง','นอร์เวย์หญิง','บอลหญิงนอร์เวย์']
+  },
+  'brasileirao feminino': {
+    name: "บราซิเลเรียว เฟมินิโน่ บราซิล", goals: 3.25, rho: -0.07, fh: 0.47, flag: '🇧🇷',
+    aliases: ['brasileirao fem','brasileirao feminino','brazil women','bra w','bra women','brasil fem','หญิง','บราซิลหญิง','บอลหญิงบราซิล']
+  },
+  'copa libertadores femenina': {
+    name: "โคปา ลิเบอร์ตาดอเรส เฟเมนินา", goals: 2.90, rho: -0.09, fh: 0.46, flag: '🏆',
+    aliases: ['copa libertadores femenina','libertadores women','conmebol femenina','lib fem','libertadores fem','หญิง','ลิเบอร์หญิง','บอลหญิงลิเบอร์']
+  },
+  'uwcl': {
+    name: "ยูฟ่า วีเมนส์ แชมเปี้ยนส์ลีก", goals: 3.30, rho: -0.07, fh: 0.47, flag: '🏆',
+    aliases: ['uwcl','uefa womens cl','womens champions league','wcl','women ucl','หญิง','ยูซีแอลหญิง','บอลหญิงแชมเปี้ยนส์']
+  },
+  'womens world cup': {
+    name: "ฟุตบอลหญิงชิงแชมป์โลก", goals: 2.75, rho: -0.10, fh: 0.45, flag: '🏆',
+    aliases: ['wwc','womens world cup','fifa womens world cup','world cup women','หญิง','บอลหญิงโลก','ฟุตบอลหญิงโลก']
+  },
+  'thai womens league': {
+    name: "ไทยลีกหญิง", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇹🇭',
+    aliases: ['thai womens','thai w','thai women','thailand women','tha w','หญิง','ไทยหญิง','บอลหญิงไทย','ไทยลีกหญิง']
+  },
 };
 
 function toNum(v) { if (v === null || v === undefined || v === '') return null; const n = Number(v); return Number.isFinite(n) ? n : null; }
@@ -660,7 +720,7 @@ function renderDropdown(query = '') {
   });
   if (filtered.length === 0) { dropdown.innerHTML = '<div class="league-item text-muted">🔍 ไม่พบลีกที่ค้นหา</div>'; }
   else {
-    filtered.slice(0, 60).forEach(([key, val]) => {
+    filtered.slice(0, 80).forEach(([key, val]) => {
       const item = document.createElement('div');
       item.className = 'league-item';
       const flag = val.flag || '🌐';
@@ -989,7 +1049,7 @@ function renderPrediction(result) {
      <div class="d-flex justify-content-between"><span>✈️ เยือน xG: <strong>${xgA.after.toFixed(2)}</strong></span><span class="text-primary">${ratio.aShot.xg.toFixed(2)} × atk${ratio.aAtkMult.toFixed(2)} × def${ratio.hDefMult.toFixed(2)}</span></div>
      <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#6c757d;"><span>Ratio: 🏠 ${(ratio.hRatio*100).toFixed(1)}% / ✈️ ${(ratio.aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
      <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#6c757d;"><span>∫xG ${result.expectedGoalsRaw.toFixed(2)} × tempo ${tempo.modifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`);
-  writeText('calibNote', `⚙️ v6.6: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ ไม่มี Big Chances' : ''));
+  writeText('calibNote', `⚙️ v6.7: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ ไม่มี Big Chances' : ''));
 }
 function predictMatch() {
   if (!AppState.user) return;
@@ -1033,7 +1093,7 @@ function copyResultAsText() {
   if (!pred) return safeAlert(currentLang === 'en' ? 'No prediction yet.' : 'ยังไม่มีผลพยากรณ์');
   const t = currentLang === 'en', pct = (v) => (v * 100).toFixed(1) + '%';
   const lines = [
-    `⚽ JackAI v6.6 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
+    `⚽ JackAI v6.7 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
     `${t ? 'Minute' : 'นาที'}: ${pred.inputs.minute} (${t ? 'remaining' : 'เหลือ'} ${pred.timeData.remaining})`,
     `League: ${AppState.league.flag || '🌐'} ${AppState.league.text}`,
     `Confidence: ${pred.confidence}%`,
