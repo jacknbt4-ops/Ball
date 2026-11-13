@@ -711,7 +711,13 @@ document.getElementById('loginEmail').addEventListener('keypress', function (e) 
 function initLeagueDatalist() {
   const dl = $('leagueList');
   if (!dl) return;
-  const opts = Object.entries(LEAGUE_CONSTANTS).map(([key, val]) => {
+  
+  // ✅ เรียงลำดับลีกตามชื่อภาษาไทย (ก-ฮ) ด้วย localeCompare
+  const sortedEntries = Object.entries(LEAGUE_CONSTANTS).sort((a, b) => {
+    return a[1].name.localeCompare(b[1].name, 'th');
+  });
+
+  const opts = sortedEntries.map(([key, val]) => {
     const aliases = (val.aliases || []).slice(0, 3).join(' · ');
     const label = `${val.flag || '🌐'} ${val.name}${aliases ? ' — ' + aliases : ''} (${val.goals.toFixed(2)}⚽)`;
     return `<option value="${val.name}">${label}</option>`;
