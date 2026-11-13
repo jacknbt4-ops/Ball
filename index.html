@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v7.0 - Quick Entry</title>
+<title>⚽ JackAI Scanner v7.1 - Quick Entry</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -80,13 +80,16 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
 .btn-copy { font-size:0.7rem; padding:3px 9px; border-radius:6px; }
 .hint-icon { font-size:0.75rem; color:#6c757d; cursor:help; margin-left:3px; }
 
-/* v7.0 — Quick Entry */
+/* v7.1 — Quick Entry */
 #advancedPanel { border:1px solid #e5e7eb; }
 #advancedPanel .form-control-sm,
 #advancedPanel .form-select-sm { font-size:0.78rem; height:30px; }
 #advancedPanel label { margin-bottom:2px; }
 #advancedPanel .auto-box { padding:6px; margin-bottom:8px; }
 .quick-hint { background:#ecfdf5; border-left:3px solid #10b981; padding:6px 8px; border-radius:4px; font-size:0.68rem; color:#047857; }
+
+/* v7.1 — Team name row */
+.team-row .form-control-sm { font-size:0.82rem; height:32px; font-weight:700; }
 </style>
 </head>
 <body>
@@ -139,7 +142,7 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
           <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
           <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v7.0</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v7.1</span>
       </span>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
@@ -163,7 +166,23 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
       <div class="card card-body p-2">
         <div class="quick-hint mb-2">
           <i class="bi bi-lightning-charge-fill text-warning"></i>
-          <strong>Quick Entry:</strong> กรอกแค่ League · นาที · สกอร์ · จำนวนยิง — SOT/Big/Strength ว่างไว้ให้ระบบประมาณ
+          <strong>Quick Entry:</strong> กรอกชื่อทีม · ลีก · นาที · สกอร์ · จำนวนยิง — SOT/Big/Strength ว่างไว้ให้ระบบประมาณ
+        </div>
+
+        <!-- 0) TEAM NAMES — v7.1 เห็นตลอดเวลา -->
+        <div class="row g-1 mb-2 team-row">
+          <div class="col-6">
+            <input type="text" id="home_name"
+                   class="form-control form-control-sm border-success fw-bold text-success"
+                   placeholder="🏠 ชื่อทีมเหย้า" autocomplete="off"
+                   style="border-width:2px;">
+          </div>
+          <div class="col-6">
+            <input type="text" id="away_name"
+                   class="form-control form-control-sm border-primary fw-bold text-primary"
+                   placeholder="✈️ ชื่อทีมเยือน" autocomplete="off"
+                   style="border-width:2px;">
+          </div>
         </div>
 
         <!-- 1) LEAGUE + HANDICAP -->
@@ -229,17 +248,11 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
         <button class="btn btn-outline-secondary w-100 py-1" type="button"
                 data-bs-toggle="collapse" data-bs-target="#advancedPanel" aria-expanded="false" aria-controls="advancedPanel"
                 style="font-size:0.72rem;">
-          <i class="bi bi-sliders"></i> ตัวเลือกเพิ่มเติม (ทีม · Strength · HT · Red · ทดเวลา)
+          <i class="bi bi-sliders"></i> ตัวเลือกเพิ่มเติม (Strength · HT · Red · ทดเวลา · Big)
         </button>
 
         <div class="collapse mt-2" id="advancedPanel">
           <div class="p-2 rounded bg-light">
-            <!-- Team names -->
-            <div class="row g-1 mb-2">
-              <div class="col-6"><input type="text" id="home_name" class="form-control form-control-sm border-success fw-bold text-success" placeholder="ชื่อทีมเหย้า" style="border-width:2px;"></div>
-              <div class="col-6"><input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary" placeholder="ชื่อทีมเยือน" style="border-width:2px;"></div>
-            </div>
-
             <!-- Strength -->
             <div class="row g-1 mb-2">
               <div class="col-6">
@@ -407,8 +420,8 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
 
       <div id="emptyState" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted card border p-5 bg-white">
         <i class="bi bi-cpu-fill text-secondary mb-3" style="font-size:4rem; opacity:0.3;"></i>
-        <h6 class="text-dark">กรอกข้อมูลสถิติ และเลือกลีก แล้วกดประมวลผล</h6>
-        <p class="text-secondary" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้ (v7.0 — Quick Entry)</p>
+        <h6 class="text-dark">กรอกชื่อทีม + ข้อมูลสถิติ แล้วกดประมวลผล</h6>
+        <p class="text-secondary" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้ (v7.1 — Quick Entry)</p>
       </div>
     </div>
   </div>
@@ -466,7 +479,7 @@ const AppState = {
 const USER_SESSION_KEY = 'jackai_active_user';
 const Storage = {
   _userSuffix() { return AppState.user ? `_${AppState.user.replace(/[^a-zA-Z0-9]/g, '_')}` : ''; },
-  key(type) { const map = { inputs: `jackai_inputs_v70${this._userSuffix()}` }; return map[type] || null; },
+  key(type) { const map = { inputs: `jackai_inputs_v71${this._userSuffix()}` }; return map[type] || null; },
   get(type, fallback = []) { const k = this.key(type); if (!k) return fallback; try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; } },
   set(type, data) { const k = this.key(type); if (!k) return false; try { localStorage.setItem(k, JSON.stringify(data)); return true; } catch (e) { return false; } },
   remove(type) { const k = this.key(type); if (!k) return; try { localStorage.removeItem(k); } catch (e) {} },
@@ -686,10 +699,11 @@ function initAppForUser() {
   $('loginOverlay').style.display = 'none';
   restoreInputs();
   initLeagueDatalist();
+  updateResultTitle();
 }
 document.getElementById('loginEmail').addEventListener('keypress', function (e) { if (e.key === 'Enter') handleLogin(); });
 
-/* ============ LEAGUE DATALIST (v7.0 — Bulletproof) ============ */
+/* ============ LEAGUE DATALIST ============ */
 function initLeagueDatalist() {
   const dl = $('leagueList');
   if (!dl) return;
@@ -763,6 +777,15 @@ function restoreInputs() {
   }
 }
 function resetInputs() { if (!safeConfirm('ล้างข้อมูลและโหลดค่าเริ่มต้นใหม่?')) return; Storage.remove('inputs'); location.reload(); }
+
+/* v7.1 — Live update title */
+function updateResultTitle() {
+  const h = readStr('home_name', 'ทีมเหย้า');
+  const a = readStr('away_name', 'ทีมเยือน');
+  const hs = readNum('current_home_score', { fallback: 0 });
+  const as = readNum('current_away_score', { fallback: 0 });
+  writeText('resultTitle', `${h} ${hs} - ${as} ${a}`);
+}
 
 function autoEstimateStrength() {
   const ah = readNum('auto_ah', { fallback: 0 });
@@ -1072,7 +1095,7 @@ function renderPrediction(result) {
      <div class="d-flex justify-content-between"><span>✈️ เยือน xG: <strong>${xgA.after.toFixed(2)}</strong></span><span class="text-primary">${ratio.aShot.xg.toFixed(2)} × atk${ratio.aAtkMult.toFixed(2)} × def${ratio.hDefMult.toFixed(2)}</span></div>
      <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#6c757d;"><span>Ratio: 🏠 ${(ratio.hRatio*100).toFixed(1)}% / ✈️ ${(ratio.aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
      <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#6c757d;"><span>∫xG ${result.expectedGoalsRaw.toFixed(2)} × tempo ${tempo.modifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`);
-  writeText('calibNote', `⚙️ v7.0: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
+  writeText('calibNote', `⚙️ v7.1: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
 }
 
 function predictMatch() {
@@ -1118,7 +1141,7 @@ function copyResultAsText() {
   if (!pred) return safeAlert(currentLang === 'en' ? 'No prediction yet.' : 'ยังไม่มีผลพยากรณ์');
   const t = currentLang === 'en', pct = (v) => (v * 100).toFixed(1) + '%';
   const lines = [
-    `⚽ JackAI v7.0 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
+    `⚽ JackAI v7.1 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
     `${t ? 'Minute' : 'นาที'}: ${pred.inputs.minute} (${t ? 'remaining' : 'เหลือ'} ${pred.timeData.remaining})`,
     `League: ${AppState.league.flag || '🌐'} ${AppState.league.text}`,
     `Confidence: ${pred.confidence}%`,
@@ -1163,6 +1186,16 @@ document.addEventListener('DOMContentLoaded', () => {
     ls.addEventListener('keydown', (e) => { if (e.key === 'Enter') { matchLeagueFromInput(); ls.blur(); } });
   }
   INPUT_IDS.forEach(id => { const el = $(id); if (el) el.addEventListener('change', saveInputs); });
+
+  // v7.1 — Live update result title when team names / scores change
+  ['home_name', 'away_name', 'current_home_score', 'current_away_score'].forEach(id => {
+    const el = $(id);
+    if (el) el.addEventListener('input', () => {
+      updateResultTitle();
+      saveInputs();
+    });
+  });
+
   document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
 });
 </script>
