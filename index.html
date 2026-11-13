@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v7.1 - Quick Entry</title>
+<title>⚽ JackAI Scanner v8.0 - Professional Hybrid</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -11,7 +11,7 @@
 html { margin:0; padding:0; width:100%; height:100%; }
 body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif; font-size:0.85rem; color:#212529; height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-direction:column; }
 
-#loginOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(135deg, #1e293b, #0f172a); display: flex; align-items: center; justify-content: center; z-index: 99999; }
+#loginOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(7, 17, 31, 0.85); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 99999; }
 .login-box { background: #ffffff; padding: 40px 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 400px; text-align: center; }
 .login-box .icon { font-size: 3rem; color: #10b981; margin-bottom: 15px; }
 .login-box h3 { font-weight: 800; color: #1e293b; margin-bottom: 5px; }
@@ -61,7 +61,6 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
 .top3-sum-note { font-size:0.65rem; color:#6c757d; padding-top:4px; border-top:1px dashed #dee2e6; margin-top:4px; }
 .prob-absolute-tag { font-size:0.55rem; opacity:0.7; }
 .debug-badge { font-size:0.55rem; background:#6c757d; color:#fff; padding:1px 5px; border-radius:3px; }
-.ht-score-box { border:1px solid #ffc107; background:#fffbeb; border-radius:6px; padding:6px; }
 .btn-donate { background:linear-gradient(45deg,#ff8a00,#e52e71); color:#fff; border:none; font-weight:bold; border-radius:20px; padding:3px 12px; font-size:0.75rem; box-shadow:0 2px 5px rgba(229,46,113,0.4); transition:transform 0.2s; }
 .btn-donate:hover { transform:scale(1.05); color:#fff; }
 .donate-box { border:2px dashed #e52e71; border-radius:12px; padding:20px; background:#fff0f5; }
@@ -80,7 +79,6 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
 .btn-copy { font-size:0.7rem; padding:3px 9px; border-radius:6px; }
 .hint-icon { font-size:0.75rem; color:#6c757d; cursor:help; margin-left:3px; }
 
-/* v7.1 — Quick Entry */
 #advancedPanel { border:1px solid #e5e7eb; }
 #advancedPanel .form-control-sm,
 #advancedPanel .form-select-sm { font-size:0.78rem; height:30px; }
@@ -88,8 +86,37 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
 #advancedPanel .auto-box { padding:6px; margin-bottom:8px; }
 .quick-hint { background:#ecfdf5; border-left:3px solid #10b981; padding:6px 8px; border-radius:4px; font-size:0.68rem; color:#047857; }
 
-/* v7.1 — Team name row */
 .team-row .form-control-sm { font-size:0.82rem; height:32px; font-weight:700; }
+
+:root{--jai-bg:#07111f;--jai-panel:#101d30;--jai-panel2:#14243a;--jai-line:#263b55;--jai-text:#e8f0fa;--jai-muted:#91a4bc;--jai-green:#20d6a0;--jai-blue:#4da3ff;--jai-orange:#ffad4d}
+body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18 100%);color:var(--jai-text)}
+.navbar-custom{background:rgba(9,20,35,.96)!important;border-bottom:1px solid var(--jai-line)!important;color:#fff}
+.navbar-brand,.navbar-brand svg{filter:drop-shadow(0 2px 8px rgba(0,0,0,.25))}
+.main-container{gap:14px;padding:14px}
+.left-panel,.right-panel{gap:12px}
+.card{background:linear-gradient(145deg,rgba(19,35,56,.98),rgba(12,25,42,.98));border:1px solid var(--jai-line);border-radius:14px;color:var(--jai-text);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.card-body{padding:14px}
+.card .text-dark,.card h5.text-dark{color:#f3f7fc!important}
+.card .text-secondary,.card .text-muted{color:var(--jai-muted)!important}
+.form-control-sm,.form-select-sm,.form-control,.form-select{background:#0b192b!important;border-color:#304763!important;color:#e8f0fa!important}
+.form-control::placeholder{color:#8297b0!important}
+.form-control:focus,.form-select:focus{border-color:var(--jai-green)!important;box-shadow:0 0 0 .18rem rgba(32,214,160,.16)!important}
+.quick-hint{background:rgba(32,214,160,.09);border-left-color:var(--jai-green);color:#a8f4d9}
+.btn-predict{background:linear-gradient(100deg,#0dbb87,#087d9e);border-radius:10px;box-shadow:0 8px 20px rgba(13,187,135,.2)}
+.btn-predict:hover{background:linear-gradient(100deg,#0ac995,#0a8daf)}
+#advancedPanel .bg-light{background:#0d1b2d!important;color:var(--jai-text)}
+#advancedPanel label{color:#b4c5d8!important}
+#resultsArea .card{padding:14px!important}
+#resultsArea .bg-light{background:#0c1b2e!important;border-color:#2b405a!important;color:#eaf2fb!important}
+.score-box{border:1px solid rgba(255,255,255,.14);border-radius:10px}
+#topScoresContainer .score-box.bg-warning { color: #212529 !important; }
+.fh-card,.next-goal-card{border-radius:9px}
+.xh-highlight{background:#0b192b;border-color:#304763;color:#b7c8dc!important}
+.user-badge{background:#1a3049;color:#cce0f7}
+.metric-tile{background:#0b1b2d;border:1px solid #2a405a;border-radius:10px;padding:10px;text-align:center;height:100%}.metric-tile .metric-label{font-size:.68rem;color:#9bb0c8}.metric-tile .metric-value{font-size:1.2rem;font-weight:800;color:#f4f8ff}.metric-tile.home .metric-value{color:#35d7a4}.metric-tile.draw .metric-value{color:#ffc56b}.metric-tile.away .metric-value{color:#69b5ff}
+.progress{background:#263b55!important}
+.warn-box{background:#3b2e16;border-color:#6b5121;color:#ffdb8a}
+@media(max-width:991.98px){body{height:auto;min-height:100vh;overflow:auto}.main-container{padding:9px}.navbar-custom{height:auto;min-height:60px}.left-panel,.right-panel{min-width:0!important}}
 </style>
 </head>
 <body>
@@ -142,7 +169,7 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
           <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
           <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v7.1</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.0 PRO</span>
       </span>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
@@ -169,7 +196,7 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
           <strong>Quick Entry:</strong> กรอกชื่อทีม · ลีก · นาที · สกอร์ · จำนวนยิง — SOT/Big/Strength ว่างไว้ให้ระบบประมาณ
         </div>
 
-        <!-- 0) TEAM NAMES — v7.1 เห็นตลอดเวลา -->
+        <!-- 0) TEAM NAMES -->
         <div class="row g-1 mb-2 team-row">
           <div class="col-6">
             <input type="text" id="home_name"
@@ -221,17 +248,29 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
           </div>
         </div>
 
+        <!-- 2.1) RED CARDS (below match state) -->
+        <div class="row g-1 mb-2">
+          <div class="col-6">
+            <label class="text-danger fw-bold" style="font-size:0.62rem;">🟥 ใบแดง 🏠 เหย้า</label>
+            <input type="number" id="red_home" class="form-control form-control-sm red-card-input" value="0" min="0" max="5">
+          </div>
+          <div class="col-6">
+            <label class="text-danger fw-bold" style="font-size:0.62rem;">🟥 ใบแดง ✈️ เยือน</label>
+            <input type="number" id="red_away" class="form-control form-control-sm red-card-input" value="0" min="0" max="5">
+          </div>
+        </div>
+
         <!-- 3) SHOTS / SOT -->
         <div class="row g-2 mb-2">
           <div class="col-6">
-            <div class="p-2 rounded" style="background:#f0fdf4; border:1px solid #bbf7d0;">
+            <div class="p-2 rounded" style="background:#0d2436; border:1px solid #1f4a3d;">
               <div class="text-success fw-bold text-center mb-1" style="font-size:0.7rem;">🏠 เหย้า</div>
               <input type="number" id="h_shots" class="form-control form-control-sm mb-1" placeholder="ยิง (Shots)" min="0">
               <input type="number" id="h_sot" class="form-control form-control-sm border-danger" placeholder="เข้ากรอบ (ว่าง=auto)" min="0" style="border-width:2px;">
             </div>
           </div>
           <div class="col-6">
-            <div class="p-2 rounded" style="background:#eff6ff; border:1px solid #bfdbfe;">
+            <div class="p-2 rounded" style="background:#0d1f36; border:1px solid #1f3a4a;">
               <div class="text-primary fw-bold text-center mb-1" style="font-size:0.7rem;">✈️ เยือน</div>
               <input type="number" id="a_shots" class="form-control form-control-sm mb-1" placeholder="ยิง (Shots)" min="0">
               <input type="number" id="a_sot" class="form-control form-control-sm border-danger" placeholder="เข้ากรอบ (ว่าง=auto)" min="0" style="border-width:2px;">
@@ -246,41 +285,27 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
 
         <!-- 5) ADVANCED PANEL -->
         <button class="btn btn-outline-secondary w-100 py-1" type="button"
-                data-bs-toggle="collapse" data-bs-target="#advancedPanel" aria-expanded="false" aria-controls="advancedPanel"
+                data-bs-toggle="collapse" data-bs-target="#advancedPanel" aria-expanded="true" aria-controls="advancedPanel"
                 style="font-size:0.72rem;">
-          <i class="bi bi-sliders"></i> ตัวเลือกเพิ่มเติม (Strength · HT · Red · ทดเวลา · Big)
+          <i class="bi bi-sliders"></i> ตัวเลือกเพิ่มเติม (AI Strength · Big)
         </button>
 
-        <div class="collapse mt-2" id="advancedPanel">
+        <div class="collapse show mt-2" id="advancedPanel">
           <div class="p-2 rounded bg-light">
-            <!-- Strength -->
-            <div class="row g-1 mb-2">
-              <div class="col-6">
-                <label class="text-success fw-bold" style="font-size:0.62rem;">🏠 Strength (0-100)</label>
-                <input type="number" id="home_strength" class="form-control form-control-sm text-center fw-bold" value="70" min="0" max="100">
-              </div>
-              <div class="col-6">
-                <label class="text-primary fw-bold" style="font-size:0.62rem;">✈️ Strength (0-100)</label>
-                <input type="number" id="away_strength" class="form-control form-control-sm text-center fw-bold" value="70" min="0" max="100">
-              </div>
-            </div>
-
-            <!-- Auto-estimate -->
             <div class="auto-box">
               <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="auto-label" style="font-size:0.65rem;"><i class="bi bi-magic"></i> Auto-strength จาก AH</span>
-                <button class="btn btn-sm btn-warning py-0 px-2" style="font-size:0.62rem;" onclick="autoEstimateStrength()">คำนวณ</button>
+                <span class="auto-label" style="font-size:0.72rem;"><i class="bi bi-magic"></i> AI Strength อัตโนมัติ</span>
+                <span class="badge bg-success">AUTO</span>
               </div>
-              <div class="row g-1">
-                <div class="col-6"><label style="font-size:0.6rem; color:#6c757d;">AH (เหย้า)</label>
-                  <input type="number" id="auto_ah" class="form-control form-control-sm text-center" value="0" step="0.25"></div>
-                <div class="col-6"><label style="font-size:0.6rem; color:#6c757d;">น้ำหนักสด (%)</label>
-                  <input type="number" id="auto_live_weight" class="form-control form-control-sm text-center" value="30" min="0" max="100"></div>
+              <div class="row g-2 text-center">
+                <div class="col-6"><div class="text-success fw-bold" style="font-size:.65rem">🏠 เหย้า</div><div id="homeStrengthDisplay" class="fw-bold fs-5 text-success">70</div></div>
+                <div class="col-6"><div class="text-primary fw-bold" style="font-size:.65rem">✈️ เยือน</div><div id="awayStrengthDisplay" class="fw-bold fs-5 text-primary">70</div></div>
               </div>
-              <div id="autoResult" class="mt-1" style="font-size:0.62rem; color:#856404; display:none;"></div>
+              <div id="autoResult" class="mt-1" style="font-size:0.62rem;color:#ffdb8a;">คำนวณจาก AH และสถิติการแข่งขันที่มีอยู่</div>
+              <input type="hidden" id="home_strength" value="70"><input type="hidden" id="away_strength" value="70">
+              <input type="hidden" id="auto_ah" value="0"><input type="hidden" id="auto_live_weight" value="30">
             </div>
 
-            <!-- Big chances -->
             <div class="row g-1 mb-2">
               <div class="col-6"><label class="text-warning fw-bold" style="font-size:0.62rem;">🏠 Big (ว่าง=auto)</label>
                 <input type="number" id="h_big" class="form-control form-control-sm border-warning" placeholder="auto" min="0"></div>
@@ -288,38 +313,13 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
                 <input type="number" id="a_big" class="form-control form-control-sm border-warning" placeholder="auto" min="0"></div>
             </div>
 
-            <!-- HT -->
-            <div class="ht-score-box mb-2">
-              <div class="text-warning fw-bold text-center mb-1" style="font-size:0.68rem;">⏱️ HT Score (ใช้เมื่อผ่าน 45')</div>
-              <div class="row g-1">
-                <div class="col-6"><input type="number" id="ht_home_score" class="form-control form-control-sm text-success text-center" value="0" min="0" placeholder="🏠 HT"></div>
-                <div class="col-6"><input type="number" id="ht_away_score" class="form-control form-control-sm text-primary text-center" value="0" min="0" placeholder="✈️ HT"></div>
-              </div>
-            </div>
+            <input type="hidden" id="ht_home_score" value="0">
+            <input type="hidden" id="ht_away_score" value="0">
 
-            <!-- Red cards -->
-            <div class="red-card-box d-flex gap-2 mb-2 p-1">
-              <div class="flex-fill text-center">
-                <label class="text-danger fw-bold" style="font-size:0.62rem;">🏠 แดง</label>
-                <input type="number" id="red_home" class="form-control form-control-sm red-card-input" value="0" min="0" max="5">
-              </div>
-              <div class="flex-fill text-center">
-                <label class="text-danger fw-bold" style="font-size:0.62rem;">✈️ แดง</label>
-                <input type="number" id="red_away" class="form-control form-control-sm red-card-input" value="0" min="0" max="5">
-              </div>
-            </div>
-
-            <!-- Injury + Format -->
-            <div class="row g-1 mb-2">
-              <div class="col-4"><label class="text-warning" style="font-size:0.62rem;">ทด 1H</label>
-                <input type="number" id="injury_1" class="form-control form-control-sm text-warning text-center" value="0" min="0" max="15"></div>
-              <div class="col-4"><label class="text-warning" style="font-size:0.62rem;">ทด 2H</label>
-                <input type="number" id="injury_2" class="form-control form-control-sm text-warning text-center" value="0" min="0" max="15"></div>
-              <div class="col-4"><label class="text-info" style="font-size:0.62rem;">รูปแบบ</label>
-                <select id="match_format" class="form-select form-select-sm text-info fw-bold" style="padding:4px 2px; font-size:0.72rem;">
-                  <option value="90">90'</option>
-                  <option value="120">120'</option>
-                </select></div>
+            <div hidden aria-hidden="true">
+              <input type="number" id="injury_1" value="0">
+              <input type="number" id="injury_2" value="0">
+              <input type="hidden" id="match_format" value="90">
             </div>
 
             <button type="button" class="btn btn-outline-danger w-100 py-1" style="font-size:0.68rem;" onclick="resetInputs()">
@@ -336,12 +336,12 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
 
     <div class="right-panel">
       <div id="resultsArea" class="d-flex flex-column gap-2 h-100 d-none">
-        <div class="card p-2 bg-white text-dark text-center position-relative border">
+        <div class="card p-2 text-center position-relative border">
           <button class="btn btn-outline-secondary btn-copy position-absolute" style="top:6px; right:6px;" onclick="copyResultAsText()" title="Copy result as text">
             <i class="bi bi-clipboard"></i>
           </button>
           <h5 class="fw-bold mb-0" id="resultTitle" style="font-size:1.1rem;">ทีมเหย้า 0 - 0 ทีมเยือน</h5>
-          <div class="text-warning mb-1" style="font-size:0.75rem;">นาทีที่ <span id="displayMinute">45</span> (เหลือ <span id="displayRemaining">45</span> นาที)</div>
+          <div class="text-warning mb-1" style="font-size:0.75rem;">นาทีที่ <span id="displayMinute">0</span> (เหลือ <span id="displayRemaining">90</span> นาที)</div>
           <div class="d-flex justify-content-center gap-1 flex-wrap">
             <span class="badge bg-secondary" id="leagueInfluenceText" style="font-size:0.65rem;">ลีกมาตรฐาน</span>
             <span class="badge bg-info text-dark" id="confidenceBadge" style="font-size:0.65rem;">Confidence: -</span>
@@ -351,6 +351,14 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
         </div>
         <div id="inputWarning" class="warn-box d-none py-1"><strong>⚠️ คำเตือน:</strong> <span id="inputWarningText"></span></div>
         <div id="redCardImpactArea" class="alert alert-danger py-1 mb-0 d-none" style="font-size:0.75rem;"><strong>🟥 ใบแดง:</strong> <span id="redImpactText"></span></div>
+
+        <div class="row g-2" id="oneXTwoPanel">
+          <div class="col-4"><div class="metric-tile home"><div class="metric-label">เจ้าบ้านชนะ</div><div class="metric-value" id="ftHomeWin">—</div></div></div>
+          <div class="col-4"><div class="metric-tile draw"><div class="metric-label">เสมอ</div><div class="metric-value" id="ftDraw">—</div></div></div>
+          <div class="col-4"><div class="metric-tile away"><div class="metric-label">ทีมเยือนชนะ</div><div class="metric-value" id="ftAwayWin">—</div></div></div>
+          <div class="col-6"><div class="metric-tile"><div class="metric-label">ทั้งสองทีมยิง (BTTS)</div><div class="metric-value" id="bttsYes">—</div></div></div>
+          <div class="col-6"><div class="metric-tile"><div class="metric-label">คาดการณ์ประตูรวม</div><div class="metric-value" id="expectedTotalGoals">—</div></div></div>
+        </div>
 
         <div class="card p-2">
           <h6 class="fw-bold text-warning mb-1 text-center" style="font-size:0.8rem;" data-i18n="ah_section">Live Asian Handicap Probs</h6>
@@ -418,14 +426,16 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
         <div class="calib-note mb-2 px-1" id="calibNote"></div>
       </div>
 
-      <div id="emptyState" class="h-100 d-flex flex-column justify-content-center align-items-center text-muted card border p-5 bg-white">
-        <i class="bi bi-cpu-fill text-secondary mb-3" style="font-size:4rem; opacity:0.3;"></i>
-        <h6 class="text-dark">กรอกชื่อทีม + ข้อมูลสถิติ แล้วกดประมวลผล</h6>
-        <p class="text-secondary" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้ (v7.1 — Quick Entry)</p>
+      <!-- Placeholder — แสดงตอนยังไม่กดประมวลผล -->
+      <div id="emptyState" class="card h-100 d-flex flex-column justify-content-center align-items-center p-4 text-center">
+        <i class="bi bi-cpu text-secondary mb-3" style="font-size:4rem; opacity:0.3;"></i>
+        <h6 class="mb-1" style="color:#b7c8dc;">กรอกข้อมูลแล้วกด "ประมวลผลคาดการณ์"</h6>
+        <p class="text-muted mb-0" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้</p>
       </div>
     </div>
   </div>
 
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.0 PRO · Manual Analysis · Probability estimates, not guarantees</div>
   <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg">
@@ -479,7 +489,7 @@ const AppState = {
 const USER_SESSION_KEY = 'jackai_active_user';
 const Storage = {
   _userSuffix() { return AppState.user ? `_${AppState.user.replace(/[^a-zA-Z0-9]/g, '_')}` : ''; },
-  key(type) { const map = { inputs: `jackai_inputs_v71${this._userSuffix()}` }; return map[type] || null; },
+  key(type) { const map = { inputs: `jackai_inputs_v80${this._userSuffix()}` }; return map[type] || null; },
   get(type, fallback = []) { const k = this.key(type); if (!k) return fallback; try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; } },
   set(type, data) { const k = this.key(type); if (!k) return false; try { localStorage.setItem(k, JSON.stringify(data)); return true; } catch (e) { return false; } },
   remove(type) { const k = this.key(type); if (!k) return; try { localStorage.removeItem(k); } catch (e) {} },
@@ -598,11 +608,12 @@ function poisson(lambda, k) {
   return Math.exp(-lambda + k * Math.log(lambda) - logFk);
 }
 function dixonColesTau(h, a, lH, lA, rho) {
+  const r = Number.isFinite(rho) ? rho : -0.11;
   let tau = 1;
-  if (h === 0 && a === 0) tau = 1 - lH * lA * rho;
-  else if (h === 0 && a === 1) tau = 1 + lH * rho;
-  else if (h === 1 && a === 0) tau = 1 + lA * rho;
-  else if (h === 1 && a === 1) tau = 1 - rho;
+  if (h === 0 && a === 0) tau = 1 - lH * lA * r;
+  else if (h === 0 && a === 1) tau = 1 + lH * r;
+  else if (h === 1 && a === 0) tau = 1 + lA * r;
+  else if (h === 1 && a === 1) tau = 1 - r;
   return Math.max(0.01, tau);
 }
 function timeWeight(minute) {
@@ -778,7 +789,6 @@ function restoreInputs() {
 }
 function resetInputs() { if (!safeConfirm('ล้างข้อมูลและโหลดค่าเริ่มต้นใหม่?')) return; Storage.remove('inputs'); location.reload(); }
 
-/* v7.1 — Live update title */
 function updateResultTitle() {
   const h = readStr('home_name', 'ทีมเหย้า');
   const a = readStr('away_name', 'ทีมเยือน');
@@ -787,34 +797,33 @@ function updateResultTitle() {
   writeText('resultTitle', `${h} ${hs} - ${as} ${a}`);
 }
 
-function autoEstimateStrength() {
-  const ah = readNum('auto_ah', { fallback: 0 });
-  const ahImpact = -ah * 15;
-  const homeBase = Math.max(20, Math.min(95, 70 + ahImpact));
-  const awayBase = Math.max(20, Math.min(95, 70 - ahImpact));
-  const minute = readNum('match_minute', { min: 0, max: 120, integer: true, fallback: 0 });
-  const cH = readNum('current_home_score', { min: 0, integer: true, fallback: 0 });
-  const cA = readNum('current_away_score', { min: 0, integer: true, fallback: 0 });
-  const hShots = readNum('h_shots', { min: 0, integer: true, fallback: 0 });
-  const aShots = readNum('a_shots', { min: 0, integer: true, fallback: 0 });
-  const hSot = readNum('h_sot', { min: 0, integer: true, fallback: 0 });
-  const aSot = readNum('a_sot', { min: 0, integer: true, fallback: 0 });
-  let lh = 0, la = 0;
-  if (minute > 0) {
-    lh += (cH - cA) * 2.0; la -= (cH - cA) * 2.0;
-    lh += (hShots - aShots) * 0.5; la -= (hShots - aShots) * 0.5;
-    lh += (hSot - aSot) * 0.8; la -= (hSot - aSot) * 0.8;
-  }
-  const lw = readNum('auto_live_weight', { min: 0, max: 100, fallback: 30 }) / 100;
-  const bw = 1 - lw;
-  const fh = Math.max(20, Math.min(95, homeBase * bw + (homeBase + lh) * lw));
-  const fa = Math.max(20, Math.min(95, awayBase * bw + (awayBase + la) * lw));
-  writeVal('home_strength', Math.round(fh));
-  writeVal('away_strength', Math.round(fa));
-  const el = $('autoResult');
-  el.style.display = 'block';
-  el.innerHTML = `🏠 <strong>${Math.round(fh)}</strong> (Base ${homeBase.toFixed(0)} ${lh>=0?'+':''}${lh.toFixed(1)}) &nbsp;|&nbsp; ✈️ <strong>${Math.round(fa)}</strong> (Base ${awayBase.toFixed(0)} ${la>=0?'+':''}${la.toFixed(1)})`;
-  saveInputs();
+function autoEstimateStrength(stats = null) {
+  const d = stats || {
+    ah: parseFloat(($('handicapSelect') && $('handicapSelect').value) || '0') || 0,
+    minute: readNum('match_minute',{min:0,max:120,integer:true,fallback:0}),
+    cH: readNum('current_home_score',{min:0,integer:true,fallback:0}),
+    cA: readNum('current_away_score',{min:0,integer:true,fallback:0}),
+    hShots: readNum('h_shots',{min:0,integer:true,fallback:0}), aShots: readNum('a_shots',{min:0,integer:true,fallback:0}),
+    hSot: readNum('h_sot',{min:0,integer:true,fallback:0}), aSot: readNum('a_sot',{min:0,integer:true,fallback:0}),
+    hBig: readNum('h_big',{min:0,integer:true,fallback:0}), aBig: readNum('a_big',{min:0,integer:true,fallback:0}),
+    redHome: readNum('red_home',{min:0,integer:true,fallback:0}), redAway: readNum('red_away',{min:0,integer:true,fallback:0})
+  };
+  const homeBase = Math.max(25,Math.min(95,70 - d.ah * 12));
+  const awayBase = Math.max(25,Math.min(95,70 + d.ah * 12));
+  const liveWeight = d.minute > 0 ? Math.min(0.45, 0.15 + d.minute / 200) : 0;
+  const scoreEdge = Math.max(-2,Math.min(2,d.cH-d.cA)) * 1.6;
+  const shotEdge = Math.max(-12,Math.min(12,(d.hShots-d.aShots)*0.35 + (d.hSot-d.aSot)*0.9 + (d.hBig-d.aBig)*1.4));
+  const redEdge = (d.redAway-d.redHome) * 5;
+  const homeLiveEdge = Math.max(-18,Math.min(18,scoreEdge + shotEdge + redEdge));
+  const awayLiveEdge = -homeLiveEdge;
+  const home = Math.round(Math.max(20,Math.min(98,homeBase*(1-liveWeight)+(homeBase+homeLiveEdge)*liveWeight)));
+  const away = Math.round(Math.max(20,Math.min(98,awayBase*(1-liveWeight)+(awayBase+awayLiveEdge)*liveWeight)));
+  writeVal('home_strength',home); writeVal('away_strength',away);
+  writeText('homeStrengthDisplay',home); writeText('awayStrengthDisplay',away);
+  const ahLabel = d.ah === 0 ? 'AH 0.0' : (d.ah > 0 ? `AH +${d.ah.toFixed(2)}` : `AH ${d.ah.toFixed(2)}`);
+  const liveNote = d.minute > 0 ? `LIVE ${Math.round(liveWeight*100)}%` : 'รอข้อมูล LIVE';
+  writeText('autoResult',`${ahLabel} · ${liveNote}`);
+  return {home,away,homeBase,awayBase,liveWeight};
 }
 
 function readMatchInputs() {
@@ -843,15 +852,19 @@ function readMatchInputs() {
 
   const htH = readNum('ht_home_score', { min: 0, integer: true, fallback: 0 });
   const htA = readNum('ht_away_score', { min: 0, integer: true, fallback: 0 });
-  if (minute >= 45 && htH === 0 && htA === 0 && (cH > 0 || cA > 0)) {
-    autoNotes.push("ผ่าน 45' — ตรวจ HT Score ในตัวเลือกเพิ่มเติม");
-  }
+  const strength = autoEstimateStrength({
+    ah: parseFloat(($('handicapSelect') && $('handicapSelect').value) || '0') || 0,
+    minute, cH, cA, hShots, aShots, hSot, aSot,
+    hBig, aBig,
+    redHome: readNum('red_home',{min:0,integer:true,fallback:0}),
+    redAway: readNum('red_away',{min:0,integer:true,fallback:0})
+  });
 
   return {
     homeName: readStr('home_name') || 'ทีมเหย้า',
     awayName: readStr('away_name') || 'ทีมเยือน',
-    homeStrength: readNum('home_strength', { min: 0, max: 100, fallback: 70 }),
-    awayStrength: readNum('away_strength', { min: 0, max: 100, fallback: 70 }),
+    homeStrength: strength.home,
+    awayStrength: strength.away,
     minute,
     injury1: readNum('injury_1', { min: 0, max: 15, integer: true, fallback: 0 }),
     injury2: readNum('injury_2', { min: 0, max: 15, integer: true, fallback: 0 }),
@@ -938,7 +951,7 @@ function calcExpectedGoals(inputs, ratio, tempo) {
   const rcAA = Math.pow(CONFIG.RED.ATTACK_MULT, inputs.redAway), rcDA = Math.pow(CONFIG.RED.DEFENSE_MULT, inputs.redAway);
   const xgHBeforeRed = xgH, xgABeforeRed = xgA;
   xgH = xgH * rcAH * rcDA; xgA = xgA * rcAA * rcDH;
-  return { xgH, xgA, xgHBeforeRed, xgABeforeRed, expectedGoalsRaw, timeData, expectedGoals };
+  return { xgH, xgA, xgHBeforeRed, xgABeforeRed, expectedGoalsRaw, timeData };
 }
 
 function buildScoreGrid(xgH, xgA, rho) {
@@ -985,7 +998,15 @@ function calcFH(inputs, xgH, xgA, rho, timeData, tempo) {
   const htTotalGoals = inputs.htH + inputs.htA;
   const half1_end = timeData.half1_end;
   if (inputs.minute >= half1_end) {
-    return { isFinished: true, fhProbHome: inputs.htH > inputs.htA ? 100 : 0, fhProbTotal: inputs.htH === inputs.htA ? 100 : 0, fhProbAway: inputs.htA > inputs.htH ? 100 : 0, fh05: htTotalGoals > 0.5 ? 100 : 0, fh15: htTotalGoals > 1.5 ? 100 : 0, fh25: htTotalGoals > 2.5 ? 100 : 0, fh35: htTotalGoals > 3.5 ? 100 : 0, htHomeWin: inputs.htH > inputs.htA, htDraw: inputs.htH === inputs.htA, htAwayWin: inputs.htA > inputs.htH };
+    const htMissing = (inputs.htH + inputs.htA) === 0 && (inputs.cH + inputs.cA) > 0;
+    return { isFinished: true, htMissing,
+      fhProbHome: inputs.htH > inputs.htA ? 100 : 0,
+      fhProbTotal: inputs.htH === inputs.htA ? 100 : 0,
+      fhProbAway: inputs.htA > inputs.htH ? 100 : 0,
+      fh05: htTotalGoals > 0.5 ? 100 : 0, fh15: htTotalGoals > 1.5 ? 100 : 0,
+      fh25: htTotalGoals > 2.5 ? 100 : 0, fh35: htTotalGoals > 3.5 ? 100 : 0,
+      htHomeWin: inputs.htH > inputs.htA, htDraw: inputs.htH === inputs.htA,
+      htAwayWin: inputs.htA > inputs.htH };
   }
   const fhRem = Math.max(0, half1_end - inputs.minute);
   const baseXgPerMin = tempo.baselineRatePer90 / 90;
@@ -993,7 +1014,8 @@ function calcFH(inputs, xgH, xgA, rho, timeData, tempo) {
   const totalRemainingXg = expectedGoalsIntegrated(inputs.minute, timeData.remaining, inputs.format, inputs.injury1, inputs.injury2, baseXgPerMin);
   const naturalFhFrac = totalRemainingXg > 0 ? fhRemainingXg / totalRemainingXg : 0;
   const BASELINE_FH_SHARE = 0.44;
-  const leagueBias = AppState.league.fhShare / BASELINE_FH_SHARE;
+  const leagueFhShare = Number.isFinite(AppState.league.fhShare) ? AppState.league.fhShare : 0.44;
+  const leagueBias = leagueFhShare / BASELINE_FH_SHARE;
   const fhXH = xgH * naturalFhFrac * leagueBias;
   const fhXA = xgA * naturalFhFrac * leagueBias;
   const fhGrid = []; let fhT = 0;
@@ -1006,11 +1028,12 @@ function calcFH(inputs, xgH, xgA, rho, timeData, tempo) {
   if (fhT > 0) fhGrid.forEach(x => x.p /= fhT);
   let pFW = 0, pFD = 0, pFL = 0, fh05 = 0, fh15 = 0, fh25 = 0, fh35 = 0;
   fhGrid.forEach(s => {
-    if (s.h > s.a) pFW += s.p; else if (s.h === s.a) pFD += s.p; else pFL += s.p;
+    const fh = inputs.cH + s.h, fa = inputs.cA + s.a;
+    if (fh > fa) pFW += s.p; else if (fh === fa) pFD += s.p; else pFL += s.p;
     const tg = s.h + s.a + currentTotalGoals;
     if (tg > 0.5) fh05 += s.p; if (tg > 1.5) fh15 += s.p; if (tg > 2.5) fh25 += s.p; if (tg > 3.5) fh35 += s.p;
   });
-  return { isFinished: false, fhProbHome: pFW * 100, fhProbTotal: pFD * 100, fhProbAway: pFL * 100, fh05: fh05 * 100, fh15: fh15 * 100, fh25: fh25 * 100, fh35: fh35 * 100, htHomeWin: pFW > pFD && pFW > pFL, htDraw: pFD > pFW && pFD > pFL, htAwayWin: pFL > pFW && pFL > pFD };
+  return { isFinished: false, htMissing: false, fhProbHome: pFW * 100, fhProbTotal: pFD * 100, fhProbAway: pFL * 100, fh05: fh05 * 100, fh15: fh15 * 100, fh25: fh25 * 100, fh35: fh35 * 100, htHomeWin: pFW > pFD && pFW > pFL, htDraw: pFD > pFW && pFD > pFL, htAwayWin: pFL > pFW && pFL > pFD };
 }
 
 function calcTop3(grid, cH, cA) {
@@ -1028,6 +1051,17 @@ function calcNextGoal(xgH, xgA) {
 
 function renderPrediction(result) {
   const { inputs, xgH, xgA, ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, timeData } = result;
+  let pHomeWin = 0, pDraw = 0, pAwayWin = 0, pBTTS = 0;
+  result.grid.forEach(cell => {
+    const homeFinal = inputs.cH + cell.h, awayFinal = inputs.cA + cell.a;
+    if (homeFinal > awayFinal) pHomeWin += cell.p; else if (homeFinal === awayFinal) pDraw += cell.p; else pAwayWin += cell.p;
+    if (homeFinal > 0 && awayFinal > 0) pBTTS += cell.p;
+  });
+  writeText('ftHomeWin', fmtPct(pHomeWin * 100));
+  writeText('ftDraw', fmtPct(pDraw * 100));
+  writeText('ftAwayWin', fmtPct(pAwayWin * 100));
+  writeText('bttsYes', fmtPct(pBTTS * 100));
+  writeText('expectedTotalGoals', (inputs.cH + inputs.cA + xgH.after + xgA.after).toFixed(2));
   writeText('ahCurrentRate', inputs.ahRate === 0 ? 'เสมอ (0.0)' : (inputs.ahRate < 0 ? `เยือนต่อ ${Math.abs(inputs.ahRate).toFixed(2)}` : `เหย้าต่อ ${inputs.ahRate.toFixed(2)}`));
   writeText('ahHomeProb', fmtPct(ah.pAHHomeWin * 100));
   writeText('ahAwayProb', fmtPct(ah.pAHAwayWin * 100));
@@ -1048,9 +1082,15 @@ function renderPrediction(result) {
   writeText('probNone', fmtPct(nextGoal.pNone * 100));
   writeText('probAway', fmtPct(nextGoal.pAN * 100));
   if (fh.isFinished) {
-    writeText('fhProbHome', fh.htHomeWin ? '✅' : '❌');
-    writeText('fhProbTotal', fh.htDraw ? '✅' : '❌');
-    writeText('fhProbAway', fh.htAwayWin ? '✅' : '❌');
+    if (fh.htMissing) {
+      writeText('fhProbHome', 'N/A');
+      writeText('fhProbTotal', 'N/A');
+      writeText('fhProbAway', 'N/A');
+    } else {
+      writeText('fhProbHome', fh.htHomeWin ? '✅' : '❌');
+      writeText('fhProbTotal', fh.htDraw ? '✅' : '❌');
+      writeText('fhProbAway', fh.htAwayWin ? '✅' : '❌');
+    }
   } else {
     writeText('fhProbHome', fmtPct(fh.fhProbHome));
     writeText('fhProbTotal', fmtPct(fh.fhProbTotal));
@@ -1093,9 +1133,9 @@ function renderPrediction(result) {
   writeHtml('xgBreakdown',
     `<div class="d-flex justify-content-between border-bottom pb-1 mb-1"><span>🏠 เหย้า xG: <strong>${xgH.after.toFixed(2)}</strong></span><span class="text-success">${ratio.hShot.xg.toFixed(2)} × atk${ratio.hAtkMult.toFixed(2)} × def${ratio.aDefMult.toFixed(2)}</span></div>
      <div class="d-flex justify-content-between"><span>✈️ เยือน xG: <strong>${xgA.after.toFixed(2)}</strong></span><span class="text-primary">${ratio.aShot.xg.toFixed(2)} × atk${ratio.aAtkMult.toFixed(2)} × def${ratio.hDefMult.toFixed(2)}</span></div>
-     <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#6c757d;"><span>Ratio: 🏠 ${(ratio.hRatio*100).toFixed(1)}% / ✈️ ${(ratio.aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
-     <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#6c757d;"><span>∫xG ${result.expectedGoalsRaw.toFixed(2)} × tempo ${tempo.modifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`);
-  writeText('calibNote', `⚙️ v7.1: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
+     <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#8297b0;"><span>Ratio: 🏠 ${(ratio.hRatio*100).toFixed(1)}% / ✈️ ${(ratio.aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
+     <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#8297b0;"><span>∫xG ${result.expectedGoalsRaw.toFixed(2)} × tempo ${tempo.modifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`);
+  writeText('calibNote', `⚙️ v8.0: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
 }
 
 function predictMatch() {
@@ -1125,7 +1165,7 @@ function predictMatch() {
     hShots: inputs.hShots, aShots: inputs.aShots, hSot: cleaned.hSot, aSot: cleaned.aSot,
     hBig: cleaned.hBig, aBig: cleaned.aBig, minute: inputs.minute, top3ProbSum: top3.sum / 100, goalDiff: inputs.cH - inputs.cA,
   });
-  const result = { inputs, xgH: { before: eg.xgHBeforeRed, after: eg.xgH }, xgA: { before: eg.xgABeforeRed, after: eg.xgA }, ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, timeData: eg.timeData, expectedGoalsRaw: eg.expectedGoalsRaw };
+  const result = { inputs, grid, xgH: { before: eg.xgHBeforeRed, after: eg.xgH }, xgA: { before: eg.xgABeforeRed, after: eg.xgA }, ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, timeData: eg.timeData, expectedGoalsRaw: eg.expectedGoalsRaw };
   AppState.setLastPrediction(result);
   renderPrediction(result);
   saveInputs();
@@ -1141,10 +1181,12 @@ function copyResultAsText() {
   if (!pred) return safeAlert(currentLang === 'en' ? 'No prediction yet.' : 'ยังไม่มีผลพยากรณ์');
   const t = currentLang === 'en', pct = (v) => (v * 100).toFixed(1) + '%';
   const lines = [
-    `⚽ JackAI v7.1 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
+    `⚽ JackAI v8.0 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
     `${t ? 'Minute' : 'นาที'}: ${pred.inputs.minute} (${t ? 'remaining' : 'เหลือ'} ${pred.timeData.remaining})`,
     `League: ${AppState.league.flag || '🌐'} ${AppState.league.text}`,
     `Confidence: ${pred.confidence}%`,
+    `1X2: Home ${pct(pred.grid.filter(x => pred.inputs.cH+x.h > pred.inputs.cA+x.a).reduce((v,x)=>v+x.p,0))} | Draw ${pct(pred.grid.filter(x => pred.inputs.cH+x.h === pred.inputs.cA+x.a).reduce((v,x)=>v+x.p,0))} | Away ${pct(pred.grid.filter(x => pred.inputs.cH+x.h < pred.inputs.cA+x.a).reduce((v,x)=>v+x.p,0))}`,
+    `BTTS: ${pct(pred.grid.filter(x => pred.inputs.cH+x.h>0 && pred.inputs.cA+x.a>0).reduce((v,x)=>v+x.p,0))}`,
     `AH ${pred.inputs.ahRate}: Home ${pct(pred.ah.pAHHomeWin)} | Push ${pct(pred.ah.pAHPush)} | Away ${pct(pred.ah.pAHAwayWin)}`,
     `Next Goal: Home ${pct(pred.nextGoal.pHN)} | None ${pct(pred.nextGoal.pNone)} | Away ${pct(pred.nextGoal.pAN)}`,
     `Top3: ${pred.top3.top3.map(x => `${x.score} (${x.prob.toFixed(1)}%)`).join(' / ')}`,
@@ -1160,8 +1202,8 @@ function copyResultAsText() {
 }
 
 const I18N = {
-  th: { home_team:'ทีมเหย้า',away_team:'ทีมเยือน',home_strength:'🏠 ความแข็งแกร่งเหย้า (0-100)',away_strength:'✈️ ความแข็งแกร่งเยือน (0-100)',auto_estimate:'ประเมินความแข็งแกร่งอัตโนมัติ',ah_home_label:'ราคาต่อรอง AH (เหย้า)',live_weight_label:'น้ำหนักสถิติสด (%)',search_league:'-- พิมพ์ชื่อลีกเพื่อค้นหา --',ht_section:'สกอร์ครึ่งแรก (HT) *สำคัญถ้าแข่งผ่าน 45 นาที',minute_label:'นาที',injury_1:'ทด 1H',injury_2:'ทด 2H',format_label:'รูปแบบ',home_score:'สกอร์เหย้า',away_score:'สกอร์เยือน',red_home:'แดง🏠',red_away:'แดง✈️',shots:'ยิงทั้งหมด',sot:'ยิงตรงกรอบ',big:'Big Chances',btn_predict:'ประมวลผลคาดการณ์',btn_reset:'รีเซ็ตข้อมูล',ah_section:'Live Asian Handicap Probs',top3_section:'สกอร์จบเกมที่เป็นไปได้สูง (Top 3)',fh_section:'ครึ่งแรก 45 นาที',next_goal_section:'ประตูถัดไป',fh_over_section:'โอกาสเกิดประตูครึ่งแรก',ft_over_section:'โอกาสเกิดประตูเต็มเวลา',home_wins_ah:'เหย้าชนะราคา',away_wins_ah:'เยือนชนะราคา',push_ah:'เสมอราคา (Push)',btn_donate:'สนับสนุน' },
-  en: { home_team:'Home Team',away_team:'Away Team',home_strength:'🏠 Home Strength (0-100)',away_strength:'✈️ Away Strength (0-100)',auto_estimate:'Auto-estimate Strength',ah_home_label:'Asian Handicap (Home)',live_weight_label:'Live stat weight (%)',search_league:'-- Type league name to search --',ht_section:'Half-Time Score *required if past 45min',minute_label:'Minute',injury_1:'Inj 1H',injury_2:'Inj 2H',format_label:'Format',home_score:'Home Score',away_score:'Away Score',red_home:'Red🏠',red_away:'Red✈️',shots:'Total Shots',sot:'Shots on Target',big:'Big Chances',btn_predict:'Run Prediction',btn_reset:'Reset Data',ah_section:'Live Asian Handicap Probs',top3_section:'Most Likely Final Scores (Top 3)',fh_section:'First Half (45 min)',next_goal_section:'Next Goal',fh_over_section:'1st Half Over Probability',ft_over_section:'Full-Time Over Probability',home_wins_ah:'Home covers AH',away_wins_ah:'Away covers AH',push_ah:'Push',btn_donate:'Support' }
+  th: { home_team:'ทีมเหย้า',away_team:'ทีมเยือน',home_strength:'🏠 ความแข็งแกร่งเหย้า (อัตโนมัติ)',away_strength:'✈️ ความแข็งแกร่งเยือน (อัตโนมัติ)',auto_estimate:'AI Strength อัตโนมัติ',ah_home_label:'ราคาต่อรอง AH (เหย้า)',live_weight_label:'น้ำหนักสถิติสด (%)',search_league:'-- พิมพ์ชื่อลีกเพื่อค้นหา --',minute_label:'นาที',injury_1:'ทด 1H',injury_2:'ทด 2H',format_label:'รูปแบบ',home_score:'สกอร์เหย้า',away_score:'สกอร์เยือน',red_home:'แดง🏠',red_away:'แดง✈️',shots:'ยิงทั้งหมด',sot:'ยิงตรงกรอบ',big:'Big Chances',btn_predict:'ประมวลผลคาดการณ์',btn_reset:'รีเซ็ตข้อมูล',ah_section:'Live Asian Handicap Probs',top3_section:'สกอร์จบเกมที่เป็นไปได้สูง (Top 3)',fh_section:'ครึ่งแรก 45 นาที',next_goal_section:'ประตูถัดไป',fh_over_section:'โอกาสเกิดประตูครึ่งแรก',ft_over_section:'โอกาสเกิดประตูเต็มเวลา',home_wins_ah:'เหย้าชนะราคา',away_wins_ah:'เยือนชนะราคา',push_ah:'เสมอราคา (Push)',btn_donate:'สนับสนุน' },
+  en: { home_team:'Home Team',away_team:'Away Team',home_strength:'🏠 Home Strength (automatic)',away_strength:'✈️ Away Strength (automatic)',auto_estimate:'Automatic AI Strength',ah_home_label:'Asian Handicap (Home)',live_weight_label:'Live stat weight (%)',search_league:'-- Type league name to search --',minute_label:'Minute',injury_1:'Inj 1H',injury_2:'Inj 2H',format_label:'Format',home_score:'Home Score',away_score:'Away Score',red_home:'Red🏠',red_away:'Red✈️',shots:'Total Shots',sot:'Shots on Target',big:'Big Chances',btn_predict:'Run Prediction',btn_reset:'Reset Data',ah_section:'Live Asian Handicap Probs',top3_section:'Most Likely Final Scores (Top 3)',fh_section:'First Half (45 min)',next_goal_section:'Next Goal',fh_over_section:'1st Half Over Probability',ft_over_section:'Full-Time Over Probability',home_wins_ah:'Home covers AH',away_wins_ah:'Away covers AH',push_ah:'Push',btn_donate:'Support' }
 };
 let currentLang = 'th';
 function applyI18N(lang) {
@@ -1186,8 +1228,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ls.addEventListener('keydown', (e) => { if (e.key === 'Enter') { matchLeagueFromInput(); ls.blur(); } });
   }
   INPUT_IDS.forEach(id => { const el = $(id); if (el) el.addEventListener('change', saveInputs); });
-
-  // v7.1 — Live update result title when team names / scores change
+  ['handicapSelect','match_minute','current_home_score','current_away_score','h_shots','a_shots','h_sot','a_sot','h_big','a_big','red_home','red_away'].forEach(id => {
+    const el = $(id); if (el) el.addEventListener('input', () => autoEstimateStrength());
+  });
   ['home_name', 'away_name', 'current_home_score', 'current_away_score'].forEach(id => {
     const el = $(id);
     if (el) el.addEventListener('input', () => {
@@ -1195,7 +1238,6 @@ document.addEventListener('DOMContentLoaded', () => {
       saveInputs();
     });
   });
-
   document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
 });
 </script>
