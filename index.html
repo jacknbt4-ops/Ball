@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v8.8 - Auto Corner & Optimal Layout</title>
+<title>⚽ JackAI Scanner v8.9 - Corner Fixed</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -175,7 +175,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
           <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.8 Layout</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9 Fixed</span>
       </span>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
@@ -271,24 +271,25 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           </div>
         </div>
 
-        <!-- 🚩 CORNER INPUTS -->
+        <!-- 🚩 CORNER INPUTS (อัปเดตคำอธิบายชัดเจน) -->
         <div class="row g-2 mb-2">
-          <div class="col-12 text-center text-warning fw-bold mt-1" style="font-size:0.7rem;">🚩 ลูกเตะมุม (Corners) - Live Stats</div>
+          <div class="col-12 text-center text-warning fw-bold mt-1" style="font-size:0.7rem;">🚩 ลูกเตะมุม (Corners)</div>
           
           <div class="col-6">
             <div class="p-2 rounded" style="background:#0d2436; border:1px solid #1f4a3d;">
               <div class="text-success fw-bold text-center mb-1" style="font-size:0.65rem;">🏠 เหย้า</div>
-              <input type="number" id="h_corners" class="form-control form-control-sm mb-1" placeholder="Live: เต็มเวลา" min="0">
-              <input type="number" id="h_corners_ht" class="form-control form-control-sm" placeholder="Live: ครึ่งแรก" min="0">
+              <input type="number" id="h_corners" class="form-control form-control-sm mb-1" placeholder="รวมทั้งเกม (FT)" min="0">
+              <input type="number" id="h_corners_ht" class="form-control form-control-sm" placeholder="ตอนจบครึ่งแรก (HT)" min="0">
             </div>
           </div>
           <div class="col-6">
             <div class="p-2 rounded" style="background:#0d1f36; border:1px solid #1f3a4a;">
               <div class="text-primary fw-bold text-center mb-1" style="font-size:0.65rem;">✈️ เยือน</div>
-              <input type="number" id="a_corners" class="form-control form-control-sm mb-1" placeholder="Live: เต็มเวลา" min="0">
-              <input type="number" id="a_corners_ht" class="form-control form-control-sm" placeholder="Live: ครึ่งแรก" min="0">
+              <input type="number" id="a_corners" class="form-control form-control-sm mb-1" placeholder="รวมทั้งเกม (FT)" min="0">
+              <input type="number" id="a_corners_ht" class="form-control form-control-sm" placeholder="ตอนจบครึ่งแรก (HT)" min="0">
             </div>
           </div>
+          <div class="col-12"><div class="text-muted text-center" style="font-size:0.6rem;">* ช่องบน = เตะมุมสะสมจนถึงปัจจุบัน, ช่องล่าง = เตะมุมเฉพาะครึ่งแรก</div></div>
         </div>
 
         <button type="button" class="btn btn-predict w-100 mb-2" onclick="predictMatch()">
@@ -503,7 +504,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     </div>
   </div>
 
-  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.8 · Optimal Layout · Probability estimates, not guarantees</div>
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.9 · Corner Fixed · Probability estimates, not guarantees</div>
   
   <!-- Donate Modal -->
   <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
@@ -528,7 +529,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   </div>
 </div>
 
-<div id="debugBanner">🐛 DEBUG MODE v8.8 — พิมพ์ <b>test()</b> ใน console เพื่อรัน tests</div>
+<div id="debugBanner">🐛 DEBUG MODE v8.9 — พิมพ์ <b>test()</b> ใน console เพื่อรัน tests</div>
 <div id="testPanel">
   <h6>🧪 Test Results</h6>
   <div id="testResults"></div>
@@ -537,7 +538,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 
 <script>
 /* ============================================================
-   JackAI Scanner v8.8
+   JackAI Scanner v8.9
    ============================================================ */
 
 let currentLang = 'th';
@@ -572,7 +573,7 @@ const AppState = {
 const USER_SESSION_KEY = 'jackai_active_user';
 const Storage = {
   _userSuffix() { return AppState.user ? `_${AppState.user.replace(/[^a-zA-Z0-9]/g, '_')}` : ''; },
-  key(type) { const map = { inputs: `jackai_inputs_v88${this._userSuffix()}` }; return map[type] || null; },
+  key(type) { const map = { inputs: `jackai_inputs_v89${this._userSuffix()}` }; return map[type] || null; },
   get(type, fallback = []) { const k = this.key(type); if (!k) return fallback; try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; } },
   set(type, data) { const k = this.key(type); if (!k) return false; try { localStorage.setItem(k, JSON.stringify(data)); return true; } catch (e) { return false; } },
   remove(type) { const k = this.key(type); if (!k) return; try { localStorage.removeItem(k); } catch (e) {} },
@@ -1266,10 +1267,9 @@ function calcNextGoal(xgH, xgA) {
 }
 
 /* ============================================================
-   🚩 CORNER ANALYSIS ENGINE (อัปเดต Auto Distribution)
+   🚩 CORNER ANALYSIS ENGINE (อัปเดตแก้ปัญหาคำนวณซ้ำซ้อน)
    ============================================================ */
 function calcCorners(inputs, xgH, xgA, tempo) {
-  // 1. ค่าเฉลี่ยมาตรฐาน (Baseline)
   const leagueBaseFT = 9.5;
   const totalRemainingXG = xgH + xgA;
   const timeRemaining = Math.max(1, tempo.totalMatchTime - inputs.minute);
@@ -1281,22 +1281,16 @@ function calcCorners(inputs, xgH, xgA, tempo) {
   
   // ค่าคาดการณ์พื้นฐานจากฟอร์มเกม (Base Prediction)
   let baseExpectedFT = leagueBaseFT * attackMod * tempoMod * scoreMod;
-  let baseExpected1H = baseExpectedFT * 0.45; // 45%
-  let baseExpected2H = baseExpectedFT * 0.55; // 55%
-  let baseHomeFT = baseExpectedFT * 0.54;
-  let baseAwayFT = baseExpectedFT * 0.46;
-
+  let expected1H = baseExpectedFT * 0.45; // 45%
+  let expected2H = baseExpectedFT * 0.55; // 55%
   let expectedFT = baseExpectedFT;
-  let expected1H = baseExpected1H;
-  let expected2H = baseExpected2H;
-  let expectedHomeFT = baseHomeFT;
-  let expectedAwayFT = baseAwayFT;
+  let expectedHomeFT = baseExpectedFT * 0.54;
+  let expectedAwayFT = baseExpectedFT * 0.46;
 
-  // 4. ดึงสถิติสด (Live Stats)
+  // ดึงสถิติสด (Live Stats)
   const actualHT = (inputs.hCornersHT || 0) + (inputs.aCornersHT || 0);
   const actualFT = (inputs.hCorners || 0) + (inputs.aCorners || 0);
   
-  // 5. ฟังก์ชันคำนวณความน่าจะเป็น Over (Poisson)
   function poissonOver(lambda, threshold) {
     const k = Math.floor(threshold);
     let cumP = 0;
@@ -1308,13 +1302,13 @@ function calcCorners(inputs, xgH, xgA, tempo) {
   
   // ================= เต็มเวลา (FT) =================
   let ft85, ft95, ft105, ft115;
-  if (inputs.minute >= 90) { // จบเกมแล้ว
+  if (inputs.minute >= 90) { // จบเกม
     ft85 = actualFT > 8.5 ? 100 : 0;
     ft95 = actualFT > 9.5 ? 100 : 0;
     ft105 = actualFT > 10.5 ? 100 : 0;
     ft115 = actualFT > 11.5 ? 100 : 0;
   } else {
-    // ถ้ามี Live Stats ให้ใช้ผลรวมจริง + ที่คาดว่าจะเกิดในนาทีที่เหลือ
+    // ถ้ากรอก actualFT (เตะมุมปัจจุบัน) มาแล้ว ให้เอายอดปัจจุบัน + (ยอดที่คาดว่าจะได้เพิ่มในนาทีที่เหลือ)
     const remainingFT = expectedFT * (timeRemaining / tempo.totalMatchTime);
     const totalExpectFT = (actualFT > 0 ? actualFT : expectedFT) + (actualFT > 0 ? remainingFT : 0);
     
@@ -1326,8 +1320,8 @@ function calcCorners(inputs, xgH, xgA, tempo) {
   
   // ================= ครึ่งแรก (1H) =================
   let c1H35, c1H45, c1H55, c1H65;
-  if (inputs.minute >= 45) { // ผ่านครึ่งแรกแล้ว
-    const final1H = inputs.hCornersHT !== null ? actualHT : expected1H;
+  if (inputs.minute >= 45) { // จบครึ่งแรกแล้ว
+    const final1H = actualHT > 0 ? actualHT : expected1H;
     c1H35 = final1H > 3.5 ? 100 : 0;
     c1H45 = final1H > 4.5 ? 100 : 0;
     c1H55 = final1H > 5.5 ? 100 : 0;
@@ -1335,6 +1329,7 @@ function calcCorners(inputs, xgH, xgA, tempo) {
   } else { // ยังอยู่ในครึ่งแรก
     const remaining1H = Math.max(0, 45 - inputs.minute);
     const expected1HRemaining = expected1H * (remaining1H / 45);
+    // ถ้ามีสถิติครึ่งแรก ให้ใช้สถิติจริง + ที่คาดว่าจะได้เพิ่ม
     const total1H = (actualHT > 0 ? actualHT : expected1H) + (actualHT > 0 ? expected1HRemaining : 0);
     
     c1H35 = poissonOver(total1H, 3.5);
@@ -1345,27 +1340,29 @@ function calcCorners(inputs, xgH, xgA, tempo) {
   
   // ================= ครึ่งหลัง (2H) =================
   let c2H45, c2H55, c2H65, c2H75;
-  if (inputs.minute >= 90) { // จบเกมแล้ว
-    const actual2H = actualFT - (inputs.hCornersHT || 0) - (inputs.aCornersHT || 0);
+  if (inputs.minute >= 90) { // จบเกม
+    const actual2H = actualFT - (actualHT > 0 ? actualHT : 0);
     c2H45 = actual2H > 4.5 ? 100 : 0;
     c2H55 = actual2H > 5.5 ? 100 : 0;
     c2H65 = actual2H > 6.5 ? 100 : 0;
     c2H75 = actual2H > 7.5 ? 100 : 0;
-  } else {
-    // ถ้ายังไม่ถึงครึ่งหลัง ให้คำนวณจาก Expected2H
-    // ถ้าอยู่ในครึ่งหลังแล้ว ให้นำผลต่างจริง (FT - HT) มาคำนวณต่อ
-    let total2H = expected2H;
-    if (inputs.minute > 45) {
-      const actual2HNow = actualFT - (inputs.hCornersHT || 0) - (inputs.aCornersHT || 0);
-      const remaining2H = Math.max(0, 90 - inputs.minute);
-      const expected2HRemaining = expected2H * (remaining2H / 45);
-      total2H = actual2HNow + expected2HRemaining;
-    }
+  } else if (inputs.minute > 45) { 
+    // อยู่ในครึ่งหลัง: เอาจำนวนเตะมุมในครึ่งหลังตอนนี้ (FT - HT) + ที่คาดว่าจะได้เพิ่ม
+    const actual2HNow = Math.max(0, actualFT - (actualHT > 0 ? actualHT : 0));
+    const remaining2H = Math.max(0, 90 - inputs.minute);
+    const expected2HRemaining = expected2H * (remaining2H / 45);
+    const total2H = actual2HNow + expected2HRemaining;
     
     c2H45 = poissonOver(total2H, 4.5);
     c2H55 = poissonOver(total2H, 5.5);
     c2H65 = poissonOver(total2H, 6.5);
     c2H75 = poissonOver(total2H, 7.5);
+  } else {
+    // ยังไม่ถึงครึ่งหลัง: ใช้ค่าคาดการณ์ล่วงหน้า
+    c2H45 = poissonOver(expected2H, 4.5);
+    c2H55 = poissonOver(expected2H, 5.5);
+    c2H65 = poissonOver(expected2H, 6.5);
+    c2H75 = poissonOver(expected2H, 7.5);
   }
   
   return {
@@ -1375,7 +1372,7 @@ function calcCorners(inputs, xgH, xgA, tempo) {
     c1H35, c1H45, c1H55, c1H65,
     c2H45, c2H55, c2H65, c2H75,
     actualFT, actualHT,
-    hasActualData: actualFT > 0 || inputs.hCornersHT !== null
+    hasActualData: actualFT > 0 || actualHT > 0
   };
 }
 
@@ -1512,7 +1509,7 @@ function renderPrediction(result) {
      <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#8297b0;"><span>Ratio: 🏠 ${(ratio.hRatio*100).toFixed(1)}% / ✈️ ${(ratio.aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
      <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#8297b0;"><span>∫xG ${result.expectedGoalsRaw.toFixed(2)} × tempo ${tempo.modifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`);
 
-  writeText('calibNote', `⚙️ v8.8: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
+  writeText('calibNote', `⚙️ v8.9: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
 
   // ===== Render Corners =====
   if (corners) {
@@ -1607,7 +1604,7 @@ function copyResultAsText() {
   const outcomeEl = $('matchOutcomeTitle');
   const outcomeText = outcomeEl ? outcomeEl.innerText : '';
   const lines = [
-    `⚽ JackAI v8.8 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
+    `⚽ JackAI v8.9 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
     `${outcomeText}`,
     `${t ? 'Minute' : 'นาที'}: ${pred.inputs.minute} (${t ? 'remaining' : 'เหลือ'} ${pred.timeData.remaining})`,
     `League: ${AppState.league.flag || '🌐'} ${AppState.league.text}`,
@@ -1854,7 +1851,7 @@ function showTestResults() {
   }
   box.innerHTML = html;
   panel.style.display = 'block';
-  console.log(`[JackAI v8.8] Tests: ${pass} pass, ${fail} fail`);
+  console.log(`[JackAI v8.9] Tests: ${pass} pass, ${fail} fail`);
   if (fail > 0) console.warn('Failures:', results.failures);
   return results;
 }
@@ -1886,8 +1883,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       const r = showTestResults();
       $('debugBanner').innerHTML = r.fail === 0
-        ? `🐛 DEBUG MODE v8.8 — ✅ ${r.pass} tests passed`
-        : `🐛 DEBUG MODE v8.8 — ❌ ${r.fail} failed / ${r.pass} passed`;
+        ? `🐛 DEBUG MODE v8.9 — ✅ ${r.pass} tests passed`
+        : `🐛 DEBUG MODE v8.9 — ❌ ${r.fail} failed / ${r.pass} passed`;
       $('debugBanner').style.borderColor = r.fail === 0 ? '#20d6a0' : '#ff6b6b';
       $('debugBanner').style.color = r.fail === 0 ? '#20d6a0' : '#ff6b6b';
     }, 100);
