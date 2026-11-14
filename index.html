@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v8.3 - Professional Hybrid + Image OCR</title>
+<title>⚽ JackAI Scanner v8.5 - Professional Hybrid + Corner Analysis</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Tesseract.js สำหรับ OCR -->
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
 html { margin:0; padding:0; width:100%; height:100%; }
 body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif; font-size:0.85rem; color:#212529; height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-direction:column; }
@@ -177,13 +175,10 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
           <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.3 OCR</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.5 Corner</span>
       </span>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
-        <button class="btn btn-sm btn-outline-info me-1" onclick="openImageModal()" title="วิเคราะห์จากรูปภาพ">
-          <i class="bi bi-camera"></i> <span class="d-none d-md-inline">ภาพ</span>
-        </button>
         <div class="lang-switch me-2" title="ภาษา / Language">
           <button id="btnLangTH" class="active" onclick="setLang('th')">TH</button>
           <button id="btnLangEN" onclick="setLang('en')">EN</button>
@@ -276,6 +271,25 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           </div>
         </div>
 
+        <!-- 🚩 CORNER INPUTS -->
+        <div class="row g-2 mb-2">
+          <div class="col-12 text-center text-warning fw-bold mt-1" style="font-size:0.7rem;">🚩 ลูกเตะมุม (Corners)</div>
+          <div class="col-6">
+            <div class="p-2 rounded" style="background:#0d2436; border:1px solid #1f4a3d;">
+              <div class="text-success fw-bold text-center mb-1" style="font-size:0.65rem;">🏠 เหย้า</div>
+              <input type="number" id="h_corners" class="form-control form-control-sm mb-1" placeholder="เต็มเวลา" min="0">
+              <input type="number" id="h_corners_ht" class="form-control form-control-sm" placeholder="ครึ่งแรก (เว้นว่าง=auto)" min="0">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-2 rounded" style="background:#0d1f36; border:1px solid #1f3a4a;">
+              <div class="text-primary fw-bold text-center mb-1" style="font-size:0.65rem;">✈️ เยือน</div>
+              <input type="number" id="a_corners" class="form-control form-control-sm mb-1" placeholder="เต็มเวลา" min="0">
+              <input type="number" id="a_corners_ht" class="form-control form-control-sm" placeholder="ครึ่งแรก (เว้นว่าง=auto)" min="0">
+            </div>
+          </div>
+        </div>
+
         <button type="button" class="btn btn-predict w-100 mb-2" onclick="predictMatch()">
           <i class="bi bi-cpu"></i> <span data-i18n="btn_predict">ประมวลผลคาดการณ์</span>
         </button>
@@ -336,7 +350,11 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           <button class="btn btn-outline-secondary btn-copy position-absolute" style="top:6px; right:6px;" onclick="copyResultAsText()" title="Copy result as text">
             <i class="bi bi-clipboard"></i> Copy
           </button>
-          <h5 class="fw-bold mb-0" id="resultTitle" style="font-size:1.1rem;">ทีมเหย้า 0 - 0 ทีมเยือน</h5>
+          <div id="resultTitle" class="fw-bold mb-1" style="font-size:1.1rem;">ทีมเหย้า 0 - 0 ทีมเยือน</div>
+          <!-- ข้อความวิเคราะห์ผู้ชนะ -->
+          <div id="matchOutcomeTitle" class="fs-6 fw-bold px-2 py-1 rounded mt-1 mb-2 d-inline-block" style="background: rgba(0,0,0,0.2); border: 1px solid transparent; display: none !important;">
+            🎯 AI คาดการณ์: -
+          </div>
           <div class="text-warning mb-1" style="font-size:0.75rem;">นาทีที่ <span id="displayMinute">0</span> (เหลือ <span id="displayRemaining">90</span> นาที)</div>
           <div class="d-flex justify-content-center gap-1 flex-wrap">
             <span class="badge bg-secondary" id="leagueInfluenceText" style="font-size:0.65rem;">ลีกมาตรฐาน</span>
@@ -394,6 +412,60 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           </div></div>
         </div>
 
+        <!-- 🚩 CORNER ANALYSIS CARD -->
+        <div class="card p-2 border-warning">
+          <h6 class="fw-bold text-warning mb-2 text-center" style="font-size:0.85rem;">
+            🚩 วิเคราะห์ลูกเตะมุม (Corner Analysis)
+          </h6>
+          
+          <div class="row g-1 mb-2 text-center">
+            <div class="col-4"><div class="metric-tile"><div class="metric-label">คาดการณ์เต็มเวลา</div><div class="metric-value" id="cornerExpFT">—</div></div></div>
+            <div class="col-4"><div class="metric-tile"><div class="metric-label">ครึ่งแรก (1H)</div><div class="metric-value" id="cornerExp1H">—</div></div></div>
+            <div class="col-4"><div class="metric-tile"><div class="metric-label">ครึ่งหลัง (2H)</div><div class="metric-value" id="cornerExp2H">—</div></div></div>
+          </div>
+
+          <div class="row g-1 mb-2">
+            <div class="col-6">
+              <div class="p-1 rounded text-center" style="background:#0d2436; border:1px solid #1f4a3d;">
+                <div class="text-success fw-bold" style="font-size:0.65rem;">🏠 เหย้า (คาดการณ์)</div>
+                <div class="fw-bold text-success" style="font-size:0.85rem;" id="cornerHomeExp">—</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-1 rounded text-center" style="background:#0d1f36; border:1px solid #1f3a4a;">
+                <div class="text-primary fw-bold" style="font-size:0.65rem;">✈️ เยือน (คาดการณ์)</div>
+                <div class="fw-bold text-primary" style="font-size:0.85rem;" id="cornerAwayExp">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-1" style="font-size:0.72rem; font-weight:bold; color:#ffdb8a;">เต็มเวลา (Full Time)</div>
+          <div class="row g-2 mb-2">
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 8.5</span><span id="cornerFT85">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="cornerFT85Bar" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 9.5</span><span id="cornerFT95">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="cornerFT95Bar" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 10.5</span><span id="cornerFT105">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="cornerFT105Bar" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 11.5</span><span id="cornerFT115">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="cornerFT115Bar" style="width:0%"></div></div></div>
+          </div>
+
+          <div class="mb-1" style="font-size:0.72rem; font-weight:bold; color:#ffdb8a;">ครึ่งแรก (1H)</div>
+          <div class="row g-2 mb-2">
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 3.5</span><span id="corner1H35">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="corner1H35Bar" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 4.5</span><span id="corner1H45">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="corner1H45Bar" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 5.5</span><span id="corner1H55">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="corner1H55Bar" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 6.5</span><span id="corner1H65">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="corner1H65Bar" style="width:0%"></div></div></div>
+          </div>
+
+          <div class="mb-1" style="font-size:0.72rem; font-weight:bold; color:#ffdb8a;">ครึ่งหลัง (2H)</div>
+          <div class="row g-2">
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 4.5</span><span id="corner2H45">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="corner2H45Bar" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 5.5</span><span id="corner2H55">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="corner2H55Bar" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 6.5</span><span id="corner2H65">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="corner2H65Bar" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 7.5</span><span id="corner2H75">0%</span></div><div class="progress mb-1" style="height:4px; background:#e9ecef;"><div class="progress-bar" id="corner2H75Bar" style="width:0%"></div></div></div>
+          </div>
+          
+          <div class="text-center text-muted mt-2" style="font-size:0.65rem;" id="cornerNote">—</div>
+        </div>
+
         <div class="row g-2">
           <div class="col-md-6"><div class="card p-2 h-100">
             <h6 class="fw-bold text-secondary mb-2" style="font-size:0.8rem;" data-i18n="fh_over_section">โอกาสเกิดประตูครึ่งแรก</h6>
@@ -430,89 +502,8 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     </div>
   </div>
 
-  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.3 · Manual Analysis + OCR · Probability estimates, not guarantees</div>
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.5 · Manual Analysis + Corners · Probability estimates, not guarantees</div>
   
-  <!-- ========== IMAGE ANALYSIS MODAL v8.3 ========== -->
-  <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-      <div class="modal-content border-0 shadow-lg" style="background:#0b192b;color:#e8f0fa;">
-        <div class="modal-header border-0" style="background:linear-gradient(100deg,#0dbb87,#087d9e);">
-          <h5 class="modal-title fw-bold text-white"><i class="bi bi-camera-fill"></i> วิเคราะห์จากรูปภาพ (AI Score OCR)</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body p-3">
-          <div class="row g-2">
-            <!-- Left: Upload + Preview -->
-            <div class="col-md-6">
-              <div id="imgDropZone" class="text-center p-4 rounded mb-2" style="border:2px dashed #20d6a0; background:#0f2537; cursor:pointer;">
-                <i class="bi bi-cloud-arrow-up" style="font-size:3rem; color:#20d6a0;"></i>
-                <div class="mt-2 fw-bold">ลากรูปมาวาง หรือคลิกเพื่อเลือก</div>
-                <div class="text-muted" style="font-size:0.7rem;">Screenshot จาก AiScore, SofaScore, FlashScore ฯลฯ</div>
-                <input type="file" id="imgFileInput" accept="image/*" class="d-none">
-              </div>
-              <img id="imgPreview" class="img-fluid rounded d-none mb-2" style="max-height:380px; width:100%; object-fit:contain; background:#000;">
-              
-              <div id="imgProgress" class="d-none mb-2">
-                <div class="d-flex justify-content-between fw-bold" style="font-size:0.8rem;">
-                  <span>⏳ กำลังประมวลผล...</span><span id="imgProgressPct">0%</span>
-                </div>
-                <div class="progress mt-1" style="height:8px; background:#0f2537;">
-                  <div id="imgProgressBar" class="progress-bar bg-success" style="width:0%;"></div>
-                </div>
-                <div id="imgProgressStage" class="text-muted mt-1" style="font-size:0.7rem;"></div>
-              </div>
-
-              <div class="mt-2">
-                <label class="fw-bold" style="font-size:0.75rem; color:#ffdb8a;">📋 หรือวางข้อความที่ copy จากเว็บ:</label>
-                <textarea id="imgPasteText" class="form-control mt-1" rows="4" 
-                  style="font-size:0.72rem; background:#0f2537; color:#e8f0fa; border:1px solid #304763; font-family:monospace;"
-                  placeholder="วางข้อความจากหน้าเว็บ AiScore ที่นี่..."></textarea>
-                <button class="btn btn-sm btn-outline-info mt-1 w-100" onclick="parsePastedText()">
-                  <i class="bi bi-clipboard-check"></i> Parse จากข้อความที่วาง
-                </button>
-              </div>
-            </div>
-
-            <!-- Right: OCR Result + Parsed Data -->
-            <div class="col-md-6">
-              <div class="fw-bold mb-1" style="color:#20d6a0;">📝 ข้อความ OCR (แก้ไขได้):</div>
-              <textarea id="imgOcrText" class="form-control" rows="6" 
-                style="font-size:0.72rem; background:#0f2537; color:#e8f0fa; border:1px solid #304763; font-family:monospace;"
-                placeholder="ข้อความ OCR จะแสดงที่นี่..."></textarea>
-
-              <div class="mt-2">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                  <span class="fw-bold" style="color:#ffdb8a; font-size:0.8rem;">🔍 ผลการ Parse:</span>
-                  <button class="btn btn-sm btn-outline-success py-0" onclick="reparseOCR()">
-                    <i class="bi bi-arrow-clockwise"></i> Parse ใหม่
-                  </button>
-                </div>
-                <div id="imgParsedResult" class="rounded p-2" style="background:#0f2537; border:1px solid #304763; min-height:200px; font-size:0.75rem;">
-                  <div class="text-muted">รอการประมวลผล...</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="alert py-1 mt-2 mb-0" style="background:#3b2e16; border:1px solid #6b5121; color:#ffdb8a; font-size:0.7rem;">
-            <strong>💡 Tips:</strong> ถ้า OCR อ่านได้ไม่ครบ ให้<b>แก้ข้อความในช่อง OCR</b> หรือ<b>วางข้อความจากเว็บโดยตรง</b> (Ctrl+A → Ctrl+C จาก AiScore) แล้วกด "Parse ใหม่" — ระบบจะแยกข้อมูลให้อัตโนมัติ
-          </div>
-        </div>
-        <div class="modal-footer border-0 d-flex justify-content-between">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ปิด</button>
-          <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-warning fw-bold" onclick="applyOCRToInputs(false)">
-              <i class="bi bi-pencil"></i> กรอกข้อมูล (ไม่ predict)
-            </button>
-            <button type="button" class="btn btn-success fw-bold" id="btnAnalyzeImage" onclick="applyOCRToInputs(true)" disabled>
-              <i class="bi bi-magic"></i> กรอก + วิเคราะห์เลย
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Donate Modal -->
   <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -536,7 +527,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   </div>
 </div>
 
-<div id="debugBanner">🐛 DEBUG MODE v8.3 — พิมพ์ <b>test()</b> ใน console เพื่อรัน tests</div>
+<div id="debugBanner">🐛 DEBUG MODE v8.5 — พิมพ์ <b>test()</b> ใน console เพื่อรัน tests</div>
 <div id="testPanel">
   <h6>🧪 Test Results</h6>
   <div id="testResults"></div>
@@ -545,8 +536,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 
 <script>
 /* ============================================================
-   JackAI Scanner v8.3
-   - Full bug fixes + 6 new leagues + OCR Image Analysis
+   JackAI Scanner v8.5
    ============================================================ */
 
 let currentLang = 'th';
@@ -581,7 +571,7 @@ const AppState = {
 const USER_SESSION_KEY = 'jackai_active_user';
 const Storage = {
   _userSuffix() { return AppState.user ? `_${AppState.user.replace(/[^a-zA-Z0-9]/g, '_')}` : ''; },
-  key(type) { const map = { inputs: `jackai_inputs_v83${this._userSuffix()}` }; return map[type] || null; },
+  key(type) { const map = { inputs: `jackai_inputs_v85${this._userSuffix()}` }; return map[type] || null; },
   get(type, fallback = []) { const k = this.key(type); if (!k) return fallback; try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; } },
   set(type, data) { const k = this.key(type); if (!k) return false; try { localStorage.setItem(k, JSON.stringify(data)); return true; } catch (e) { return false; } },
   remove(type) { const k = this.key(type); if (!k) return; try { localStorage.removeItem(k); } catch (e) {} },
@@ -693,7 +683,6 @@ const LEAGUE_CONSTANTS = {
   'womens world cup': { name: "ฟุตบอลหญิงชิงแชมป์โลก", goals: 2.75, rho: -0.10, fh: 0.45, flag: '🏆', aliases: ['wwc','womens world cup','fifa womens world cup','world cup women','หญิง','บอลหญิงโลก','ฟุตบอลหญิงโลก'] },
   'thai womens league': { name: "ไทยลีกหญิง", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇹🇭', aliases: ['thai womens','thai w','thai women','thailand women','tha w','หญิง','ไทยหญิง','บอลหญิงไทย','ไทยลีกหญิง'] },
 
-  /* ===== เพิ่มใหม่ v8.2 ===== */
   'mexico liga premier serie a': { name: "เม็กซิโก ลีกา พรีเมียร์ เซเรีย เอ", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇲🇽', aliases: ['mexico premier serie a','liga premier serie a','mex lpsa','lpsa','mexico serie a','mex serie a','เม็กซิโก เซเรีย เอ','เม็กซิโก พรีเมียร์ เซเรีย เอ'] },
   'new zealand national league': { name: "นิวซีแลนด์ เนชั่นแนล ลีก แชมเปียนชิพ", goals: 2.90, rho: -0.08, fh: 0.46, flag: '🇳🇿', aliases: ['new zealand','nz national league','nzfc','nz national','new zealand championship','national league nz','นิวซีแลนด์','นิวซีแลนด์ แชมเปียนชิพ'] },
   'panama liga futbol':          { name: "ปานามา ลีกา ฟุตบอล", goals: 2.50, rho: -0.10, fh: 0.45, flag: '🇵🇦', aliases: ['panama','pan','liga panamena','lpf panama','liga futbol panama','panama liga','ปานามา'] },
@@ -915,7 +904,7 @@ function handleLeagueInput() {
   }
 }
 
-const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
+const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','h_corners','h_corners_ht','a_corners','a_corners_ht','auto_ah','auto_live_weight'];
 let _saveTimer = null;
 function saveInputs() {
   if (!AppState.user) return;
@@ -1042,6 +1031,10 @@ function readMatchInputs() {
     redAway: readNum('red_away', { min: 0, max: 5, integer: true, fallback: 0 }),
     ahRate: parseFloat(($('handicapSelect') && $('handicapSelect').value) || '0') || 0,
     hShots, aShots, hSot, aSot, hBig, aBig,
+    hCorners: isBlankInput('h_corners') ? null : readNum('h_corners', { min: 0, integer: true }),
+    aCorners: isBlankInput('a_corners') ? null : readNum('a_corners', { min: 0, integer: true }),
+    hCornersHT: isBlankInput('h_corners_ht') ? null : readNum('h_corners_ht', { min: 0, integer: true }),
+    aCornersHT: isBlankInput('a_corners_ht') ? null : readNum('a_corners_ht', { min: 0, integer: true }),
     autoNotes,
   };
 }
@@ -1271,8 +1264,116 @@ function calcNextGoal(xgH, xgA) {
   return { pHN, pNone, pAN };
 }
 
+/* ============================================================
+   🚩 CORNER ANALYSIS ENGINE
+   ============================================================ */
+function calcCorners(inputs, xgH, xgA, tempo) {
+  const leagueBaseFT = 9.5;
+  const totalRemainingXG = xgH + xgA;
+  const timeRemaining = Math.max(1, tempo.totalMatchTime - inputs.minute);
+  const xgRatePer90 = (totalRemainingXG / timeRemaining) * 90;
+  const attackMod = Math.max(0.7, Math.min(1.4, xgRatePer90 / 2.7));
+  const tempoMod = tempo.modifier;
+  const goalDiff = Math.abs(inputs.cH - inputs.cA);
+  const scoreMod = 1 + (Math.min(3, goalDiff) * 0.05);
+  
+  const expectedFT = leagueBaseFT * attackMod * tempoMod * scoreMod;
+  
+  const hRatio = 0.54;
+  const aRatio = 0.46;
+  const expectedHomeFT = expectedFT * hRatio;
+  const expectedAwayFT = expectedFT * aRatio;
+  
+  const FH_SHARE = 0.45;
+  const SH_SHARE = 0.55;
+  const expected1H = expectedFT * FH_SHARE;
+  const expected2H = expectedFT * SH_SHARE;
+  
+  const actualHT = (inputs.hCornersHT || 0) + (inputs.aCornersHT || 0);
+  const actualFT = (inputs.hCorners || 0) + (inputs.aCorners || 0);
+  
+  function poissonOver(lambda, threshold) {
+    const k = Math.floor(threshold);
+    let cumP = 0;
+    for (let i = 0; i <= k; i++) {
+      cumP += poisson(lambda, i);
+    }
+    return (1 - cumP) * 100;
+  }
+  
+  let ft85, ft95, ft105, ft115;
+  if (actualFT > 0 && inputs.minute >= 90) {
+    ft85 = actualFT > 8.5 ? 100 : 0;
+    ft95 = actualFT > 9.5 ? 100 : 0;
+    ft105 = actualFT > 10.5 ? 100 : 0;
+    ft115 = actualFT > 11.5 ? 100 : 0;
+  } else {
+    const remainingFT = actualFT > 0 
+      ? expectedFT * (timeRemaining / tempo.totalMatchTime) 
+      : expectedFT;
+    const totalExpect = actualFT + remainingFT;
+    ft85 = poissonOver(totalExpect, 8.5);
+    ft95 = poissonOver(totalExpect, 9.5);
+    ft105 = poissonOver(totalExpect, 10.5);
+    ft115 = poissonOver(totalExpect, 11.5);
+  }
+  
+  let c1H35, c1H45, c1H55, c1H65;
+  if (inputs.minute >= 45) {
+    const actual1H = inputs.hCornersHT !== null && inputs.aCornersHT !== null
+      ? actualHT
+      : expected1H;
+    c1H35 = actual1H > 3.5 ? 100 : 0;
+    c1H45 = actual1H > 4.5 ? 100 : 0;
+    c1H55 = actual1H > 5.5 ? 100 : 0;
+    c1H65 = actual1H > 6.5 ? 100 : 0;
+  } else {
+    const remaining1H = Math.max(0, 45 - inputs.minute);
+    const actual1HNow = actualHT;
+    const expected1HRemaining = expected1H * (remaining1H / 45);
+    const total1H = actual1HNow + expected1HRemaining;
+    c1H35 = poissonOver(total1H, 3.5);
+    c1H45 = poissonOver(total1H, 4.5);
+    c1H55 = poissonOver(total1H, 5.5);
+    c1H65 = poissonOver(total1H, 6.5);
+  }
+  
+  let c2H45, c2H55, c2H65, c2H75;
+  if (inputs.minute >= 90) {
+    const actual2H = actualFT - (inputs.hCornersHT || 0) - (inputs.aCornersHT || 0);
+    c2H45 = actual2H > 4.5 ? 100 : 0;
+    c2H55 = actual2H > 5.5 ? 100 : 0;
+    c2H65 = actual2H > 6.5 ? 100 : 0;
+    c2H75 = actual2H > 7.5 ? 100 : 0;
+  } else {
+    const half2Start = 45;
+    const half2End = 90;
+    const currentInHalf2 = Math.max(0, inputs.minute - half2Start);
+    const remaining2H = Math.max(0, half2End - inputs.minute);
+    const actual2HNow = inputs.minute > 45 
+      ? actualFT - (inputs.hCornersHT || 0) - (inputs.aCornersHT || 0)
+      : 0;
+    const expected2HRemaining = expected2H * (remaining2H / 45);
+    const total2H = actual2HNow + expected2HRemaining;
+    c2H45 = poissonOver(total2H, 4.5);
+    c2H55 = poissonOver(total2H, 5.5);
+    c2H65 = poissonOver(total2H, 6.5);
+    c2H75 = poissonOver(total2H, 7.5);
+  }
+  
+  return {
+    expectedFT, expected1H, expected2H,
+    expectedHomeFT, expectedAwayFT,
+    ft85, ft95, ft105, ft115,
+    c1H35, c1H45, c1H55, c1H65,
+    c2H45, c2H55, c2H65, c2H75,
+    actualFT, actualHT,
+    hasActualData: actualFT > 0 || inputs.hCornersHT !== null,
+  };
+}
+
 function renderPrediction(result) {
-  const { inputs, xgH, xgA, ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, timeData, grid } = result;
+  const { inputs, xgH, xgA, ratio, tempo, ah, ft, fh, top3, nextGoal, corners, confidence, timeData, grid } = result;
 
   let pHomeWin = 0, pDraw = 0, pAwayWin = 0, pBTTS = 0;
   for (const cell of iterateGrid(grid)) {
@@ -1282,6 +1383,7 @@ function renderPrediction(result) {
     else pAwayWin += cell.p;
     if (homeFinal > 0 && awayFinal > 0) pBTTS += cell.p;
   }
+  
   writeText('ftHomeWin', fmtPct(pHomeWin * 100));
   writeText('ftDraw', fmtPct(pDraw * 100));
   writeText('ftAwayWin', fmtPct(pAwayWin * 100));
@@ -1352,6 +1454,33 @@ function renderPrediction(result) {
   const lg = AppState.league;
   writeText('leagueInfluenceText', `${lg.flag || '🌐'} ${lg.text}`);
 
+  // 🏆 วิเคราะห์ผลการแข่งขัน: ใครชนะ & สกอร์เท่าไร
+  let matchOutcome = '';
+  let matchOutcomeColor = '';
+  const top1 = top3.top3[0];
+  
+  if (pHomeWin > pAwayWin && pHomeWin > pDraw) {
+    const likelyScore = top1 ? top1.score : `${inputs.cH + 1}-${inputs.cA}`;
+    matchOutcome = `🏠 ${inputs.homeName} ชนะ (สกอร์น่าจะเป็น ${likelyScore})`;
+    matchOutcomeColor = '#35d7a4';
+  } else if (pAwayWin > pHomeWin && pAwayWin > pDraw) {
+    const likelyScore = top1 ? top1.score : `${inputs.cH}-${inputs.cA + 1}`;
+    matchOutcome = `✈️ ${inputs.awayName} ชนะ (สกอร์น่าจะเป็น ${likelyScore})`;
+    matchOutcomeColor = '#69b5ff';
+  } else {
+    const likelyScore = top1 ? top1.score : `${inputs.cH}-${inputs.cA}`;
+    matchOutcome = `🤝 เสมอ (สกอร์น่าจะเป็น ${likelyScore})`;
+    matchOutcomeColor = '#ffc56b';
+  }
+
+  const outcomeEl = $('matchOutcomeTitle');
+  if (outcomeEl) {
+    outcomeEl.innerText = `🎯 AI คาดการณ์: ${matchOutcome}`;
+    outcomeEl.style.color = matchOutcomeColor;
+    outcomeEl.style.borderColor = matchOutcomeColor;
+    outcomeEl.style.display = 'inline-block';
+  }
+
   const dqEl = $('dataQualityBadge');
   if (hasBigData(inputs.hBig, inputs.aBig)) { dqEl.className = 'badge bg-success'; dqEl.innerText = 'Data: High'; }
   else if ((inputs.hShots + inputs.aShots) >= 10) { dqEl.className = 'badge bg-warning text-dark'; dqEl.innerText = 'Data: Medium'; }
@@ -1376,7 +1505,47 @@ function renderPrediction(result) {
      <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#8297b0;"><span>Ratio: 🏠 ${(ratio.hRatio*100).toFixed(1)}% / ✈️ ${(ratio.aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
      <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#8297b0;"><span>∫xG ${result.expectedGoalsRaw.toFixed(2)} × tempo ${tempo.modifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`);
 
-  writeText('calibNote', `⚙️ v8.3: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
+  writeText('calibNote', `⚙️ v8.5: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
+
+  // ===== Render Corners =====
+  if (corners) {
+    renderCornerPrediction(corners, inputs);
+  }
+}
+
+function renderCornerPrediction(c, inputs) {
+  writeText('cornerExpFT', c.expectedFT.toFixed(1));
+  writeText('cornerExp1H', c.expected1H.toFixed(1));
+  writeText('cornerExp2H', c.expected2H.toFixed(1));
+  writeText('cornerHomeExp', c.expectedHomeFT.toFixed(1));
+  writeText('cornerAwayExp', c.expectedAwayFT.toFixed(1));
+  
+  const setCornerRow = (id, barId, val) => {
+    const el = $(id), bar = $(barId);
+    if (!el || !bar) return;
+    const c2 = pickColor(val);
+    el.innerText = fmtPct(val); el.className = 'fw-bold ' + c2.text;
+    bar.style.width = val + '%'; bar.className = 'progress-bar ' + c2.bar;
+  };
+  
+  setCornerRow('cornerFT85', 'cornerFT85Bar', c.ft85);
+  setCornerRow('cornerFT95', 'cornerFT95Bar', c.ft95);
+  setCornerRow('cornerFT105', 'cornerFT105Bar', c.ft105);
+  setCornerRow('cornerFT115', 'cornerFT115Bar', c.ft115);
+  
+  setCornerRow('corner1H35', 'corner1H35Bar', c.c1H35);
+  setCornerRow('corner1H45', 'corner1H45Bar', c.c1H45);
+  setCornerRow('corner1H55', 'corner1H55Bar', c.c1H55);
+  setCornerRow('corner1H65', 'corner1H65Bar', c.c1H65);
+  
+  setCornerRow('corner2H45', 'corner2H45Bar', c.c2H45);
+  setCornerRow('corner2H55', 'corner2H55Bar', c.c2H55);
+  setCornerRow('corner2H65', 'corner2H65Bar', c.c2H65);
+  setCornerRow('corner2H75', 'corner2H75Bar', c.c2H75);
+  
+  let note = `คาดการณ์จาก League Base × Attack × Tempo × Score`;
+  if (c.hasActualData) note = `ใช้ข้อมูลจริง: FT ${c.actualFT} | HT ${c.actualHT}`;
+  writeText('cornerNote', note);
 }
 
 function predictMatch() {
@@ -1406,12 +1575,13 @@ function predictMatch() {
   const fh = calcFH(inputs, eg.xgH, eg.xgA, AppState.league.rho, eg.timeData, tempo);
   const top3 = calcTop3(grid, inputs.cH, inputs.cA);
   const nextGoal = calcNextGoal(eg.xgH, eg.xgA);
+  const corners = calcCorners(inputs, eg.xgH, eg.xgA, tempo);
   const confidence = calcConfidence({
     hShots: inputs.hShots, aShots: inputs.aShots, hSot: cleaned.hSot, aSot: cleaned.aSot,
     hBig: cleaned.hBig, aBig: cleaned.aBig, minute: inputs.minute, top3ProbSum: top3.sum / 100, goalDiff: inputs.cH - inputs.cA,
   });
 
-  const result = { inputs, grid, xgH: { before: eg.xgHBeforeRed, after: eg.xgH }, xgA: { before: eg.xgABeforeRed, after: eg.xgA }, ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, timeData: eg.timeData, expectedGoalsRaw: eg.expectedGoalsRaw };
+  const result = { inputs, grid, xgH: { before: eg.xgHBeforeRed, after: eg.xgH }, xgA: { before: eg.xgABeforeRed, after: eg.xgA }, ratio, tempo, ah, ft, fh, top3, nextGoal, corners, confidence, timeData: eg.timeData, expectedGoalsRaw: eg.expectedGoalsRaw };
   AppState.setLastPrediction(result);
   renderPrediction(result);
   saveInputs();
@@ -1426,8 +1596,11 @@ function copyResultAsText() {
   const pred = AppState.lastPrediction;
   if (!pred) return safeAlert(currentLang === 'en' ? 'No prediction yet.' : 'ยังไม่มีผลพยากรณ์');
   const t = currentLang === 'en', pct = (v) => (v * 100).toFixed(1) + '%';
+  const outcomeEl = $('matchOutcomeTitle');
+  const outcomeText = outcomeEl ? outcomeEl.innerText : '';
   const lines = [
-    `⚽ JackAI v8.3 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
+    `⚽ JackAI v8.5 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
+    `${outcomeText}`,
     `${t ? 'Minute' : 'นาที'}: ${pred.inputs.minute} (${t ? 'remaining' : 'เหลือ'} ${pred.timeData.remaining})`,
     `League: ${AppState.league.flag || '🌐'} ${AppState.league.text}`,
     `Confidence: ${pred.confidence}%`,
@@ -1435,6 +1608,8 @@ function copyResultAsText() {
     `Next Goal: Home ${pct(pred.nextGoal.pHN)} | None ${pct(pred.nextGoal.pNone)} | Away ${pct(pred.nextGoal.pAN)}`,
     `Top3: ${pred.top3.top3.map(x => `${x.score} (${x.prob.toFixed(1)}%)`).join(' / ')}`,
     `O/U FT: 1.5 ${pct(pred.ft.pOver15)} | 2.5 ${pct(pred.ft.pOver25)} | 3.5 ${pct(pred.ft.pOver35)}`,
+    `Corners FT: ${pred.corners.expectedFT.toFixed(1)} (1H: ${pred.corners.expected1H.toFixed(1)}, 2H: ${pred.corners.expected2H.toFixed(1)})`,
+    `Corner Over 9.5: ${pred.corners.ft95.toFixed(0)}%`,
     `xG: Home ${pred.xgH.after.toFixed(2)} | Away ${pred.xgA.after.toFixed(2)}`,
   ];
   const txt = lines.join('\n');
@@ -1445,246 +1620,6 @@ function copyResultAsText() {
   });
 }
 
-/* ============================================================
-   📷 IMAGE ANALYSIS v8.3
-   ============================================================ */
-let _ocrWorker = null;
-let _imageModalInstance = null;
-let _lastParsed = null;
-
-function openImageModal() {
-  if (!_imageModalInstance) _imageModalInstance = new bootstrap.Modal($('imageModal'));
-  _imageModalInstance.show();
-}
-
-function initImageUpload() {
-  const dz = $('imgDropZone'), fi = $('imgFileInput');
-  if (!dz || !fi) return;
-  dz.addEventListener('click', () => fi.click());
-  dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.style.background = '#164e3a'; });
-  dz.addEventListener('dragleave', () => { dz.style.background = '#0f2537'; });
-  dz.addEventListener('drop', (e) => {
-    e.preventDefault(); dz.style.background = '#0f2537';
-    if (e.dataTransfer.files[0]) handleImageFile(e.dataTransfer.files[0]);
-  });
-  fi.addEventListener('change', (e) => { if (e.target.files[0]) handleImageFile(e.target.files[0]); });
-}
-
-async function handleImageFile(file) {
-  if (!file.type.startsWith('image/')) return safeAlert('⚠️ กรุณาเลือกไฟล์รูปภาพ');
-  if (file.size > 10 * 1024 * 1024) return safeAlert('⚠️ ไฟล์ใหญ่เกิน 10 MB');
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    $('imgPreview').src = e.target.result;
-    $('imgPreview').classList.remove('d-none');
-    $('imgOcrText').value = '';
-    $('imgParsedResult').innerHTML = '<div class="text-muted">กำลังรอผล OCR...</div>';
-    $('btnAnalyzeImage').disabled = true;
-    runOCR(file);
-  };
-  reader.readAsDataURL(file);
-}
-
-async function runOCR(file) {
-  showImgProgress(true, 0, 'กำลังโหลด Tesseract...');
-  try {
-    if (typeof Tesseract === 'undefined') throw new Error('Tesseract.js ยังไม่โหลด');
-    if (!_ocrWorker) {
-      updateImgProgress(10, 'สร้าง worker...');
-      _ocrWorker = await Tesseract.createWorker('tha+eng', 1, {
-        logger: (m) => {
-          if (m.status === 'recognizing text') updateImgProgress(20 + m.progress * 70, `อ่านข้อความ... ${Math.round(m.progress * 100)}%`);
-        }
-      });
-    }
-    updateImgProgress(25, 'ประมวลผลภาพ...');
-    const { data: { text } } = await _ocrWorker.recognize(file);
-    updateImgProgress(100, 'เสร็จสิ้น');
-    $('imgOcrText').value = (text || '').trim();
-    setTimeout(() => showImgProgress(false), 400);
-    if (!text || text.trim().length < 3) {
-      $('imgOcrText').value = '⚠️ OCR อ่านไม่ออก — ลองภาพที่ชัดขึ้น หรือใช้ช่อง "วางข้อความจากเว็บ"';
-      $('imgParsedResult').innerHTML = '<div class="text-danger">ไม่สามารถอ่านข้อความได้</div>';
-    } else {
-      reparseOCR();
-      $('btnAnalyzeImage').disabled = false;
-    }
-  } catch (err) {
-    console.error('[OCR]', err);
-    showImgProgress(false);
-    safeAlert('❌ OCR ล้มเหลว: ' + err.message);
-  }
-}
-
-function showImgProgress(show, pct = 0, stage = '') {
-  $('imgProgress').classList.toggle('d-none', !show);
-  updateImgProgress(pct, stage);
-}
-function updateImgProgress(pct, stage) {
-  $('imgProgressBar').style.width = pct + '%';
-  $('imgProgressPct').innerText = Math.round(pct) + '%';
-  if (stage) $('imgProgressStage').innerText = stage;
-}
-
-function parsePastedText() {
-  const txt = $('imgPasteText').value || '';
-  if (!txt.trim()) return safeAlert('⚠️ กรุณาวางข้อความก่อน');
-  $('imgOcrText').value = txt;
-  reparseOCR();
-  $('btnAnalyzeImage').disabled = false;
-}
-
-/* 🧠 PARSER สำหรับ AiScore / SofaScore / FlashScore */
-function parseOCRText(text) {
-  const result = {
-    homeName: null, awayName: null, homeScore: null, awayScore: null,
-    minute: null, hShots: null, aShots: null, hSot: null, aSot: null,
-    hBig: null, aBig: null, redHome: null, redAway: null, ahRate: null
-  };
-
-  const clean = text.replace(/[|•·]/g, ' ').replace(/\s+/g, ' ').trim();
-  const lines = text.split('\n').map(s => s.trim()).filter(Boolean);
-
-  // 1) ดึงนาที (เช่น 88:24)
-  const minMatch = clean.match(/\b(\d{1,3}):(\d{2})\b/);
-  if (minMatch) result.minute = parseInt(minMatch[1], 10);
-
-  // 2) ดึงชื่อทีม (ภาษาไทย/อังกฤษ ที่มี CA, FC, United, etc.)
-  const teamMatch = clean.match(/(CA\s+[A-Za-z\s]+|[\u0E00-\u0E7F\sA-Za-z]{3,30})\s+(\d)\s*[:|-]\s*(\d)\s+([A-Za-z\s]{3,30}|[\u0E00-\u0E7F\s]{3,30})/i);
-  if (teamMatch) {
-    result.homeName = teamMatch[1].trim();
-    result.homeScore = parseInt(teamMatch[2], 10);
-    result.awayScore = parseInt(teamMatch[3], 10);
-    result.awayName = teamMatch[4].trim();
-  } else {
-    // fallback หา สกอร์แบบลอย "3 : 1"
-    const sc = clean.match(/(\d)\s*[:|-]\s*(\d)/);
-    if (sc) { result.homeScore = parseInt(sc[1], 10); result.awayScore = parseInt(sc[2], 10); }
-  }
-
-  // 3) ดึงสถิติ (ยิง, เข้ากรอบ, ใบแดง) - ใช้ Pattern "คีย์เวิร์ด [ช่องว่าง] ตัวเลข [ช่องว่าง] ตัวเลข"
-  function grabPair(keyword, maxDist = 25) {
-    const re = new RegExp(`(?:${keyword})[^0-9]{0,${maxDist}}(\\d{1,3})[^0-9]{0,5}(\\d{1,3})`, 'i');
-    const m = clean.match(re);
-    if (m) return [parseInt(m[1], 10), parseInt(m[2], 10)];
-    return [null, null];
-  }
-
-  // ภาพนี้: "ยิงทั้งหมด 5 [แท่งกราฟ] 2" (ภาษาไทยใช้คำว่า "ยิงทั้งหมด")
-  // บางที OCR จะอ่าน "ยิงทั้งหมด" เป็น "ยังทั้งหมด" หรือ "อิงทั้งหมด"
-  const [hs, as] = grabPair('ยิงทั้งหมด|ยิง|Shots|ยังทั้งหมด|อิงทั้งหมด');
-  result.hShots = hs; result.aShots = as;
-
-  const [hst, ast] = grabPair('ยิงเข้ากรอบ|เข้ากรอบ|SOT|ยิงตรงกรอบ');
-  result.hSot = hst; result.aSot = ast;
-
-  const [hbc, abc] = grabPair('Big|โอกาศ|โอกาส');
-  result.hBig = hbc; result.aBig = abc;
-
-  const [hr, ar] = grabPair('ใบแดง|แดง|Red');
-  result.redHome = hr; result.redAway = ar;
-
-  // 4) ดึง AH (ถ้ามี)
-  const ahM = clean.match(/(?:AH|Handicap|ต่อ|ราคาต่อรอง)[^\d\-+]{0,10}([+\-]?\d+(?:\.\d+)?)/i);
-  if (ahM) result.ahRate = parseFloat(ahM[1]);
-
-  return result;
-}
-
-function reparseOCR() {
-  const text = $('imgOcrText').value || '';
-  if (!text.trim()) {
-    $('imgParsedResult').innerHTML = '<div class="text-muted">ยังไม่มีข้อความ</div>';
-    return;
-  }
-  _lastParsed = parseOCRText(text);
-  renderParsedResult(_lastParsed);
-  $('btnAnalyzeImage').disabled = false;
-}
-
-function renderParsedResult(p) {
-  const rows = [];
-  const add = (label, val) => {
-    if (val === null || val === undefined || val === '') return;
-    rows.push(`<div class="d-flex justify-content-between border-bottom py-1"><span>${label}</span><strong style="color:#20d6a0;">${val}</strong></div>`);
-  };
-  add('🏠 เหย้า', p.homeName);
-  add('✈️ เยือน', p.awayName);
-  if (p.homeScore !== null) add('⚽ สกอร์', `${p.homeScore} - ${p.awayScore}`);
-  add('⏱️ นาที', p.minute);
-  if (p.hShots !== null) add('🎯 ยิง', `${p.hShots} - ${p.aShots}`);
-  if (p.hSot !== null) add('🎯 SOT', `${p.hSot} - ${p.aSot}`);
-  if (p.hBig !== null) add('🔥 Big', `${p.hBig} - ${p.aBig}`);
-  if (p.redHome !== null) add('🟥 ใบแดง', `${p.redHome} - ${p.redAway}`);
-  add('📊 AH', p.ahRate);
-
-  $('imgParsedResult').innerHTML = rows.length > 0
-    ? rows.join('')
-    : '<div class="text-warning">⚠️ ไม่พบ pattern ที่รู้จัก — ลองแก้ข้อความหรือใช้ "วางข้อความจากเว็บ"</div>';
-}
-
-function applyOCRToInputs(autoPredict) {
-  if (!_lastParsed) reparseOCR();
-  const p = _lastParsed;
-  if (!p) return;
-
-  let filled = 0;
-  const setIf = (id, val, type = 'text') => {
-    if (val === null || val === undefined || val === '') return;
-    const el = $(id); if (!el) return;
-    if (type === 'number') {
-      const v = parseFloat(val);
-      if (!Number.isFinite(v)) return;
-      el.value = v;
-    } else {
-      el.value = val;
-    }
-    filled++;
-  };
-
-  setIf('home_name', p.homeName);
-  setIf('away_name', p.awayName);
-  setIf('current_home_score', p.homeScore, 'number');
-  setIf('current_away_score', p.awayScore, 'number');
-  setIf('match_minute', p.minute, 'number');
-  setIf('h_shots', p.hShots, 'number');
-  setIf('a_shots', p.aShots, 'number');
-  setIf('h_sot', p.hSot, 'number');
-  setIf('a_sot', p.aSot, 'number');
-  setIf('h_big', p.hBig, 'number');
-  setIf('a_big', p.aBig, 'number');
-  setIf('red_home', p.redHome, 'number');
-  setIf('red_away', p.redAway, 'number');
-
-  if (p.ahRate !== null) {
-    const sel = $('handicapSelect');
-    if (sel) {
-      const target = p.ahRate;
-      let bestOpt = null, bestDiff = Infinity;
-      for (const opt of sel.options) {
-        const d = Math.abs(parseFloat(opt.value) - target);
-        if (d < bestDiff) { bestDiff = d; bestOpt = opt; }
-      }
-      if (bestOpt && bestDiff <= 0.26) { sel.value = bestOpt.value; filled++; }
-    }
-  }
-
-  if (typeof autoEstimateStrength === 'function') autoEstimateStrength();
-  if (typeof updateResultTitle === 'function') updateResultTitle();
-  if (typeof saveInputs === 'function') saveInputs();
-
-  if (_imageModalInstance) _imageModalInstance.hide();
-
-  safeAlert(`✅ กรอกข้อมูล ${filled} ช่อง\n${autoPredict ? '\nกำลังประมวลผลคาดการณ์...' : '\nตรวจสอบแล้วกด "ประมวลผลคาดการณ์"'}`);
-
-  if (autoPredict && filled >= 2) {
-    setTimeout(() => { if (typeof predictMatch === 'function') predictMatch(); }, 200);
-  }
-}
-
-/* ============================================================
-   I18N & TESTS
-   ============================================================ */
 const I18N = {
   th: { home_team:'ทีมเหย้า',away_team:'ทีมเยือน',home_strength:'🏠 ความแข็งแกร่งเหย้า (อัตโนมัติ)',away_strength:'✈️ ความแข็งแกร่งเยือน (อัตโนมัติ)',auto_estimate:'AI Strength อัตโนมัติ',ah_home_label:'ราคาต่อรอง AH (เหย้า)',live_weight_label:'น้ำหนักสถิติสด (%)',search_league:'-- พิมพ์ชื่อลีกเพื่อค้นหา --',minute_label:'นาที',injury_1:'ทด 1H',injury_2:'ทด 2H',format_label:'รูปแบบ',home_score:'สกอร์เหย้า',away_score:'สกอร์เยือน',red_home:'แดง🏠',red_away:'แดง✈️',shots:'ยิงทั้งหมด',sot:'ยิงตรงกรอบ',big:'Big Chances',btn_predict:'ประมวลผลคาดการณ์',btn_reset:'รีเซ็ตข้อมูล',ah_section:'Live Asian Handicap Probs',top3_section:'สกอร์จบเกมที่เป็นไปได้สูง (Top 3)',fh_section:'ครึ่งแรก 45 นาที',next_goal_section:'ประตูถัดไป',fh_over_section:'โอกาสเกิดประตูครึ่งแรก',ft_over_section:'โอกาสเกิดประตูเต็มเวลา',home_wins_ah:'เหย้าชนะราคา',away_wins_ah:'เยือนชนะราคา',push_ah:'เสมอราคา (Push)',btn_donate:'สนับสนุน' },
   en: { home_team:'Home Team',away_team:'Away Team',home_strength:'🏠 Home Strength (automatic)',away_strength:'✈️ Away Strength (automatic)',auto_estimate:'Automatic AI Strength',ah_home_label:'Asian Handicap (Home)',live_weight_label:'Live stat weight (%)',search_league:'-- Type league name to search --',minute_label:'Minute',injury_1:'Inj 1H',injury_2:'Inj 2H',format_label:'Format',home_score:'Home Score',away_score:'Away Score',red_home:'Red🏠',red_away:'Red✈️',shots:'Total Shots',sot:'Shots on Target',big:'Big Chances',btn_predict:'Run Prediction',btn_reset:'Reset Data',ah_section:'Live Asian Handicap Probs',top3_section:'Most Likely Final Scores (Top 3)',fh_section:'First Half (45 min)',next_goal_section:'Next Goal',fh_over_section:'1st Half Over Probability',ft_over_section:'Full-Time Over Probability',home_wins_ah:'Home covers AH',away_wins_ah:'Away covers AH',push_ah:'Push',btn_donate:'Support' }
@@ -1702,9 +1637,6 @@ function applyI18N(lang) {
 function setLang(lang) { applyI18N(lang); }
 (function initLang() { let saved = null; try { saved = localStorage.getItem('jackai_lang'); } catch (e) {} applyI18N(saved === 'en' ? 'en' : 'th'); })();
 
-/* ============================================================
-   TEST SUITE
-   ============================================================ */
 const TestRunner = (() => {
   let pass = 0, fail = 0, failures = [];
   const assert = (cond, msg) => { if (cond) { pass++; } else { fail++; failures.push(msg); } };
@@ -1884,6 +1816,14 @@ function runAllTests() {
     T.assert(r.fh05 === null, 'fh05 = null');
   });
 
+  T.run('calcCorners() — smoke test', () => {
+    const inputs = { cH: 1, cA: 0, minute: 60, hCorners: 5, aCorners: 3, hCornersHT: 3, aCornersHT: 1 };
+    const r = calcCorners(inputs, 0.8, 0.6, { modifier: 1.0, totalMatchTime: 90 });
+    T.assert(r.expectedFT > 0, 'expectedFT > 0');
+    T.assert(r.ft95 >= 0 && r.ft95 <= 100, 'ft95 in range');
+    T.assert(r.expected1H > 0 && r.expected2H > 0, 'halves > 0');
+  });
+
   const { pass, fail, failures } = TestRunner.getResults();
   return { pass, fail, failures };
 }
@@ -1906,7 +1846,7 @@ function showTestResults() {
   }
   box.innerHTML = html;
   panel.style.display = 'block';
-  console.log(`[JackAI v8.3] Tests: ${pass} pass, ${fail} fail`);
+  console.log(`[JackAI v8.5] Tests: ${pass} pass, ${fail} fail`);
   if (fail > 0) console.warn('Failures:', results.failures);
   return results;
 }
@@ -1916,7 +1856,6 @@ window.runTests = runAllTests;
 
 document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
-  initImageUpload();
   const ls = $('leagueSearch');
   if (ls) {
     ls.addEventListener('change', matchLeagueFromInput);
@@ -1924,7 +1863,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ls.addEventListener('keydown', (e) => { if (e.key === 'Enter') { matchLeagueFromInput(); ls.blur(); } });
   }
   INPUT_IDS.forEach(id => { const el = $(id); if (el) el.addEventListener('change', saveInputsDebounced); });
-  ['handicapSelect','match_minute','current_home_score','current_away_score','h_shots','a_shots','h_sot','a_sot','h_big','a_big','red_home','red_away'].forEach(id => {
+  ['handicapSelect','match_minute','current_home_score','current_away_score','h_shots','a_shots','h_sot','a_sot','h_big','a_big','red_home','red_away','h_corners','h_corners_ht','a_corners','a_corners_ht'].forEach(id => {
     const el = $(id); if (el) el.addEventListener('input', () => autoEstimateStrength());
   });
   ['home_name', 'away_name', 'current_home_score', 'current_away_score'].forEach(id => {
@@ -1939,8 +1878,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       const r = showTestResults();
       $('debugBanner').innerHTML = r.fail === 0
-        ? `🐛 DEBUG MODE v8.3 — ✅ ${r.pass} tests passed`
-        : `🐛 DEBUG MODE v8.3 — ❌ ${r.fail} failed / ${r.pass} passed`;
+        ? `🐛 DEBUG MODE v8.5 — ✅ ${r.pass} tests passed`
+        : `🐛 DEBUG MODE v8.5 — ❌ ${r.fail} failed / ${r.pass} passed`;
       $('debugBanner').style.borderColor = r.fail === 0 ? '#20d6a0' : '#ff6b6b';
       $('debugBanner').style.color = r.fail === 0 ? '#20d6a0' : '#ff6b6b';
     }, 100);
