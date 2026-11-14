@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v8.2 - Professional Hybrid</title>
+<title>⚽ JackAI Scanner v8.3 - Professional Hybrid + Image OCR</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Tesseract.js สำหรับ OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
 html { margin:0; padding:0; width:100%; height:100%; }
 body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif; font-size:0.85rem; color:#212529; height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-direction:column; }
@@ -175,10 +177,13 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
           <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.2</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.3 OCR</span>
       </span>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
+        <button class="btn btn-sm btn-outline-info me-1" onclick="openImageModal()" title="วิเคราะห์จากรูปภาพ">
+          <i class="bi bi-camera"></i> <span class="d-none d-md-inline">ภาพ</span>
+        </button>
         <div class="lang-switch me-2" title="ภาษา / Language">
           <button id="btnLangTH" class="active" onclick="setLang('th')">TH</button>
           <button id="btnLangEN" onclick="setLang('en')">EN</button>
@@ -425,7 +430,90 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     </div>
   </div>
 
-  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.2 · Manual Analysis · Probability estimates, not guarantees</div>
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.3 · Manual Analysis + OCR · Probability estimates, not guarantees</div>
+  
+  <!-- ========== IMAGE ANALYSIS MODAL v8.3 ========== -->
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content border-0 shadow-lg" style="background:#0b192b;color:#e8f0fa;">
+        <div class="modal-header border-0" style="background:linear-gradient(100deg,#0dbb87,#087d9e);">
+          <h5 class="modal-title fw-bold text-white"><i class="bi bi-camera-fill"></i> วิเคราะห์จากรูปภาพ (AI Score OCR)</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-3">
+          <div class="row g-2">
+            <!-- Left: Upload + Preview -->
+            <div class="col-md-6">
+              <div id="imgDropZone" class="text-center p-4 rounded mb-2" style="border:2px dashed #20d6a0; background:#0f2537; cursor:pointer;">
+                <i class="bi bi-cloud-arrow-up" style="font-size:3rem; color:#20d6a0;"></i>
+                <div class="mt-2 fw-bold">ลากรูปมาวาง หรือคลิกเพื่อเลือก</div>
+                <div class="text-muted" style="font-size:0.7rem;">Screenshot จาก AiScore, SofaScore, FlashScore ฯลฯ</div>
+                <input type="file" id="imgFileInput" accept="image/*" class="d-none">
+              </div>
+              <img id="imgPreview" class="img-fluid rounded d-none mb-2" style="max-height:380px; width:100%; object-fit:contain; background:#000;">
+              
+              <div id="imgProgress" class="d-none mb-2">
+                <div class="d-flex justify-content-between fw-bold" style="font-size:0.8rem;">
+                  <span>⏳ กำลังประมวลผล...</span><span id="imgProgressPct">0%</span>
+                </div>
+                <div class="progress mt-1" style="height:8px; background:#0f2537;">
+                  <div id="imgProgressBar" class="progress-bar bg-success" style="width:0%;"></div>
+                </div>
+                <div id="imgProgressStage" class="text-muted mt-1" style="font-size:0.7rem;"></div>
+              </div>
+
+              <div class="mt-2">
+                <label class="fw-bold" style="font-size:0.75rem; color:#ffdb8a;">📋 หรือวางข้อความที่ copy จากเว็บ:</label>
+                <textarea id="imgPasteText" class="form-control mt-1" rows="4" 
+                  style="font-size:0.72rem; background:#0f2537; color:#e8f0fa; border:1px solid #304763; font-family:monospace;"
+                  placeholder="วางข้อความจากหน้าเว็บ AiScore ที่นี่..."></textarea>
+                <button class="btn btn-sm btn-outline-info mt-1 w-100" onclick="parsePastedText()">
+                  <i class="bi bi-clipboard-check"></i> Parse จากข้อความที่วาง
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: OCR Result + Parsed Data -->
+            <div class="col-md-6">
+              <div class="fw-bold mb-1" style="color:#20d6a0;">📝 ข้อความ OCR (แก้ไขได้):</div>
+              <textarea id="imgOcrText" class="form-control" rows="6" 
+                style="font-size:0.72rem; background:#0f2537; color:#e8f0fa; border:1px solid #304763; font-family:monospace;"
+                placeholder="ข้อความ OCR จะแสดงที่นี่..."></textarea>
+
+              <div class="mt-2">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <span class="fw-bold" style="color:#ffdb8a; font-size:0.8rem;">🔍 ผลการ Parse:</span>
+                  <button class="btn btn-sm btn-outline-success py-0" onclick="reparseOCR()">
+                    <i class="bi bi-arrow-clockwise"></i> Parse ใหม่
+                  </button>
+                </div>
+                <div id="imgParsedResult" class="rounded p-2" style="background:#0f2537; border:1px solid #304763; min-height:200px; font-size:0.75rem;">
+                  <div class="text-muted">รอการประมวลผล...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert py-1 mt-2 mb-0" style="background:#3b2e16; border:1px solid #6b5121; color:#ffdb8a; font-size:0.7rem;">
+            <strong>💡 Tips:</strong> ถ้า OCR อ่านได้ไม่ครบ ให้<b>แก้ข้อความในช่อง OCR</b> หรือ<b>วางข้อความจากเว็บโดยตรง</b> (Ctrl+A → Ctrl+C จาก AiScore) แล้วกด "Parse ใหม่" — ระบบจะแยกข้อมูลให้อัตโนมัติ
+          </div>
+        </div>
+        <div class="modal-footer border-0 d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ปิด</button>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-warning fw-bold" onclick="applyOCRToInputs(false)">
+              <i class="bi bi-pencil"></i> กรอกข้อมูล (ไม่ predict)
+            </button>
+            <button type="button" class="btn btn-success fw-bold" id="btnAnalyzeImage" onclick="applyOCRToInputs(true)" disabled>
+              <i class="bi bi-magic"></i> กรอก + วิเคราะห์เลย
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Donate Modal -->
   <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg">
@@ -448,7 +536,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   </div>
 </div>
 
-<div id="debugBanner">🐛 DEBUG MODE v8.2 — พิมพ์ <b>test()</b> ใน console เพื่อรัน tests</div>
+<div id="debugBanner">🐛 DEBUG MODE v8.3 — พิมพ์ <b>test()</b> ใน console เพื่อรัน tests</div>
 <div id="testPanel">
   <h6>🧪 Test Results</h6>
   <div id="testResults"></div>
@@ -457,9 +545,8 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 
 <script>
 /* ============================================================
-   JackAI Scanner v8.2
-   - v8.1 bug fixes ครบ (7 ตัว)
-   - เพิ่มลีกใหม่ 6 รายการ + อัปเดต colombia primera a
+   JackAI Scanner v8.3
+   - Full bug fixes + 6 new leagues + OCR Image Analysis
    ============================================================ */
 
 let currentLang = 'th';
@@ -494,7 +581,7 @@ const AppState = {
 const USER_SESSION_KEY = 'jackai_active_user';
 const Storage = {
   _userSuffix() { return AppState.user ? `_${AppState.user.replace(/[^a-zA-Z0-9]/g, '_')}` : ''; },
-  key(type) { const map = { inputs: `jackai_inputs_v82${this._userSuffix()}` }; return map[type] || null; },
+  key(type) { const map = { inputs: `jackai_inputs_v83${this._userSuffix()}` }; return map[type] || null; },
   get(type, fallback = []) { const k = this.key(type); if (!k) return fallback; try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; } },
   set(type, data) { const k = this.key(type); if (!k) return false; try { localStorage.setItem(k, JSON.stringify(data)); return true; } catch (e) { return false; } },
   remove(type) { const k = this.key(type); if (!k) return; try { localStorage.removeItem(k); } catch (e) {} },
@@ -683,7 +770,6 @@ function pickColor(pct) {
   return { bar: 'bg-danger', text: 'text-danger' };
 }
 
-/* AH CONVENTION: AH -0.5 = เหย้าต่อ 0.5 ลูก, margin = (fh-fa)+h */
 function calcAHOutcome(fh, fa, h) {
   const margin = (fh - fa) + h;
   if (margin > TOL_AH) return 1;
@@ -1290,7 +1376,7 @@ function renderPrediction(result) {
      <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#8297b0;"><span>Ratio: 🏠 ${(ratio.hRatio*100).toFixed(1)}% / ✈️ ${(ratio.aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
      <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#8297b0;"><span>∫xG ${result.expectedGoalsRaw.toFixed(2)} × tempo ${tempo.modifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`);
 
-  writeText('calibNote', `⚙️ v8.2: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
+  writeText('calibNote', `⚙️ v8.3: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
 }
 
 function predictMatch() {
@@ -1341,7 +1427,7 @@ function copyResultAsText() {
   if (!pred) return safeAlert(currentLang === 'en' ? 'No prediction yet.' : 'ยังไม่มีผลพยากรณ์');
   const t = currentLang === 'en', pct = (v) => (v * 100).toFixed(1) + '%';
   const lines = [
-    `⚽ JackAI v8.2 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
+    `⚽ JackAI v8.3 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
     `${t ? 'Minute' : 'นาที'}: ${pred.inputs.minute} (${t ? 'remaining' : 'เหลือ'} ${pred.timeData.remaining})`,
     `League: ${AppState.league.flag || '🌐'} ${AppState.league.text}`,
     `Confidence: ${pred.confidence}%`,
@@ -1359,6 +1445,246 @@ function copyResultAsText() {
   });
 }
 
+/* ============================================================
+   📷 IMAGE ANALYSIS v8.3
+   ============================================================ */
+let _ocrWorker = null;
+let _imageModalInstance = null;
+let _lastParsed = null;
+
+function openImageModal() {
+  if (!_imageModalInstance) _imageModalInstance = new bootstrap.Modal($('imageModal'));
+  _imageModalInstance.show();
+}
+
+function initImageUpload() {
+  const dz = $('imgDropZone'), fi = $('imgFileInput');
+  if (!dz || !fi) return;
+  dz.addEventListener('click', () => fi.click());
+  dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.style.background = '#164e3a'; });
+  dz.addEventListener('dragleave', () => { dz.style.background = '#0f2537'; });
+  dz.addEventListener('drop', (e) => {
+    e.preventDefault(); dz.style.background = '#0f2537';
+    if (e.dataTransfer.files[0]) handleImageFile(e.dataTransfer.files[0]);
+  });
+  fi.addEventListener('change', (e) => { if (e.target.files[0]) handleImageFile(e.target.files[0]); });
+}
+
+async function handleImageFile(file) {
+  if (!file.type.startsWith('image/')) return safeAlert('⚠️ กรุณาเลือกไฟล์รูปภาพ');
+  if (file.size > 10 * 1024 * 1024) return safeAlert('⚠️ ไฟล์ใหญ่เกิน 10 MB');
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    $('imgPreview').src = e.target.result;
+    $('imgPreview').classList.remove('d-none');
+    $('imgOcrText').value = '';
+    $('imgParsedResult').innerHTML = '<div class="text-muted">กำลังรอผล OCR...</div>';
+    $('btnAnalyzeImage').disabled = true;
+    runOCR(file);
+  };
+  reader.readAsDataURL(file);
+}
+
+async function runOCR(file) {
+  showImgProgress(true, 0, 'กำลังโหลด Tesseract...');
+  try {
+    if (typeof Tesseract === 'undefined') throw new Error('Tesseract.js ยังไม่โหลด');
+    if (!_ocrWorker) {
+      updateImgProgress(10, 'สร้าง worker...');
+      _ocrWorker = await Tesseract.createWorker('tha+eng', 1, {
+        logger: (m) => {
+          if (m.status === 'recognizing text') updateImgProgress(20 + m.progress * 70, `อ่านข้อความ... ${Math.round(m.progress * 100)}%`);
+        }
+      });
+    }
+    updateImgProgress(25, 'ประมวลผลภาพ...');
+    const { data: { text } } = await _ocrWorker.recognize(file);
+    updateImgProgress(100, 'เสร็จสิ้น');
+    $('imgOcrText').value = (text || '').trim();
+    setTimeout(() => showImgProgress(false), 400);
+    if (!text || text.trim().length < 3) {
+      $('imgOcrText').value = '⚠️ OCR อ่านไม่ออก — ลองภาพที่ชัดขึ้น หรือใช้ช่อง "วางข้อความจากเว็บ"';
+      $('imgParsedResult').innerHTML = '<div class="text-danger">ไม่สามารถอ่านข้อความได้</div>';
+    } else {
+      reparseOCR();
+      $('btnAnalyzeImage').disabled = false;
+    }
+  } catch (err) {
+    console.error('[OCR]', err);
+    showImgProgress(false);
+    safeAlert('❌ OCR ล้มเหลว: ' + err.message);
+  }
+}
+
+function showImgProgress(show, pct = 0, stage = '') {
+  $('imgProgress').classList.toggle('d-none', !show);
+  updateImgProgress(pct, stage);
+}
+function updateImgProgress(pct, stage) {
+  $('imgProgressBar').style.width = pct + '%';
+  $('imgProgressPct').innerText = Math.round(pct) + '%';
+  if (stage) $('imgProgressStage').innerText = stage;
+}
+
+function parsePastedText() {
+  const txt = $('imgPasteText').value || '';
+  if (!txt.trim()) return safeAlert('⚠️ กรุณาวางข้อความก่อน');
+  $('imgOcrText').value = txt;
+  reparseOCR();
+  $('btnAnalyzeImage').disabled = false;
+}
+
+/* 🧠 PARSER สำหรับ AiScore / SofaScore / FlashScore */
+function parseOCRText(text) {
+  const result = {
+    homeName: null, awayName: null, homeScore: null, awayScore: null,
+    minute: null, hShots: null, aShots: null, hSot: null, aSot: null,
+    hBig: null, aBig: null, redHome: null, redAway: null, ahRate: null
+  };
+
+  const clean = text.replace(/[|•·]/g, ' ').replace(/\s+/g, ' ').trim();
+  const lines = text.split('\n').map(s => s.trim()).filter(Boolean);
+
+  // 1) ดึงนาที (เช่น 88:24)
+  const minMatch = clean.match(/\b(\d{1,3}):(\d{2})\b/);
+  if (minMatch) result.minute = parseInt(minMatch[1], 10);
+
+  // 2) ดึงชื่อทีม (ภาษาไทย/อังกฤษ ที่มี CA, FC, United, etc.)
+  const teamMatch = clean.match(/(CA\s+[A-Za-z\s]+|[\u0E00-\u0E7F\sA-Za-z]{3,30})\s+(\d)\s*[:|-]\s*(\d)\s+([A-Za-z\s]{3,30}|[\u0E00-\u0E7F\s]{3,30})/i);
+  if (teamMatch) {
+    result.homeName = teamMatch[1].trim();
+    result.homeScore = parseInt(teamMatch[2], 10);
+    result.awayScore = parseInt(teamMatch[3], 10);
+    result.awayName = teamMatch[4].trim();
+  } else {
+    // fallback หา สกอร์แบบลอย "3 : 1"
+    const sc = clean.match(/(\d)\s*[:|-]\s*(\d)/);
+    if (sc) { result.homeScore = parseInt(sc[1], 10); result.awayScore = parseInt(sc[2], 10); }
+  }
+
+  // 3) ดึงสถิติ (ยิง, เข้ากรอบ, ใบแดง) - ใช้ Pattern "คีย์เวิร์ด [ช่องว่าง] ตัวเลข [ช่องว่าง] ตัวเลข"
+  function grabPair(keyword, maxDist = 25) {
+    const re = new RegExp(`(?:${keyword})[^0-9]{0,${maxDist}}(\\d{1,3})[^0-9]{0,5}(\\d{1,3})`, 'i');
+    const m = clean.match(re);
+    if (m) return [parseInt(m[1], 10), parseInt(m[2], 10)];
+    return [null, null];
+  }
+
+  // ภาพนี้: "ยิงทั้งหมด 5 [แท่งกราฟ] 2" (ภาษาไทยใช้คำว่า "ยิงทั้งหมด")
+  // บางที OCR จะอ่าน "ยิงทั้งหมด" เป็น "ยังทั้งหมด" หรือ "อิงทั้งหมด"
+  const [hs, as] = grabPair('ยิงทั้งหมด|ยิง|Shots|ยังทั้งหมด|อิงทั้งหมด');
+  result.hShots = hs; result.aShots = as;
+
+  const [hst, ast] = grabPair('ยิงเข้ากรอบ|เข้ากรอบ|SOT|ยิงตรงกรอบ');
+  result.hSot = hst; result.aSot = ast;
+
+  const [hbc, abc] = grabPair('Big|โอกาศ|โอกาส');
+  result.hBig = hbc; result.aBig = abc;
+
+  const [hr, ar] = grabPair('ใบแดง|แดง|Red');
+  result.redHome = hr; result.redAway = ar;
+
+  // 4) ดึง AH (ถ้ามี)
+  const ahM = clean.match(/(?:AH|Handicap|ต่อ|ราคาต่อรอง)[^\d\-+]{0,10}([+\-]?\d+(?:\.\d+)?)/i);
+  if (ahM) result.ahRate = parseFloat(ahM[1]);
+
+  return result;
+}
+
+function reparseOCR() {
+  const text = $('imgOcrText').value || '';
+  if (!text.trim()) {
+    $('imgParsedResult').innerHTML = '<div class="text-muted">ยังไม่มีข้อความ</div>';
+    return;
+  }
+  _lastParsed = parseOCRText(text);
+  renderParsedResult(_lastParsed);
+  $('btnAnalyzeImage').disabled = false;
+}
+
+function renderParsedResult(p) {
+  const rows = [];
+  const add = (label, val) => {
+    if (val === null || val === undefined || val === '') return;
+    rows.push(`<div class="d-flex justify-content-between border-bottom py-1"><span>${label}</span><strong style="color:#20d6a0;">${val}</strong></div>`);
+  };
+  add('🏠 เหย้า', p.homeName);
+  add('✈️ เยือน', p.awayName);
+  if (p.homeScore !== null) add('⚽ สกอร์', `${p.homeScore} - ${p.awayScore}`);
+  add('⏱️ นาที', p.minute);
+  if (p.hShots !== null) add('🎯 ยิง', `${p.hShots} - ${p.aShots}`);
+  if (p.hSot !== null) add('🎯 SOT', `${p.hSot} - ${p.aSot}`);
+  if (p.hBig !== null) add('🔥 Big', `${p.hBig} - ${p.aBig}`);
+  if (p.redHome !== null) add('🟥 ใบแดง', `${p.redHome} - ${p.redAway}`);
+  add('📊 AH', p.ahRate);
+
+  $('imgParsedResult').innerHTML = rows.length > 0
+    ? rows.join('')
+    : '<div class="text-warning">⚠️ ไม่พบ pattern ที่รู้จัก — ลองแก้ข้อความหรือใช้ "วางข้อความจากเว็บ"</div>';
+}
+
+function applyOCRToInputs(autoPredict) {
+  if (!_lastParsed) reparseOCR();
+  const p = _lastParsed;
+  if (!p) return;
+
+  let filled = 0;
+  const setIf = (id, val, type = 'text') => {
+    if (val === null || val === undefined || val === '') return;
+    const el = $(id); if (!el) return;
+    if (type === 'number') {
+      const v = parseFloat(val);
+      if (!Number.isFinite(v)) return;
+      el.value = v;
+    } else {
+      el.value = val;
+    }
+    filled++;
+  };
+
+  setIf('home_name', p.homeName);
+  setIf('away_name', p.awayName);
+  setIf('current_home_score', p.homeScore, 'number');
+  setIf('current_away_score', p.awayScore, 'number');
+  setIf('match_minute', p.minute, 'number');
+  setIf('h_shots', p.hShots, 'number');
+  setIf('a_shots', p.aShots, 'number');
+  setIf('h_sot', p.hSot, 'number');
+  setIf('a_sot', p.aSot, 'number');
+  setIf('h_big', p.hBig, 'number');
+  setIf('a_big', p.aBig, 'number');
+  setIf('red_home', p.redHome, 'number');
+  setIf('red_away', p.redAway, 'number');
+
+  if (p.ahRate !== null) {
+    const sel = $('handicapSelect');
+    if (sel) {
+      const target = p.ahRate;
+      let bestOpt = null, bestDiff = Infinity;
+      for (const opt of sel.options) {
+        const d = Math.abs(parseFloat(opt.value) - target);
+        if (d < bestDiff) { bestDiff = d; bestOpt = opt; }
+      }
+      if (bestOpt && bestDiff <= 0.26) { sel.value = bestOpt.value; filled++; }
+    }
+  }
+
+  if (typeof autoEstimateStrength === 'function') autoEstimateStrength();
+  if (typeof updateResultTitle === 'function') updateResultTitle();
+  if (typeof saveInputs === 'function') saveInputs();
+
+  if (_imageModalInstance) _imageModalInstance.hide();
+
+  safeAlert(`✅ กรอกข้อมูล ${filled} ช่อง\n${autoPredict ? '\nกำลังประมวลผลคาดการณ์...' : '\nตรวจสอบแล้วกด "ประมวลผลคาดการณ์"'}`);
+
+  if (autoPredict && filled >= 2) {
+    setTimeout(() => { if (typeof predictMatch === 'function') predictMatch(); }, 200);
+  }
+}
+
+/* ============================================================
+   I18N & TESTS
+   ============================================================ */
 const I18N = {
   th: { home_team:'ทีมเหย้า',away_team:'ทีมเยือน',home_strength:'🏠 ความแข็งแกร่งเหย้า (อัตโนมัติ)',away_strength:'✈️ ความแข็งแกร่งเยือน (อัตโนมัติ)',auto_estimate:'AI Strength อัตโนมัติ',ah_home_label:'ราคาต่อรอง AH (เหย้า)',live_weight_label:'น้ำหนักสถิติสด (%)',search_league:'-- พิมพ์ชื่อลีกเพื่อค้นหา --',minute_label:'นาที',injury_1:'ทด 1H',injury_2:'ทด 2H',format_label:'รูปแบบ',home_score:'สกอร์เหย้า',away_score:'สกอร์เยือน',red_home:'แดง🏠',red_away:'แดง✈️',shots:'ยิงทั้งหมด',sot:'ยิงตรงกรอบ',big:'Big Chances',btn_predict:'ประมวลผลคาดการณ์',btn_reset:'รีเซ็ตข้อมูล',ah_section:'Live Asian Handicap Probs',top3_section:'สกอร์จบเกมที่เป็นไปได้สูง (Top 3)',fh_section:'ครึ่งแรก 45 นาที',next_goal_section:'ประตูถัดไป',fh_over_section:'โอกาสเกิดประตูครึ่งแรก',ft_over_section:'โอกาสเกิดประตูเต็มเวลา',home_wins_ah:'เหย้าชนะราคา',away_wins_ah:'เยือนชนะราคา',push_ah:'เสมอราคา (Push)',btn_donate:'สนับสนุน' },
   en: { home_team:'Home Team',away_team:'Away Team',home_strength:'🏠 Home Strength (automatic)',away_strength:'✈️ Away Strength (automatic)',auto_estimate:'Automatic AI Strength',ah_home_label:'Asian Handicap (Home)',live_weight_label:'Live stat weight (%)',search_league:'-- Type league name to search --',minute_label:'Minute',injury_1:'Inj 1H',injury_2:'Inj 2H',format_label:'Format',home_score:'Home Score',away_score:'Away Score',red_home:'Red🏠',red_away:'Red✈️',shots:'Total Shots',sot:'Shots on Target',big:'Big Chances',btn_predict:'Run Prediction',btn_reset:'Reset Data',ah_section:'Live Asian Handicap Probs',top3_section:'Most Likely Final Scores (Top 3)',fh_section:'First Half (45 min)',next_goal_section:'Next Goal',fh_over_section:'1st Half Over Probability',ft_over_section:'Full-Time Over Probability',home_wins_ah:'Home covers AH',away_wins_ah:'Away covers AH',push_ah:'Push',btn_donate:'Support' }
@@ -1580,7 +1906,7 @@ function showTestResults() {
   }
   box.innerHTML = html;
   panel.style.display = 'block';
-  console.log(`[JackAI v8.2] Tests: ${pass} pass, ${fail} fail`);
+  console.log(`[JackAI v8.3] Tests: ${pass} pass, ${fail} fail`);
   if (fail > 0) console.warn('Failures:', results.failures);
   return results;
 }
@@ -1590,6 +1916,7 @@ window.runTests = runAllTests;
 
 document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
+  initImageUpload();
   const ls = $('leagueSearch');
   if (ls) {
     ls.addEventListener('change', matchLeagueFromInput);
@@ -1612,8 +1939,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       const r = showTestResults();
       $('debugBanner').innerHTML = r.fail === 0
-        ? `🐛 DEBUG MODE v8.2 — ✅ ${r.pass} tests passed`
-        : `🐛 DEBUG MODE v8.2 — ❌ ${r.fail} failed / ${r.pass} passed`;
+        ? `🐛 DEBUG MODE v8.3 — ✅ ${r.pass} tests passed`
+        : `🐛 DEBUG MODE v8.3 — ❌ ${r.fail} failed / ${r.pass} passed`;
       $('debugBanner').style.borderColor = r.fail === 0 ? '#20d6a0' : '#ff6b6b';
       $('debugBanner').style.color = r.fail === 0 ? '#20d6a0' : '#ff6b6b';
     }, 100);
