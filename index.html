@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v8.5 - Professional Hybrid + Corner Analysis</title>
+<title>⚽ JackAI Scanner v8.6 - H2H Corner Analysis</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -175,7 +175,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
           <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.5 Corner</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.6 H2H</span>
       </span>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
@@ -271,21 +271,46 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           </div>
         </div>
 
-        <!-- 🚩 CORNER INPUTS -->
+        <!-- 🚩 CORNER & H2H INPUTS -->
         <div class="row g-2 mb-2">
           <div class="col-12 text-center text-warning fw-bold mt-1" style="font-size:0.7rem;">🚩 ลูกเตะมุม (Corners)</div>
+          
+          <!-- สถิติสด -->
           <div class="col-6">
             <div class="p-2 rounded" style="background:#0d2436; border:1px solid #1f4a3d;">
               <div class="text-success fw-bold text-center mb-1" style="font-size:0.65rem;">🏠 เหย้า</div>
-              <input type="number" id="h_corners" class="form-control form-control-sm mb-1" placeholder="เต็มเวลา" min="0">
-              <input type="number" id="h_corners_ht" class="form-control form-control-sm" placeholder="ครึ่งแรก (เว้นว่าง=auto)" min="0">
+              <input type="number" id="h_corners" class="form-control form-control-sm mb-1" placeholder="Live: เต็มเวลา" min="0">
+              <input type="number" id="h_corners_ht" class="form-control form-control-sm" placeholder="Live: ครึ่งแรก" min="0">
             </div>
           </div>
           <div class="col-6">
             <div class="p-2 rounded" style="background:#0d1f36; border:1px solid #1f3a4a;">
               <div class="text-primary fw-bold text-center mb-1" style="font-size:0.65rem;">✈️ เยือน</div>
-              <input type="number" id="a_corners" class="form-control form-control-sm mb-1" placeholder="เต็มเวลา" min="0">
-              <input type="number" id="a_corners_ht" class="form-control form-control-sm" placeholder="ครึ่งแรก (เว้นว่าง=auto)" min="0">
+              <input type="number" id="a_corners" class="form-control form-control-sm mb-1" placeholder="Live: เต็มเวลา" min="0">
+              <input type="number" id="a_corners_ht" class="form-control form-control-sm" placeholder="Live: ครึ่งแรก" min="0">
+            </div>
+          </div>
+
+          <!-- สถิติ H2H (การเจอกันครั้งก่อน) -->
+          <div class="col-12 mt-2">
+            <div class="p-2 rounded" style="background:#1a1520; border:1px dashed #e52e71;">
+              <div class="text-danger fw-bold text-center mb-1" style="font-size:0.65rem;"><i class="bi bi-clock-history"></i> สถิติ H2H (ครั้งที่แล้ว)</div>
+              <div class="row g-1">
+                <div class="col-6">
+                  <label class="text-white-50" style="font-size:0.6rem;">เหย้า (ครึ่งแรก/เต็ม)</label>
+                  <div class="d-flex gap-1">
+                    <input type="number" id="h2h_h_ht" class="form-control form-control-sm text-center p-0" placeholder="HT" min="0" style="font-size:0.7rem;">
+                    <input type="number" id="h2h_h_ft" class="form-control form-control-sm text-center p-0" placeholder="FT" min="0" style="font-size:0.7rem;">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label class="text-white-50" style="font-size:0.6rem;">เยือน (ครึ่งแรก/เต็ม)</label>
+                  <div class="d-flex gap-1">
+                    <input type="number" id="h2h_a_ht" class="form-control form-control-sm text-center p-0" placeholder="HT" min="0" style="font-size:0.7rem;">
+                    <input type="number" id="h2h_a_ft" class="form-control form-control-sm text-center p-0" placeholder="FT" min="0" style="font-size:0.7rem;">
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -502,7 +527,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     </div>
   </div>
 
-  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.5 · Manual Analysis + Corners · Probability estimates, not guarantees</div>
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.6 · H2H Corner Analysis · Probability estimates, not guarantees</div>
   
   <!-- Donate Modal -->
   <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
@@ -527,7 +552,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   </div>
 </div>
 
-<div id="debugBanner">🐛 DEBUG MODE v8.5 — พิมพ์ <b>test()</b> ใน console เพื่อรัน tests</div>
+<div id="debugBanner">🐛 DEBUG MODE v8.6 — พิมพ์ <b>test()</b> ใน console เพื่อรัน tests</div>
 <div id="testPanel">
   <h6>🧪 Test Results</h6>
   <div id="testResults"></div>
@@ -536,7 +561,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 
 <script>
 /* ============================================================
-   JackAI Scanner v8.5
+   JackAI Scanner v8.6
    ============================================================ */
 
 let currentLang = 'th';
@@ -571,7 +596,7 @@ const AppState = {
 const USER_SESSION_KEY = 'jackai_active_user';
 const Storage = {
   _userSuffix() { return AppState.user ? `_${AppState.user.replace(/[^a-zA-Z0-9]/g, '_')}` : ''; },
-  key(type) { const map = { inputs: `jackai_inputs_v85${this._userSuffix()}` }; return map[type] || null; },
+  key(type) { const map = { inputs: `jackai_inputs_v86${this._userSuffix()}` }; return map[type] || null; },
   get(type, fallback = []) { const k = this.key(type); if (!k) return fallback; try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; } },
   set(type, data) { const k = this.key(type); if (!k) return false; try { localStorage.setItem(k, JSON.stringify(data)); return true; } catch (e) { return false; } },
   remove(type) { const k = this.key(type); if (!k) return; try { localStorage.removeItem(k); } catch (e) {} },
@@ -904,7 +929,7 @@ function handleLeagueInput() {
   }
 }
 
-const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','h_corners','h_corners_ht','a_corners','a_corners_ht','auto_ah','auto_live_weight'];
+const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','h_corners','h_corners_ht','a_corners','a_corners_ht','h2h_h_ht','h2h_h_ft','h2h_a_ht','h2h_a_ft','auto_ah','auto_live_weight'];
 let _saveTimer = null;
 function saveInputs() {
   if (!AppState.user) return;
@@ -1035,6 +1060,10 @@ function readMatchInputs() {
     aCorners: isBlankInput('a_corners') ? null : readNum('a_corners', { min: 0, integer: true }),
     hCornersHT: isBlankInput('h_corners_ht') ? null : readNum('h_corners_ht', { min: 0, integer: true }),
     aCornersHT: isBlankInput('a_corners_ht') ? null : readNum('a_corners_ht', { min: 0, integer: true }),
+    h2hHomeHT: isBlankInput('h2h_h_ht') ? null : readNum('h2h_h_ht', { min: 0, integer: true }),
+    h2hHomeFT: isBlankInput('h2h_h_ft') ? null : readNum('h2h_h_ft', { min: 0, integer: true }),
+    h2hAwayHT: isBlankInput('h2h_a_ht') ? null : readNum('h2h_a_ht', { min: 0, integer: true }),
+    h2hAwayFT: isBlankInput('h2h_a_ft') ? null : readNum('h2h_a_ft', { min: 0, integer: true }),
     autoNotes,
   };
 }
@@ -1265,9 +1294,10 @@ function calcNextGoal(xgH, xgA) {
 }
 
 /* ============================================================
-   🚩 CORNER ANALYSIS ENGINE
+   🚩 CORNER ANALYSIS ENGINE (อัปเดตสูตร H2H Blending)
    ============================================================ */
 function calcCorners(inputs, xgH, xgA, tempo) {
+  // 1. ค่าเฉลี่ยมาตรฐาน (Baseline)
   const leagueBaseFT = 9.5;
   const totalRemainingXG = xgH + xgA;
   const timeRemaining = Math.max(1, tempo.totalMatchTime - inputs.minute);
@@ -1277,21 +1307,52 @@ function calcCorners(inputs, xgH, xgA, tempo) {
   const goalDiff = Math.abs(inputs.cH - inputs.cA);
   const scoreMod = 1 + (Math.min(3, goalDiff) * 0.05);
   
-  const expectedFT = leagueBaseFT * attackMod * tempoMod * scoreMod;
+  // ค่าคาดการณ์พื้นฐานจากฟอร์มเกม (Base Prediction)
+  let baseExpectedFT = leagueBaseFT * attackMod * tempoMod * scoreMod;
+  let baseExpected1H = baseExpectedFT * 0.45; // 45%
+  let baseExpected2H = baseExpectedFT * 0.55; // 55%
+  let baseHomeFT = baseExpectedFT * 0.54;
+  let baseAwayFT = baseExpectedFT * 0.46;
   
-  const hRatio = 0.54;
-  const aRatio = 0.46;
-  const expectedHomeFT = expectedFT * hRatio;
-  const expectedAwayFT = expectedFT * aRatio;
+  // 2. ดึงสถิติ H2H (ถ้ามี)
+  const h2hH_ht = inputs.h2hHomeHT;
+  const h2hH_ft = inputs.h2hHomeFT;
+  const h2hA_ht = inputs.h2hAwayHT;
+  const h2hA_ft = inputs.h2hAwayFT;
   
-  const FH_SHARE = 0.45;
-  const SH_SHARE = 0.55;
-  const expected1H = expectedFT * FH_SHARE;
-  const expected2H = expectedFT * SH_SHARE;
+  const hasH2H = (h2hH_ht !== null && h2hH_ft !== null && h2hA_ht !== null && h2hA_ft !== null);
   
+  let h2hTotalHT = 0, h2hTotalFT = 0, h2hTotal2H = 0;
+  let h2hHomeFT = 0, h2hAwayFT = 0;
+  
+  if (hasH2H) {
+    h2hTotalHT = h2hH_ht + h2hA_ht;
+    h2hTotalFT = h2hH_ft + h2hA_ft;
+    h2hTotal2H = h2hTotalFT - h2hTotalHT;
+    h2hHomeFT = h2hH_ft;
+    h2hAwayFT = h2hA_ft;
+  }
+
+  // 3. คำนวณค่าคาดการณ์จริง (Actual) โดยผสม Base + H2H (ถ้ามี)
+  let expectedFT = baseExpectedFT;
+  let expected1H = baseExpected1H;
+  let expected2H = baseExpected2H;
+  let expectedHomeFT = baseHomeFT;
+  let expectedAwayFT = baseAwayFT;
+  
+  if (hasH2H) {
+    expectedFT = (baseExpectedFT * 0.3) + (h2hTotalFT * 0.7);
+    expected1H = (baseExpected1H * 0.3) + (h2hTotalHT * 0.7);
+    expected2H = (baseExpected2H * 0.3) + (h2hTotal2H * 0.7);
+    expectedHomeFT = (baseHomeFT * 0.3) + (h2hHomeFT * 0.7);
+    expectedAwayFT = (baseAwayFT * 0.3) + (h2hAwayFT * 0.7);
+  }
+
+  // 4. ดึงสถิติสด (Live Stats)
   const actualHT = (inputs.hCornersHT || 0) + (inputs.aCornersHT || 0);
   const actualFT = (inputs.hCorners || 0) + (inputs.aCorners || 0);
   
+  // 5. ฟังก์ชันคำนวณความน่าจะเป็น Over (Poisson)
   function poissonOver(lambda, threshold) {
     const k = Math.floor(threshold);
     let cumP = 0;
@@ -1301,60 +1362,62 @@ function calcCorners(inputs, xgH, xgA, tempo) {
     return (1 - cumP) * 100;
   }
   
+  // ================= เต็มเวลา (FT) =================
   let ft85, ft95, ft105, ft115;
-  if (actualFT > 0 && inputs.minute >= 90) {
+  if (inputs.minute >= 90) { // จบเกมแล้ว
     ft85 = actualFT > 8.5 ? 100 : 0;
     ft95 = actualFT > 9.5 ? 100 : 0;
     ft105 = actualFT > 10.5 ? 100 : 0;
     ft115 = actualFT > 11.5 ? 100 : 0;
   } else {
-    const remainingFT = actualFT > 0 
-      ? expectedFT * (timeRemaining / tempo.totalMatchTime) 
-      : expectedFT;
-    const totalExpect = actualFT + remainingFT;
-    ft85 = poissonOver(totalExpect, 8.5);
-    ft95 = poissonOver(totalExpect, 9.5);
-    ft105 = poissonOver(totalExpect, 10.5);
-    ft115 = poissonOver(totalExpect, 11.5);
+    // ถ้ามี Live Stats ให้ใช้ผลรวมจริง + ที่คาดว่าจะเกิดในนาทีที่เหลือ
+    const remainingFT = expectedFT * (timeRemaining / tempo.totalMatchTime);
+    const totalExpectFT = (actualFT > 0 ? actualFT : expectedFT) + (actualFT > 0 ? remainingFT : 0);
+    
+    ft85 = poissonOver(totalExpectFT, 8.5);
+    ft95 = poissonOver(totalExpectFT, 9.5);
+    ft105 = poissonOver(totalExpectFT, 10.5);
+    ft115 = poissonOver(totalExpectFT, 11.5);
   }
   
+  // ================= ครึ่งแรก (1H) =================
   let c1H35, c1H45, c1H55, c1H65;
-  if (inputs.minute >= 45) {
-    const actual1H = inputs.hCornersHT !== null && inputs.aCornersHT !== null
-      ? actualHT
-      : expected1H;
-    c1H35 = actual1H > 3.5 ? 100 : 0;
-    c1H45 = actual1H > 4.5 ? 100 : 0;
-    c1H55 = actual1H > 5.5 ? 100 : 0;
-    c1H65 = actual1H > 6.5 ? 100 : 0;
-  } else {
+  if (inputs.minute >= 45) { // ผ่านครึ่งแรกแล้ว
+    const final1H = inputs.hCornersHT !== null ? actualHT : expected1H;
+    c1H35 = final1H > 3.5 ? 100 : 0;
+    c1H45 = final1H > 4.5 ? 100 : 0;
+    c1H55 = final1H > 5.5 ? 100 : 0;
+    c1H65 = final1H > 6.5 ? 100 : 0;
+  } else { // ยังอยู่ในครึ่งแรก
     const remaining1H = Math.max(0, 45 - inputs.minute);
-    const actual1HNow = actualHT;
     const expected1HRemaining = expected1H * (remaining1H / 45);
-    const total1H = actual1HNow + expected1HRemaining;
+    const total1H = (actualHT > 0 ? actualHT : expected1H) + (actualHT > 0 ? expected1HRemaining : 0);
+    
     c1H35 = poissonOver(total1H, 3.5);
     c1H45 = poissonOver(total1H, 4.5);
     c1H55 = poissonOver(total1H, 5.5);
     c1H65 = poissonOver(total1H, 6.5);
   }
   
+  // ================= ครึ่งหลัง (2H) =================
   let c2H45, c2H55, c2H65, c2H75;
-  if (inputs.minute >= 90) {
+  if (inputs.minute >= 90) { // จบเกมแล้ว
     const actual2H = actualFT - (inputs.hCornersHT || 0) - (inputs.aCornersHT || 0);
     c2H45 = actual2H > 4.5 ? 100 : 0;
     c2H55 = actual2H > 5.5 ? 100 : 0;
     c2H65 = actual2H > 6.5 ? 100 : 0;
     c2H75 = actual2H > 7.5 ? 100 : 0;
   } else {
-    const half2Start = 45;
-    const half2End = 90;
-    const currentInHalf2 = Math.max(0, inputs.minute - half2Start);
-    const remaining2H = Math.max(0, half2End - inputs.minute);
-    const actual2HNow = inputs.minute > 45 
-      ? actualFT - (inputs.hCornersHT || 0) - (inputs.aCornersHT || 0)
-      : 0;
-    const expected2HRemaining = expected2H * (remaining2H / 45);
-    const total2H = actual2HNow + expected2HRemaining;
+    // ถ้ายังไม่ถึงครึ่งหลัง ให้คำนวณจาก Expected2H
+    // ถ้าอยู่ในครึ่งหลังแล้ว ให้นำผลต่างจริง (FT - HT) มาคำนวณต่อ
+    let total2H = expected2H;
+    if (inputs.minute > 45) {
+      const actual2HNow = actualFT - (inputs.hCornersHT || 0) - (inputs.aCornersHT || 0);
+      const remaining2H = Math.max(0, 90 - inputs.minute);
+      const expected2HRemaining = expected2H * (remaining2H / 45);
+      total2H = actual2HNow + expected2HRemaining;
+    }
+    
     c2H45 = poissonOver(total2H, 4.5);
     c2H55 = poissonOver(total2H, 5.5);
     c2H65 = poissonOver(total2H, 6.5);
@@ -1369,6 +1432,7 @@ function calcCorners(inputs, xgH, xgA, tempo) {
     c2H45, c2H55, c2H65, c2H75,
     actualFT, actualHT,
     hasActualData: actualFT > 0 || inputs.hCornersHT !== null,
+    hasH2H
   };
 }
 
@@ -1505,7 +1569,7 @@ function renderPrediction(result) {
      <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#8297b0;"><span>Ratio: 🏠 ${(ratio.hRatio*100).toFixed(1)}% / ✈️ ${(ratio.aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
      <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#8297b0;"><span>∫xG ${result.expectedGoalsRaw.toFixed(2)} × tempo ${tempo.modifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`);
 
-  writeText('calibNote', `⚙️ v8.5: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
+  writeText('calibNote', `⚙️ v8.6: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
 
   // ===== Render Corners =====
   if (corners) {
@@ -1544,7 +1608,9 @@ function renderCornerPrediction(c, inputs) {
   setCornerRow('corner2H75', 'corner2H75Bar', c.c2H75);
   
   let note = `คาดการณ์จาก League Base × Attack × Tempo × Score`;
-  if (c.hasActualData) note = `ใช้ข้อมูลจริง: FT ${c.actualFT} | HT ${c.actualHT}`;
+  if (c.hasActualData) note = `🔵 ใช้สถิติสด: FT ${c.actualFT} | HT ${c.actualHT}`;
+  else if (c.hasH2H) note = `🟣 ใช้สถิติ H2H (70%) ผสมกับ Base Model (30%)`;
+  
   writeText('cornerNote', note);
 }
 
@@ -1599,7 +1665,7 @@ function copyResultAsText() {
   const outcomeEl = $('matchOutcomeTitle');
   const outcomeText = outcomeEl ? outcomeEl.innerText : '';
   const lines = [
-    `⚽ JackAI v8.5 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
+    `⚽ JackAI v8.6 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
     `${outcomeText}`,
     `${t ? 'Minute' : 'นาที'}: ${pred.inputs.minute} (${t ? 'remaining' : 'เหลือ'} ${pred.timeData.remaining})`,
     `League: ${AppState.league.flag || '🌐'} ${AppState.league.text}`,
@@ -1846,7 +1912,7 @@ function showTestResults() {
   }
   box.innerHTML = html;
   panel.style.display = 'block';
-  console.log(`[JackAI v8.5] Tests: ${pass} pass, ${fail} fail`);
+  console.log(`[JackAI v8.6] Tests: ${pass} pass, ${fail} fail`);
   if (fail > 0) console.warn('Failures:', results.failures);
   return results;
 }
@@ -1878,8 +1944,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       const r = showTestResults();
       $('debugBanner').innerHTML = r.fail === 0
-        ? `🐛 DEBUG MODE v8.5 — ✅ ${r.pass} tests passed`
-        : `🐛 DEBUG MODE v8.5 — ❌ ${r.fail} failed / ${r.pass} passed`;
+        ? `🐛 DEBUG MODE v8.6 — ✅ ${r.pass} tests passed`
+        : `🐛 DEBUG MODE v8.6 — ❌ ${r.fail} failed / ${r.pass} passed`;
       $('debugBanner').style.borderColor = r.fail === 0 ? '#20d6a0' : '#ff6b6b';
       $('debugBanner').style.color = r.fail === 0 ? '#20d6a0' : '#ff6b6b';
     }, 100);
