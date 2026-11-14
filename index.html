@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v8.0 - Professional Hybrid</title>
+<title>⚽ JackAI Scanner v8.2 - Professional Hybrid</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -77,7 +77,6 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
 .lang-switch button:hover:not(.active) { background:#e9ecef; }
 
 .btn-copy { font-size:0.7rem; padding:3px 9px; border-radius:6px; }
-.hint-icon { font-size:0.75rem; color:#6c757d; cursor:help; margin-left:3px; }
 
 #advancedPanel { border:1px solid #e5e7eb; }
 #advancedPanel .form-control-sm,
@@ -115,6 +114,15 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 .progress{background:#263b55!important}
 .warn-box{background:#3b2e16;border-color:#6b5121;color:#ffdb8a}
 @media(max-width:991.98px){body{height:auto;min-height:100vh;overflow:auto}.main-container{padding:9px}.navbar-custom{height:auto;min-height:60px}.left-panel,.right-panel{min-width:0!important}}
+
+/* Debug overlay */
+#debugBanner { position:fixed; bottom:8px; left:8px; z-index:9999; background:#0b192b; border:1px solid #20d6a0; color:#20d6a0; padding:4px 10px; border-radius:6px; font-size:0.7rem; font-family:monospace; display:none; }
+#testPanel { position:fixed; top:70px; right:10px; width:420px; max-height:80vh; overflow-y:auto; background:#0b192b; border:1px solid #20d6a0; color:#e8f0fa; padding:12px; border-radius:10px; font-family:monospace; font-size:0.75rem; z-index:9998; display:none; }
+#testPanel h6 { color:#20d6a0; margin-bottom:8px; }
+#testPanel .pass { color:#35d7a4; }
+#testPanel .fail { color:#ff6b6b; }
+#testPanel .test-row { padding:2px 0; border-bottom:1px solid #1a3049; }
+#testPanel .summary { margin-top:8px; padding-top:8px; border-top:1px solid #263b55; font-weight:bold; }
 </style>
 </head>
 <body>
@@ -167,7 +175,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
           <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.0 PRO</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.2</span>
       </span>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
@@ -190,23 +198,17 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     <div class="left-panel">
       <div class="card card-body p-2">
 
-        <!-- 0) TEAM NAMES -->
         <div class="row g-1 mb-2 team-row">
           <div class="col-6">
-            <input type="text" id="home_name"
-                   class="form-control form-control-sm border-success fw-bold text-success"
-                   placeholder="🏠 ชื่อทีมเหย้า" autocomplete="off"
-                   style="border-width:2px;">
+            <input type="text" id="home_name" class="form-control form-control-sm border-success fw-bold text-success"
+                   placeholder="🏠 ชื่อทีมเหย้า" autocomplete="off" style="border-width:2px;">
           </div>
           <div class="col-6">
-            <input type="text" id="away_name"
-                   class="form-control form-control-sm border-primary fw-bold text-primary"
-                   placeholder="✈️ ชื่อทีมเยือน" autocomplete="off"
-                   style="border-width:2px;">
+            <input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary"
+                   placeholder="✈️ ชื่อทีมเยือน" autocomplete="off" style="border-width:2px;">
           </div>
         </div>
 
-        <!-- 1) LEAGUE + HANDICAP -->
         <div class="row g-1 mb-1">
           <div class="col-7">
             <input type="text" id="leagueSearch" list="leagueList" class="form-control form-control-sm text-info fw-bold"
@@ -226,7 +228,6 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           <span class="text-warning fw-bold">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>
         </div>
 
-        <!-- 2) MATCH STATE -->
         <div class="row g-1 mb-2">
           <div class="col-4">
             <label class="text-muted" style="font-size:0.62rem;">⏱️ นาที</label>
@@ -242,7 +243,6 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           </div>
         </div>
 
-        <!-- 2.1) RED CARDS -->
         <div class="row g-1 mb-2">
           <div class="col-6">
             <label class="text-danger fw-bold" style="font-size:0.62rem;">🟥 ใบแดง 🏠 เหย้า</label>
@@ -254,7 +254,6 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           </div>
         </div>
 
-        <!-- 3) SHOTS / SOT -->
         <div class="row g-2 mb-2">
           <div class="col-6">
             <div class="p-2 rounded" style="background:#0d2436; border:1px solid #1f4a3d;">
@@ -272,12 +271,10 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           </div>
         </div>
 
-        <!-- 4) PREDICT -->
         <button type="button" class="btn btn-predict w-100 mb-2" onclick="predictMatch()">
           <i class="bi bi-cpu"></i> <span data-i18n="btn_predict">ประมวลผลคาดการณ์</span>
         </button>
 
-        <!-- 5) ADVANCED PANEL -->
         <button class="btn btn-outline-secondary w-100 py-1" type="button"
                 data-bs-toggle="collapse" data-bs-target="#advancedPanel" aria-expanded="true" aria-controls="advancedPanel"
                 style="font-size:0.72rem;">
@@ -332,7 +329,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
       <div id="resultsArea" class="d-flex flex-column gap-2 h-100 d-none">
         <div class="card p-2 text-center position-relative border">
           <button class="btn btn-outline-secondary btn-copy position-absolute" style="top:6px; right:6px;" onclick="copyResultAsText()" title="Copy result as text">
-            <i class="bi bi-clipboard"></i>
+            <i class="bi bi-clipboard"></i> Copy
           </button>
           <h5 class="fw-bold mb-0" id="resultTitle" style="font-size:1.1rem;">ทีมเหย้า 0 - 0 ทีมเยือน</h5>
           <div class="text-warning mb-1" style="font-size:0.75rem;">นาทีที่ <span id="displayMinute">0</span> (เหลือ <span id="displayRemaining">90</span> นาที)</div>
@@ -428,7 +425,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     </div>
   </div>
 
-  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.0 PRO · Manual Analysis · Probability estimates, not guarantees</div>
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.2 · Manual Analysis · Probability estimates, not guarantees</div>
   <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg">
@@ -451,7 +448,22 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   </div>
 </div>
 
+<div id="debugBanner">🐛 DEBUG MODE v8.2 — พิมพ์ <b>test()</b> ใน console เพื่อรัน tests</div>
+<div id="testPanel">
+  <h6>🧪 Test Results</h6>
+  <div id="testResults"></div>
+  <button class="btn btn-sm btn-outline-info w-100 mt-2" onclick="document.getElementById('testPanel').style.display='none'">ปิด</button>
+</div>
+
 <script>
+/* ============================================================
+   JackAI Scanner v8.2
+   - v8.1 bug fixes ครบ (7 ตัว)
+   - เพิ่มลีกใหม่ 6 รายการ + อัปเดต colombia primera a
+   ============================================================ */
+
+let currentLang = 'th';
+
 const $ = (id) => document.getElementById(id);
 const readNum = (id, { min = -Infinity, max = Infinity, fallback = 0, integer = false } = {}) => {
   const el = $(id);
@@ -482,7 +494,7 @@ const AppState = {
 const USER_SESSION_KEY = 'jackai_active_user';
 const Storage = {
   _userSuffix() { return AppState.user ? `_${AppState.user.replace(/[^a-zA-Z0-9]/g, '_')}` : ''; },
-  key(type) { const map = { inputs: `jackai_inputs_v80${this._userSuffix()}` }; return map[type] || null; },
+  key(type) { const map = { inputs: `jackai_inputs_v82${this._userSuffix()}` }; return map[type] || null; },
   get(type, fallback = []) { const k = this.key(type); if (!k) return fallback; try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; } },
   set(type, data) { const k = this.key(type); if (!k) return false; try { localStorage.setItem(k, JSON.stringify(data)); return true; } catch (e) { return false; } },
   remove(type) { const k = this.key(type); if (!k) return; try { localStorage.removeItem(k); } catch (e) {} },
@@ -505,6 +517,7 @@ const CONFIG = {
   LIMITS: { INJURY_MAX: 15, MINUTE_MAX: 120, RED_MAX: 5 },
 };
 const EPS = 0.001;
+const TOL_AH = 1e-9;
 const TEMPO_0_0_LATE_MINUTE = CONFIG.TEMPO.LATE_0_0_MINUTE;
 const TEMPO_0_0_LATE_BOOST = CONFIG.TEMPO.LATE_0_0_BOOST;
 const FACT = [1]; for (let i = 1; i <= 30; i++) FACT[i] = FACT[i-1] * i;
@@ -534,7 +547,7 @@ const LEAGUE_CONSTANTS = {
   'paraguay primera':    { name: "ปารากวัย พรีเมรา", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇵🇾', aliases: ['paraguay','par','primera par','ปารากวัย'] },
   'bolivia primera':     { name: "โบลิเวีย พรีเมรา", goals: 2.85, rho: -0.08, fh: 0.46, flag: '🇧🇴', aliases: ['bolivia','bol','primera bol','liga bolivia','โบลิเวีย'] },
   'venezuela primera':   { name: "เวเนซุเอลา พรีเมรา", goals: 2.40, rho: -0.11, fh: 0.44, flag: '🇻🇪', aliases: ['venezuela','ven','primera ven','liga ven','เวเน'] },
-  'colombia primera a':  { name: "โคลอมเบีย พรีเมรา เอ", goals: 2.35, rho: -0.12, fh: 0.44, flag: '🇨🇴', aliases: ['colombia a','liga betplay','primera a col','col-a','betplay'] },
+  'colombia primera a':  { name: "โคลอมเบีย พรีเมร่า เอ", goals: 2.35, rho: -0.12, fh: 0.44, flag: '🇨🇴', aliases: ['colombia a','liga betplay','primera a col','col-a','betplay','โคลอมเบีย พรีเมร่า เอ','โคลอมเบีย พรีเมร่า','โคลอมเบีย'] },
   'uruguay primera':     { name: "อุรุกวัย พรีเมรา", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇺🇾', aliases: ['uruguay primera','primera uru','uru-a'] },
   'copa do brasil':      { name: "โคปา โด บราซิล", goals: 2.60, rho: -0.10, fh: 0.45, flag: '🇧🇷', aliases: ['copa brasil','brazil cup','copa do bra','cdb'] },
   'copa argentina':      { name: "โคปา อาร์เจนตินา", goals: 2.30, rho: -0.13, fh: 0.43, flag: '🇦🇷', aliases: ['arg cup','copa arg','argentina cup'] },
@@ -592,15 +605,48 @@ const LEAGUE_CONSTANTS = {
   'uwcl': { name: "ยูฟ่า วีเมนส์ แชมเปี้ยนส์ลีก", goals: 3.30, rho: -0.07, fh: 0.47, flag: '🏆', aliases: ['uwcl','uefa womens cl','womens champions league','wcl','women ucl','หญิง','ยูซีแอลหญิง','บอลหญิงแชมเปี้ยนส์'] },
   'womens world cup': { name: "ฟุตบอลหญิงชิงแชมป์โลก", goals: 2.75, rho: -0.10, fh: 0.45, flag: '🏆', aliases: ['wwc','womens world cup','fifa womens world cup','world cup women','หญิง','บอลหญิงโลก','ฟุตบอลหญิงโลก'] },
   'thai womens league': { name: "ไทยลีกหญิง", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇹🇭', aliases: ['thai womens','thai w','thai women','thailand women','tha w','หญิง','ไทยหญิง','บอลหญิงไทย','ไทยลีกหญิง'] },
+
+  /* ===== เพิ่มใหม่ v8.2 ===== */
+  'mexico liga premier serie a': { name: "เม็กซิโก ลีกา พรีเมียร์ เซเรีย เอ", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇲🇽', aliases: ['mexico premier serie a','liga premier serie a','mex lpsa','lpsa','mexico serie a','mex serie a','เม็กซิโก เซเรีย เอ','เม็กซิโก พรีเมียร์ เซเรีย เอ'] },
+  'new zealand national league': { name: "นิวซีแลนด์ เนชั่นแนล ลีก แชมเปียนชิพ", goals: 2.90, rho: -0.08, fh: 0.46, flag: '🇳🇿', aliases: ['new zealand','nz national league','nzfc','nz national','new zealand championship','national league nz','นิวซีแลนด์','นิวซีแลนด์ แชมเปียนชิพ'] },
+  'panama liga futbol':          { name: "ปานามา ลีกา ฟุตบอล", goals: 2.50, rho: -0.10, fh: 0.45, flag: '🇵🇦', aliases: ['panama','pan','liga panamena','lpf panama','liga futbol panama','panama liga','ปานามา'] },
+  'japan national regional':     { name: "ญี่ปุ่น เนชั่นแนล รีจินอล ฟุตบอล แชมเปี้ยนส์ ลีก", goals: 2.70, rho: -0.10, fh: 0.45, flag: '🇯🇵', aliases: ['japan regional','jfl','japan football league','japan national regional','japan regional champions','ญี่ปุ่น รีจินอล','เจเอฟแอล'] },
+  'concacaf nations league a':   { name: "คอนคาเคฟ เนชั่นส์ ลีก เอ", goals: 2.75, rho: -0.09, fh: 0.46, flag: '🏆', aliases: ['concacaf nations league','concacaf nations a','cnl a','concacaf nl a','nations league a','คอนคาเคฟ','เนชั่นส์ ลีก'] },
+  'mexico liga premier':         { name: "เม็กซิโก ลีกา พรีเมรา พรีเมียร์", goals: 2.80, rho: -0.09, fh: 0.46, flag: '🇲🇽', aliases: ['mexico liga premier','liga premier mexico','mexico premier','mex liga premier','liga premier de ascenso','เม็กซิโก พรีเมรา'] },
 };
 
-function fmtPct(v) { if (v < 0.5) return '<0.5%'; if (v > 99.5) return '>99.5%'; return v.toFixed(0) + '%'; }
+function fmtPct(v) { if (v == null) return 'N/A'; if (v < 0.5) return '<0.5%'; if (v > 99.5) return '>99.5%'; return v.toFixed(0) + '%'; }
+
+const _poissonCache = new Map();
 function poisson(lambda, k) {
-  if (lambda <= 0) return k === 0 ? 1 : 0;
-  if (lambda < 30) return Math.exp(-lambda) * Math.pow(lambda, k) / FACT[k];
-  let logFk = 0; for (let i = 2; i <= k; i++) logFk += Math.log(i);
-  return Math.exp(-lambda + k * Math.log(lambda) - logFk);
+  const key = lambda + '|' + k;
+  if (_poissonCache.has(key)) return _poissonCache.get(key);
+  let v;
+  if (lambda <= 0) v = k === 0 ? 1 : 0;
+  else if (lambda < 30) v = Math.exp(-lambda) * Math.pow(lambda, k) / FACT[k];
+  else {
+    let logFk = 0; for (let i = 2; i <= k; i++) logFk += Math.log(i);
+    v = Math.exp(-lambda + k * Math.log(lambda) - logFk);
+  }
+  if (_poissonCache.size > 5000) _poissonCache.clear();
+  _poissonCache.set(key, v);
+  return v;
 }
+
+function makePoissonTable(lambda, maxK) {
+  const table = new Float64Array(maxK + 1);
+  for (let k = 0; k <= maxK; k++) {
+    if (lambda <= 0) { table[k] = k === 0 ? 1 : 0; continue; }
+    if (lambda < 30) {
+      table[k] = Math.exp(-lambda) * Math.pow(lambda, k) / FACT[k];
+    } else {
+      let logFk = 0; for (let i = 2; i <= k; i++) logFk += Math.log(i);
+      table[k] = Math.exp(-lambda + k * Math.log(lambda) - logFk);
+    }
+  }
+  return table;
+}
+
 function dixonColesTau(h, a, lH, lA, rho) {
   const r = Number.isFinite(rho) ? rho : -0.11;
   let tau = 1;
@@ -610,11 +656,13 @@ function dixonColesTau(h, a, lH, lA, rho) {
   else if (h === 1 && a === 1) tau = 1 - r;
   return Math.max(0.01, tau);
 }
+
 function timeWeight(minute) {
   if (minute <= 15) return 0.80; if (minute <= 30) return 0.88; if (minute <= 45) return 0.95;
   if (minute <= 60) return 1.00; if (minute <= 75) return 1.10; if (minute <= 90) return 1.25;
   if (minute <= 105) return 1.30; return 1.35;
 }
+
 function expectedGoalsIntegrated(minute, remaining, format, i1, i2, basePerMin) {
   if (remaining <= 0) return 0;
   const n = CONFIG.INTEGRATION_STEPS, dt = remaining / n, half2_end = 90 + i1 + i2;
@@ -627,13 +675,22 @@ function expectedGoalsIntegrated(minute, remaining, format, i1, i2, basePerMin) 
   }
   return sum;
 }
+
 function pickColor(pct) {
   if (pct >= 65) return { bar: 'bg-success', text: 'text-success' };
   if (pct >= 35) return { bar: 'bg-warning', text: 'text-warning' };
   if (pct >= 15) return { bar: 'bg-orange', text: 'text-orange' };
   return { bar: 'bg-danger', text: 'text-danger' };
 }
-function calcAHOutcome(fh, fa, h) { const n = fh - fa - h; const TOL = 1e-9; if (n >= 0.5 - TOL) return 1; if (n <= -0.5 + TOL) return -1; return 0; }
+
+/* AH CONVENTION: AH -0.5 = เหย้าต่อ 0.5 ลูก, margin = (fh-fa)+h */
+function calcAHOutcome(fh, fa, h) {
+  const margin = (fh - fa) + h;
+  if (margin > TOL_AH) return 1;
+  if (margin < -TOL_AH) return -1;
+  return 0;
+}
+
 function getAHParts(ah) {
   const absH = Math.abs(ah), frac = absH - Math.floor(absH);
   const q = Math.abs(frac - 0.25) < EPS || Math.abs(frac - 0.75) < EPS;
@@ -644,19 +701,23 @@ function getAHParts(ah) {
   if (ah < 0) { h1 = -h1; h2 = -h2; }
   return { isQuarter: true, parts: [h1, h2] };
 }
+
 function calcShotXg(sot, big, shots) {
   big = Math.min(big, sot);
   const sotNonBig = Math.max(0, sot - big), offTarget = Math.max(0, shots - sot);
   const xg = big * CONFIG.XG.BIG_CHANCE + sotNonBig * CONFIG.XG.SOT_NON_BIG + offTarget * CONFIG.XG.OFF_TARGET;
   return { xg, sotNonBig, offTarget };
 }
+
 function strengthToAttackMult(s) {
   const raw = Math.exp(CONFIG.STRENGTH.SENSITIVITY * (s - 70));
   const shrunk = 1 + (raw - 1) * CONFIG.STRENGTH.BAYES_SHRINK;
   return Math.max(CONFIG.STRENGTH.MIN_MULT, Math.min(CONFIG.STRENGTH.MAX_MULT, shrunk));
 }
 function strengthToDefenseMult(s) { return 1 / strengthToAttackMult(s); }
+
 function getTotalMatchTime(format, i1, i2) { return (format === "90") ? (90 + i1 + i2) : (120 + i1 + i2); }
+
 function calculateRemaining(minute, i1, i2, format) {
   const h1e = 45 + i1, h2e = 90 + i1 + i2, et1e = 105 + i1, et2e = 120 + i1 + i2;
   let r = 0;
@@ -664,6 +725,7 @@ function calculateRemaining(minute, i1, i2, format) {
   else { if (minute <= h1e) r = (h1e - minute) + (45 + i2) + 30; else if (minute <= h2e) r = (h2e - minute) + 30; else if (minute <= et1e) r = (et1e - minute) + (15 + i2); else if (minute <= et2e) r = et2e - minute; }
   return { remaining: r, half1_end: h1e, half2_end: h2e, et1_end: et1e, et2_end: et2e };
 }
+
 function calcConfidence({ hShots, aShots, hSot, aSot, hBig, aBig, minute, top3ProbSum, goalDiff = 0 }) {
   const total = hShots + aShots;
   const sSample = Math.min(1, total / 25);
@@ -675,7 +737,8 @@ function calcConfidence({ hShots, aShots, hSot, aSot, hBig, aBig, minute, top3Pr
   const leadMagnitude = Math.min(3, Math.abs(goalDiff));
   const leadScore = Math.min(1, (leadMagnitude / 3) * (minute / 75));
   const C = CONFIG.CONFIDENCE;
-  const comp = C.W_SAMPLE * sSample + C.W_QUALITY * qScore + C.W_AGREEMENT * aScore + C.W_MINUTE * mScore + C.W_ACCURACY * acc + C.W_LEAD * leadScore;
+  const comp = C.W_SAMPLE * sSample + C.W_QUALITY * qScore + C.W_AGREEMENT * aScore
+             + C.W_MINUTE * mScore + C.W_ACCURACY * acc + C.W_LEAD * leadScore;
   const raw = (C.BASE + (1 - C.BASE) * comp) * C.SHRINK * 100;
   return Math.round(Math.max(0, Math.min(100, raw)));
 }
@@ -693,7 +756,11 @@ function handleLogin() {
   Storage.saveSession();
   initAppForUser();
 }
-function handleLogout() { if (!safeConfirm('คุณต้องการออกจากระบบใช่หรือไม่?')) return; Storage.clearSession(); location.reload(); }
+function handleLogout() {
+  if (!safeConfirm('คุณต้องการออกจากระบบใช่หรือไม่?')) return;
+  Storage.clearSession();
+  location.reload();
+}
 function checkAuth() {
   const savedUser = Storage.loadSession();
   if (savedUser) { AppState.setUser(savedUser); $('loginOverlay').style.display = 'none'; initAppForUser(); }
@@ -708,22 +775,19 @@ function initAppForUser() {
 }
 document.getElementById('loginEmail').addEventListener('keypress', function (e) { if (e.key === 'Enter') handleLogin(); });
 
-/* ============ LEAGUE DATALIST ============ */
 function initLeagueDatalist() {
   const dl = $('leagueList');
   if (!dl) return;
-  
-  // ✅ เรียงลำดับลีกตามชื่อภาษาไทย (ก-ฮ) ด้วย localeCompare
-  const sortedEntries = Object.entries(LEAGUE_CONSTANTS).sort((a, b) => {
-    return a[1].name.localeCompare(b[1].name, 'th');
+  const sortedEntries = Object.entries(LEAGUE_CONSTANTS).sort((a, b) => a[1].name.localeCompare(b[1].name, 'th'));
+  const opts = [];
+  sortedEntries.forEach(([key, val]) => {
+    const label = `${val.flag || '🌐'} ${val.name} (${val.goals.toFixed(2)}⚽)`;
+    opts.push(`<option value="${val.name}">${label}</option>`);
+    (val.aliases || []).slice(0, 2).forEach(alias => {
+      opts.push(`<option value="${alias}">${val.flag || '🌐'} ${alias} → ${val.name}</option>`);
+    });
   });
-
-  const opts = sortedEntries.map(([key, val]) => {
-    const aliases = (val.aliases || []).slice(0, 3).join(' · ');
-    const label = `${val.flag || '🌐'} ${val.name}${aliases ? ' — ' + aliases : ''} (${val.goals.toFixed(2)}⚽)`;
-    return `<option value="${val.name}">${label}</option>`;
-  }).join('');
-  dl.innerHTML = opts;
+  dl.innerHTML = opts.join('');
 }
 
 function matchLeagueFromInput() {
@@ -732,24 +796,20 @@ function matchLeagueFromInput() {
   const val = (input.value || '').trim();
   if (!val) return;
   const q = val.toLowerCase().normalize('NFC');
-
-  let found = Object.entries(LEAGUE_CONSTANTS).find(([k, v]) =>
-    v.name.toLowerCase().normalize('NFC') === q);
+  let found = Object.entries(LEAGUE_CONSTANTS).find(([k, v]) => v.name.toLowerCase().normalize('NFC') === q);
   if (!found) found = Object.entries(LEAGUE_CONSTANTS).find(([k]) => k.toLowerCase() === q);
-  if (!found) found = Object.entries(LEAGUE_CONSTANTS).find(([k, v]) =>
-    v.aliases && v.aliases.some(a => (a || '').toLowerCase().normalize('NFC') === q));
+  if (!found) found = Object.entries(LEAGUE_CONSTANTS).find(([k, v]) => v.aliases && v.aliases.some(a => (a || '').toLowerCase().normalize('NFC') === q));
   if (!found && q.length >= 3) {
     found = Object.entries(LEAGUE_CONSTANTS).find(([k, v]) =>
       v.name.toLowerCase().normalize('NFC').includes(q) ||
       k.toLowerCase().includes(q) ||
       (v.aliases && v.aliases.some(a => (a || '').toLowerCase().normalize('NFC').includes(q))));
   }
-
   if (found && AppState.league.key !== found[0]) {
     AppState.setLeague(found[0], found[1]);
     writeVal('leagueSearch', found[1].name);
     handleLeagueInput();
-    saveInputs();
+    saveInputsDebounced();
   } else if (!found && val.length >= 2) {
     const el = $('leagueResult');
     if (el) el.innerHTML = `<span class="text-danger fw-bold" style="font-size:0.65rem;">❌ ไม่พบลีก "${val}" — ลองพิมพ์: EPL, THAI, NWSL, premier, ไทย</span>`;
@@ -770,12 +830,17 @@ function handleLeagueInput() {
 }
 
 const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','auto_ah','auto_live_weight'];
+let _saveTimer = null;
 function saveInputs() {
   if (!AppState.user) return;
   const data = {};
   INPUT_IDS.forEach(id => { const el = $(id); if (el) data[id] = el.value; });
   data['selectedLeagueKey'] = AppState.league.key;
   Storage.set('inputs', data);
+}
+function saveInputsDebounced() {
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(saveInputs, 300);
 }
 function restoreInputs() {
   if (!AppState.user) return;
@@ -787,7 +852,11 @@ function restoreInputs() {
     handleLeagueInput();
   }
 }
-function resetInputs() { if (!safeConfirm('ล้างข้อมูลและโหลดค่าเริ่มต้นใหม่?')) return; Storage.remove('inputs'); location.reload(); }
+function resetInputs() {
+  if (!safeConfirm('ล้างข้อมูลและโหลดค่าเริ่มต้นใหม่?')) return;
+  Storage.remove('inputs');
+  location.reload();
+}
 
 function updateResultTitle() {
   const h = readStr('home_name', 'ทีมเหย้า');
@@ -797,33 +866,48 @@ function updateResultTitle() {
   writeText('resultTitle', `${h} ${hs} - ${as} ${a}`);
 }
 
-function autoEstimateStrength(stats = null) {
-  const d = stats || {
-    ah: parseFloat(($('handicapSelect') && $('handicapSelect').value) || '0') || 0,
-    minute: readNum('match_minute',{min:0,max:120,integer:true,fallback:0}),
-    cH: readNum('current_home_score',{min:0,integer:true,fallback:0}),
-    cA: readNum('current_away_score',{min:0,integer:true,fallback:0}),
-    hShots: readNum('h_shots',{min:0,integer:true,fallback:0}), aShots: readNum('a_shots',{min:0,integer:true,fallback:0}),
-    hSot: readNum('h_sot',{min:0,integer:true,fallback:0}), aSot: readNum('a_sot',{min:0,integer:true,fallback:0}),
-    hBig: readNum('h_big',{min:0,integer:true,fallback:0}), aBig: readNum('a_big',{min:0,integer:true,fallback:0}),
-    redHome: readNum('red_home',{min:0,integer:true,fallback:0}), redAway: readNum('red_away',{min:0,integer:true,fallback:0})
-  };
-  const homeBase = Math.max(25,Math.min(95,70 - d.ah * 12));
-  const awayBase = Math.max(25,Math.min(95,70 + d.ah * 12));
+function computeStrength(d) {
+  const homeBase = Math.max(25, Math.min(95, 70 - d.ah * 12));
+  const awayBase = Math.max(25, Math.min(95, 70 + d.ah * 12));
   const liveWeight = d.minute > 0 ? Math.min(0.45, 0.15 + d.minute / 200) : 0;
-  const scoreEdge = Math.max(-2,Math.min(2,d.cH-d.cA)) * 1.6;
-  const shotEdge = Math.max(-12,Math.min(12,(d.hShots-d.aShots)*0.35 + (d.hSot-d.aSot)*0.9 + (d.hBig-d.aBig)*1.4));
-  const redEdge = (d.redAway-d.redHome) * 5;
-  const homeLiveEdge = Math.max(-18,Math.min(18,scoreEdge + shotEdge + redEdge));
-  const awayLiveEdge = -homeLiveEdge;
-  const home = Math.round(Math.max(20,Math.min(98,homeBase*(1-liveWeight)+(homeBase+homeLiveEdge)*liveWeight)));
-  const away = Math.round(Math.max(20,Math.min(98,awayBase*(1-liveWeight)+(awayBase+awayLiveEdge)*liveWeight)));
-  writeVal('home_strength',home); writeVal('away_strength',away);
-  writeText('homeStrengthDisplay',home); writeText('awayStrengthDisplay',away);
+  const scoreEdge = Math.max(-2, Math.min(2, d.cH - d.cA)) * 1.6;
+  const shotEdge = Math.max(-12, Math.min(12,
+    (d.hShots - d.aShots) * 0.35 + (d.hSot - d.aSot) * 0.9 + (d.hBig - d.aBig) * 1.4));
+  const redEdge = (d.redAway - d.redHome) * 5;
+  const homeLiveEdge = Math.max(-18, Math.min(18, scoreEdge + shotEdge + redEdge));
+  const home = Math.round(Math.max(20, Math.min(98, homeBase * (1 - liveWeight) + (homeBase + homeLiveEdge) * liveWeight)));
+  const away = Math.round(Math.max(20, Math.min(98, awayBase * (1 - liveWeight) + (awayBase - homeLiveEdge) * liveWeight)));
+  return { home, away, homeBase, awayBase, liveWeight, ah: d.ah };
+}
+
+function autoEstimateStrength(stats = null) {
+  const d = stats || readStatsFromDOM();
+  const r = computeStrength(d);
+  writeVal('home_strength', r.home);
+  writeVal('away_strength', r.away);
+  writeText('homeStrengthDisplay', r.home);
+  writeText('awayStrengthDisplay', r.away);
   const ahLabel = d.ah === 0 ? 'AH 0.0' : (d.ah > 0 ? `AH +${d.ah.toFixed(2)}` : `AH ${d.ah.toFixed(2)}`);
-  const liveNote = d.minute > 0 ? `LIVE ${Math.round(liveWeight*100)}%` : 'รอข้อมูล LIVE';
-  writeText('autoResult',`${ahLabel} · ${liveNote}`);
-  return {home,away,homeBase,awayBase,liveWeight};
+  const liveNote = d.minute > 0 ? `LIVE ${Math.round(r.liveWeight * 100)}%` : 'รอข้อมูล LIVE';
+  writeText('autoResult', `${ahLabel} · ${liveNote}`);
+  return r;
+}
+
+function readStatsFromDOM() {
+  return {
+    ah: parseFloat(($('handicapSelect') && $('handicapSelect').value) || '0') || 0,
+    minute: readNum('match_minute', { min: 0, max: 120, integer: true }),
+    cH: readNum('current_home_score', { min: 0, integer: true }),
+    cA: readNum('current_away_score', { min: 0, integer: true }),
+    hShots: readNum('h_shots', { min: 0, integer: true }),
+    aShots: readNum('a_shots', { min: 0, integer: true }),
+    hSot: readNum('h_sot', { min: 0, integer: true }),
+    aSot: readNum('a_sot', { min: 0, integer: true }),
+    hBig: readNum('h_big', { min: 0, integer: true }),
+    aBig: readNum('a_big', { min: 0, integer: true }),
+    redHome: readNum('red_home', { min: 0, max: 5, integer: true }),
+    redAway: readNum('red_away', { min: 0, max: 5, integer: true }),
+  };
 }
 
 function readMatchInputs() {
@@ -852,19 +936,17 @@ function readMatchInputs() {
 
   const htH = readNum('ht_home_score', { min: 0, integer: true, fallback: 0 });
   const htA = readNum('ht_away_score', { min: 0, integer: true, fallback: 0 });
-  const strength = autoEstimateStrength({
+  const strength = computeStrength({
     ah: parseFloat(($('handicapSelect') && $('handicapSelect').value) || '0') || 0,
-    minute, cH, cA, hShots, aShots, hSot, aSot,
-    hBig, aBig,
-    redHome: readNum('red_home',{min:0,integer:true,fallback:0}),
-    redAway: readNum('red_away',{min:0,integer:true,fallback:0})
+    minute, cH, cA, hShots, aShots, hSot, aSot, hBig, aBig,
+    redHome: readNum('red_home', { min: 0, max: 5, integer: true, fallback: 0 }),
+    redAway: readNum('red_away', { min: 0, max: 5, integer: true, fallback: 0 }),
   });
 
   return {
     homeName: readStr('home_name') || 'ทีมเหย้า',
     awayName: readStr('away_name') || 'ทีมเยือน',
-    homeStrength: strength.home,
-    awayStrength: strength.away,
+    homeStrength: strength.home, awayStrength: strength.away,
     minute,
     injury1: readNum('injury_1', { min: 0, max: 15, integer: true, fallback: 0 }),
     injury2: readNum('injury_2', { min: 0, max: 15, integer: true, fallback: 0 }),
@@ -915,16 +997,20 @@ function calcTempo(inputs, ratio) {
   let modifier = 1.0, text = 'ปกติ', badge = 'bg-secondary', icon = 'bi-speedometer2';
   if (inputs.minute >= 15) {
     const effMin = Math.min(inputs.minute, totalMatchTime);
-    const tempo90Equiv = Math.min(effMin, 90) + Math.max(0, effMin - 90) * CONFIG.TEMPO.ET_RATE_MULT;
-    const expSoFar = Math.max(0.1, (baselineRatePer90 / 90) * tempo90Equiv);
+    const etMinutes = Math.max(0, effMin - 90);
+    const effectiveTempoMin = Math.min(effMin, 90) + etMinutes * CONFIG.TEMPO.ET_RATE_MULT;
+    const expSoFar = Math.max(0.1, (baselineRatePer90 / 90) * effectiveTempoMin);
     const actG = currentTotalGoals;
     if (actG > expSoFar) {
       const dr = actG / Math.max(0.1, expSoFar);
       modifier = Math.min(CONFIG.TEMPO.MAX, 1 + (dr - 1) * 0.15);
       if (modifier > 1.08) { text = `🔥 ดุเดือด (x${modifier.toFixed(2)})`; badge = 'bg-danger text-white'; icon = 'bi-fire'; }
     } else if (actG === 0 && inputs.minute > 30) {
-      if (inputs.minute >= TEMPO_0_0_LATE_MINUTE) { modifier = TEMPO_0_0_LATE_BOOST; text = `⏰ 0-0 ท้ายเกม (x${modifier.toFixed(2)})`; badge = 'bg-warning text-dark'; icon = 'bi-alarm'; }
-      else { modifier = 0.90; text = `🧊 เนือย (x${modifier.toFixed(2)})`; badge = 'bg-primary text-white'; icon = 'bi-snow'; }
+      if (inputs.minute >= TEMPO_0_0_LATE_MINUTE) {
+        modifier = TEMPO_0_0_LATE_BOOST; text = `⏰ 0-0 ท้ายเกม (x${modifier.toFixed(2)})`; badge = 'bg-warning text-dark'; icon = 'bi-alarm';
+      } else {
+        modifier = 0.90; text = `🧊 เนือย (x${modifier.toFixed(2)})`; badge = 'bg-primary text-white'; icon = 'bi-snow';
+      }
     } else if (actG < expSoFar) {
       const dr = actG / Math.max(0.1, expSoFar);
       modifier = Math.max(CONFIG.TEMPO.MIN, 1 - (1 - dr) * 0.15);
@@ -955,41 +1041,66 @@ function calcExpectedGoals(inputs, ratio, tempo) {
 }
 
 function buildScoreGrid(xgH, xgA, rho) {
-  const grid = []; let total = 0;
-  for (let h = 0; h <= CONFIG.GRID.MAX_GOALS; h++) {
-    for (let a = 0; a <= CONFIG.GRID.MAX_GOALS; a++) {
-      const p = poisson(xgH, h) * poisson(xgA, a) * dixonColesTau(h, a, xgH, xgA, rho);
-      grid.push({ h, a, p }); total += p;
+  const N = CONFIG.GRID.MAX_GOALS + 1;
+  const probs = new Float64Array(N * N);
+  const pH = makePoissonTable(xgH, CONFIG.GRID.MAX_GOALS);
+  const pA = makePoissonTable(xgA, CONFIG.GRID.MAX_GOALS);
+  let total = 0;
+  for (let h = 0; h < N; h++) {
+    for (let a = 0; a < N; a++) {
+      const p = pH[h] * pA[a] * dixonColesTau(h, a, xgH, xgA, rho);
+      probs[h * N + a] = p;
+      total += p;
     }
   }
-  if (total > 0) grid.forEach(x => x.p /= total);
-  return { grid, total };
+  if (total > 0) {
+    const inv = 1 / total;
+    for (let i = 0; i < probs.length; i++) probs[i] *= inv;
+  }
+  return { probs, N, total };
+}
+
+function* iterateGrid(grid) {
+  const { probs, N } = grid;
+  for (let h = 0; h < N; h++) {
+    for (let a = 0; a < N; a++) {
+      yield { h, a, p: probs[h * N + a] };
+    }
+  }
 }
 
 function calcAH(grid, cH, cA, ahRate) {
   const ahParts = getAHParts(ahRate);
   let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
-  const TOL = 1e-9;
-  grid.forEach(x => {
-    const fh = cH + x.h, fa = cA + x.a;
-    const ah = ahParts.isQuarter ? (calcAHOutcome(fh, fa, ahParts.parts[0]) + calcAHOutcome(fh, fa, ahParts.parts[1])) / 2 : calcAHOutcome(fh, fa, ahRate);
-    if      (ah >  0.5 + TOL) { pAHHomeWin += x.p; }
-    else if (ah >         TOL) { pAHHomeWin += x.p*0.5; pAHPush += x.p*0.5; }
-    else if (ah < -0.5 - TOL) { pAHAwayWin += x.p; }
-    else if (ah <       -TOL) { pAHAwayWin += x.p*0.5; pAHPush += x.p*0.5; }
-    else                       { pAHPush   += x.p; }
-  });
+  for (const cell of iterateGrid(grid)) {
+    const fh = cH + cell.h, fa = cA + cell.a;
+    let outcome;
+    if (ahParts.isQuarter) {
+      const r1 = calcAHOutcome(fh, fa, ahParts.parts[0]);
+      const r2 = calcAHOutcome(fh, fa, ahParts.parts[1]);
+      outcome = (r1 + r2) / 2;
+    } else {
+      outcome = calcAHOutcome(fh, fa, ahRate);
+    }
+    if      (outcome >  0.5 + TOL_AH) { pAHHomeWin += cell.p; }
+    else if (outcome >        TOL_AH) { pAHHomeWin += cell.p * 0.5; pAHPush += cell.p * 0.5; }
+    else if (outcome < -0.5 - TOL_AH) { pAHAwayWin += cell.p; }
+    else if (outcome <      -TOL_AH) { pAHAwayWin += cell.p * 0.5; pAHPush += cell.p * 0.5; }
+    else                               { pAHPush += cell.p; }
+  }
   const sum = pAHHomeWin + pAHAwayWin + pAHPush;
   if (sum > 0) { pAHHomeWin /= sum; pAHAwayWin /= sum; pAHPush /= sum; }
   return { pAHHomeWin, pAHAwayWin, pAHPush };
 }
 
 function calcFT(grid, cH, cA) {
-  const p = { 0.5: 0, 1.5: 0, 2.5: 0, 3.5: 0, 4.5: 0, 5.5: 0, 6.5: 0 };
-  grid.forEach(x => {
-    const tg = cH + x.h + cA + x.a;
-    [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5].forEach(t => { if (tg > t) p[t] += x.p; });
-  });
+  const thresholds = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5];
+  const p = {};
+  thresholds.forEach(t => p[t] = 0);
+  for (const cell of iterateGrid(grid)) {
+    const tg = cH + cell.h + cA + cell.a;
+    for (const t of thresholds) { if (tg > t) p[t] += cell.p; }
+  }
   return { pOver05: p[0.5], pOver15: p[1.5], pOver25: p[2.5], pOver35: p[3.5], pOver45: p[4.5], pOver55: p[5.5], pOver65: p[6.5] };
 }
 
@@ -997,15 +1108,25 @@ function calcFH(inputs, xgH, xgA, rho, timeData, tempo) {
   const currentTotalGoals = inputs.cH + inputs.cA;
   const htTotalGoals = inputs.htH + inputs.htA;
   const half1_end = timeData.half1_end;
+  const htMissing = (inputs.htH + inputs.htA) === 0 && currentTotalGoals > 0;
+
   if (inputs.minute >= half1_end) {
-    const htMissing = (inputs.htH + inputs.htA) === 0 && (inputs.cH + inputs.cA) > 0;
-    return { isFinished: true, htMissing,
+    if (htMissing) {
+      return { isFinished: true, htMissing: true,
+        fhProbHome: null, fhProbTotal: null, fhProbAway: null,
+        fh05: null, fh15: null, fh25: null, fh35: null,
+        htHomeWin: null, htDraw: null, htAwayWin: null };
+    }
+    return { isFinished: true, htMissing: false,
       fhProbHome: inputs.htH > inputs.htA ? 100 : 0,
       fhProbTotal: inputs.htH === inputs.htA ? 100 : 0,
       fhProbAway: inputs.htA > inputs.htH ? 100 : 0,
-      fh05: htTotalGoals > 0.5 ? 100 : 0, fh15: htTotalGoals > 1.5 ? 100 : 0,
-      fh25: htTotalGoals > 2.5 ? 100 : 0, fh35: htTotalGoals > 3.5 ? 100 : 0,
-      htHomeWin: inputs.htH > inputs.htA, htDraw: inputs.htH === inputs.htA,
+      fh05: htTotalGoals > 0.5 ? 100 : 0,
+      fh15: htTotalGoals > 1.5 ? 100 : 0,
+      fh25: htTotalGoals > 2.5 ? 100 : 0,
+      fh35: htTotalGoals > 3.5 ? 100 : 0,
+      htHomeWin: inputs.htH > inputs.htA,
+      htDraw: inputs.htH === inputs.htA,
       htAwayWin: inputs.htA > inputs.htH };
   }
   const fhRem = Math.max(0, half1_end - inputs.minute);
@@ -1018,26 +1139,41 @@ function calcFH(inputs, xgH, xgA, rho, timeData, tempo) {
   const leagueBias = leagueFhShare / BASELINE_FH_SHARE;
   const fhXH = xgH * naturalFhFrac * leagueBias;
   const fhXA = xgA * naturalFhFrac * leagueBias;
-  const fhGrid = []; let fhT = 0;
-  for (let h = 0; h <= CONFIG.GRID.MAX_FH_GOALS; h++) {
-    for (let a = 0; a <= CONFIG.GRID.MAX_FH_GOALS; a++) {
-      const p = poisson(fhXH, h) * poisson(fhXA, a) * dixonColesTau(h, a, fhXH, fhXA, rho);
-      fhGrid.push({ h, a, p }); fhT += p;
+  const fhGrid = new Float64Array((CONFIG.GRID.MAX_FH_GOALS + 1) ** 2);
+  const NFH = CONFIG.GRID.MAX_FH_GOALS + 1;
+  const pH = makePoissonTable(fhXH, CONFIG.GRID.MAX_FH_GOALS);
+  const pA = makePoissonTable(fhXA, CONFIG.GRID.MAX_FH_GOALS);
+  let fhT = 0;
+  for (let h = 0; h < NFH; h++) {
+    for (let a = 0; a < NFH; a++) {
+      const p = pH[h] * pA[a] * dixonColesTau(h, a, fhXH, fhXA, rho);
+      fhGrid[h * NFH + a] = p; fhT += p;
     }
   }
-  if (fhT > 0) fhGrid.forEach(x => x.p /= fhT);
+  if (fhT > 0) { const inv = 1 / fhT; for (let i = 0; i < fhGrid.length; i++) fhGrid[i] *= inv; }
   let pFW = 0, pFD = 0, pFL = 0, fh05 = 0, fh15 = 0, fh25 = 0, fh35 = 0;
-  fhGrid.forEach(s => {
-    const fh = inputs.cH + s.h, fa = inputs.cA + s.a;
-    if (fh > fa) pFW += s.p; else if (fh === fa) pFD += s.p; else pFL += s.p;
-    const tg = s.h + s.a + currentTotalGoals;
-    if (tg > 0.5) fh05 += s.p; if (tg > 1.5) fh15 += s.p; if (tg > 2.5) fh25 += s.p; if (tg > 3.5) fh35 += s.p;
-  });
-  return { isFinished: false, htMissing: false, fhProbHome: pFW * 100, fhProbTotal: pFD * 100, fhProbAway: pFL * 100, fh05: fh05 * 100, fh15: fh15 * 100, fh25: fh25 * 100, fh35: fh35 * 100, htHomeWin: pFW > pFD && pFW > pFL, htDraw: pFD > pFW && pFD > pFL, htAwayWin: pFL > pFW && pFL > pFD };
+  for (let h = 0; h < NFH; h++) {
+    for (let a = 0; a < NFH; a++) {
+      const p = fhGrid[h * NFH + a];
+      const fh = inputs.cH + h, fa = inputs.cA + a;
+      if (fh > fa) pFW += p; else if (fh === fa) pFD += p; else pFL += p;
+      const tg = h + a + currentTotalGoals;
+      if (tg > 0.5) fh05 += p; if (tg > 1.5) fh15 += p; if (tg > 2.5) fh25 += p; if (tg > 3.5) fh35 += p;
+    }
+  }
+  return { isFinished: false, htMissing: false,
+    fhProbHome: pFW * 100, fhProbTotal: pFD * 100, fhProbAway: pFL * 100,
+    fh05: fh05 * 100, fh15: fh15 * 100, fh25: fh25 * 100, fh35: fh35 * 100,
+    htHomeWin: pFW > pFD && pFW > pFL, htDraw: pFD > pFW && pFD > pFL, htAwayWin: pFL > pFW && pFL > pFD };
 }
 
 function calcTop3(grid, cH, cA) {
-  const top3 = grid.map(x => ({ score: `${cH + x.h}-${cA + x.a}`, prob: x.p })).sort((a, b) => b.prob - a.prob).slice(0, 3).map(x => ({ score: x.score, prob: x.prob * 100 }));
+  const arr = [];
+  for (const cell of iterateGrid(grid)) {
+    arr.push({ score: `${cH + cell.h}-${cA + cell.a}`, prob: cell.p });
+  }
+  arr.sort((a, b) => b.prob - a.prob);
+  const top3 = arr.slice(0, 3).map(x => ({ score: x.score, prob: x.prob * 100 }));
   const sum = top3.reduce((s, i) => s + i.prob, 0);
   return { top3, sum };
 }
@@ -1050,13 +1186,16 @@ function calcNextGoal(xgH, xgA) {
 }
 
 function renderPrediction(result) {
-  const { inputs, xgH, xgA, ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, timeData } = result;
+  const { inputs, xgH, xgA, ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, timeData, grid } = result;
+
   let pHomeWin = 0, pDraw = 0, pAwayWin = 0, pBTTS = 0;
-  result.grid.forEach(cell => {
+  for (const cell of iterateGrid(grid)) {
     const homeFinal = inputs.cH + cell.h, awayFinal = inputs.cA + cell.a;
-    if (homeFinal > awayFinal) pHomeWin += cell.p; else if (homeFinal === awayFinal) pDraw += cell.p; else pAwayWin += cell.p;
+    if (homeFinal > awayFinal) pHomeWin += cell.p;
+    else if (homeFinal === awayFinal) pDraw += cell.p;
+    else pAwayWin += cell.p;
     if (homeFinal > 0 && awayFinal > 0) pBTTS += cell.p;
-  });
+  }
   writeText('ftHomeWin', fmtPct(pHomeWin * 100));
   writeText('ftDraw', fmtPct(pDraw * 100));
   writeText('ftAwayWin', fmtPct(pAwayWin * 100));
@@ -1066,6 +1205,7 @@ function renderPrediction(result) {
   writeText('ahHomeProb', fmtPct(ah.pAHHomeWin * 100));
   writeText('ahAwayProb', fmtPct(ah.pAHAwayWin * 100));
   writeText('ahPushProb', fmtPct(ah.pAHPush * 100));
+
   const setFtRow = (id, barId, val, trigger) => {
     const fv = trigger ? 100 : val * 100, el = $(id), c = pickColor(fv);
     el.innerText = fmtPct(fv); el.className = 'fw-bold ' + c.text;
@@ -1078,9 +1218,11 @@ function renderPrediction(result) {
   setFtRow('ftOver45', 'ftOver45Bar', ft.pOver45, inputs.cH + inputs.cA > 4.5);
   setFtRow('ftOver55', 'ftOver55Bar', ft.pOver55, inputs.cH + inputs.cA > 5.5);
   setFtRow('ftOver65', 'ftOver65Bar', ft.pOver65, inputs.cH + inputs.cA > 6.5);
+
   writeText('probHome', fmtPct(nextGoal.pHN * 100));
   writeText('probNone', fmtPct(nextGoal.pNone * 100));
   writeText('probAway', fmtPct(nextGoal.pAN * 100));
+
   if (fh.isFinished) {
     if (fh.htMissing) {
       writeText('fhProbHome', 'N/A');
@@ -1097,31 +1239,42 @@ function renderPrediction(result) {
     writeText('fhProbAway', fmtPct(fh.fhProbAway));
   }
   const setFhRow = (id, barId, val) => {
-    const el = $(id), c = pickColor(val);
+    const el = $(id), bar = $(barId);
+    if (val === null) {
+      el.innerText = 'N/A'; el.className = 'fw-bold text-muted';
+      bar.style.width = '0%'; bar.className = 'progress-bar bg-secondary';
+      return;
+    }
+    const c = pickColor(val);
     el.innerText = fmtPct(val); el.className = 'fw-bold ' + c.text;
-    const bar = $(barId); bar.style.width = val + '%'; bar.className = 'progress-bar ' + c.bar;
+    bar.style.width = val + '%'; bar.className = 'progress-bar ' + c.bar;
   };
   setFhRow('fhOver05', 'fhOver05Bar', fh.fh05);
   setFhRow('fhOver15', 'fhOver15Bar', fh.fh15);
   setFhRow('fhOver25', 'fhOver25Bar', fh.fh25);
   setFhRow('fhOver35', 'fhOver35Bar', fh.fh35);
+
   const colors = ['bg-success text-white', 'bg-warning text-dark', 'bg-secondary text-white'];
   const icons = ['🥇', '🥈', '🥉'];
   writeHtml('topScoresContainer', top3.top3.map((item, i) => `<div class="col-4"><div class="score-box ${colors[i]} shadow-sm"><div class="fw-bold mb-0" style="font-size:0.75rem;">${icons[i]}</div><div class="fw-extrabold mb-0" style="font-size:1.1rem;">${item.score}</div><div class="fw-bold" style="font-size:0.75rem;">${fmtPct(item.prob)}</div></div></div>`).join(''));
   writeHtml('top3SumNote', `Top 3 รวม = <strong>${fmtPct(top3.sum)}</strong> <span class="prob-absolute-tag">(absolute)</span>`);
+
   writeText('resultTitle', `${inputs.homeName} ${inputs.cH} - ${inputs.cA} ${inputs.awayName}`);
   writeText('displayMinute', inputs.minute);
   writeText('displayRemaining', timeData.remaining);
   writeText('confidenceBadge', `Confidence: ${confidence}%`);
   const lg = AppState.league;
   writeText('leagueInfluenceText', `${lg.flag || '🌐'} ${lg.text}`);
+
   const dqEl = $('dataQualityBadge');
   if (hasBigData(inputs.hBig, inputs.aBig)) { dqEl.className = 'badge bg-success'; dqEl.innerText = 'Data: High'; }
   else if ((inputs.hShots + inputs.aShots) >= 10) { dqEl.className = 'badge bg-warning text-dark'; dqEl.innerText = 'Data: Medium'; }
   else { dqEl.className = 'badge bg-danger'; dqEl.innerText = 'Data: Low'; }
+
   const tempoEl = $('tempoBadge');
   tempoEl.className = `badge ${tempo.badge}`;
   tempoEl.innerHTML = `<i class="bi ${tempo.icon}"></i> Tempo: ${tempo.text}`;
+
   const rcArea = $('redCardImpactArea');
   if (inputs.redHome > 0 || inputs.redAway > 0) {
     let parts = [];
@@ -1130,12 +1283,14 @@ function renderPrediction(result) {
     writeHtml('redImpactText', parts.join(' | ') + ` (xG: ${xgH.before.toFixed(2)}→${xgH.after.toFixed(2)} vs ${xgA.before.toFixed(2)}→${xgA.after.toFixed(2)})`);
     rcArea.classList.remove('d-none');
   } else rcArea.classList.add('d-none');
+
   writeHtml('xgBreakdown',
     `<div class="d-flex justify-content-between border-bottom pb-1 mb-1"><span>🏠 เหย้า xG: <strong>${xgH.after.toFixed(2)}</strong></span><span class="text-success">${ratio.hShot.xg.toFixed(2)} × atk${ratio.hAtkMult.toFixed(2)} × def${ratio.aDefMult.toFixed(2)}</span></div>
      <div class="d-flex justify-content-between"><span>✈️ เยือน xG: <strong>${xgA.after.toFixed(2)}</strong></span><span class="text-primary">${ratio.aShot.xg.toFixed(2)} × atk${ratio.aAtkMult.toFixed(2)} × def${ratio.hDefMult.toFixed(2)}</span></div>
      <div class="d-flex justify-content-between mt-1 pt-1 border-top" style="font-size:0.65rem; color:#8297b0;"><span>Ratio: 🏠 ${(ratio.hRatio*100).toFixed(1)}% / ✈️ ${(ratio.aRatio*100).toFixed(1)}%</span><span class="fst-italic">smooth +${CONFIG.GRID.LAPLACE_SMOOTH}</span></div>
      <div class="d-flex justify-content-between mt-1" style="font-size:0.65rem; color:#8297b0;"><span>∫xG ${result.expectedGoalsRaw.toFixed(2)} × tempo ${tempo.modifier.toFixed(2)}</span><span class="debug-badge">conf=${confidence}%</span></div>`);
-  writeText('calibNote', `⚙️ v8.0: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
+
+  writeText('calibNote', `⚙️ v8.2: ∫${CONFIG.INTEGRATION_STEPS}steps; grid=${CONFIG.GRID.MAX_GOALS}; ρ=${AppState.league.rho}.` + (!hasBigData(inputs.hBig, inputs.aBig) ? ' ⚠️ Big auto' : ''));
 }
 
 function predictMatch() {
@@ -1148,14 +1303,18 @@ function predictMatch() {
   const cleaned = validation.cleaned;
   if (warnings.length > 0) { writeText('inputWarningText', warnings.join(' | ')); showEl('inputWarning', true); }
   else showEl('inputWarning', false);
+
   showEl('emptyState', false);
   showEl('resultsArea', true);
+
   const ratio = calcRatio(inputs, cleaned);
   const tempo = calcTempo(inputs, ratio);
   const eg = calcExpectedGoals(inputs, ratio, tempo);
   if (eg.timeData.remaining <= 0) { showCalcError('การแข่งขันจบลงแล้ว'); return; }
-  const { grid, total } = buildScoreGrid(eg.xgH, eg.xgA, AppState.league.rho);
-  if (total <= 0) { showCalcError('คำนวณ grid ไม่ได้'); return; }
+
+  const grid = buildScoreGrid(eg.xgH, eg.xgA, AppState.league.rho);
+  if (grid.total <= 0) { showCalcError('คำนวณ grid ไม่ได้'); return; }
+
   const ah = calcAH(grid, inputs.cH, inputs.cA, inputs.ahRate);
   const ft = calcFT(grid, inputs.cH, inputs.cA);
   const fh = calcFH(inputs, eg.xgH, eg.xgA, AppState.league.rho, eg.timeData, tempo);
@@ -1165,6 +1324,7 @@ function predictMatch() {
     hShots: inputs.hShots, aShots: inputs.aShots, hSot: cleaned.hSot, aSot: cleaned.aSot,
     hBig: cleaned.hBig, aBig: cleaned.aBig, minute: inputs.minute, top3ProbSum: top3.sum / 100, goalDiff: inputs.cH - inputs.cA,
   });
+
   const result = { inputs, grid, xgH: { before: eg.xgHBeforeRed, after: eg.xgH }, xgA: { before: eg.xgABeforeRed, after: eg.xgA }, ratio, tempo, ah, ft, fh, top3, nextGoal, confidence, timeData: eg.timeData, expectedGoalsRaw: eg.expectedGoalsRaw };
   AppState.setLastPrediction(result);
   renderPrediction(result);
@@ -1181,12 +1341,10 @@ function copyResultAsText() {
   if (!pred) return safeAlert(currentLang === 'en' ? 'No prediction yet.' : 'ยังไม่มีผลพยากรณ์');
   const t = currentLang === 'en', pct = (v) => (v * 100).toFixed(1) + '%';
   const lines = [
-    `⚽ JackAI v8.0 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
+    `⚽ JackAI v8.2 — ${pred.inputs.homeName} ${pred.inputs.cH}-${pred.inputs.cA} ${pred.inputs.awayName}`,
     `${t ? 'Minute' : 'นาที'}: ${pred.inputs.minute} (${t ? 'remaining' : 'เหลือ'} ${pred.timeData.remaining})`,
     `League: ${AppState.league.flag || '🌐'} ${AppState.league.text}`,
     `Confidence: ${pred.confidence}%`,
-    `1X2: Home ${pct(pred.grid.filter(x => pred.inputs.cH+x.h > pred.inputs.cA+x.a).reduce((v,x)=>v+x.p,0))} | Draw ${pct(pred.grid.filter(x => pred.inputs.cH+x.h === pred.inputs.cA+x.a).reduce((v,x)=>v+x.p,0))} | Away ${pct(pred.grid.filter(x => pred.inputs.cH+x.h < pred.inputs.cA+x.a).reduce((v,x)=>v+x.p,0))}`,
-    `BTTS: ${pct(pred.grid.filter(x => pred.inputs.cH+x.h>0 && pred.inputs.cA+x.a>0).reduce((v,x)=>v+x.p,0))}`,
     `AH ${pred.inputs.ahRate}: Home ${pct(pred.ah.pAHHomeWin)} | Push ${pct(pred.ah.pAHPush)} | Away ${pct(pred.ah.pAHAwayWin)}`,
     `Next Goal: Home ${pct(pred.nextGoal.pHN)} | None ${pct(pred.nextGoal.pNone)} | Away ${pct(pred.nextGoal.pAN)}`,
     `Top3: ${pred.top3.top3.map(x => `${x.score} (${x.prob.toFixed(1)}%)`).join(' / ')}`,
@@ -1205,7 +1363,6 @@ const I18N = {
   th: { home_team:'ทีมเหย้า',away_team:'ทีมเยือน',home_strength:'🏠 ความแข็งแกร่งเหย้า (อัตโนมัติ)',away_strength:'✈️ ความแข็งแกร่งเยือน (อัตโนมัติ)',auto_estimate:'AI Strength อัตโนมัติ',ah_home_label:'ราคาต่อรอง AH (เหย้า)',live_weight_label:'น้ำหนักสถิติสด (%)',search_league:'-- พิมพ์ชื่อลีกเพื่อค้นหา --',minute_label:'นาที',injury_1:'ทด 1H',injury_2:'ทด 2H',format_label:'รูปแบบ',home_score:'สกอร์เหย้า',away_score:'สกอร์เยือน',red_home:'แดง🏠',red_away:'แดง✈️',shots:'ยิงทั้งหมด',sot:'ยิงตรงกรอบ',big:'Big Chances',btn_predict:'ประมวลผลคาดการณ์',btn_reset:'รีเซ็ตข้อมูล',ah_section:'Live Asian Handicap Probs',top3_section:'สกอร์จบเกมที่เป็นไปได้สูง (Top 3)',fh_section:'ครึ่งแรก 45 นาที',next_goal_section:'ประตูถัดไป',fh_over_section:'โอกาสเกิดประตูครึ่งแรก',ft_over_section:'โอกาสเกิดประตูเต็มเวลา',home_wins_ah:'เหย้าชนะราคา',away_wins_ah:'เยือนชนะราคา',push_ah:'เสมอราคา (Push)',btn_donate:'สนับสนุน' },
   en: { home_team:'Home Team',away_team:'Away Team',home_strength:'🏠 Home Strength (automatic)',away_strength:'✈️ Away Strength (automatic)',auto_estimate:'Automatic AI Strength',ah_home_label:'Asian Handicap (Home)',live_weight_label:'Live stat weight (%)',search_league:'-- Type league name to search --',minute_label:'Minute',injury_1:'Inj 1H',injury_2:'Inj 2H',format_label:'Format',home_score:'Home Score',away_score:'Away Score',red_home:'Red🏠',red_away:'Red✈️',shots:'Total Shots',sot:'Shots on Target',big:'Big Chances',btn_predict:'Run Prediction',btn_reset:'Reset Data',ah_section:'Live Asian Handicap Probs',top3_section:'Most Likely Final Scores (Top 3)',fh_section:'First Half (45 min)',next_goal_section:'Next Goal',fh_over_section:'1st Half Over Probability',ft_over_section:'Full-Time Over Probability',home_wins_ah:'Home covers AH',away_wins_ah:'Away covers AH',push_ah:'Push',btn_donate:'Support' }
 };
-let currentLang = 'th';
 function applyI18N(lang) {
   currentLang = lang;
   const dict = I18N[lang] || I18N.th;
@@ -1219,26 +1376,248 @@ function applyI18N(lang) {
 function setLang(lang) { applyI18N(lang); }
 (function initLang() { let saved = null; try { saved = localStorage.getItem('jackai_lang'); } catch (e) {} applyI18N(saved === 'en' ? 'en' : 'th'); })();
 
+/* ============================================================
+   TEST SUITE
+   ============================================================ */
+const TestRunner = (() => {
+  let pass = 0, fail = 0, failures = [];
+  const assert = (cond, msg) => { if (cond) { pass++; } else { fail++; failures.push(msg); } };
+  const approx = (a, b, tol = 1e-6) => Math.abs(a - b) <= tol;
+  const run = (name, fn) => { try { fn(); } catch (e) { fail++; failures.push(`${name}: ${e.message}`); } };
+  const getResults = () => ({ pass, fail, failures });
+  return { assert, approx, run, getResults };
+})();
+
+function runAllTests() {
+  const T = TestRunner;
+
+  T.run('poisson()', () => {
+    T.assert(poisson(0, 0) === 1, 'poisson(0,0)=1');
+    T.assert(poisson(0, 3) === 0, 'poisson(0,3)=0');
+    T.assert(T.approx(poisson(1, 0), Math.exp(-1)), 'poisson(1,0)=e^-1');
+    T.assert(T.approx(poisson(2, 2), Math.exp(-2) * 2), 'poisson(2,2)');
+    let sum = 0; for (let k = 0; k <= 20; k++) sum += poisson(2.5, k);
+    T.assert(T.approx(sum, 1, 1e-4), 'sum poisson(2.5,0..20)=1');
+    T.assert(poisson(30, 30) > 0 && Number.isFinite(poisson(30, 30)), 'poisson(30,30) finite');
+  });
+
+  T.run('dixonColesTau()', () => {
+    const lH = 1.5, lA = 1.0, rho = -0.1;
+    T.assert(T.approx(dixonColesTau(0, 0, lH, lA, rho), 1.15), 'τ(0,0)=1.15');
+    T.assert(T.approx(dixonColesTau(0, 1, lH, lA, rho), 0.85), 'τ(0,1)=0.85');
+    T.assert(T.approx(dixonColesTau(1, 0, lH, lA, rho), 0.90), 'τ(1,0)=0.90');
+    T.assert(T.approx(dixonColesTau(1, 1, lH, lA, rho), 1.10), 'τ(1,1)=1.10');
+    T.assert(T.approx(dixonColesTau(2, 0, lH, lA, rho), 1.0), 'τ(2,0)=1.0');
+    T.assert(Number.isFinite(dixonColesTau(0, 0, lH, lA, NaN)), 'τ NaN rho finite');
+  });
+
+  T.run('calcShotXg()', () => {
+    const r1 = calcShotXg(4, 2, 10);
+    T.assert(T.approx(r1.xg, 0.64 + 0.30 + 0.168, 1e-9), 'xg=1.108');
+    T.assert(r1.sotNonBig === 2, 'sotNonBig=2');
+    T.assert(r1.offTarget === 6, 'offTarget=6');
+    T.assert(calcShotXg(0, 0, 0).xg === 0, 'zero shots → xg=0');
+    T.assert(calcShotXg(5, 2, 3).offTarget === 0, 'offTarget clamp 0');
+  });
+
+  T.run('strengthToAttackMult()', () => {
+    T.assert(T.approx(strengthToAttackMult(70), 1.0), 's=70 → 1');
+    const s100 = strengthToAttackMult(100);
+    T.assert(s100 > 1.3 && s100 < 1.35, 's=100 ≈ 1.33');
+    T.assert(strengthToAttackMult(-1000) >= 0.45, 'clamp min');
+    T.assert(strengthToAttackMult(1000) <= 2.20, 'clamp max');
+    T.assert(T.approx(strengthToDefenseMult(70), 1.0), 'def(70)=1');
+  });
+
+  T.run('getAHParts()', () => {
+    let r = getAHParts(0.25);
+    T.assert(r.isQuarter && r.parts[0] === 0 && r.parts[1] === 0.5, '0.25 → [0, 0.5]');
+    r = getAHParts(0.75);
+    T.assert(r.isQuarter && r.parts[0] === 0.5 && r.parts[1] === 1.0, '0.75 → [0.5, 1.0]');
+    r = getAHParts(-0.25);
+    T.assert(r.isQuarter && r.parts[0] === 0 && r.parts[1] === -0.5, '-0.25 → [0, -0.5]');
+    r = getAHParts(-0.75);
+    T.assert(r.parts[0] === -0.5 && r.parts[1] === -1.0, '-0.75 → [-0.5, -1.0]');
+    r = getAHParts(0.5);
+    T.assert(!r.isQuarter, '0.5 not quarter');
+    r = getAHParts(1.25);
+    T.assert(r.parts[0] === 1.0 && r.parts[1] === 1.5, '1.25 → [1.0, 1.5]');
+  });
+
+  T.run('calcAHOutcome()', () => {
+    T.assert(calcAHOutcome(1, 0, 0) === 1, '1-0 AH0 → home');
+    T.assert(calcAHOutcome(1, 1, 0) === 0, '1-1 AH0 → push');
+    T.assert(calcAHOutcome(0, 1, 0) === -1, '0-1 AH0 → away');
+    T.assert(calcAHOutcome(1, 0, -0.5) === 1, '1-0 AH-0.5 → home');
+    T.assert(calcAHOutcome(1, 1, -0.5) === -1, '1-1 AH-0.5 → away');
+    T.assert(calcAHOutcome(0, 0, -0.5) === -1, '0-0 AH-0.5 → away');
+    T.assert(calcAHOutcome(2, 0, -1.0) === 1, '2-0 AH-1.0 → home');
+    T.assert(calcAHOutcome(1, 0, -1.0) === 0, '1-0 AH-1.0 → push');
+    T.assert(calcAHOutcome(0, 0, -1.0) === -1, '0-0 AH-1.0 → away');
+    T.assert(calcAHOutcome(0, 0, 0.5) === 1, '0-0 AH+0.5 → home');
+    T.assert(calcAHOutcome(0, 1, 0.5) === -1, '0-1 AH+0.5 → away');
+    T.assert(calcAHOutcome(1, 1, 1.0) === 1, '1-1 AH+1.0 → home');
+    T.assert(calcAHOutcome(0, 1, 1.0) === 0, '0-1 AH+1.0 → push');
+  });
+
+  T.run('calcAH() — Quarter', () => {
+    let r = calcAH([{ h: 1, a: 1, p: 1 }], 0, 0, -0.25);
+    T.assert(T.approx(r.pAHAwayWin, 0.5), 'AH-0.25 1-1 → away 50%');
+    T.assert(T.approx(r.pAHPush, 0.5), 'AH-0.25 1-1 → push 50%');
+    r = calcAH([{ h: 1, a: 0, p: 1 }], 0, 0, -0.25);
+    T.assert(T.approx(r.pAHHomeWin, 1), 'AH-0.25 1-0 → home 100%');
+    r = calcAH([{ h: 1, a: 0, p: 1 }], 0, 0, -0.75);
+    T.assert(T.approx(r.pAHHomeWin, 0.5), 'AH-0.75 1-0 → home 50%');
+    T.assert(T.approx(r.pAHPush, 0.5), 'AH-0.75 1-0 → push 50%');
+    r = calcAH([{ h: 0, a: 0, p: 1 }], 0, 0, 0.25);
+    T.assert(T.approx(r.pAHHomeWin, 0.5), 'AH+0.25 0-0 → home 50%');
+    T.assert(T.approx(r.pAHPush, 0.5), 'AH+0.25 0-0 → push 50%');
+  });
+
+  T.run('buildScoreGrid()', () => {
+    const g = buildScoreGrid(1.5, 1.2, -0.1);
+    T.assert(g.probs.length === 256, 'grid 256 cells');
+    let sum = 0; for (let i = 0; i < g.probs.length; i++) sum += g.probs[i];
+    T.assert(T.approx(sum, 1, 1e-6), 'grid sum=1');
+    T.assert(g.total > 0, 'total > 0');
+  });
+
+  T.run('calcFT()', () => {
+    let r = calcFT({ probs: new Float64Array([1]), N: 1, total: 1 }, 0, 0);
+    T.assert(T.approx(r.pOver05, 0), '0-0 → over 0.5 = 0');
+    r = calcFT({ probs: new Float64Array([0, 0, 1, 0, 0, 0, 0, 0, 0]), N: 3, total: 1 }, 0, 0);
+    T.assert(T.approx(r.pOver05, 1), '1-0 → over 0.5 = 100%');
+    T.assert(T.approx(r.pOver15, 0), '1-0 → over 1.5 = 0');
+  });
+
+  T.run('calcNextGoal()', () => {
+    let r = calcNextGoal(0, 0);
+    T.assert(T.approx(r.pNone, 1), 'xg 0,0 → none=100%');
+    r = calcNextGoal(1, 0);
+    T.assert(T.approx(r.pNone, Math.exp(-1), 1e-6), 'xg 1,0 → none=e^-1');
+    r = calcNextGoal(1.5, 1.2);
+    T.assert(T.approx(r.pHN + r.pNone + r.pAN, 1, 1e-6), 'sum=1');
+  });
+
+  T.run('calculateRemaining()', () => {
+    T.assert(calculateRemaining(0, 0, 0, '90').remaining === 90, 'min 0 → 90');
+    T.assert(calculateRemaining(45, 0, 0, '90').remaining === 45, 'min 45 → 45');
+    T.assert(calculateRemaining(90, 0, 0, '90').remaining === 0, 'min 90 → 0');
+    T.assert(calculateRemaining(90, 0, 0, '120').remaining === 30, '120 min 90 → 30');
+  });
+
+  T.run('expectedGoalsIntegrated()', () => {
+    const r = expectedGoalsIntegrated(0, 90, '90', 0, 0, 0.03);
+    T.assert(r > 2.5 && r < 3.5, '∫xG ≈ 2.8-3.0');
+    T.assert(expectedGoalsIntegrated(90, 0, '90', 0, 0, 0.03) === 0, 'rem 0 → 0');
+    T.assert(expectedGoalsIntegrated(0, 90, '90', 0, 0, 0) === 0, 'rate 0 → 0');
+  });
+
+  T.run('calcConfidence()', () => {
+    const c1 = calcConfidence({ hShots: 0, aShots: 0, hSot: 0, aSot: 0, hBig: 0, aBig: 0, minute: 0, top3ProbSum: 0, goalDiff: 0 });
+    T.assert(c1 >= 0 && c1 <= 100, 'conf range');
+    const c2 = calcConfidence({ hShots: 15, aShots: 12, hSot: 6, aSot: 5, hBig: 3, aBig: 2, minute: 75, top3ProbSum: 0.5, goalDiff: 1 });
+    T.assert(c2 > c1, 'more data → higher conf');
+  });
+
+  T.run('validateInputs()', () => {
+    let r = validateInputs({ hShots: 0, aShots: 0, hSot: 0, aSot: 0, hBig: 0, aBig: 0 });
+    T.assert(!r.ok, '0 shots → not ok');
+    r = validateInputs({ hShots: 10, aShots: 8, hSot: 4, aSot: 3, hBig: 2, aBig: 1 });
+    T.assert(r.ok, 'valid → ok');
+    r = validateInputs({ hShots: 5, aShots: 5, hSot: 10, aSot: 3, hBig: 1, aBig: 1 });
+    T.assert(r.ok && r.warnings.length > 0, 'SOT>shots → warning');
+    T.assert(r.cleaned.hSot === 5, 'hSot clamped');
+  });
+
+  T.run('Edge cases', () => {
+    const g1 = buildScoreGrid(10, 10, -0.1);
+    let sum = 0; for (let i = 0; i < g1.probs.length; i++) sum += g1.probs[i];
+    T.assert(T.approx(sum, 1, 1e-6), 'high xg grid sum=1');
+    const g2 = buildScoreGrid(0, 0, -0.1);
+    T.assert(T.approx(g2.probs[0], 1, 1e-6), 'xg 0,0 → 0-0=100%');
+  });
+
+  T.run('computeStrength() — pure', () => {
+    const r = computeStrength({ ah: 0, minute: 0, cH: 0, cA: 0, hShots: 0, aShots: 0, hSot: 0, aSot: 0, hBig: 0, aBig: 0, redHome: 0, redAway: 0 });
+    T.assert(r.home === 70 && r.away === 70, 'no data → 70/70');
+    T.assert(r.liveWeight === 0, 'liveWeight=0');
+    const r2 = computeStrength({ ah: -0.5, minute: 0, cH: 0, cA: 0, hShots: 0, aShots: 0, hSot: 0, aSot: 0, hBig: 0, aBig: 0, redHome: 0, redAway: 0 });
+    T.assert(r2.home > r2.away, 'AH -0.5 → home stronger');
+    const r3 = computeStrength({ ah: 0, minute: 60, cH: 2, cA: 0, hShots: 10, aShots: 5, hSot: 5, aSot: 2, hBig: 2, aBig: 1, redHome: 0, redAway: 0 });
+    T.assert(r3.home > r3.away, 'leading 2-0 at 60min → home stronger');
+  });
+
+  T.run('calcFH() — HT missing', () => {
+    const inputs = { cH: 1, cA: 0, htH: 0, htA: 0, minute: 60, format: '90', injury1: 0, injury2: 0 };
+    const timeData = calculateRemaining(60, 0, 0, '90');
+    const r = calcFH(inputs, 0.5, 0.5, -0.11, timeData, { baselineRatePer90: 2.7 });
+    T.assert(r.isFinished === true, 'isFinished');
+    T.assert(r.htMissing === true, 'htMissing');
+    T.assert(r.fhProbHome === null, 'fhProbHome = null');
+    T.assert(r.fh05 === null, 'fh05 = null');
+  });
+
+  const { pass, fail, failures } = TestRunner.getResults();
+  return { pass, fail, failures };
+}
+
+function showTestResults() {
+  const results = runAllTests();
+  const panel = document.getElementById('testPanel');
+  const box = document.getElementById('testResults');
+  const pass = results.pass, fail = results.fail;
+  const total = pass + fail;
+  const color = fail === 0 ? '#35d7a4' : (fail < 5 ? '#ffad4d' : '#ff6b6b');
+  let html = `<div style="margin-bottom:8px;font-size:1rem;font-weight:bold;color:${color}">`;
+  html += fail === 0 ? '✅ ALL PASS' : `❌ ${fail} FAILED`;
+  html += ` — ${pass}/${total}</div>`;
+  if (fail > 0) {
+    html += `<div style="margin-bottom:8px;color:#ff6b6b;font-weight:bold">Failures:</div>`;
+    results.failures.forEach(f => { html += `<div class="test-row fail">• ${f}</div>`; });
+  } else {
+    html += `<div class="pass">🎉 ${pass} tests passed</div>`;
+  }
+  box.innerHTML = html;
+  panel.style.display = 'block';
+  console.log(`[JackAI v8.2] Tests: ${pass} pass, ${fail} fail`);
+  if (fail > 0) console.warn('Failures:', results.failures);
+  return results;
+}
+
+window.test = showTestResults;
+window.runTests = runAllTests;
+
 document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
   const ls = $('leagueSearch');
   if (ls) {
     ls.addEventListener('change', matchLeagueFromInput);
-    ls.addEventListener('blur',   matchLeagueFromInput);
+    ls.addEventListener('blur', matchLeagueFromInput);
     ls.addEventListener('keydown', (e) => { if (e.key === 'Enter') { matchLeagueFromInput(); ls.blur(); } });
   }
-  INPUT_IDS.forEach(id => { const el = $(id); if (el) el.addEventListener('change', saveInputs); });
+  INPUT_IDS.forEach(id => { const el = $(id); if (el) el.addEventListener('change', saveInputsDebounced); });
   ['handicapSelect','match_minute','current_home_score','current_away_score','h_shots','a_shots','h_sot','a_sot','h_big','a_big','red_home','red_away'].forEach(id => {
     const el = $(id); if (el) el.addEventListener('input', () => autoEstimateStrength());
   });
   ['home_name', 'away_name', 'current_home_score', 'current_away_score'].forEach(id => {
     const el = $(id);
-    if (el) el.addEventListener('input', () => {
-      updateResultTitle();
-      saveInputs();
-    });
+    if (el) el.addEventListener('input', () => { updateResultTitle(); saveInputsDebounced(); });
   });
   document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('test') === '1') {
+    $('debugBanner').style.display = 'block';
+    setTimeout(() => {
+      const r = showTestResults();
+      $('debugBanner').innerHTML = r.fail === 0
+        ? `🐛 DEBUG MODE v8.2 — ✅ ${r.pass} tests passed`
+        : `🐛 DEBUG MODE v8.2 — ❌ ${r.fail} failed / ${r.pass} passed`;
+      $('debugBanner').style.borderColor = r.fail === 0 ? '#20d6a0' : '#ff6b6b';
+      $('debugBanner').style.color = r.fail === 0 ? '#20d6a0' : '#ff6b6b';
+    }, 100);
+  }
 });
 </script>
 </body>
