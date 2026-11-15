@@ -1522,8 +1522,8 @@ function renderTopScores(sortedScores, top3Sum) {
     const colors = ['bg-danger', 'bg-warning', 'bg-info'];
     const color = colors[i] || 'bg-secondary';
     return `<div class="col-4"><div class="score-box ${color}">
-      <div class="fw-bold" style="font-size:0.75rem;">${escapeHtml(key)}</div>
-      <div class="fw-bold" style="font-size:0.95rem;">${fmtPct(p * 100)}</div>
+      <div class="fw-bold" style="font-size:1.5rem; line-height:1.2;">${escapeHtml(key)}</div>
+      <div class="fw-bold" style="font-size:1rem;">${fmtPct(p * 100)}</div>
     </div></div>`;
   }).join('');
   const noteEl = $('top3SumNote');
