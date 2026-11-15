@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v8.9.6 — Full Patch</title>
+<title>⚽ JackAI Scanner v8.9.7 — Full Patch</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -169,7 +169,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
             <text x="145" y="42" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="900" font-size="26" fill="#0f172a" letter-spacing="-1">BALL</text>
           </g>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9.6</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9.7</span>
       </a>
 
       <!-- ปุ่มไปหน้าโหมด 1H -->
@@ -506,7 +506,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     </div>
   </div>
 
-  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.9.6 · Full Patch · Probability estimates, not guarantees</div>
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.9.7 · Data Sync Patch · Probability estimates, not guarantees</div>
 
   <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-describedby="donateModalDesc">
     <div class="modal-dialog modal-dialog-centered">
@@ -530,7 +530,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   </div>
 </div>
 
-<div id="debugBanner">🐛 DEBUG MODE v8.9.6 — พิมพ์ test() ใน console</div>
+<div id="debugBanner">🐛 DEBUG MODE v8.9.7 — พิมพ์ test() ใน console</div>
 <div id="testPanel">
   <h6>🧪 Test Results</h6>
   <div id="testResults"></div>
@@ -542,7 +542,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 
 <script>
 /* ============================================================
-   JackAI Scanner v8.9.6 — Core
+   JackAI Scanner v8.9.7 — Core
    ============================================================ */
 let currentLang = 'th';
 
@@ -586,7 +586,7 @@ const AppState = {
 const Storage = {
   _memoryFallback: {},
   _useFallback: false,
-  key(type) { const map = { inputs: 'jackai_inputs_v896' }; return map[type] || null; },
+  key(type) { const map = { inputs: 'jackai_inputs_v897' }; return map[type] || null; },
   get(type, fallback = []) {
     const k = this.key(type);
     if (!k) return fallback;
@@ -783,7 +783,7 @@ const I18N = {
 
 <script>
 /* ============================================================
-   JackAI v8.9.6 — Math Engine
+   JackAI v8.9.7 — Math Engine
    ============================================================ */
 const _poissonCache = new Map();
 function poisson(lambda, k) {
@@ -1059,7 +1059,7 @@ function readMatchInputs() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.6 — Corner Model v2 (Negative Binomial)
+   JackAI v8.9.7 — Corner Model v2 (Negative Binomial)
    ============================================================ */
 const CORNER_CONFIG = {
   BASE_PER_MATCH: 10.4,
@@ -1196,7 +1196,7 @@ function calcCornerExpectation(inp, baseGoals, strength) {
 
 <script>
 /* ============================================================
-   JackAI v8.9.6 — Prediction + Rendering
+   JackAI v8.9.7 — Prediction + Rendering
    ============================================================ */
 function predictMatch() {
   try {
@@ -1610,7 +1610,7 @@ function announce(text) { const region = $('ariaLiveRegion'); if (region) region
 
 <script>
 /* ============================================================
-   JackAI v8.9.6 — CSV Export
+   JackAI v8.9.7 — CSV Export
    ============================================================ */
 function csvEscape(v) {
   const s = String(v == null ? '' : v);
@@ -1734,13 +1734,13 @@ function clearHistory() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.6 — UI Actions
+   JackAI v8.9.7 — UI Actions
    ============================================================ */
 function copyResultAsText() {
   const pred = AppState.lastPrediction;
   if (!pred) { announce('ยังไม่มีผล'); return; }
   const txt = [
-    `JackAI Scanner v8.9.6`,
+    `JackAI Scanner v8.9.7`,
     `${pred.home} ${pred.score} ${pred.away} (นาที ${pred.minute})`,
     `1X2: ${fmtPct(pred.pHomeWin)} / ${fmtPct(pred.pDraw)} / ${fmtPct(pred.pAwayWin)}`,
     `Top scores:`,
@@ -1816,10 +1816,43 @@ function saveInputs() {
   Storage.set('inputs', data);
 }
 function loadSavedInputs() {
-  const data = Storage.get('inputs', {});
+  // 1. ลองเช็คก่อนว่ามีข้อมูลส่งมาจากหน้า 1H หรือไม่
+  let sharedData = null;
+  try {
+    const rawShare = localStorage.getItem('jackai_share_data_1h');
+    const shareTime = localStorage.getItem('jackai_share_time');
+    
+    if (rawShare && shareTime) {
+      const timeDiff = Date.now() - parseInt(shareTime, 10);
+      // ถ้าข้อมูลถูกส่งมาไม่เกิน 2 นาที (120,000 ms) ให้ใช้ข้อมูลนี้
+      if (timeDiff < 120000) {
+        sharedData = JSON.parse(rawShare);
+        toast('✓ ดึงข้อมูลจากโหมด 1H มาใส่ให้แล้ว');
+      }
+    }
+  } catch (e) {}
+
+  // 2. ถ้ามีข้อมูลจากหน้า 1H ให้ใช้ข้อมูลนั้น ถ้าไม่มีให้ใช้ข้อมูลที่เซฟไว้เดิม
+  const data = sharedData || Storage.get('inputs', {});
+  
   if (!data || typeof data !== 'object') return;
-  PERSIST_IDS.forEach(id => { if (data[id] != null) { const el = $(id); if (el) el.value = data[id]; } });
-  if (data.handicapSelect && $('handicapSelect')) $('handicapSelect').value = data.handicapSelect;
+  
+  PERSIST_IDS.forEach(id => { 
+    if (data[id] != null) { 
+      const el = $(id); 
+      if (el) el.value = data[id]; 
+    } 
+  });
+  
+  if (data.handicapSelect && $('handicapSelect')) {
+    $('handicapSelect').value = data.handicapSelect;
+  }
+
+  // ถ้าเป็นการดึงข้อมูลจาก 1H ให้เคลียร์ค่าเพื่อไม่ให้ดึงซ้ำรอบหน้า
+  if (sharedData) {
+    localStorage.removeItem('jackai_share_data_1h');
+    localStorage.removeItem('jackai_share_time');
+  }
 }
 function bindAutoSave() {
   PERSIST_IDS.forEach(id => { const el = $(id); if (el) el.addEventListener('change', saveInputs); });
@@ -1878,7 +1911,7 @@ function copyDonateNumber() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.6 — Test Framework
+   JackAI v8.9.7 — Test Framework
    ============================================================ */
 const TestRunner = (() => {
   const suites = [];
@@ -2100,7 +2133,7 @@ function closeTestPanel() { const p = $('testPanel'); if (p) p.style.display = '
 
 <script>
 /* ============================================================
-   JackAI v8.9.6 — Init
+   JackAI v8.9.7 — Init
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   buildLeagueDatalist();
@@ -2118,7 +2151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (banner) banner.style.display = 'block';
   }
 
-  console.log('[JackAI] v8.9.6 initialized — New Logo');
+  console.log('[JackAI] v8.9.7 initialized — Data Sync Ready');
 });
 </script>
 
