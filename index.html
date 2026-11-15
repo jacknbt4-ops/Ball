@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v8.9.5 — Full Patch</title>
+<title>⚽ JackAI Scanner v8.9.6 — Full Patch</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -140,33 +140,37 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
     <div class="container-fluid d-flex align-items-center gap-2 flex-wrap">
       
-      <!-- โลโก้ -->
-            <!-- เปลี่ยนจาก <span เป็น <a href="index.html" -->
+      <!-- LOGO JACK AI BALL (Ball Behind Text) -->
       <a href="index.html" class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold logo-container text-decoration-none">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" width="210" height="48" style="margin-top: 5px;" aria-hidden="true">
-          <!-- ... โค้ด SVG ด้านในปล่อยไว้เหมือนเดิม ... -->
-        </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9.5</span>
-      </a> <!-- เปลี่ยนจาก </span> เป็น </a> -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 70" width="260" height="56" style="margin-top: 5px;" aria-hidden="true">
           <defs>
-            <linearGradient id="speedGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <radialGradient id="ballBgGrad" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#f8fafc" />
+              <stop offset="100%" stop-color="#cbd5e1" />
+            </radialGradient>
+            <linearGradient id="textGradBg" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#ef4444" />
               <stop offset="100%" stop-color="#f97316" />
             </linearGradient>
           </defs>
-          <g transform="translate(5, 5)">
-            <path d="M 0 15 L 20 15 L 30 25 L 45 25" fill="none" stroke="url(#speedGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M 0 25 L 15 25 L 25 35 L 45 35" fill="none" stroke="url(#speedGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" />
-            <path d="M 5 35 L 15 35 L 25 45 L 40 45" fill="none" stroke="url(#speedGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" />
-            <circle cx="30" cy="20" r="12" fill="#fff" stroke="#1e293b" stroke-width="2" />
-            <polygon points="30,12 36,16 34,23 26,23 24,16" fill="#1e293b" />
+
+          <!-- 1. รูปฟุตบอล (พื้นหลัง) -->
+          <g transform="translate(115, 5)">
+            <ellipse cx="30" cy="60" rx="24" ry="5" fill="rgba(0,0,0,0.1)" />
+            <circle cx="30" cy="30" r="28" fill="url(#ballBgGrad)" stroke="#94a3b8" stroke-width="1.5" />
+            <polygon points="30,14 42,21 38,36 22,36 18,21" fill="#334155" />
+            <path d="M 10 22 L 18 21 M 50 22 L 42 21 M 30 58 L 22 36 M 30 58 L 38 36 M 2 30 L 18 21 M 58 30 L 42 21 M 6 40 L 10 22 M 54 40 L 50 22" stroke="#334155" stroke-width="2.5" fill="none" stroke-linecap="round" />
           </g>
-          <text x="65" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="#1e293b" letter-spacing="-1">Jack</text>
-          <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
-          <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
+
+          <!-- 2. ตัวหนังสือ (อยู่ด้านหน้า) -->
+          <g style="text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">
+            <text x="15" y="42" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="900" font-size="26" fill="#0f172a" letter-spacing="-1">JACK</text>
+            <text x="95" y="42" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="900" font-size="26" fill="url(#textGradBg)" letter-spacing="-1">AI</text>
+            <text x="145" y="42" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="900" font-size="26" fill="#0f172a" letter-spacing="-1">BALL</text>
+          </g>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9.5</span>
-      </span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9.6</span>
+      </a>
 
       <!-- ปุ่มไปหน้าโหมด 1H -->
       <a href="index_1h.html" class="btn btn-sm btn-outline-warning fw-bold ms-2" style="border-radius: 20px; font-size: 0.75rem;">
@@ -502,7 +506,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     </div>
   </div>
 
-  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.9.5 · Full Patch · Probability estimates, not guarantees</div>
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.9.6 · Full Patch · Probability estimates, not guarantees</div>
 
   <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-describedby="donateModalDesc">
     <div class="modal-dialog modal-dialog-centered">
@@ -526,7 +530,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   </div>
 </div>
 
-<div id="debugBanner">🐛 DEBUG MODE v8.9.5 — พิมพ์ test() ใน console</div>
+<div id="debugBanner">🐛 DEBUG MODE v8.9.6 — พิมพ์ test() ใน console</div>
 <div id="testPanel">
   <h6>🧪 Test Results</h6>
   <div id="testResults"></div>
@@ -538,7 +542,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 
 <script>
 /* ============================================================
-   JackAI Scanner v8.9.5 — Core
+   JackAI Scanner v8.9.6 — Core
    ============================================================ */
 let currentLang = 'th';
 
@@ -582,7 +586,7 @@ const AppState = {
 const Storage = {
   _memoryFallback: {},
   _useFallback: false,
-  key(type) { const map = { inputs: 'jackai_inputs_v895' }; return map[type] || null; },
+  key(type) { const map = { inputs: 'jackai_inputs_v896' }; return map[type] || null; },
   get(type, fallback = []) {
     const k = this.key(type);
     if (!k) return fallback;
@@ -779,7 +783,7 @@ const I18N = {
 
 <script>
 /* ============================================================
-   JackAI v8.9.5 — Math Engine
+   JackAI v8.9.6 — Math Engine
    ============================================================ */
 const _poissonCache = new Map();
 function poisson(lambda, k) {
@@ -1055,7 +1059,7 @@ function readMatchInputs() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.5 — Corner Model v2 (Negative Binomial)
+   JackAI v8.9.6 — Corner Model v2 (Negative Binomial)
    ============================================================ */
 const CORNER_CONFIG = {
   BASE_PER_MATCH: 10.4,
@@ -1192,7 +1196,7 @@ function calcCornerExpectation(inp, baseGoals, strength) {
 
 <script>
 /* ============================================================
-   JackAI v8.9.5 — Prediction + Rendering
+   JackAI v8.9.6 — Prediction + Rendering
    ============================================================ */
 function predictMatch() {
   try {
@@ -1606,7 +1610,7 @@ function announce(text) { const region = $('ariaLiveRegion'); if (region) region
 
 <script>
 /* ============================================================
-   JackAI v8.9.5 — CSV Export
+   JackAI v8.9.6 — CSV Export
    ============================================================ */
 function csvEscape(v) {
   const s = String(v == null ? '' : v);
@@ -1730,13 +1734,13 @@ function clearHistory() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.5 — UI Actions
+   JackAI v8.9.6 — UI Actions
    ============================================================ */
 function copyResultAsText() {
   const pred = AppState.lastPrediction;
   if (!pred) { announce('ยังไม่มีผล'); return; }
   const txt = [
-    `JackAI Scanner v8.9.5`,
+    `JackAI Scanner v8.9.6`,
     `${pred.home} ${pred.score} ${pred.away} (นาที ${pred.minute})`,
     `1X2: ${fmtPct(pred.pHomeWin)} / ${fmtPct(pred.pDraw)} / ${fmtPct(pred.pAwayWin)}`,
     `Top scores:`,
@@ -1874,7 +1878,7 @@ function copyDonateNumber() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.5 — Test Framework
+   JackAI v8.9.6 — Test Framework
    ============================================================ */
 const TestRunner = (() => {
   const suites = [];
@@ -2096,7 +2100,7 @@ function closeTestPanel() { const p = $('testPanel'); if (p) p.style.display = '
 
 <script>
 /* ============================================================
-   JackAI v8.9.5 — Init
+   JackAI v8.9.6 — Init
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   buildLeagueDatalist();
@@ -2114,7 +2118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (banner) banner.style.display = 'block';
   }
 
-  console.log('[JackAI] v8.9.5 initialized — Full Patch + 1H Link');
+  console.log('[JackAI] v8.9.6 initialized — New Logo');
 });
 </script>
 

@@ -138,28 +138,39 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 <div id="appScanner">
 
   <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
-    <div class="container-fluid d-flex align-items-center gap-2">
-      <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold logo-container">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" width="210" height="48" style="margin-top: 5px;" aria-hidden="true">
+    <div class="container-fluid d-flex align-items-center gap-2 flex-wrap">
+      
+      <!-- LOGO JACK AI BALL (Ball Behind Text) -->
+      <a href="index.html" class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold logo-container text-decoration-none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 70" width="260" height="56" style="margin-top: 5px;" aria-hidden="true">
           <defs>
-            <linearGradient id="speedGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <radialGradient id="ballBgGrad" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#f8fafc" />
+              <stop offset="100%" stop-color="#cbd5e1" />
+            </radialGradient>
+            <linearGradient id="textGradBg" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#ef4444" />
               <stop offset="100%" stop-color="#f97316" />
             </linearGradient>
           </defs>
-          <g transform="translate(5, 5)">
-            <path d="M 0 15 L 20 15 L 30 25 L 45 25" fill="none" stroke="url(#speedGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M 0 25 L 15 25 L 25 35 L 45 35" fill="none" stroke="url(#speedGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" />
-            <path d="M 5 35 L 15 35 L 25 45 L 40 45" fill="none" stroke="url(#speedGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" />
-            <circle cx="30" cy="20" r="12" fill="#fff" stroke="#1e293b" stroke-width="2" />
-            <polygon points="30,12 36,16 34,23 26,23 24,16" fill="#1e293b" />
+
+          <!-- 1. รูปฟุตบอล (พื้นหลัง) -->
+          <g transform="translate(115, 5)">
+            <ellipse cx="30" cy="60" rx="24" ry="5" fill="rgba(0,0,0,0.1)" />
+            <circle cx="30" cy="30" r="28" fill="url(#ballBgGrad)" stroke="#94a3b8" stroke-width="1.5" />
+            <polygon points="30,14 42,21 38,36 22,36 18,21" fill="#334155" />
+            <path d="M 10 22 L 18 21 M 50 22 L 42 21 M 30 58 L 22 36 M 30 58 L 38 36 M 2 30 L 18 21 M 58 30 L 42 21 M 6 40 L 10 22 M 54 40 L 50 22" stroke="#334155" stroke-width="2.5" fill="none" stroke-linecap="round" />
           </g>
-          <text x="65" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="#1e293b" letter-spacing="-1">Jack</text>
-          <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
-          <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">1H</text>
+
+          <!-- 2. ตัวหนังสือ (อยู่ด้านหน้า) -->
+          <g style="text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">
+            <text x="15" y="42" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="900" font-size="26" fill="#0f172a" letter-spacing="-1">JACK</text>
+            <text x="95" y="42" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="900" font-size="26" fill="url(#textGradBg)" letter-spacing="-1">AI</text>
+            <text x="145" y="42" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="900" font-size="26" fill="#0f172a" letter-spacing="-1">BALL</text>
+          </g>
         </svg>
-        <span class="badge bg-danger" style="font-size:0.55rem; margin-left: 5px;">v1.0 (1H Only)</span>
-      </span>
+        <span class="badge bg-danger" style="font-size:0.55rem; margin-left: 5px;">1H Only</span>
+      </a>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
         <div class="lang-switch me-2" title="ภาษา / Language" role="group" aria-label="เลือกภาษา">
