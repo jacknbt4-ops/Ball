@@ -3,23 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v8.9.2 — Full Patch + CSV + Tests</title>
+<title>⚽ JackAI Scanner v8.9.3 — No Login</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <style>
 html { margin:0; padding:0; width:100%; height:100%; }
 body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif; font-size:0.85rem; color:#212529; height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-direction:column; }
-
-#loginOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(7, 17, 31, 0.85); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 99999; }
-.login-box { background: #ffffff; padding: 40px 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 400px; text-align: center; }
-.login-box .icon { font-size: 3rem; color: #10b981; margin-bottom: 15px; }
-.login-box h3 { font-weight: 800; color: #1e293b; margin-bottom: 5px; }
-.login-box p { color: #64748b; font-size: 0.85rem; margin-bottom: 25px; }
-.login-box input { margin-bottom: 20px; padding: 12px 15px; font-size: 1rem; border-radius: 8px; }
-.btn-login { background: #10b981; color: white; font-weight: bold; font-size: 1rem; padding: 12px; border-radius: 8px; border: none; width: 100%; transition: 0.2s; }
-.btn-login:hover { background: #059669; transform: translateY(-2px); }
-.btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .navbar-custom { height:60px; flex-shrink:0; background:#fff; border-bottom:1px solid #dee2e6; }
 .main-container { flex:1; padding:10px; display:flex; gap:10px; height:calc(100vh - 60px); box-sizing:border-box; overflow:hidden; }
@@ -59,7 +49,6 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
 .btn-donate { background:linear-gradient(45deg,#ff8a00,#e52e71); color:#fff; border:none; font-weight:bold; border-radius:20px; padding:3px 12px; font-size:0.75rem; box-shadow:0 2px 5px rgba(229,46,113,0.4); transition:transform 0.2s; }
 .btn-donate:hover { transform:scale(1.05); color:#fff; }
 .donate-box { border:2px dashed #e52e71; border-radius:12px; padding:20px; background:#fff0f5; }
-.user-badge { background: #e2e8f0; color: #334155; font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
 .btn-copy { font-size:0.7rem; padding:3px 9px; border-radius:6px; }
 
 ::-webkit-scrollbar { width:4px; height:4px; }
@@ -99,7 +88,6 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 .score-box{border:1px solid rgba(255,255,255,.14);border-radius:10px}
 .fh-card,.next-goal-card{border-radius:9px}
 .xh-highlight{background:#0b192b;border-color:#304763;color:#b7c8dc!important}
-.user-badge{background:#1a3049;color:#cce0f7}
 .metric-tile{background:#0b1b2d;border:1px solid #2a405a;border-radius:10px;padding:10px;text-align:center;height:100%}
 .metric-tile .metric-label{font-size:.68rem;color:#9bb0c8}
 .metric-tile .metric-value{font-size:1.2rem;font-weight:800;color:#f4f8ff}
@@ -147,34 +135,6 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 </head>
 <body>
 
-<div id="loginOverlay" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-    <div class="login-box">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" width="200" height="46" style="margin-bottom: 15px;" aria-hidden="true">
-            <defs>
-                <linearGradient id="speedGradLogin" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#ef4444" />
-                    <stop offset="100%" stop-color="#f97316" />
-                </linearGradient>
-            </defs>
-            <g transform="translate(5, 5)">
-                <path d="M 0 15 L 20 15 L 30 25 L 45 25" fill="none" stroke="url(#speedGradLogin)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M 0 25 L 15 25 L 25 35 L 45 35" fill="none" stroke="url(#speedGradLogin)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6" />
-                <path d="M 5 35 L 15 35 L 25 45 L 40 45" fill="none" stroke="url(#speedGradLogin)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" />
-                <circle cx="30" cy="20" r="12" fill="#fff" stroke="#1e293b" stroke-width="2" />
-                <polygon points="30,12 36,16 34,23 26,23 24,16" fill="#1e293b" />
-            </g>
-            <text x="65" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="#1e293b" letter-spacing="-1">Jack</text>
-            <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGradLogin)" letter-spacing="-1">AI</text>
-            <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
-        </svg>
-        <h3 id="loginTitle">เข้าสู่ระบบ</h3>
-        <p>กรุณาเข้าสู่ระบบด้วยอีเมลของคุณ<br>(ข้อมูลจะถูกบันทึกไว้ในเครื่องนี้)</p>
-        <label for="loginEmail" class="visually-hidden">อีเมล</label>
-        <input type="email" id="loginEmail" class="form-control" placeholder="example@email.com" autocomplete="email" aria-label="อีเมล">
-        <button class="btn-login" onclick="handleLogin()" type="button"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i> เข้าสู่ระบบ</button>
-    </div>
-</div>
-
 <div id="appScanner">
 
   <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
@@ -198,7 +158,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
           <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9.2</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9.3</span>
       </span>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
@@ -206,12 +166,8 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           <button id="btnLangTH" class="active" onclick="setLang('th')" type="button">TH</button>
           <button id="btnLangEN" onclick="setLang('en')" type="button">EN</button>
         </div>
-        <span class="user-badge d-none d-md-block"><i class="bi bi-person-circle" aria-hidden="true"></i> <span id="displayUserEmailScan">-</span></span>
         <button class="btn btn-donate mb-0" onclick="openDonateModal()" type="button" aria-label="สนับสนุนผู้พัฒนา">
           <i class="bi bi-heart-fill text-white" aria-hidden="true"></i> <span data-i18n="btn_donate">สนับสนุน</span>
-        </button>
-        <button class="btn btn-sm btn-outline-danger" onclick="handleLogout()" type="button" title="ออกจากระบบ" aria-label="ออกจากระบบ">
-          <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
         </button>
       </div>
     </div>
@@ -533,7 +489,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     </div>
   </div>
 
-  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.9.2 · Corner NB + CSV + Tests · Probability estimates, not guarantees</div>
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.9.3 · Corner NB + CSV + Tests (No Login) · Probability estimates, not guarantees</div>
 
   <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-describedby="donateModalDesc">
     <div class="modal-dialog modal-dialog-centered">
@@ -557,7 +513,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   </div>
 </div>
 
-<div id="debugBanner">🐛 DEBUG MODE v8.9.2 — พิมพ์ <b>test()</b> หรือ <b>exportHistoryCSV()</b> ใน console</div>
+<div id="debugBanner">🐛 DEBUG MODE v8.9.3 — พิมพ์ test() หรือ exportHistoryCSV() ใน console</div>
 <div id="testPanel">
   <h6>🧪 Test Results</h6>
   <div id="testResults"></div>
@@ -569,7 +525,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 
 <script>
 /* ============================================================
-   JackAI Scanner v8.9.2 — Core
+   JackAI Scanner v8.9.3 — Core
    ============================================================ */
 let currentLang = 'th';
 
@@ -603,29 +559,17 @@ function toast(msg, isError = false) {
 }
 
 const AppState = {
-  user: '',
   league: { key: 'default', text: 'ลีกมาตรฐาน', avgGoals: 2.70, rho: -0.11, fhShare: 0.44, flag: '🌐' },
   lastPrediction: null,
-  setUser(email) { this.user = email || ''; },
   setLeague(key, data) { this.league = { key, text: data.name, avgGoals: data.goals, rho: data.rho, fhShare: data.fh, flag: data.flag || '🌐' }; },
   setDefaultLeague() { this.league = { key: 'default', text: 'ลีกมาตรฐาน', avgGoals: 2.70, rho: -0.11, fhShare: 0.44, flag: '🌐' }; },
   setLastPrediction(pred) { this.lastPrediction = pred; },
 };
 
-const USER_SESSION_KEY = 'jackai_active_user';
-
 const Storage = {
   _memoryFallback: {},
   _useFallback: false,
-  _userSuffix() {
-    if (!AppState.user) return '';
-    let hash = 0;
-    for (let i = 0; i < AppState.user.length; i++) {
-      hash = ((hash << 5) - hash + AppState.user.charCodeAt(i)) | 0;
-    }
-    return '_' + Math.abs(hash).toString(36);
-  },
-  key(type) { const map = { inputs: `jackai_inputs_v892${this._userSuffix()}` }; return map[type] || null; },
+  key(type) { const map = { inputs: 'jackai_inputs_v893' }; return map[type] || null; },
   get(type, fallback = []) {
     const k = this.key(type);
     if (!k) return fallback;
@@ -656,22 +600,7 @@ const Storage = {
       try { sessionStorage.setItem(k, json); return true; } catch (e2) {}
       return false;
     }
-  },
-  saveSession() {
-    try { localStorage.setItem(USER_SESSION_KEY, AppState.user); return; } catch (e) {}
-    try { sessionStorage.setItem(USER_SESSION_KEY, AppState.user); return; } catch (e) {}
-    this._memoryFallback[USER_SESSION_KEY] = AppState.user;
-  },
-  loadSession() {
-    try { const v = localStorage.getItem(USER_SESSION_KEY); if (v) return v; } catch (e) {}
-    try { const v = sessionStorage.getItem(USER_SESSION_KEY); if (v) return v; } catch (e) {}
-    return this._memoryFallback[USER_SESSION_KEY] || null;
-  },
-  clearSession() {
-    delete this._memoryFallback[USER_SESSION_KEY];
-    try { localStorage.removeItem(USER_SESSION_KEY); } catch (e) {}
-    try { sessionStorage.removeItem(USER_SESSION_KEY); } catch (e) {}
-  },
+  }
 };
 
 const CONFIG = {
@@ -698,15 +627,15 @@ const LEAGUE_CONSTANTS = {
   'championship':        { name: "แชมเปี้ยนชิพ อังกฤษ", goals: 2.68, rho: -0.09, fh: 0.45, flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', aliases: ['champ','efl','championship england'] },
   'la liga':             { name: "ลาลีกา สเปน", goals: 2.58, rho: -0.12, fh: 0.44, flag: '🇪🇸', aliases: ['laliga','spain','esp','ลาลีกา'] },
   'bundesliga':          { name: "บุนเดสลีกา เยอรมัน", goals: 3.42, rho: -0.08, fh: 0.47, flag: '🇩🇪', aliases: ['bundes','germany','ger','buli','บุนเดส'] },
-  'serie a':             { name: "เซเรียอา อิตาลี", goals: 2.62, rho: -0.13, fh: 0.44, flag: '🇮🇹', aliases: ['seriea','italy','ita','serie','กัลโช่'] },
+  'serie a':             { name: "เซเรียอา อิตาลี", goals: 2.62, rho: -0.13, fh: 0.44, flag: '🇮🇹', aliases: ['seriea','italy','ita','italy serie a','กัลโช่'] },
   'ligue 1':             { name: "ลีกเอิง ฝรั่งเศส", goals: 2.70, rho: -0.11, fh: 0.44, flag: '🇫🇷', aliases: ['ligue1','france','fra','l1','ลีกเอิง'] },
   'eredivisie':          { name: "เอเรดิวิซี เนเธอร์แลนด์", goals: 3.15, rho: -0.08, fh: 0.46, flag: '🇳🇱', aliases: ['ere','netherlands','ned','holland','dutch','ered'] },
   'thai league':         { name: "ไทยลีก", goals: 2.95, rho: -0.09, fh: 0.46, flag: '🇹🇭', aliases: ['thai','t1','thailand','tl','ไทย'] },
   'j1 league':           { name: "เจลีก J1", goals: 2.65, rho: -0.11, fh: 0.44, flag: '🇯🇵', aliases: ['j1','japan','jpn','jleague','เจ'] },
+  'j2 league':           { name: "เจลีก J2", goals: 2.55, rho: -0.10, fh: 0.45, flag: '🇯🇵', aliases: ['j2','japan2','jpn2','เจลีก 2'] },
   'mls':                 { name: "เมเจอร์ลีกซอกเกอร์", goals: 3.12, rho: -0.08, fh: 0.46, flag: '🇺🇸', aliases: ['usa','us','america','major league soccer','เมเจอร์'] },
   'colombia cup':        { name: "โคลัมเบีย คัพ", goals: 2.55, rho: -0.11, fh: 0.44, flag: '🇨🇴', aliases: ['colombia','col','copa colombia','copacol','โคลัมเบีย'] },
   'uruguay cup':         { name: "อุรุกวัย คัพ", goals: 2.55, rho: -0.11, fh: 0.44, flag: '🇺🇾', aliases: ['uruguay','uru','ury','copa uruguay','copauru','อุรุกวัย'] },
-  'brazil copa fmf':     { name: "บราซิล โคปา FMF", goals: 2.70, rho: -0.09, fh: 0.45, flag: '🇧🇷', aliases: ['brazil','brasil','bra','copa fmf','fmf','copafmf','บราซิล'] },
   'el salvador primera': { name: "เอล ซัลวาดอร์ พรีเมียร์ ดิวิชั่น", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇸🇻', aliases: ['el salvador','salvador','slv','esa','elsalvador','primera','เอลซัลวาดอร์'] },
   'brasileirao serie a': { name: "บราซิเลเรียว เซเรีย อา", goals: 2.45, rho: -0.10, fh: 0.44, flag: '🇧🇷', aliases: ['brasileirao','brazil a','brasil a','brasileirao a','bra-a','บราซิเลเรียว'] },
   'brasileirao serie b': { name: "บราซิเลเรียว เซเรีย บี", goals: 2.35, rho: -0.11, fh: 0.44, flag: '🇧🇷', aliases: ['brasileirao b','brazil b','brasil b','serie b bra','bra-b'] },
@@ -750,8 +679,6 @@ const LEAGUE_CONSTANTS = {
   'uae pro league':         { name: "ยูเออี โปรลีก", goals: 3.10, rho: -0.07, fh: 0.46, flag: '🇦🇪', aliases: ['uae','uaepl','emirates','ยูเออี'] },
   'qatar stars league':     { name: "กาตาร์ สตาร์สลีก", goals: 2.95, rho: -0.08, fh: 0.46, flag: '🇶🇦', aliases: ['qatar','qat','qsl','stars','กาตาร์'] },
   'a-league':               { name: "เอ-ลีก ออสเตรเลีย", goals: 3.05, rho: -0.08, fh: 0.46, flag: '🇦🇺', aliases: ['aleague','australia','aus','a league','ออสเตรเลีย'] },
-  'australia championship': { name: "ออสเตรเลีย แชมเปี้ยนชิพ", goals: 3.10, rho: -0.08, fh: 0.46, flag: '🇦🇺', aliases: ['australia championship','aus champ','npl','australia 2'] },
-  'j2 league':              { name: "เจลีก J2", goals: 2.55, rho: -0.10, fh: 0.45, flag: '🇯🇵', aliases: ['j2','japan2','jpn2','เจลีก 2'] },
   'v-league 1':             { name: "วีลีก 1 เวียดนาม", goals: 2.55, rho: -0.10, fh: 0.45, flag: '🇻🇳', aliases: ['vleague','vietnam','vie','viet','เวียดนาม'] },
   'afc champions league':   { name: "เอเอฟซี แชมเปี้ยนส์ลีก", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🏆', aliases: ['acl','afc cl','afc','เอเอฟซี'] },
   'egyptian premier league': { name: "อียิปต์ พรีเมียร์ลีก", goals: 2.20, rho: -0.13, fh: 0.43, flag: '🇪🇬', aliases: ['egypt','egy','egypl','อียิปต์'] },
@@ -776,77 +703,25 @@ const LEAGUE_CONSTANTS = {
   'uwcl': { name: "ยูฟ่า วีเมนส์ แชมเปี้ยนส์ลีก", goals: 3.30, rho: -0.07, fh: 0.47, flag: '🏆', aliases: ['uwcl','womens champions league','wcl'] },
   'womens world cup': { name: "ฟุตบอลหญิงชิงแชมป์โลก", goals: 2.75, rho: -0.10, fh: 0.45, flag: '🏆', aliases: ['wwc','womens world cup','world cup women'] },
   'thai womens league': { name: "ไทยลีกหญิง", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇹🇭', aliases: ['thai womens','thai w','thailand women'] },
-  'mexico liga premier serie a': { name: "เม็กซิโก ลีกา พรีเมียร์ เซเรีย เอ", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇲🇽', aliases: ['mexico premier serie a','lpsa'] },
-  'new zealand national league': { name: "นิวซีแลนด์ เนชั่นแนล ลีก", goals: 2.90, rho: -0.08, fh: 0.46, flag: '🇳🇿', aliases: ['new zealand','nz national'] },
-  'panama liga futbol':          { name: "ปานามา ลีกา ฟุตบอล", goals: 2.50, rho: -0.10, fh: 0.45, flag: '🇵🇦', aliases: ['panama','pan'] },
-  'japan national regional':     { name: "ญี่ปุ่น เนชั่นแนล รีจินอล", goals: 2.70, rho: -0.10, fh: 0.45, flag: '🇯🇵', aliases: ['japan regional','jfl'] },
-  'concacaf nations league a':   { name: "คอนคาเคฟ เนชั่นส์ ลีก เอ", goals: 2.75, rho: -0.09, fh: 0.46, flag: '🏆', aliases: ['concacaf nations','concacaf nl a'] },
   'mexico liga premier':         { name: "เม็กซิโก ลีกา พรีเมรา พรีเมียร์", goals: 2.80, rho: -0.09, fh: 0.46, flag: '🇲🇽', aliases: ['mexico liga premier','mexico premier'] },
-  'segunda federacion': { name: "สเปน เซกุนด้า เฟเดอร์เรชั่น", goals: 2.45, rho: -0.12, fh: 0.44, flag: '🇪🇸', aliases: ['segunda federacion','segunda rfef','สเปน เซกุนด้า','เซกุนด้า เฟเดอร์เรชั่น','สเปน ลีกรอง','สเปน ดิวิชั่น 4'] },
+  
+  // ลีกที่เพิ่มใหม่
   'hong kong premier league': { name: "ฮ่องกง ดิวิชั่น วัน", goals: 3.10, rho: -0.08, fh: 0.46, flag: '🇭🇰', aliases: ['hong kong','hk','hong kong division 1','hk div 1','hk premier','ฮ่องกง','ฮ่องกง ดิวิชั่น 1','ฮ่องกง ดิวิชั่น วัน'] },
   'hong kong first division': { name: "ฮ่องกง ดิวิชั่น 2", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇭🇰', aliases: ['hong kong division 2','hk div 2','hk first division','ฮ่องกง ดิวิชั่น 2'] },
-  'hong kong league cup': { name: "ฮ่องกง ลีกคัพ", goals: 2.95, rho: -0.09, fh: 0.45,flag: '🏆', aliases: ['hong kong cup','hk cup','hk league cup','hong kong fa cup','ฮ่องกง ลีกตัพ','ฮ่องกง คัพ'] },
+  'hong kong league cup': { name: "ฮ่องกง ลีกคัพ", goals: 2.95, rho: -0.09, fh: 0.45, flag: '🏆', aliases: ['hong kong cup','hk cup','hk league cup','hong kong fa cup','ฮ่องกง ลีกตัพ','ฮ่องกง คัพ'] },
+  'segunda federacion': { name: "สเปน เซกุนด้า เฟเดอร์เรชั่น", goals: 2.45, rho: -0.12, fh: 0.44, flag: '🇪🇸', aliases: ['segunda federacion','segunda rfef','สเปน เซกุนด้า','เซกุนด้า เฟเดอร์เรชั่น','สเปน ลีกรอง','สเปน ดิวิชั่น 4'] },
   'south africa reserve league': { name: "เซาท์ แอฟริกา รีเสิร์ฟ ลีก", goals: 3.20, rho: -0.05, fh: 0.47, flag: '🇿🇦', aliases: ['south africa reserve','sa reserve','diski challenge','dstv diski','south africa youth','เซาท์ แอฟริกา รีเสิร์ฟ','แอฟริกาใต้ รีเสิร์ฟ','ดิสกี้ ชาเลนจ์'] },
-  'we league': { 
-    name: "ญี่ปุ่น หญิง เอ็มพาวเวอร์เมนท์ ลีก (WE League)", 
-    goals: 3.00, 
-    rho: -0.08, 
-    fh: 0.46, 
-    flag: '🇯🇵', 
-    aliases: ['we league','japan women','jpn w','japan we league','nadeshiko','ญี่ปุ่น หญิง','วีลีก หญิง','เอ็มพาวเวอร์เมนท์'] },
-  'j3 league': { 
-    name: "เจลีก J3", 
-    goals: 2.90, 
-    rho: -0.08, 
-    fh: 0.46, 
-    flag: '🇯🇵', 
-    aliases: ['j3','japan3','jpn3','jleague 3','j3 league','เจลีก 3','เจ 3'] },
-  'china league two': { 
-    name: "ไชน่า ลีก 2 (ดิวิชั่น 3)", 
-    goals: 2.60, 
-    rho: -0.10, 
-    fh: 0.45, 
-    flag: '🇨🇳', 
-    aliases: ['china league 2','china league two','cfa league two','china div 3','จีน ลีก 2','ไชน่า ลีก 2','ไชนีส ลีก 2'] },
-  'spain women segunda federacion': { 
-    name: "สเปน หญิง เซกันด้า เฟเดราซิออน", 
-    goals: 3.10, 
-    rho: -0.07, 
-    fh: 0.47, 
-    flag: '🇪🇸', 
-    aliases: ['spain women segunda','primera federacion femenina','segunda federacion femenina','spain women div 2','สเปน หญิง','สเปน หญิง ดิวิชั่น 2','เซกันด้า เฟเดราซิออน'] },
-  'slovakia super liga': { 
-    name: "สโลวาเกีย ซูเปอร์ลีกา (ดิวิชั่น 1)", 
-    goals: 2.85, 
-    rho: -0.09, 
-    fh: 0.46, 
-    flag: '🇸🇰', 
-    aliases: ['slovakia super liga','slovak first league','slovakia div 1','สโลวาเกีย ดิวิชั่น 1','สโลวาเกีย ซูเปอร์ลีกา'] },
-  'slovakia 2 liga': { 
-    name: "สโลวาเกีย ดิวิชั่น 2", 
-    goals: 2.50, 
-    rho: -0.11, 
-    fh: 0.45, 
-    flag: '🇸🇰', 
-    aliases: ['slovakia 2','slovak second division','2 liga slovakia','slovakia div 2','สโลวาเกีย','สโลวาเกีย ดิวิชั่น 2','สโลวัก'] },
-  'austria regionalliga': { 
-    name: "ออสเตรีย แลนเดสลิก้า (ดิวิชั่น 3)", 
-    goals: 3.05, 
-    rho: -0.08, 
-    fh: 0.46, 
-    flag: '🇦🇹', 
-    aliases: ['austria regionalliga','austria landesliga','austria div 3','regionalliga austria','ออสเตรีย','ออสเตรีย แลนเดสลิก้า','ออสเตรีย ดิวิชั่น 3'] },
-  'russia first league': { 
-    name: "รัสเซีย เฟิร์ส ลีก (ดิวิชั่น 2)", 
-    goals: 2.30, 
-    rho: -0.13, 
-    fh: 0.44, 
-    flag: '🇷🇺', 
-    aliases: ['russia first league','russian first league','fnl','russia div 2','russia 2','รัสเซีย เฟิร์ส ลีก','รัสเซีย ดิวิชั่น 2','รัสเซีย ลีกรอง'] },
-  
-  },
+  'we league': { name: "ญี่ปุ่น หญิง เอ็มพาวเวอร์เมนท์ ลีก (WE League)", goals: 3.00, rho: -0.08, fh: 0.46, flag: '🇯🇵', aliases: ['we league','japan women','jpn w','japan we league','nadeshiko','ญี่ปุ่น หญิง','วีลีก หญิง','เอ็มพาวเวอร์เมนท์'] },
+  'nadeshiko league': { name: "ญี่ปุ่น นาเดชิโกะ ลีก (ลีกรองหญิง)", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇯🇵', aliases: ['nadeshiko league','japan women div 2','ญี่ปุ่น หญิง ดิวิชั่น 2','นาเดชิโกะ'] },
+  'j3 league': { name: "เจลีก J3", goals: 2.90, rho: -0.08, fh: 0.46, flag: '🇯🇵', aliases: ['j3','japan3','jpn3','jleague 3','j3 league','เจลีก 3','เจ 3'] },
+  'china league two': { name: "ไชน่า ลีก 2 (ดิวิชั่น 3)", goals: 2.60, rho: -0.10, fh: 0.45, flag: '🇨🇳', aliases: ['china league 2','china league two','cfa league two','china div 3','จีน ลีก 2','ไชน่า ลีก 2','ไชนีส ลีก 2'] },
+  'spain women segunda federacion': { name: "สเปน หญิง เซกันด้า เฟเดราซิออน", goals: 3.10, rho: -0.07, fh: 0.47, flag: '🇪🇸', aliases: ['spain women segunda','primera federacion femenina','segunda federacion femenina','spain women div 2','สเปน หญิง','สเปน หญิง ดิวิชั่น 2','เซกันด้า เฟเดราซิออน'] },
+  'slovakia 2 liga': { name: "สโลวาเกีย ดิวิชั่น 2", goals: 2.50, rho: -0.11, fh: 0.45, flag: '🇸🇰', aliases: ['slovakia 2','slovak second division','2 liga slovakia','slovakia div 2','สโลวาเกีย','สโลวาเกีย ดิวิชั่น 2','สโลวัก'] },
+  'slovakia super liga': { name: "สโลวาเกีย ซูเปอร์ลีกา (ดิวิชั่น 1)", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇸🇰', aliases: ['slovakia super liga','slovak first league','slovakia div 1','สโลวาเกีย ดิวิชั่น 1','สโลวาเกีย ซูเปอร์ลีกา'] },
+  'austria regionalliga': { name: "ออสเตรีย แลนเดสลิก้า (ดิวิชั่น 3)", goals: 3.05, rho: -0.08, fh: 0.46, flag: '🇦🇹', aliases: ['austria regionalliga','austria landesliga','austria div 3','regionalliga austria','ออสเตรีย','ออสเตรีย แลนเดสลิก้า','ออสเตรีย ดิวิชั่น 3'] },
+  'russia first league': { name: "รัสเซีย เฟิร์ส ลีก (ดิวิชั่น 2)", goals: 2.30, rho: -0.13, fh: 0.44, flag: '🇷🇺', aliases: ['russia first league','russian first league','fnl','russia div 2','russia 2','รัสเซีย เฟิร์ส ลีก','รัสเซีย ดิวิชั่น 2','รัสเซีย ลีกรอง'] },
+};
 
-  
 const I18N = {
   th: {
     home_team:'ทีมเหย้า', away_team:'ทีมเยือน',
@@ -891,7 +766,7 @@ const I18N = {
 
 <script>
 /* ============================================================
-   JackAI v8.9.2 — Math Engine
+   JackAI v8.9.3 — Math Engine
    ============================================================ */
 const _poissonCache = new Map();
 function poisson(lambda, k) {
@@ -1167,7 +1042,7 @@ function readMatchInputs() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.2 — Corner Model v2 (Negative Binomial)
+   JackAI v8.9.3 — Corner Model v2 (Negative Binomial)
    ============================================================ */
 const CORNER_CONFIG = {
   BASE_PER_MATCH: 10.4,
@@ -1300,7 +1175,7 @@ function calcCornerExpectation(inp, baseGoals, strength) {
 
 <script>
 /* ============================================================
-   JackAI v8.9.2 — Prediction + Rendering
+   JackAI v8.9.3 — Prediction + Rendering
    ============================================================ */
 function predictMatch() {
   try {
@@ -1713,7 +1588,7 @@ function announce(text) { const region = $('ariaLiveRegion'); if (region) region
 
 <script>
 /* ============================================================
-   JackAI v8.9.2 — CSV Export
+   JackAI v8.9.3 — CSV Export
    ============================================================ */
 function csvEscape(v) {
   const s = String(v == null ? '' : v);
@@ -1837,13 +1712,13 @@ function clearHistory() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.2 — UI Actions
+   JackAI v8.9.3 — UI Actions
    ============================================================ */
 function copyResultAsText() {
   const pred = AppState.lastPrediction;
   if (!pred) { announce('ยังไม่มีผล'); return; }
   const txt = [
-    `JackAI Scanner v8.9.2`,
+    `JackAI Scanner v8.9.3`,
     `${pred.home} ${pred.score} ${pred.away} (นาที ${pred.minute})`,
     `1X2: ${fmtPct(pred.pHomeWin)} / ${fmtPct(pred.pDraw)} / ${fmtPct(pred.pAwayWin)}`,
     `Top scores:`,
@@ -1908,34 +1783,11 @@ function setLang(lang) {
   });
 }
 
-function handleLogin() {
-  const email = readStr('loginEmail');
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    toast('กรุณากรอกอีเมลให้ถูกต้อง', true);
-    $('loginEmail')?.focus();
-    return;
-  }
-  AppState.setUser(email);
-  Storage.saveSession();
-  $('loginOverlay').style.display = 'none';
-  writeText('displayUserEmailScan', email);
-  loadSavedInputs();
-  announce(`ยินดีต้อนรับ ${email}`);
-}
-function handleLogout() {
-  AppState.setUser('');
-  Storage.clearSession();
-  $('loginOverlay').style.display = 'flex';
-  writeVal('loginEmail', '');
-  announce('ออกจากระบบแล้ว');
-}
-
 const PERSIST_IDS = ['home_name','away_name','match_minute','current_home_score','current_away_score',
   'red_home','red_away','h_shots','a_shots','h_sot','a_sot','h_big','a_big',
   'h_corners','a_corners','h_corners_ht','a_corners_ht'];
 
 function saveInputs() {
-  if (!AppState.user) return;
   const data = {};
   PERSIST_IDS.forEach(id => { const el = $(id); if (el) data[id] = el.value; });
   const ah = $('handicapSelect'); if (ah) data.handicapSelect = ah.value;
@@ -2004,7 +1856,7 @@ function copyDonateNumber() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.2 — Test Framework
+   JackAI v8.9.3 — Test Framework
    ============================================================ */
 const TestRunner = (() => {
   const suites = [];
@@ -2026,6 +1878,10 @@ const TestRunner = (() => {
       toBeTruthy: () => { if (!actual) throw new Error(`expected truthy, got ${actual}`); },
       toBeFalsy: () => { if (actual) throw new Error(`expected falsy, got ${actual}`); },
       toEqual: (exp) => { const a = JSON.stringify(actual), b = JSON.stringify(exp); if (a !== b) throw new Error(`expected ${b}, got ${a}`); },
+      not: {
+        toBe: (exp) => { if (actual === exp) throw new Error(`expected NOT ${exp}, got ${actual}`); },
+        toBeGreaterThan: (exp) => { if (actual <= exp) throw new Error(`expected NOT > ${exp}, got ${actual}`); }
+      },
     };
   }
   function run() {
@@ -2110,10 +1966,10 @@ function defineAllTests() {
   });
 
   describe('Corner NB', () => {
-    it('NB(0, μ=10, r=8) ~ 0.05-0.25', () => {
+    it('NB(0, μ=10, r=8) ~ 0.0001-0.01', () => {
       const p = negBinomialPmf(0, 10, 8);
-      expect(p).toBeGreaterThan(0.05);
-      expect(p).toBeLessThan(0.25);
+      expect(p).toBeGreaterThan(0.0001);
+      expect(p).toBeLessThan(0.01);
     });
     it('NB sums to ~1', () => {
       let s = 0; for (let k = 0; k <= 60; k++) s += negBinomialPmf(k, 10.5, 8);
@@ -2222,27 +2078,14 @@ function closeTestPanel() { const p = $('testPanel'); if (p) p.style.display = '
 
 <script>
 /* ============================================================
-   JackAI v8.9.2 — Init
+   JackAI v8.9.3 — Init
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   buildLeagueDatalist();
   bindAutoSave();
-
-  const saved = Storage.loadSession();
-  if (saved) {
-    AppState.setUser(saved);
-    $('loginOverlay').style.display = 'none';
-    writeText('displayUserEmailScan', saved);
-    loadSavedInputs();
-  } else {
-    $('loginOverlay').style.display = 'flex';
-  }
+  loadSavedInputs();
 
   $('leagueSearch')?.addEventListener('input', handleLeagueSearch);
-
-  $('loginEmail')?.addEventListener('keydown', e => {
-    if (e.key === 'Enter') handleLogin();
-  });
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Enter' && e.ctrlKey) { e.preventDefault(); predictMatch(); }
@@ -2253,7 +2096,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (banner) banner.style.display = 'block';
   }
 
-  console.log('[JackAI] v8.9.2 initialized — Corner NB + CSV + Tests');
+  console.log('[JackAI] v8.9.3 initialized — No Login mode');
 });
 </script>
 
