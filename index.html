@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v9.0 — Clean Layout</title>
+<title>⚽ JackAI Scanner v9.1 — Realistic 1H Odds</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -161,7 +161,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
             <text x="145" y="42" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="900" font-size="26" fill="#0f172a" letter-spacing="-1">BALL</text>
           </g>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v9.0</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v9.1</span>
       </a>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
@@ -408,10 +408,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           <div class="text-center text-muted mt-1" style="font-size:0.65rem;"><span data-i18n="push_ah">เสมอราคา (Push)</span>: <span id="ahPushProb" class="fw-bold">0%</span></div>
         </div>
 
-        <!-- 🎯 ปรับโครงสร้างใหม่: เอา Top 3 ไปใส่ใน Card ครึ่งแรก และ ประตูถัดไป -->
         <div class="row g-2">
-          
-          <!-- คอลัมน์ที่ 1: ครึ่งแรก + Top 3 -->
           <div class="col-md-6">
             <div class="card p-2 h-100 d-flex flex-column">
               <h6 class="fw-bold text-secondary mb-2 text-center" style="font-size:0.8rem;" data-i18n="fh_section">ครึ่งแรก 45 นาที</h6>
@@ -421,7 +418,6 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
                 <div class="col-4"><div class="fh-card fh-away" data-box="away"><div class="fw-bold" style="font-size:0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="fhProbAway">0%</div></div></div>
               </div>
               
-              <!-- Top 3 ครึ่งแรก -->
               <div class="mt-auto border-top pt-2">
                 <div class="text-secondary text-center mb-1" style="font-size:0.75rem;">🎯 สกอร์ครึ่งแรก (Top 3)</div>
                 <div class="row g-1 text-center" id="topScoresContainerFH"></div>
@@ -430,7 +426,6 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
             </div>
           </div>
 
-          <!-- คอลัมน์ที่ 2: ประตูถัดไป + Top 3 -->
           <div class="col-md-6">
             <div class="card p-2 h-100 d-flex flex-column">
               <h6 class="fw-bold text-secondary mb-2 text-center" style="font-size:0.8rem;">⚽ <span data-i18n="next_goal_section">ประตูถัดไป</span></h6>
@@ -440,7 +435,6 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
                 <div class="col-4"><div class="next-goal-card ng-away"><div class="fw-bold" style="font-size:0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="probAway">0%</div></div></div>
               </div>
 
-              <!-- Top 3 เต็มเวลา -->
               <div class="mt-auto border-top pt-2">
                 <div class="text-secondary text-center mb-1" style="font-size:0.75rem;">🎯 สกอร์จบเกม (Top 3)</div>
                 <div class="row g-1 text-center" id="topScoresContainerNG"></div>
@@ -531,7 +525,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     </div>
   </div>
 
-  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v9.0 · Clean Layout · Probability estimates, not guarantees</div>
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v9.1 · Realistic 1H Odds · Probability estimates, not guarantees</div>
 
   <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-describedby="donateModalDesc">
     <div class="modal-dialog modal-dialog-centered">
@@ -560,7 +554,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 
 <script>
 /* ============================================================
-   JackAI Scanner v9.0 — Core Math Engine & State
+   JackAI Scanner v9.1 — Core Math Engine & State
    ============================================================ */
 const $ = (id) => document.getElementById(id);
 const readNum = (id, { min = -Infinity, max = Infinity, fallback = 0, integer = false } = {}) => {
@@ -598,7 +592,7 @@ const AppState = {
 const Storage = {
   _memoryFallback: {},
   _useFallback: false,
-  key(type) { const map = { inputs: 'jackai_inputs_v90' }; return map[type] || null; },
+  key(type) { const map = { inputs: 'jackai_inputs_v91' }; return map[type] || null; },
   get(type, fallback = []) {
     const k = this.key(type);
     if (!k) return fallback;
@@ -766,7 +760,7 @@ const LEAGUE_CONSTANTS = {
 
 <script>
 /* ============================================================
-   JackAI v9.0 — Math & Predictor Engine
+   JackAI v9.1 — Math & Predictor Engine
    ============================================================ */
 const _poissonCache = new Map();
 function poisson(lambda, k) {
@@ -1035,7 +1029,7 @@ function readMatchInputs() {
 
 <script>
 /* ============================================================
-   JackAI v9.0 — Corner Model & UI Render & Clock
+   JackAI v9.1 — Corner Model & UI Render & Clock
    ============================================================ */
 const CORNER_CONFIG = {
   BASE_PER_MATCH: 10.4, FH_SHARE: 0.44, NB_R: 8.0, TEMPO_ELASTICITY: 1.35,
@@ -1172,7 +1166,6 @@ function predictMatch() {
     const stats = readStatsFromDOM();
     const strength = computeStrength(stats);
     
-    // อัปเดต UI Strength
     if ($('homeStrengthDisplay')) $('homeStrengthDisplay').innerText = strength.home;
     if ($('awayStrengthDisplay')) $('awayStrengthDisplay').innerText = strength.away;
 
@@ -1197,14 +1190,12 @@ function predictMatch() {
     const baseXgPerMin = (inputs.league.avgGoals / 90);
     let expGoals = expectedGoalsIntegrated(inputs.minute, timeData.remaining, inputs.format, inputs.injury1, inputs.injury2, baseXgPerMin);
     
-    // Tempo & Game State
     let xgH = expGoals * hRatio;
     let xgA = expGoals * aRatio;
     const diff = inputs.cH - inputs.cA;
     if (diff > 0) { xgH *= (1 - 0.15 * Math.min(2, diff)); xgA *= (1 + 0.15 * Math.min(2, diff)); }
     else if (diff < 0) { xgA *= (1 - 0.15 * Math.min(2, -diff)); xgH *= (1 + 0.15 * Math.min(2, -diff)); }
 
-    // Red cards
     xgH *= Math.pow(CONFIG.RED.ATTACK_MULT, inputs.redHome) * Math.pow(CONFIG.RED.DEFENSE_MULT, inputs.redAway);
     xgA *= Math.pow(CONFIG.RED.ATTACK_MULT, inputs.redAway) * Math.pow(CONFIG.RED.DEFENSE_MULT, inputs.redHome);
 
@@ -1215,15 +1206,20 @@ function predictMatch() {
     let fhHome = 0, fhDraw = 0, fhAway = 0, fhOver05 = 0, fhOver15 = 0, fhOver25 = 0, fhOver35 = 0;
     let homeWin = 0, draw = 0, awayWin = 0;
     
-    // AH logic
     const ahParts = getAHParts(inputs.ah);
     let pAHH = 0, pAHA = 0, pAHPush = 0;
 
     let topScoresFT = [];
     let topScoresFH = [];
 
-    const fhXgH = xgH * inputs.league.fhShare;
-    const fhXgA = xgA * inputs.league.fhShare;
+    // ✅ คำนวณ xG ครึ่งแรก โดยอิงตามเวลาที่เหลือจริงในครึ่งแรก (แม่นยำขึ้น)
+    const fhMinute = Math.min(45, inputs.minute);
+    const fhRemaining = Math.max(0, 45 - fhMinute);
+    const fhRatio = fhRemaining / 90; // สัดส่วนเวลาที่เหลือเทียบกับทั้งเกม
+
+    // xG เฉพาะช่วงเวลาที่เหลือในครึ่งแรก (ใช้ xG ต่อนาทีของทั้งเกมมาคูณ)
+    const fhXgH = (xgH / Math.max(1, 90 - inputs.minute)) * fhRemaining * inputs.league.fhShare * 1.5;
+    const fhXgA = (xgA / Math.max(1, 90 - inputs.minute)) * fhRemaining * inputs.league.fhShare * 1.5;
 
     forEachCell(grid, (h, a, p) => {
       const ftH = inputs.cH + h, ftA = inputs.cA + a;
@@ -1249,11 +1245,19 @@ function predictMatch() {
 
       if (h < 6 && a < 6) topScoresFT.push({ score: `${ftH}-${ftA}`, p: p });
 
+      // ✅ ตรรกะใหม่: คำนวณ Top 3 ครึ่งแรก และ Over/Under ครึ่งแรก โดยอิงเวลาที่เหลือจริง
       if (inputs.minute < 45) {
         const po = poisson(fhXgH, h) * poisson(fhXgA, a) * dixonColesTau(h, a, fhXgH, fhXgA, inputs.league.rho);
-        if (h < 6 && a < 6) topScoresFH.push({ score: `${h}-${a}`, p: po });
-        if (h > a) fhHome += po; else if (a > h) fhAway += po; else fhDraw += po;
-        if (h + a > 0.5) fhOver05 += po; if (h + a > 1.5) fhOver15 += po; if (h + a > 2.5) fhOver25 += po; if (h + a > 3.5) fhOver35 += po;
+        if (h < 6 && a < 6) {
+          topScoresFH.push({ score: `${h}-${a}`, p: po });
+        }
+        
+        // Over/Under เช็คจากผลรวมประตู "ที่เหลือ" + ประตูที่มีอยู่แล้ว
+        const currentTotal = inputs.cH + inputs.cA; 
+        if (currentTotal + h + a > 0.5) fhOver05 += po; 
+        if (currentTotal + h + a > 1.5) fhOver15 += po; 
+        if (currentTotal + h + a > 2.5) fhOver25 += po; 
+        if (currentTotal + h + a > 3.5) fhOver35 += po;
       }
     });
 
