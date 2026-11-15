@@ -214,9 +214,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 </head>
 <body>
 
-<!-- ============================================================
-     LOGIN OVERLAY
-     ============================================================ -->
+<!-- LOGIN OVERLAY -->
 <div id="loginOverlay" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
     <div class="login-box">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" width="200" height="46" style="margin-bottom: 15px;" aria-hidden="true">
@@ -245,9 +243,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     </div>
 </div>
 
-<!-- ============================================================
-     APP
-     ============================================================ -->
+<!-- APP -->
 <div id="appScanner">
 
   <!-- NAVBAR -->
@@ -457,7 +453,6 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
       </div>
     </div>
 
-    <!-- ✅ RIGHT PANEL + RESULTS จะอยู่ใน Part 2 -->
     <!-- RIGHT PANEL -->
     <div class="right-panel">
       <div id="resultsArea" class="d-flex flex-column gap-2 h-100 d-none">
@@ -634,7 +629,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   </div>
 </div>
 
-<!-- ✅ DEBUG / TEST PANEL (ยังไม่มี scripts — Part 3) -->
+<!-- DEBUG / TEST PANEL -->
 <div id="debugBanner">🐛 DEBUG MODE v8.9.1 — พิมพ์ <b>test()</b> ใน console เพื่อรัน tests</div>
 <div id="testPanel">
   <h6>🧪 Test Results</h6>
@@ -642,7 +637,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   <button class="btn btn-sm btn-outline-info w-100 mt-2" onclick="closeTestPanel()" type="button">ปิด</button>
 </div>
 
-<!-- ✅ ARIA LIVE REGION -->
+<!-- ARIA LIVE REGION -->
 <div id="ariaLiveRegion" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
 
 <script>
@@ -904,16 +899,13 @@ const I18N = {
     placeholder_league:'🔍 Type league name...',
   }
 };
-
 console.log('[JackAI] Part 2 loaded — Config/Constants/Storage ready');
 </script>
 
-<!-- ✅ Part 3 จะมี calc*, render*, storage, auth, UI, tests + ปิด tags -->
 <script>
 /* ============================================================
    JackAI v8.9.1 — Core Calculation Engine
    ============================================================ */
-
 const _poissonCache = new Map();
 function poisson(lambda, k) {
   const key = lambda + '|' + k;
@@ -1178,6 +1170,7 @@ function readMatchInputs() {
 
   const htH = readNum('ht_home_score', { min: 0, integer: true, fallback: 0 });
   const htA = readNum('ht_away_score', { min: 0, integer: true, fallback: 0 });
+
   const strength = computeStrength({
     ah: parseFloat(($('handicapSelect') && $('handicapSelect').value) || '0') || 0,
     minute, cH, cA, hShots, aShots, hSot, aSot, hBig, aBig,
@@ -1217,9 +1210,6 @@ function validateInputs(inputs) {
   return { ok: true, warnings, cleaned: { hSot, aSot, hBig, aBig } };
 }
 
-/* ============================================================
-   Ratio / Tempo / ExpectedGoals
-   ============================================================ */
 function calcRatio(inputs, cleaned) {
   const hShot = calcShotXg(cleaned.hSot, cleaned.hBig, inputs.hShots);
   const aShot = calcShotXg(cleaned.aSot, cleaned.aBig, inputs.aShots);
@@ -1318,9 +1308,6 @@ function calcExpectedGoals(inputs, ratio, tempo) {
   return { xgH, xgA, xgHBeforeRed, xgABeforeRed, expectedGoalsRaw, timeData };
 }
 
-/* ============================================================
-   AH / FT / FH / Top3 / NextGoal
-   ============================================================ */
 function calcAH(grid, cH, cA, ahRate) {
   const ahParts = getAHParts(ahRate);
   let pAHHomeWin = 0, pAHAwayWin = 0, pAHPush = 0;
@@ -1459,9 +1446,6 @@ function calcNextGoal(xgH, xgA) {
   return { pHN, pNone, pAN };
 }
 
-/* ============================================================
-   Corners (v8.9.1 — isBlankInput + live rate)
-   ============================================================ */
 function calcCorners(inputs, xgH, xgA, tempo) {
   const leagueBaseFT = 9.5;
   const totalRemainingXG = xgH + xgA;
@@ -1583,7 +1567,6 @@ function calcCorners(inputs, xgH, xgA, tempo) {
     hasFTData, hasHTData,
   };
 }
-
 console.log('[JackAI] Part 3a loaded — calc engine ready');
 </script>
 
@@ -1591,15 +1574,13 @@ console.log('[JackAI] Part 3a loaded — calc engine ready');
 /* ============================================================
    JackAI v8.9.1 — Render / UI / Storage / Auth
    ============================================================ */
-
 function renderPrediction(result) {
   const { inputs, xgH, xgA, ratio, tempo, ah, ft, fh, top3, nextGoal, corners, confidence, timeData,
           ft1x2, expectedTotalGoals, matchOutcome, ahLabel, dataQuality, redImpactText, cornerNote } = result;
 
-  // 1X2 + BTTS
   const x1 = ft1x2 ?? (() => {
     let hw = 0, d = 0, aw = 0, btts = 0;
-    forEachCell(grid, (h, a, p) => {
+    forEachCell(result.grid, (h, a, p) => {
       const hf = inputs.cH + h, af = inputs.cA + a;
       if (hf > af) hw += p; else if (hf === af) d += p; else aw += p;
       if (hf > 0 && af > 0) btts += p;
@@ -1635,7 +1616,6 @@ function renderPrediction(result) {
   writeText('probNone', fmtPct(nextGoal.pNone * 100));
   writeText('probAway', fmtPct(nextGoal.pAN * 100));
 
-  // FH 3-boxes
   const setFhBox = (id, val, isFinished, isWin) => {
     const el = $(id);
     if (!el) return;
@@ -1693,7 +1673,6 @@ function renderPrediction(result) {
   setFhRow('fhOver25', 'fhOver25Bar', fh.fh25);
   setFhRow('fhOver35', 'fhOver35Bar', fh.fh35);
 
-  // Top3
   if (top3 && top3.top3 && top3.top3.length > 0) {
     const topN = top3.top3.length;
     const colors = ['bg-success text-white', 'bg-warning text-dark', 'bg-secondary text-white'];
@@ -1723,7 +1702,6 @@ function renderPrediction(result) {
   const lg = AppState.league;
   writeText('leagueInfluenceText', `${lg.flag || '🌐'} ${lg.text}`);
 
-  // Match outcome
   if (matchOutcome) {
     const outcomeEl = $('matchOutcomeTitle');
     if (outcomeEl) {
@@ -1734,7 +1712,6 @@ function renderPrediction(result) {
     }
   }
 
-  // Data quality
   const dqEl = $('dataQualityBadge');
   if (dqEl) {
     const dq = dataQuality ?? ((hasBigData(inputs.hBig, inputs.aBig)) ? 'High' : ((inputs.hShots + inputs.aShots) >= 10 ? 'Medium' : 'Low'));
@@ -1749,7 +1726,6 @@ function renderPrediction(result) {
     tempoEl.innerHTML = `<i class="bi ${tempo.icon}" aria-hidden="true"></i> Tempo: ${tempo.text}`;
   }
 
-  // Red card
   const rcArea = $('redCardImpactArea');
   if (rcArea) {
     if (redImpactText) {
@@ -1766,7 +1742,6 @@ function renderPrediction(result) {
     }
   }
 
-  // xG breakdown
   writeHtml('xgBreakdown',
     `<div class="d-flex justify-content-between border-bottom pb-1 mb-1"><span>🏠 เหย้า xG: <strong>${xgH.after.toFixed(2)}</strong></span><span class="text-success">${ratio.hShot.xg.toFixed(2)} × atk${ratio.hAtkMult.toFixed(2)} × def${ratio.aDefMult.toFixed(2)}</span></div>` +
     `<div class="d-flex justify-content-between"><span>✈️ เยือน xG: <strong>${xgA.after.toFixed(2)}</strong></span><span class="text-primary">${ratio.aShot.xg.toFixed(2)} × atk${ratio.aAtkMult.toFixed(2)} × def${ratio.hDefMult.toFixed(2)}</span></div>` +
@@ -1823,9 +1798,6 @@ function renderCornerPrediction(c, cornerNote) {
   writeText('cornerNote', cornerNote || '⚪ คาดการณ์ล้วน: ลีก 45% / ครึ่งหลัง 55%');
 }
 
-/* ============================================================
-   UI: Toast / Confirm / CalcError
-   ============================================================ */
 const _toastQueue = [];
 function showToast(msg, type = 'info', duration = 2500) {
   if (_toastQueue.length >= 3) {
@@ -1938,9 +1910,6 @@ function clearCalcError() {
   showEl('calcError', false);
 }
 
-/* ============================================================
-   Clipboard helper
-   ============================================================ */
 async function copyToClipboard(text) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     try { await navigator.clipboard.writeText(text); return true; } catch (e) {}
@@ -1964,9 +1933,6 @@ function copyDonateNumber() {
   });
 }
 
-/* ============================================================
-   Donate modal (cache + bootstrap fallback)
-   ============================================================ */
 let _donateModalInstance = null;
 let _donateModalEl = null;
 function openDonateModal() {
@@ -2015,9 +1981,6 @@ function closeTestPanel() {
   if (panel) panel.style.display = 'none';
 }
 
-/* ============================================================
-   copyResultAsText (Full — FH added + NaN guard)
-   ============================================================ */
 function copyResultAsText() {
   const pred = AppState.lastPrediction;
   if (!pred) { safeAlert(currentLang === 'en' ? 'No prediction yet.' : 'ยังไม่มีผลพยากรณ์'); return; }
@@ -2096,9 +2059,8 @@ console.log('[JackAI] Part 3b loaded — render/UI ready');
 
 <script>
 /* ============================================================
-   JackAI v8.9.1 — League matching / I18N / Auth / Save
+   JackAI v8.9.1 — League matching / I18N / Auth / Save / Tests
    ============================================================ */
-
 let _datalistInitialized = false;
 let _sortedLeaguesCache = null;
 function getSortedLeagues() {
@@ -2174,9 +2136,6 @@ function updateResultTitle() {
   writeText('resultTitle', `${h} ${hs} - ${as} ${a}`);
 }
 
-/* ============================================================
-   I18N
-   ============================================================ */
 function applyI18N(lang) {
   const prev = currentLang;
   currentLang = lang;
@@ -2206,9 +2165,6 @@ function applyI18N(lang) {
 function setLang(lang) { applyI18N(lang); }
 (function initLang() { let saved = null; try { saved = localStorage.getItem('jackai_lang'); } catch (e) {} applyI18N(saved === 'en' ? 'en' : 'th'); })();
 
-/* ============================================================
-   Auto strength
-   ============================================================ */
 function autoEstimateStrength(stats = null) {
   const d = stats || readStatsFromDOM();
   const r = computeStrength(d);
@@ -2224,9 +2180,6 @@ function autoEstimateStrength(stats = null) {
   return r;
 }
 
-/* ============================================================
-   Save / Restore
-   ============================================================ */
 const INPUT_IDS = ['home_name','away_name','home_strength','away_strength','leagueSearch','handicapSelect','ht_home_score','ht_away_score','match_minute','injury_1','injury_2','match_format','current_home_score','current_away_score','red_home','red_away','h_shots','h_sot','h_big','a_shots','a_sot','a_big','h_corners','h_corners_ht','a_corners','a_corners_ht'];
 
 let _saveTimer = null;
@@ -2263,15 +2216,11 @@ function restoreInputs() {
   updateResultTitle();
 }
 
-// ✅ save ก่อนปิด tab
 window.addEventListener('beforeunload', () => {
   clearTimeout(_saveTimer);
   saveInputs();
 });
 
-/* ============================================================
-   Auth
-   ============================================================ */
 function handleLogin() {
   const emailInput = $('loginEmail');
   if (!emailInput) return;
@@ -2351,9 +2300,6 @@ function initAppForUser() {
   updateResultTitle();
 }
 
-/* ============================================================
-   predictMatch (sync guard + try/finally)
-   ============================================================ */
 function predictMatch() {
   if (!AppState.user) return;
   if (predictMatch._running) return;
@@ -2495,9 +2441,6 @@ function resetInputs() {
   })();
 }
 
-/* ============================================================
-   DOMContentLoaded
-   ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
 
@@ -2538,9 +2481,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-/* ============================================================
-   TEST RUNNER
-   ============================================================ */
 const TestRunner = (() => {
   let pass = 0, fail = 0, failures = [];
   const assert = (cond, msg) => { if (cond) pass++; else { fail++; failures.push(msg); } };
