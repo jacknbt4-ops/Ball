@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⚽ JackAI Scanner v8.9.3 — No Login</title>
+<title>⚽ JackAI Scanner v8.9.4 — Full Patch</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -32,7 +32,7 @@ body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif
 .fh-total { background:#fff3cd; border-color:#ffeeba; color:#856404; }
 .fh-away { background:#cce5ff; border-color:#b8daff; color:#004085; }
 .fh-none { background:#e2e3e5; border-color:#d3d6d8; color:#6c757d; }
-.score-box { border-radius:8px; padding:5px; text-align:center; color:#fff; }
+.score-box { border-radius:8px; padding:8px 5px; text-align:center; color:#fff; }
 .bg-orange { background-color:#fd7e14 !important; }
 .text-orange { color:#fd7e14 !important; }
 .fw-extrabold { font-weight:800; }
@@ -158,7 +158,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
           <text x="118" y="35" font-family="'Segoe UI', sans-serif" font-weight="800" font-size="24" fill="url(#speedGrad)" letter-spacing="-1">AI</text>
           <text x="150" y="35" font-family="'Segoe UI', sans-serif" font-weight="300" font-size="20" fill="#64748b" letter-spacing="1">Scanner</text>
         </svg>
-        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9.3</span>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9.4</span>
       </span>
 
       <div class="d-flex align-items-center gap-2 ms-auto">
@@ -467,12 +467,12 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
             <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 5.5</span><span id="corner1H55">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="corner1H55Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
             <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 6.5</span><span id="corner1H65">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="corner1H65Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
           </div>
-          <div class="mb-1" style="font-size:0.72rem; font-weight:bold; color:#ffdb8a;">ครึ่งหลัง (2H)</div>
+          <div class="mb-1" style="font-size:0.72rem; font-weight:bold; color:#ffdb8a;">เต็มเวลา (Full Time)</div>
           <div class="row g-2">
-            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 4.5</span><span id="corner2H45">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="corner2H45Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
-            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 5.5</span><span id="corner2H55">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="corner2H55Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
-            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 6.5</span><span id="corner2H65">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="corner2H65Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
-            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 7.5</span><span id="corner2H75">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="corner2H75Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 4.5</span><span id="cornerFT45" class="text-warning">0%</span></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 5.5</span><span id="cornerFT55" class="text-warning">0%</span></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 6.5</span><span id="cornerFT65" class="text-warning">0%</span></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 7.5</span><span id="cornerFT75" class="text-warning">0%</span></div></div>
           </div>
           <div class="text-center text-muted mt-2" style="font-size:0.65rem;" id="cornerNote">—</div>
         </div>
@@ -489,7 +489,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     </div>
   </div>
 
-  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.9.3 · Corner NB + CSV + Tests (No Login) · Probability estimates, not guarantees</div>
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.9.4 · Full Patch · Probability estimates, not guarantees</div>
 
   <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-describedby="donateModalDesc">
     <div class="modal-dialog modal-dialog-centered">
@@ -513,7 +513,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
   </div>
 </div>
 
-<div id="debugBanner">🐛 DEBUG MODE v8.9.3 — พิมพ์ test() หรือ exportHistoryCSV() ใน console</div>
+<div id="debugBanner">🐛 DEBUG MODE v8.9.4 — พิมพ์ test() ใน console</div>
 <div id="testPanel">
   <h6>🧪 Test Results</h6>
   <div id="testResults"></div>
@@ -525,7 +525,7 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
 
 <script>
 /* ============================================================
-   JackAI Scanner v8.9.3 — Core
+   JackAI Scanner v8.9.4 — Core
    ============================================================ */
 let currentLang = 'th';
 
@@ -569,7 +569,7 @@ const AppState = {
 const Storage = {
   _memoryFallback: {},
   _useFallback: false,
-  key(type) { const map = { inputs: 'jackai_inputs_v893' }; return map[type] || null; },
+  key(type) { const map = { inputs: 'jackai_inputs_v894' }; return map[type] || null; },
   get(type, fallback = []) {
     const k = this.key(type);
     if (!k) return fallback;
@@ -705,7 +705,7 @@ const LEAGUE_CONSTANTS = {
   'thai womens league': { name: "ไทยลีกหญิง", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇹🇭', aliases: ['thai womens','thai w','thailand women'] },
   'mexico liga premier':         { name: "เม็กซิโก ลีกา พรีเมรา พรีเมียร์", goals: 2.80, rho: -0.09, fh: 0.46, flag: '🇲🇽', aliases: ['mexico liga premier','mexico premier'] },
   
-  // ลีกที่เพิ่มใหม่
+  // ลีกที่เพิ่มใหม่ (Custom Added)
   'hong kong premier league': { name: "ฮ่องกง ดิวิชั่น วัน", goals: 3.10, rho: -0.08, fh: 0.46, flag: '🇭🇰', aliases: ['hong kong','hk','hong kong division 1','hk div 1','hk premier','ฮ่องกง','ฮ่องกง ดิวิชั่น 1','ฮ่องกง ดิวิชั่น วัน'] },
   'hong kong first division': { name: "ฮ่องกง ดิวิชั่น 2", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇭🇰', aliases: ['hong kong division 2','hk div 2','hk first division','ฮ่องกง ดิวิชั่น 2'] },
   'hong kong league cup': { name: "ฮ่องกง ลีกคัพ", goals: 2.95, rho: -0.09, fh: 0.45, flag: '🏆', aliases: ['hong kong cup','hk cup','hk league cup','hong kong fa cup','ฮ่องกง ลีกตัพ','ฮ่องกง คัพ'] },
@@ -766,7 +766,7 @@ const I18N = {
 
 <script>
 /* ============================================================
-   JackAI v8.9.3 — Math Engine
+   JackAI v8.9.4 — Math Engine
    ============================================================ */
 const _poissonCache = new Map();
 function poisson(lambda, k) {
@@ -1042,7 +1042,7 @@ function readMatchInputs() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.3 — Corner Model v2 (Negative Binomial)
+   JackAI v8.9.4 — Corner Model v2 (Negative Binomial)
    ============================================================ */
 const CORNER_CONFIG = {
   BASE_PER_MATCH: 10.4,
@@ -1152,6 +1152,10 @@ function calcCornerExpectation(inp, baseGoals, strength) {
     expFT, exp1H, exp2H, homeExpFT, awayExpFT,
     rateH, rateA, totalRate,
     ft: {
+      over45: nbOrPoisson(expFT, 4.5),
+      over55: nbOrPoisson(expFT, 5.5),
+      over65: nbOrPoisson(expFT, 6.5),
+      over75: nbOrPoisson(expFT, 7.5),
       over85: nbOrPoisson(expFT, 8.5),
       over95: nbOrPoisson(expFT, 9.5),
       over105: nbOrPoisson(expFT, 10.5),
@@ -1175,7 +1179,7 @@ function calcCornerExpectation(inp, baseGoals, strength) {
 
 <script>
 /* ============================================================
-   JackAI v8.9.3 — Prediction + Rendering
+   JackAI v8.9.4 — Prediction + Rendering
    ============================================================ */
 function predictMatch() {
   try {
@@ -1545,10 +1549,11 @@ function renderCorners(c) {
   setBar('corner1H45', 'corner1H45Bar', c.h1.over45);
   setBar('corner1H55', 'corner1H55Bar', c.h1.over55);
   setBar('corner1H65', 'corner1H65Bar', c.h1.over65);
-  setBar('corner2H45', 'corner2H45Bar', c.h2.over45);
-  setBar('corner2H55', 'corner2H55Bar', c.h2.over55);
-  setBar('corner2H65', 'corner2H65Bar', c.h2.over65);
-  setBar('corner2H75', 'corner2H75Bar', c.h2.over75);
+
+  writeText('cornerFT45', fmtPct(c.ft.over45 || 0));
+  writeText('cornerFT55', fmtPct(c.ft.over55 || 0));
+  writeText('cornerFT65', fmtPct(c.ft.over65 || 0));
+  writeText('cornerFT75', fmtPct(c.ft.over75 || 0));
 
   const note = $('cornerNote');
   if (note) {
@@ -1588,7 +1593,7 @@ function announce(text) { const region = $('ariaLiveRegion'); if (region) region
 
 <script>
 /* ============================================================
-   JackAI v8.9.3 — CSV Export
+   JackAI v8.9.4 — CSV Export
    ============================================================ */
 function csvEscape(v) {
   const s = String(v == null ? '' : v);
@@ -1712,13 +1717,13 @@ function clearHistory() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.3 — UI Actions
+   JackAI v8.9.4 — UI Actions
    ============================================================ */
 function copyResultAsText() {
   const pred = AppState.lastPrediction;
   if (!pred) { announce('ยังไม่มีผล'); return; }
   const txt = [
-    `JackAI Scanner v8.9.3`,
+    `JackAI Scanner v8.9.4`,
     `${pred.home} ${pred.score} ${pred.away} (นาที ${pred.minute})`,
     `1X2: ${fmtPct(pred.pHomeWin)} / ${fmtPct(pred.pDraw)} / ${fmtPct(pred.pAwayWin)}`,
     `Top scores:`,
@@ -1856,7 +1861,7 @@ function copyDonateNumber() {
 
 <script>
 /* ============================================================
-   JackAI v8.9.3 — Test Framework
+   JackAI v8.9.4 — Test Framework
    ============================================================ */
 const TestRunner = (() => {
   const suites = [];
@@ -2078,7 +2083,7 @@ function closeTestPanel() { const p = $('testPanel'); if (p) p.style.display = '
 
 <script>
 /* ============================================================
-   JackAI v8.9.3 — Init
+   JackAI v8.9.4 — Init
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   buildLeagueDatalist();
@@ -2096,7 +2101,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (banner) banner.style.display = 'block';
   }
 
-  console.log('[JackAI] v8.9.3 initialized — No Login mode');
+  console.log('[JackAI] v8.9.4 initialized — Full Patch');
 });
 </script>
 
