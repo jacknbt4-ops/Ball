@@ -141,8 +141,13 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     <div class="container-fluid d-flex align-items-center gap-2 flex-wrap">
       
       <!-- โลโก้ -->
-      <span class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold logo-container">
+            <!-- เปลี่ยนจาก <span เป็น <a href="index.html" -->
+      <a href="index.html" class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold logo-container text-decoration-none">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" width="210" height="48" style="margin-top: 5px;" aria-hidden="true">
+          <!-- ... โค้ด SVG ด้านในปล่อยไว้เหมือนเดิม ... -->
+        </svg>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9.5</span>
+      </a> <!-- เปลี่ยนจาก </span> เป็น </a> -->
           <defs>
             <linearGradient id="speedGrad" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#ef4444" />
