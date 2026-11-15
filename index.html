@@ -1,168 +1,2166 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>โปรแกรมดู HTML - เครื่องมือดูตัวอย่างโค้ด</title>
-  <style>
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-      line-height: 1.6;
-    }
-    .header {
-      text-align: center;
-      color: #2563eb;
-      margin-bottom: 2rem;
-    }
-    .powered-by {
-      font-size: 0.9rem;
-      color: #64748b;
-      margin-top: 0.5rem;
-    }
-    .content {
-      background: #f8fafc;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .features {
-      margin-top: 2rem;
-    }
-    .features h2 {
-      color: #1e40af;
-      margin-bottom: 1rem;
-    }
-    .features ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    .features li {
-      margin-bottom: 0.5rem;
-      padding-left: 1.5rem;
-      position: relative;
-    }
-    .features li::before {
-      content: "✓";
-      color: #2563eb;
-      position: absolute;
-      left: 0;
-    }
-    .cta-button {
-      display: inline-block;
-      background: #2563eb;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem;
-      text-decoration: none;
-      margin-top: 1.5rem;
-      transition: background-color 0.2s;
-    }
-    .cta-button:hover {
-      background: #1e40af;
-    }
-    .share-section {
-      margin-top: 3rem;
-      text-align: center;
-    }
-    .share-buttons {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      margin-top: 1rem;
-    }
-    .share-button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0.5rem;
-      transition: transform 0.2s;
-    }
-    .share-button:hover {
-      transform: scale(1.1);
-    }
-    .share-button svg {
-      width: 24px;
-      height: 24px;
-    }
-    .love-message {
-      margin: 2rem 0;
-      padding: 1rem;
-      background: #f0f9ff;
-      border-radius: 8px;
-      text-align: center;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚽ JackAI Scanner v8.9.7 — Full Patch</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+html { margin:0; padding:0; width:100%; height:100%; }
+body { margin:0; padding:0; width:100%; font-family:'Segoe UI',Tahoma,sans-serif; font-size:0.85rem; color:#212529; height:100vh; overflow:hidden; background:#f8f9fa; display:flex; flex-direction:column; }
+
+.navbar-custom { height:60px; flex-shrink:0; background:#fff; border-bottom:1px solid #dee2e6; }
+.main-container { flex:1; padding:10px; display:flex; gap:10px; height:calc(100vh - 60px); box-sizing:border-box; overflow:hidden; }
+.left-panel { width:380px; min-width:380px; height:100%; display:flex; flex-direction:column; gap:8px; overflow-y:auto; overflow-x:hidden; }
+.right-panel { flex:1; height:100%; display:flex; flex-direction:column; gap:8px; overflow-y:auto; overflow-x:hidden; }
+
+.card { background:#fff; border:1px solid #dee2e6; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.02); color:#212529; }
+.card-body { padding:12px; }
+.form-control-sm, .form-select-sm { padding:4px 8px; font-size:0.85rem; background:#fff; border:1px solid #ced4da; color:#212529; font-family:'Segoe UI',Tahoma,sans-serif; border-radius:6px; }
+.form-select-sm { font-weight:600; }
+.red-card-box { border:1px solid #f5c2c7; background:#f8d7da; border-radius:8px; padding:4px 6px; }
+.red-card-input { border-color:#dc3545 !important; font-weight:700; color:#dc3545; height:28px; text-align:center; font-family:'Segoe UI',Tahoma,sans-serif; border-radius:6px; font-size:0.9rem; }
+
+.next-goal-card { border-radius:6px; padding:5px; text-align:center; border:1px solid; }
+.ng-none { background:#e2e3e5; border-color:#d3d6d8; color:#383d41; }
+.ng-home { background:#d4edda; border-color:#c3e6cb; color:#155724; }
+.ng-away { background:#cce5ff; border-color:#b8daff; color:#004085; }
+.fh-card { border-radius:6px; padding:5px; text-align:center; border:1px solid; }
+.fh-home { background:#d4edda; border-color:#c3e6cb; color:#155724; }
+.fh-total { background:#fff3cd; border-color:#ffeeba; color:#856404; }
+.fh-away { background:#cce5ff; border-color:#b8daff; color:#004085; }
+.fh-none { background:#e2e3e5; border-color:#d3d6d8; color:#6c757d; }
+.score-box { border-radius:8px; padding:8px 5px; text-align:center; color:#fff; }
+.bg-orange { background-color:#fd7e14 !important; }
+.text-orange { color:#fd7e14 !important; }
+.fw-extrabold { font-weight:800; }
+.warn-box { background:#fff3cd; border:1px solid #ffecb5; border-radius:4px; padding:4px 8px; font-size:0.75rem; color:#856404; }
+.xh-highlight { font-size:0.7rem; background:#e9ecef; padding:5px; border-radius:6px; border:1px solid #ced4da; color:#495057; }
+
+.btn-predict { background:#dc3545; color:#fff; border-radius:8px; padding:10px; font-size:1rem; font-weight:bold; border:none; box-shadow:0 2px 4px rgba(220,53,69,0.3); transition:all 0.2s; }
+.btn-predict:hover { background:#c82333; color:#fff; }
+.btn-predict:disabled { opacity:0.6; cursor:not-allowed; }
+.calib-note { font-size:0.65rem; color:#6c757d; font-style:italic; }
+.auto-box { border:1px dashed #fd7e14; background:#fff3cd; border-radius:6px; padding:6px; margin-bottom:8px; }
+.auto-label { font-size:0.7rem; font-weight:bold; color:#d39e00; }
+.top3-sum-note { font-size:0.65rem; color:#6c757d; padding-top:4px; border-top:1px dashed #dee2e6; margin-top:4px; }
+.btn-donate { background:linear-gradient(45deg,#ff8a00,#e52e71); color:#fff; border:none; font-weight:bold; border-radius:20px; padding:3px 12px; font-size:0.75rem; box-shadow:0 2px 5px rgba(229,46,113,0.4); transition:transform 0.2s; }
+.btn-donate:hover { transform:scale(1.05); color:#fff; }
+.donate-box { border:2px dashed #e52e71; border-radius:12px; padding:20px; background:#fff0f5; }
+.btn-copy { font-size:0.7rem; padding:3px 9px; border-radius:6px; }
+
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:#ced4da; border-radius:10px; }
+::-webkit-scrollbar-thumb:hover { background:#adb5bd; }
+.logo-container { display: flex; align-items: center; gap: 5px; }
+
+.lang-switch { display:inline-flex; border:1px solid #ced4da; border-radius:20px; overflow:hidden; background:#fff; }
+.lang-switch button { border:none; background:transparent; padding:3px 10px; font-size:0.7rem; font-weight:700; color:#6c757d; cursor:pointer; transition:0.15s; }
+.lang-switch button.active { background:#10b981; color:#fff; }
+.lang-switch button:hover:not(.active) { background:#e9ecef; }
+
+#advancedPanel { border:1px solid #e5e7eb; }
+#advancedPanel .form-control-sm, #advancedPanel .form-select-sm { font-size:0.78rem; height:30px; }
+#advancedPanel label { margin-bottom:2px; }
+.team-row .form-control-sm { font-size:0.82rem; height:32px; font-weight:700; }
+
+:root{--jai-bg:#07111f;--jai-panel:#101d30;--jai-panel2:#14243a;--jai-line:#263b55;--jai-text:#e8f0fa;--jai-muted:#91a4bc;--jai-green:#20d6a0;--jai-blue:#4da3ff;--jai-orange:#ffad4d}
+body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18 100%);color:var(--jai-text)}
+.navbar-custom{background:rgba(9,20,35,.96)!important;border-bottom:1px solid var(--jai-line)!important;color:#fff}
+.main-container{gap:14px;padding:14px}
+.left-panel,.right-panel{gap:12px}
+.card{background:linear-gradient(145deg,rgba(19,35,56,.98),rgba(12,25,42,.98));border:1px solid var(--jai-line);border-radius:14px;color:var(--jai-text);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.card-body{padding:14px}
+.card .text-dark,.card h5.text-dark{color:#f3f7fc!important}
+.card .text-secondary,.card .text-muted{color:var(--jai-muted)!important}
+.form-control-sm,.form-select-sm,.form-control,.form-select{background:#0b192b!important;border-color:#304763!important;color:#e8f0fa!important}
+.form-control::placeholder{color:#8297b0!important}
+.form-control:focus,.form-select:focus{border-color:var(--jai-green)!important;box-shadow:0 0 0 .18rem rgba(32,214,160,.16)!important}
+.btn-predict{background:linear-gradient(100deg,#0dbb87,#087d9e);border-radius:10px;box-shadow:0 8px 20px rgba(13,187,135,.2)}
+.btn-predict:hover{background:linear-gradient(100deg,#0ac995,#0a8daf)}
+#advancedPanel .bg-light{background:#0d1b2d!important;color:var(--jai-text)}
+#advancedPanel label{color:#b4c5d8!important}
+#resultsArea .card{padding:14px!important}
+#resultsArea .bg-light{background:#0c1b2e!important;border-color:#2b405a!important;color:#eaf2fb!important}
+.score-box{border:1px solid rgba(255,255,255,.14);border-radius:10px}
+.fh-card,.next-goal-card{border-radius:9px}
+.xh-highlight{background:#0b192b;border-color:#304763;color:#b7c8dc!important}
+.metric-tile{background:#0b1b2d;border:1px solid #2a405a;border-radius:10px;padding:10px;text-align:center;height:100%}
+.metric-tile .metric-label{font-size:.68rem;color:#9bb0c8}
+.metric-tile .metric-value{font-size:1.2rem;font-weight:800;color:#f4f8ff}
+.metric-tile.home .metric-value{color:#35d7a4}
+.metric-tile.draw .metric-value{color:#ffc56b}
+.metric-tile.away .metric-value{color:#69b5ff}
+.progress{background:#263b55!important}
+.warn-box{background:#3b2e16;border-color:#6b5121;color:#ffdb8a}
+
+@media (max-width:991.98px){
+  body { height:auto; min-height:100vh; min-height:100dvh; overflow:auto; font-size:1rem; }
+  .main-container { flex-direction:column; height:auto; overflow:visible; padding:9px; gap:9px; }
+  .left-panel, .right-panel { width:100% !important; min-width:0 !important; height:auto !important; overflow-y:visible !important; gap:9px; }
+  .navbar-custom{height:auto;min-height:60px}
+  .btn-sm, .btn-copy, .lang-switch button, .btn-donate { min-height: 44px; min-width: 44px; }
+  .form-control-sm, .form-select-sm { min-height: 44px; font-size: 16px !important; }
+  .btn-predict { min-height: 48px; font-size: 1rem; }
+}
+@media (max-width: 480px) {
+  body { font-size: 0.95rem; }
+  .main-container { padding: 6px; gap: 6px; }
+  .card-body { padding: 10px; }
+  .left-panel, .right-panel { gap: 6px; }
+  .navbar-custom .lang-switch { display: none; }
+  .navbar-custom .btn-donate span { display: none; }
+  .team-row .col-6 { width: 100%; flex: 0 0 100%; max-width: 100%; }
+  #resultsArea .card { padding: 10px !important; }
+  .metric-tile { padding: 8px; }
+  .metric-tile .metric-value { font-size: 1rem; }
+}
+
+#debugBanner { position:fixed; bottom:8px; left:8px; z-index:9999; background:#0b192b; border:1px solid #20d6a0; color:#20d6a0; padding:4px 10px; border-radius:6px; font-size:0.7rem; font-family:monospace; display:none; }
+#testPanel { position:fixed; top:70px; right:10px; width:480px; max-height:85vh; overflow-y:auto; background:#0b192b; border:1px solid #20d6a0; color:#e8f0fa; padding:12px; border-radius:10px; font-family:monospace; font-size:0.75rem; z-index:9998; display:none; }
+#testPanel h6 { color:#20d6a0; margin-bottom:8px; }
+#testPanel .pass { color:#35d7a4; }
+#testPanel .fail { color:#ff6b6b; }
+#testPanel .test-row { padding:2px 0; border-bottom:1px solid #1a3049; }
+#testPanel .summary { margin-top:8px; padding-top:8px; border-top:1px solid #263b55; font-weight:bold; }
+
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+.toast-jai { position: fixed; bottom: 20px; right: 20px; background: #0b192b; border: 1px solid #20d6a0; color: #20d6a0; padding: 10px 16px; border-radius: 8px; font-size: 0.8rem; z-index: 100000; box-shadow: 0 8px 24px rgba(0,0,0,0.4); opacity: 0; transform: translateY(10px); transition: all 0.25s; }
+.toast-jai.show { opacity: 1; transform: translateY(0); }
+</style>
 </head>
 <body>
-  <header class="header">
-    <h1>โปรแกรมดู HTML</h1>
-    <p class="powered-by">พัฒนาโดย HTMLonline.ORG</p>
-    <p>เครื่องมือแก้ไขโค้ด & ดูตัวอย่างของคุณ</p>
-  </header>
-  <div class="love-message">
-      <p>❤️ ชอบใช้ โปรแกรมดู HTML ใช่ไหม? แชร์ให้เพื่อนและนักพัฒนาคนอื่นๆ ดูสิ!</p>
-  </div>
-  <div class="share-section">
-    <h2>แชร์ โปรแกรมดู HTML</h2>
-    <div class="share-buttons">
-      <button class="share-button" onclick="share(&quot;email&quot;)" title="แชร์ทางอีเมล">
-        <svg viewBox="0 0 24 24" fill="#EA4335">
-          <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+
+<div id="appScanner">
+
+  <nav class="navbar navbar-light px-3 shadow-sm navbar-custom">
+    <div class="container-fluid d-flex align-items-center gap-2 flex-wrap">
+      
+      <!-- LOGO JACK AI BALL (Ball Behind Text) -->
+      <a href="index.html" class="navbar-brand mb-0 h1 fs-6 text-dark fw-bold logo-container text-decoration-none">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 70" width="260" height="56" style="margin-top: 5px;" aria-hidden="true">
+          <defs>
+            <radialGradient id="ballBgGrad" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stop-color="#f8fafc" />
+              <stop offset="100%" stop-color="#cbd5e1" />
+            </radialGradient>
+            <linearGradient id="textGradBg" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ef4444" />
+              <stop offset="100%" stop-color="#f97316" />
+            </linearGradient>
+          </defs>
+
+          <!-- 1. รูปฟุตบอล (พื้นหลัง) -->
+          <g transform="translate(115, 5)">
+            <ellipse cx="30" cy="60" rx="24" ry="5" fill="rgba(0,0,0,0.1)" />
+            <circle cx="30" cy="30" r="28" fill="url(#ballBgGrad)" stroke="#94a3b8" stroke-width="1.5" />
+            <polygon points="30,14 42,21 38,36 22,36 18,21" fill="#334155" />
+            <path d="M 10 22 L 18 21 M 50 22 L 42 21 M 30 58 L 22 36 M 30 58 L 38 36 M 2 30 L 18 21 M 58 30 L 42 21 M 6 40 L 10 22 M 54 40 L 50 22" stroke="#334155" stroke-width="2.5" fill="none" stroke-linecap="round" />
+          </g>
+
+          <!-- 2. ตัวหนังสือ (อยู่ด้านหน้า) -->
+          <g style="text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;">
+            <text x="15" y="42" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="900" font-size="26" fill="#0f172a" letter-spacing="-1">JACK</text>
+            <text x="95" y="42" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="900" font-size="26" fill="url(#textGradBg)" letter-spacing="-1">AI</text>
+            <text x="145" y="42" font-family="'Segoe UI', Tahoma, sans-serif" font-weight="900" font-size="26" fill="#0f172a" letter-spacing="-1">BALL</text>
+          </g>
         </svg>
-      </button>
-      <button class="share-button" onclick="share(&quot;facebook&quot;)" title="แชร์บน Facebook">
-        <svg viewBox="0 0 24 24" fill="#1877F2">
-          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-        </svg>
-      </button>
-      <button class="share-button" onclick="share(&quot;twitter&quot;)" title="แชร์บน Twitter">
-        <svg viewBox="0 0 24 24" fill="#1DA1F2">
-          <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-        </svg>
-      </button>
-      <button class="share-button" onclick="share(&quot;reddit&quot;)" title="แชร์บน Reddit">
-        <svg viewBox="0 0 24 24" fill="#FF4500">
-          <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
-        </svg>
-      </button>
+        <span class="badge bg-success" style="font-size:0.55rem; margin-left: 5px;">v8.9.7</span>
+      </a>
+
+      <!-- ปุ่มไปหน้าโหมด 1H -->
+      <a href="index_1h.html" class="btn btn-sm btn-outline-warning fw-bold ms-2" style="border-radius: 20px; font-size: 0.75rem;">
+        <i class="bi bi-clock-history"></i> โหมดครึ่งแรก (1H)
+      </a>
+
+      <!-- เมนูด้านขวา -->
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <div class="lang-switch me-2" title="ภาษา / Language" role="group" aria-label="เลือกภาษา">
+          <button id="btnLangTH" class="active" onclick="setLang('th')" type="button">TH</button>
+          <button id="btnLangEN" onclick="setLang('en')" type="button">EN</button>
+        </div>
+        <button class="btn btn-donate mb-0" onclick="openDonateModal()" type="button" aria-label="สนับสนุนผู้พัฒนา">
+          <i class="bi bi-heart-fill text-white" aria-hidden="true"></i> <span data-i18n="btn_donate">สนับสนุน</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-container">
+    <div class="left-panel">
+      <div class="card card-body p-2">
+
+        <div class="row g-1 mb-2 team-row">
+          <div class="col-6">
+            <input type="text" id="home_name" class="form-control form-control-sm border-success fw-bold text-success"
+                   placeholder="🏠 ชื่อทีมเหย้า" autocomplete="off" style="border-width:2px;" aria-label="ชื่อทีมเหย้า">
+          </div>
+          <div class="col-6">
+            <input type="text" id="away_name" class="form-control form-control-sm border-primary fw-bold text-primary"
+                   placeholder="✈️ ชื่อทีมเยือน" autocomplete="off" style="border-width:2px;" aria-label="ชื่อทีมเยือน">
+          </div>
+        </div>
+
+        <div class="row g-1 mb-1">
+          <div class="col-7">
+            <input type="text" id="leagueSearch" list="leagueList" class="form-control form-control-sm text-info fw-bold"
+                   placeholder="🔍 พิมพ์ชื่อลีก..." autocomplete="off" aria-label="ค้นหาลีก">
+            <datalist id="leagueList"></datalist>
+          </div>
+          <div class="col-5">
+            <select id="handicapSelect" class="form-select form-select-sm text-warning fw-bold" aria-label="Asian Handicap">
+              <option value="0">AH: 0.0 (เสมอ)</option>
+              <option value="0.25">AH: +0.25</option>
+              <option value="0.5">AH: +0.5</option>
+              <option value="0.75">AH: +0.75</option>
+              <option value="1.0">AH: +1.0</option>
+              <option value="1.25">AH: +1.25</option>
+              <option value="1.5">AH: +1.5</option>
+              <option value="1.75">AH: +1.75</option>
+              <option value="2.0">AH: +2.0</option>
+              <option value="-0.25">AH: -0.25</option>
+              <option value="-0.5">AH: -0.5</option>
+              <option value="-0.75">AH: -0.75</option>
+              <option value="-1.0">AH: -1.0</option>
+              <option value="-1.25">AH: -1.25</option>
+              <option value="-1.5">AH: -1.5</option>
+              <option value="-1.75">AH: -1.75</option>
+              <option value="-2.0">AH: -2.0</option>
+            </select>
+          </div>
+        </div>
+        <div id="leagueResult" class="mb-2" style="font-size:0.68rem;">
+          <span class="text-warning fw-bold">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>
+        </div>
+
+        <div class="row g-1 mb-2">
+          <div class="col-4">
+            <label class="text-muted" style="font-size:0.62rem;" for="match_minute">⏱️ นาที</label>
+            <input type="number" id="match_minute" class="form-control form-control-sm text-danger text-center fw-bold" value="0" min="0" max="120" aria-label="นาทีที่แข่งขัน">
+          </div>
+          <div class="col-4">
+            <label class="text-success" style="font-size:0.62rem;" for="current_home_score">🏠 เหย้า</label>
+            <input type="number" id="current_home_score" class="form-control form-control-sm text-success text-center fw-bold" value="0" min="0" aria-label="สกอร์เหย้า">
+          </div>
+          <div class="col-4">
+            <label class="text-primary" style="font-size:0.62rem;" for="current_away_score">✈️ เยือน</label>
+            <input type="number" id="current_away_score" class="form-control form-control-sm text-primary text-center fw-bold" value="0" min="0" aria-label="สกอร์เยือน">
+          </div>
+        </div>
+
+        <div class="row g-1 mb-2">
+          <div class="col-6">
+            <label class="text-danger fw-bold" style="font-size:0.62rem;" for="red_home">🟥 ใบแดง 🏠 เหย้า</label>
+            <input type="number" id="red_home" class="form-control form-control-sm red-card-input" value="0" min="0" max="5" aria-label="ใบแดงเหย้า">
+          </div>
+          <div class="col-6">
+            <label class="text-danger fw-bold" style="font-size:0.62rem;" for="red_away">🟥 ใบแดง ✈️ เยือน</label>
+            <input type="number" id="red_away" class="form-control form-control-sm red-card-input" value="0" min="0" max="5" aria-label="ใบแดงเยือน">
+          </div>
+        </div>
+
+        <div class="row g-2 mb-2">
+          <div class="col-6">
+            <div class="p-2 rounded" style="background:#0d2436; border:1px solid #1f4a3d;">
+              <div class="text-success fw-bold text-center mb-1" style="font-size:0.7rem;">🏠 เหย้า</div>
+              <input type="number" id="h_shots" class="form-control form-control-sm mb-1" placeholder="ยิง (Shots)" min="0" aria-label="ยิงเหย้า">
+              <input type="number" id="h_sot" class="form-control form-control-sm border-danger" placeholder="เข้ากรอบ (ว่าง=auto)" min="0" style="border-width:2px;" aria-label="เข้ากรอบเหย้า">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-2 rounded" style="background:#0d1f36; border:1px solid #1f3a4a;">
+              <div class="text-primary fw-bold text-center mb-1" style="font-size:0.7rem;">✈️ เยือน</div>
+              <input type="number" id="a_shots" class="form-control form-control-sm mb-1" placeholder="ยิง (Shots)" min="0" aria-label="ยิงเยือน">
+              <input type="number" id="a_sot" class="form-control form-control-sm border-danger" placeholder="เข้ากรอบ (ว่าง=auto)" min="0" style="border-width:2px;" aria-label="เข้ากรอบเยือน">
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-2">
+          <div class="col-12 text-center text-warning fw-bold mt-1" style="font-size:0.7rem;">🚩 ลูกเตะมุม (Corners)</div>
+          <div class="col-6">
+            <div class="p-2 rounded" style="background:#0d2436; border:1px solid #1f4a3d;">
+              <div class="text-success fw-bold text-center mb-1" style="font-size:0.65rem;">🏠 เหย้า</div>
+              <input type="number" id="h_corners" class="form-control form-control-sm mb-1" placeholder="รวมทั้งเกม (FT)" min="0" aria-label="เตะมุมเหย้า FT">
+              <input type="number" id="h_corners_ht" class="form-control form-control-sm" placeholder="ตอนจบครึ่งแรก (HT)" min="0" aria-label="เตะมุมเหย้า HT">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="p-2 rounded" style="background:#0d1f36; border:1px solid #1f3a4a;">
+              <div class="text-primary fw-bold text-center mb-1" style="font-size:0.65rem;">✈️ เยือน</div>
+              <input type="number" id="a_corners" class="form-control form-control-sm mb-1" placeholder="รวมทั้งเกม (FT)" min="0" aria-label="เตะมุมเยือน FT">
+              <input type="number" id="a_corners_ht" class="form-control form-control-sm" placeholder="ตอนจบครึ่งแรก (HT)" min="0" aria-label="เตะมุมเยือน HT">
+            </div>
+          </div>
+          <div class="col-12"><div class="text-muted text-center" style="font-size:0.6rem;">* ช่องบน = เตะมุมสะสมจนถึงปัจจุบัน, ช่องล่าง = เตะมุมเฉพาะครึ่งแรก</div></div>
+        </div>
+
+        <button type="button" class="btn btn-predict w-100 mb-2" onclick="predictMatch()">
+          <i class="bi bi-cpu" aria-hidden="true"></i> <span data-i18n="btn_predict">ประมวลผลคาดการณ์</span>
+        </button>
+
+        <button class="btn btn-outline-secondary w-100 py-1" type="button"
+                data-bs-toggle="collapse" data-bs-target="#advancedPanel" aria-expanded="true" aria-controls="advancedPanel"
+                style="font-size:0.72rem;">
+          <i class="bi bi-sliders" aria-hidden="true"></i> ตัวเลือกเพิ่มเติม (AI Strength · Big)
+        </button>
+
+        <div class="collapse show mt-2" id="advancedPanel">
+          <div class="p-2 rounded bg-light">
+            <div class="auto-box">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="auto-label" style="font-size:0.72rem;"><i class="bi bi-magic" aria-hidden="true"></i> AI Strength อัตโนมัติ</span>
+                <span class="badge bg-success">AUTO</span>
+              </div>
+              <div class="row g-2 text-center">
+                <div class="col-6"><div class="text-success fw-bold" style="font-size:.65rem">🏠 เหย้า</div><div id="homeStrengthDisplay" class="fw-bold fs-5 text-success">70</div></div>
+                <div class="col-6"><div class="text-primary fw-bold" style="font-size:.65rem">✈️ เยือน</div><div id="awayStrengthDisplay" class="fw-bold fs-5 text-primary">70</div></div>
+              </div>
+              <div id="autoResult" class="mt-1" style="font-size:0.62rem;color:#ffdb8a;">คำนวณจาก AH และสถิติการแข่งขันที่มีอยู่</div>
+              <input type="hidden" id="home_strength" value="70"><input type="hidden" id="away_strength" value="70">
+              <input type="hidden" id="auto_ah" value="0"><input type="hidden" id="auto_live_weight" value="30">
+            </div>
+
+            <div class="row g-1 mb-2">
+              <div class="col-6"><label class="text-warning fw-bold" style="font-size:0.62rem;" for="h_big">🏠 Big (ว่าง=auto)</label>
+                <input type="number" id="h_big" class="form-control form-control-sm border-warning" placeholder="auto" min="0" aria-label="Big เหย้า"></div>
+              <div class="col-6"><label class="text-warning fw-bold" style="font-size:0.62rem;" for="a_big">✈️ Big (ว่าง=auto)</label>
+                <input type="number" id="a_big" class="form-control form-control-sm border-warning" placeholder="auto" min="0" aria-label="Big เยือน"></div>
+            </div>
+
+            <input type="hidden" id="ht_home_score" value="">
+            <input type="hidden" id="ht_away_score" value="">
+
+            <div hidden aria-hidden="true">
+              <input type="number" id="injury_1" value="0">
+              <input type="number" id="injury_2" value="0">
+              <input type="hidden" id="match_format" value="90">
+            </div>
+
+            <button type="button" class="btn btn-outline-danger w-100 py-1" style="font-size:0.68rem;" onclick="resetInputs()">
+              <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> <span data-i18n="btn_reset">รีเซ็ตข้อมูล</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="calcError" class="alert alert-danger py-1 mb-0 d-none mt-2" role="alert" aria-live="assertive" tabindex="-1" style="font-size:0.72rem;">
+          <strong>⚠️ ไม่สามารถคำนวณได้:</strong> <span id="calcErrorText"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div id="resultsArea" class="d-flex flex-column gap-2 h-100 d-none">
+        <div class="card p-2 text-center position-relative border">
+          <div class="position-absolute d-flex gap-1" style="top:6px; right:6px;">
+            <button class="btn btn-outline-success btn-copy" onclick="exportPredictionCSV()" title="Export CSV" type="button" aria-label="Export CSV">
+              <i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i> CSV
+            </button>
+            <button class="btn btn-outline-secondary btn-copy" onclick="copyResultAsText()" title="Copy result as text" type="button" aria-label="คัดลอกผล">
+              <i class="bi bi-clipboard" aria-hidden="true"></i> Copy
+            </button>
+          </div>
+          <div id="resultTitle" class="fw-bold mb-1" style="font-size:1.1rem;">ทีมเหย้า 0 - 0 ทีมเยือน</div>
+          <div id="matchOutcomeTitle" class="fs-6 fw-bold px-2 py-1 rounded mt-1 mb-2 d-inline-block" style="background: rgba(0,0,0,0.2); border: 1px solid transparent; display: none;">
+            🎯 AI คาดการณ์: -
+          </div>
+          <div class="text-warning mb-1" style="font-size:0.75rem;">นาทีที่ <span id="displayMinute">0</span> (เหลือ <span id="displayRemaining">90</span> นาที)</div>
+          <div class="d-flex justify-content-center gap-1 flex-wrap">
+            <span class="badge bg-secondary" id="leagueInfluenceText" style="font-size:0.65rem;">ลีกมาตรฐาน</span>
+            <span class="badge bg-info text-dark" id="confidenceBadge" style="font-size:0.65rem;">Confidence: -</span>
+            <span class="badge bg-secondary" id="tempoBadge" style="font-size:0.65rem;"><i class="bi bi-speedometer2" aria-hidden="true"></i> Tempo: ปกติ</span>
+            <span class="badge bg-success" id="dataQualityBadge" style="font-size:0.65rem;">Data: -</span>
+          </div>
+        </div>
+        <div id="inputWarning" class="warn-box d-none py-1"><strong>⚠️ คำเตือน:</strong> <span id="inputWarningText"></span></div>
+        <div id="redCardImpactArea" class="alert alert-danger py-1 mb-0 d-none" style="font-size:0.75rem;"><strong>🟥 ใบแดง:</strong> <span id="redImpactText"></span></div>
+
+        <div class="row g-2" id="oneXTwoPanel">
+          <div class="col-4"><div class="metric-tile home"><div class="metric-label">เจ้าบ้านชนะ</div><div class="metric-value" id="ftHomeWin">—</div></div></div>
+          <div class="col-4"><div class="metric-tile draw"><div class="metric-label">เสมอ</div><div class="metric-value" id="ftDraw">—</div></div></div>
+          <div class="col-4"><div class="metric-tile away"><div class="metric-label">ทีมเยือนชนะ</div><div class="metric-value" id="ftAwayWin">—</div></div></div>
+          <div class="col-6"><div class="metric-tile"><div class="metric-label">ทั้งสองทีมยิง (BTTS)</div><div class="metric-value" id="bttsYes">—</div></div></div>
+          <div class="col-6"><div class="metric-tile"><div class="metric-label">คาดการณ์ประตูรวม</div><div class="metric-value" id="expectedTotalGoals">—</div></div></div>
+        </div>
+
+        <div class="card p-2">
+          <h6 class="fw-bold text-warning mb-1 text-center" style="font-size:0.8rem;" data-i18n="ah_section">Live Asian Handicap Probs</h6>
+          <div class="p-1 bg-light rounded border text-center mb-1">
+            <div class="text-secondary" style="font-size:0.65rem;">อัตราต่อรอง</div>
+            <div class="fw-extrabold text-dark mb-0" style="font-size:1rem;" id="ahCurrentRate">0.0</div>
+          </div>
+          <div class="row g-1 text-center">
+            <div class="col-6"><div class="p-1 rounded bg-success-subtle border border-success"><div class="text-success fw-bold" style="font-size:0.7rem;" data-i18n="home_wins_ah">เหย้าชนะราคา</div><div class="fw-bold text-success mb-0" style="font-size:1rem;" id="ahHomeProb">0%</div></div></div>
+            <div class="col-6"><div class="p-1 rounded bg-primary-subtle border border-primary"><div class="text-primary fw-bold" style="font-size:0.7rem;" data-i18n="away_wins_ah">เยือนชนะราคา</div><div class="fw-bold text-primary mb-0" style="font-size:1rem;" id="ahAwayProb">0%</div></div></div>
+          </div>
+          <div class="text-center text-muted mt-1" style="font-size:0.65rem;"><span data-i18n="push_ah">เสมอราคา (Push)</span>: <span id="ahPushProb" class="fw-bold">0%</span></div>
+        </div>
+
+        <div class="card p-2">
+          <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size:0.8rem;">🎯 <span data-i18n="top3_section">สกอร์จบเกมที่เป็นไปได้สูง (Top 3)</span></h6>
+          <div class="row g-1 text-center" id="topScoresContainer"></div>
+          <div class="top3-sum-note text-center" id="top3SumNote"></div>
+        </div>
+
+        <div class="row g-2">
+          <div class="col-md-6"><div class="card p-2 h-100">
+            <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size:0.8rem;" data-i18n="fh_section">ครึ่งแรก 45 นาที</h6>
+            <div class="row g-1 text-center">
+              <div class="col-4"><div class="fh-card fh-home" data-box="home"><div class="fw-bold" style="font-size:0.7rem;">เหย้า</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="fhProbHome">0%</div></div></div>
+              <div class="col-4"><div class="fh-card fh-total" data-box="total"><div class="fw-bold" style="font-size:0.7rem;">เสมอ</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="fhProbTotal">0%</div></div></div>
+              <div class="col-4"><div class="fh-card fh-away" data-box="away"><div class="fw-bold" style="font-size:0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="fhProbAway">0%</div></div></div>
+            </div>
+          </div></div>
+          <div class="col-md-6"><div class="card p-2 h-100">
+            <h6 class="fw-bold text-secondary mb-1 text-center" style="font-size:0.8rem;">⚽ <span data-i18n="next_goal_section">ประตูถัดไป</span></h6>
+            <div class="row g-1 text-center">
+              <div class="col-4"><div class="next-goal-card ng-home"><div class="fw-bold" style="font-size:0.7rem;">เหย้า</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="probHome">0%</div></div></div>
+              <div class="col-4"><div class="next-goal-card ng-none"><div class="fw-bold" style="font-size:0.7rem;">ไม่มี</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="probNone">0%</div></div></div>
+              <div class="col-4"><div class="next-goal-card ng-away"><div class="fw-bold" style="font-size:0.7rem;">เยือน</div><div class="fw-bold mb-0" style="font-size:0.9rem;" id="probAway">0%</div></div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="row g-2">
+          <div class="col-md-6"><div class="card p-2 h-100">
+            <h6 class="fw-bold text-secondary mb-2" style="font-size:0.8rem;" data-i18n="fh_over_section">โอกาสเกิดประตูครึ่งแรก</h6>
+            <div class="row g-2">
+              <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 0.5</span><span id="fhOver05">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="fhOver05Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+              <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 1.5</span><span id="fhOver15">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="fhOver15Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+              <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 2.5</span><span id="fhOver25">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="fhOver25Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+              <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 3.5</span><span id="fhOver35">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="fhOver35Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+            </div>
+          </div></div>
+          <div class="col-md-6"><div class="card p-2 h-100">
+            <h6 class="fw-bold text-secondary mb-2" style="font-size:0.8rem;" data-i18n="ft_over_section">โอกาสเกิดประตูเต็มเวลา</h6>
+            <div class="row g-2">
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>0.5</span><span id="ftOver05">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="ftOver05Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>1.5</span><span id="ftOver15">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="ftOver15Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>2.5</span><span id="ftOver25">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="ftOver25Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>3.5</span><span id="ftOver35">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="ftOver35Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>4.5</span><span id="ftOver45">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="ftOver45Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>5.5</span><span id="ftOver55">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="ftOver55Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+              <div class="col-4"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>6.5</span><span id="ftOver65">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="ftOver65Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="card p-2 border-warning mt-1">
+          <h6 class="fw-bold text-warning mb-2 text-center" style="font-size:0.85rem;">🚩 วิเคราะห์ลูกเตะมุม (Corner Analysis v2)</h6>
+          <div class="row g-1 mb-2 text-center">
+            <div class="col-4"><div class="metric-tile"><div class="metric-label">คาดการณ์เต็มเวลา</div><div class="metric-value" id="cornerExpFT">—</div></div></div>
+            <div class="col-4"><div class="metric-tile"><div class="metric-label">ครึ่งแรก (1H)</div><div class="metric-value" id="cornerExp1H">—</div></div></div>
+            <div class="col-4"><div class="metric-tile"><div class="metric-label">ครึ่งหลัง (2H)</div><div class="metric-value" id="cornerExp2H">—</div></div></div>
+          </div>
+          <div class="row g-1 mb-2">
+            <div class="col-6">
+              <div class="p-1 rounded text-center" style="background:#0d2436; border:1px solid #1f4a3d;">
+                <div class="text-success fw-bold" style="font-size:0.65rem;">🏠 เหย้า (คาดการณ์)</div>
+                <div class="fw-bold text-success" style="font-size:0.85rem;" id="cornerHomeExp">—</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-1 rounded text-center" style="background:#0d1f36; border:1px solid #1f3a4a;">
+                <div class="text-primary fw-bold" style="font-size:0.65rem;">✈️ เยือน (คาดการณ์)</div>
+                <div class="fw-bold text-primary" style="font-size:0.85rem;" id="cornerAwayExp">—</div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-1" style="font-size:0.72rem; font-weight:bold; color:#ffdb8a;">เต็มเวลา (Full Time)</div>
+          <div class="row g-2 mb-2">
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 8.5</span><span id="cornerFT85">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="cornerFT85Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 9.5</span><span id="cornerFT95">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="cornerFT95Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 10.5</span><span id="cornerFT105">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="cornerFT105Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 11.5</span><span id="cornerFT115">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="cornerFT115Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+          </div>
+          <div class="mb-1" style="font-size:0.72rem; font-weight:bold; color:#ffdb8a;">ครึ่งแรก (1H)</div>
+          <div class="row g-2 mb-2">
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 3.5</span><span id="corner1H35">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="corner1H35Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 4.5</span><span id="corner1H45">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="corner1H45Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 5.5</span><span id="corner1H55">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="corner1H55Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 6.5</span><span id="corner1H65">0%</span></div><div class="progress mb-1" style="height:4px;"><div class="progress-bar" id="corner1H65Bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:0%"></div></div></div>
+          </div>
+          <div class="mb-1" style="font-size:0.72rem; font-weight:bold; color:#ffdb8a;">เต็มเวลา (Full Time)</div>
+          <div class="row g-2">
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 4.5</span><span id="cornerFT45" class="text-warning">0%</span></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 5.5</span><span id="cornerFT55" class="text-warning">0%</span></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 6.5</span><span id="cornerFT65" class="text-warning">0%</span></div></div>
+            <div class="col-6"><div class="d-flex justify-content-between fw-bold" style="font-size:0.75rem;"><span>สูง 7.5</span><span id="cornerFT75" class="text-warning">0%</span></div></div>
+          </div>
+          <div class="text-center text-muted mt-2" style="font-size:0.65rem;" id="cornerNote">—</div>
+        </div>
+
+        <div class="xh-highlight text-muted mb-2" id="xgBreakdown">-</div>
+        <div class="calib-note mb-2 px-1" id="calibNote"></div>
+      </div>
+
+      <div id="emptyState" class="card h-100 d-flex flex-column justify-content-center align-items-center p-4 text-center">
+        <i class="bi bi-cpu text-secondary mb-3" style="font-size:4rem; opacity:0.3;" aria-hidden="true"></i>
+        <h6 class="mb-1" style="color:#b7c8dc;">กรอกข้อมูลแล้วกด "ประมวลผลคาดการณ์"</h6>
+        <p class="text-muted mb-0" style="font-size:0.8rem;">ผลวิเคราะห์จะแสดงตรงนี้</p>
+      </div>
     </div>
   </div>
-  <div class="content">
-    <section class="features">
-      <h2>คุณสมบัติหลัก</h2>
-      <ul>
-        <li>ดูตัวอย่าง HTML แบบเรียลไทม์ พร้อมอัปเดตทันที</li>
-        <li>ไฮไลต์ไวยากรณ์เพื่อความอ่านง่าย</li>
-        <li>รองรับ HTML5, CSS3, และ JavaScript สมัยใหม่</li>
-        <li>ดูตัวอย่างการออกแบบที่รองรับหน้าจอขนาดต่างๆ</li>
-        <li>อินเทอร์เฟซที่สะอาดและเข้าใจง่าย (คัดลอก, วาง & ค้นหา)</li>
-        <li>ไม่ต้องสมัครสมาชิก - เริ่มเขียนโค้ดได้ทันที</li>
-        <li>รองรับการใช้งานข้ามเบราว์เซอร์</li>
-        <li>นำเข้าและส่งออกโค้ดของคุณได้ง่าย</li>
-      </ul>
-    </section>
-    
-  </div>
 
-  <script>
-    function share(platform) {
-      const url = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent("ลองใช้เครื่องมือ โปรแกรมดู HTML ที่เจ๋งนี้ดู!");
-      
-      const shareUrls = {
-        email: "mailto:?subject=HTML%20Viewer&body=" + text + "%20" + url,
-        facebook: "https://www.facebook.com/sharer/sharer.php?u=" + url,
-        twitter: "https://twitter.com/intent/tweet?url=" + url + "&text=" + text,
-        reddit: "https://reddit.com/submit?url=" + url + "&title=" + text
-      };
-      
-      window.open(shareUrls[platform], "_blank");
+  <div class="text-center py-2" style="font-size:.65rem;color:#8297b0">JackAI Scanner v8.9.7 · Data Sync Patch · Probability estimates, not guarantees</div>
+
+  <div class="modal fade" id="donateModal" tabindex="-1" aria-labelledby="donateModalLabel" aria-describedby="donateModalDesc">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-danger text-white border-0">
+          <h5 class="modal-title fw-bold" id="donateModalLabel"><i class="bi bi-heart-fill text-warning" aria-hidden="true"></i> สนับสนุนผู้พัฒนา</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="ปิด" data-i18n-aria-label="close_btn"></button>
+        </div>
+        <div class="modal-body text-center p-4" id="donateModalDesc">
+          <p class="mb-3 text-secondary">หากโปรแกรม JackAI Scanner นี้มีประโยชน์กับคุณ</p>
+          <div class="donate-box text-center mb-3">
+            <div class="mb-3"><img src="https://www.truemoney.com/wp-content/uploads/2023/02/truemoney_logo_1x.png" alt="TrueMoney" width="120" height="40" loading="lazy" decoding="async" style="height:40px; object-fit:contain;" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/TrueMoney_Logo.svg/512px-TrueMoney_Logo.svg.png'"></div>
+            <h6 class="fw-bold text-dark mb-1">พร้อมเพย์ / ทรูมันนี่ วอลเล็ท</h6>
+            <h4 class="fw-extrabold text-danger mb-3">094-475-4282</h4>
+            <button class="btn btn-outline-danger fw-bold w-100" onclick="copyDonateNumber()" type="button"><i class="bi bi-clipboard-check" aria-hidden="true"></i> คัดลอกเบอร์โอนเงิน</button>
+          </div>
+          <small class="text-muted">ขอบคุณที่สนับสนุนครับ ❤️</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="debugBanner">🐛 DEBUG MODE v8.9.7 — พิมพ์ test() ใน console</div>
+<div id="testPanel">
+  <h6>🧪 Test Results</h6>
+  <div id="testResults"></div>
+  <button class="btn btn-sm btn-outline-info w-100 mt-2" onclick="closeTestPanel()" type="button">ปิด</button>
+</div>
+
+<div id="ariaLiveRegion" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
+<div id="toastJai" class="toast-jai" role="status"></div>
+
+<script>
+/* ============================================================
+   JackAI Scanner v8.9.7 — Core
+   ============================================================ */
+let currentLang = 'th';
+
+const $ = (id) => document.getElementById(id);
+const readNum = (id, { min = -Infinity, max = Infinity, fallback = 0, integer = false } = {}) => {
+  const el = $(id);
+  if (!el) return fallback;
+  let v = integer ? parseInt(el.value, 10) : parseFloat(el.value);
+  if (!Number.isFinite(v)) v = fallback;
+  return Math.max(min, Math.min(max, v));
+};
+const readStr = (id, fallback = '') => { const el = $(id); return el ? (el.value || '').trim() || fallback : fallback; };
+const writeVal = (id, val) => { const el = $(id); if (el) el.value = (val == null) ? '' : val; };
+const writeText = (id, text) => { const el = $(id); if (el) el.innerText = text; };
+const showEl = (id, show = true) => { const el = $(id); if (el) el.classList.toggle('d-none', !show); };
+const isBlankInput = (id) => { const el = $(id); return !el || String(el.value).trim() === ''; };
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function toast(msg, isError = false) {
+  const el = $('toastJai');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.borderColor = isError ? '#ff6b6b' : '#20d6a0';
+  el.style.color = isError ? '#ff6b6b' : '#20d6a0';
+  el.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+const AppState = {
+  league: { key: 'default', text: 'ลีกมาตรฐาน', avgGoals: 2.70, rho: -0.11, fhShare: 0.44, flag: '🌐' },
+  lastPrediction: null,
+  setLeague(key, data) { this.league = { key, text: data.name, avgGoals: data.goals, rho: data.rho, fhShare: data.fh, flag: data.flag || '🌐' }; },
+  setDefaultLeague() { this.league = { key: 'default', text: 'ลีกมาตรฐาน', avgGoals: 2.70, rho: -0.11, fhShare: 0.44, flag: '🌐' }; },
+  setLastPrediction(pred) { this.lastPrediction = pred; },
+};
+
+const Storage = {
+  _memoryFallback: {},
+  _useFallback: false,
+  key(type) { const map = { inputs: 'jackai_inputs_v897' }; return map[type] || null; },
+  get(type, fallback = []) {
+    const k = this.key(type);
+    if (!k) return fallback;
+    if (this._useFallback && this._memoryFallback[k]) {
+      try { return JSON.parse(this._memoryFallback[k]); } catch (e) {}
     }
-  </script>
+    try {
+      const raw = localStorage.getItem(k);
+      if (!raw) return fallback;
+      return JSON.parse(raw);
+    } catch (e) {
+      try { localStorage.removeItem(k); } catch (e2) {}
+      return fallback;
+    }
+  },
+  set(type, data) {
+    const k = this.key(type);
+    if (!k) return false;
+    const json = JSON.stringify(data);
+    try {
+      localStorage.setItem(k, json);
+      this._useFallback = false;
+      delete this._memoryFallback[k];
+      return true;
+    } catch (e) {
+      this._memoryFallback[k] = json;
+      this._useFallback = true;
+      try { sessionStorage.setItem(k, json); return true; } catch (e2) {}
+      return false;
+    }
+  }
+};
+
+const CONFIG = {
+  XG: { BIG_CHANCE: 0.32, SOT_NON_BIG: 0.15, OFF_TARGET: 0.028 },
+  STRENGTH: { SENSITIVITY: 0.0115, MIN_MULT: 0.45, MAX_MULT: 2.20, BAYES_SHRINK: 0.80 },
+  HOME_ADV: { SHARE: 0.53, SHOTS_FOR_FULL_WEIGHT: 15 },
+  RED: { ATTACK_MULT: 0.78, DEFENSE_MULT: 1.18, BOTH_RED_DISCOUNT: 0.5 },
+  TEMPO: { MIN: 0.85, MAX: 1.20, ET_RATE_MULT: 0.75, LATE_0_0_MINUTE: 75, LATE_0_0_BOOST: 1.05 },
+  TEMPO_BASELINE: { SHOT_XG_MIN_THRESHOLD: 0.5, SHOT_WEIGHT: 0.65, LEAGUE_WEIGHT: 0.35 },
+  SCORE_EFFECT: { LEADING_ATTACK_PENALTY: 0.15, TRAILING_ATTACK_BOOST: 0.15, MAX_DIFF: 2 },
+  INTEGRATION_STEPS: 30,
+  GRID: { MAX_GOALS: 15, MAX_FH_GOALS: 8, LAPLACE_SMOOTH: 0.15, RHO_DEFAULT: -0.11 },
+  CONFIDENCE: { BASE: 0.25, W_SAMPLE: 0.25, W_QUALITY: 0.20, W_AGREEMENT: 0.18, W_MINUTE: 0.12, W_ACCURACY: 0.10, W_LEAD: 0.15, SHRINK: 0.92 },
+  LIMITS: { INJURY_MAX: 15, MINUTE_MAX: 120, RED_MAX: 5 },
+};
+const EPS = 0.001;
+const TOL_AH = 1e-9;
+const TEMPO_0_0_LATE_MINUTE = CONFIG.TEMPO.LATE_0_0_MINUTE;
+const TEMPO_0_0_LATE_BOOST = CONFIG.TEMPO.LATE_0_0_BOOST;
+const FACT = [1]; for (let i = 1; i <= 30; i++) FACT[i] = FACT[i-1] * i;
+
+const LEAGUE_CONSTANTS = {
+  'premier league':      { name: "พรีเมียร์ลีกอังกฤษ", goals: 3.24, rho: -0.10, fh: 0.46, flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', aliases: ['epl','premier','england','eng','pl','พรีเมียร์'] },
+  'championship':        { name: "แชมเปี้ยนชิพ อังกฤษ", goals: 2.68, rho: -0.09, fh: 0.45, flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', aliases: ['champ','efl','championship england'] },
+  'la liga':             { name: "ลาลีกา สเปน", goals: 2.58, rho: -0.12, fh: 0.44, flag: '🇪🇸', aliases: ['laliga','spain','esp','ลาลีกา'] },
+  'bundesliga':          { name: "บุนเดสลีกา เยอรมัน", goals: 3.42, rho: -0.08, fh: 0.47, flag: '🇩🇪', aliases: ['bundes','germany','ger','buli','บุนเดส'] },
+  'serie a':             { name: "เซเรียอา อิตาลี", goals: 2.62, rho: -0.13, fh: 0.44, flag: '🇮🇹', aliases: ['seriea','italy','ita','italy serie a','กัลโช่'] },
+  'ligue 1':             { name: "ลีกเอิง ฝรั่งเศส", goals: 2.70, rho: -0.11, fh: 0.44, flag: '🇫🇷', aliases: ['ligue1','france','fra','l1','ลีกเอิง'] },
+  'eredivisie':          { name: "เอเรดิวิซี เนเธอร์แลนด์", goals: 3.15, rho: -0.08, fh: 0.46, flag: '🇳🇱', aliases: ['ere','netherlands','ned','holland','dutch','ered'] },
+  'thai league':         { name: "ไทยลีก", goals: 2.95, rho: -0.09, fh: 0.46, flag: '🇹🇭', aliases: ['thai','t1','thailand','tl','ไทย'] },
+  'j1 league':           { name: "เจลีก J1", goals: 2.65, rho: -0.11, fh: 0.44, flag: '🇯🇵', aliases: ['j1','japan','jpn','jleague','เจ'] },
+  'j2 league':           { name: "เจลีก J2", goals: 2.55, rho: -0.10, fh: 0.45, flag: '🇯🇵', aliases: ['j2','japan2','jpn2','เจลีก 2'] },
+  'mls':                 { name: "เมเจอร์ลีกซอกเกอร์", goals: 3.12, rho: -0.08, fh: 0.46, flag: '🇺🇸', aliases: ['usa','us','america','major league soccer','เมเจอร์'] },
+  'colombia cup':        { name: "โคลัมเบีย คัพ", goals: 2.55, rho: -0.11, fh: 0.44, flag: '🇨🇴', aliases: ['colombia','col','copa colombia','copacol','โคลัมเบีย'] },
+  'uruguay cup':         { name: "อุรุกวัย คัพ", goals: 2.55, rho: -0.11, fh: 0.44, flag: '🇺🇾', aliases: ['uruguay','uru','ury','copa uruguay','copauru','อุรุกวัย'] },
+  'el salvador primera': { name: "เอล ซัลวาดอร์ พรีเมียร์ ดิวิชั่น", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇸🇻', aliases: ['el salvador','salvador','slv','esa','elsalvador','primera','เอลซัลวาดอร์'] },
+  'brasileirao serie a': { name: "บราซิเลเรียว เซเรีย อา", goals: 2.45, rho: -0.10, fh: 0.44, flag: '🇧🇷', aliases: ['brasileirao','brazil a','brasil a','brasileirao a','bra-a','บราซิเลเรียว'] },
+  'brasileirao serie b': { name: "บราซิเลเรียว เซเรีย บี", goals: 2.35, rho: -0.11, fh: 0.44, flag: '🇧🇷', aliases: ['brasileirao b','brazil b','brasil b','serie b bra','bra-b'] },
+  'argentina primera':   { name: "อาร์เจนตินา พรีเมรา", goals: 2.30, rho: -0.13, fh: 0.43, flag: '🇦🇷', aliases: ['argentina','arg','liga profesional','lpf','primera arg','อาร์เจน'] },
+  'argentina primera nacional': { name: "อาร์เจนตินา พรีเมรา นาซิอองนาล", goals: 2.20, rho: -0.13, fh: 0.43, flag: '🇦🇷', aliases: ['primera nacional','arg b','argentina b','b nacional'] },
+  'chile primera':       { name: "ชิลี พรีเมรา ดิวิชั่น", goals: 2.65, rho: -0.09, fh: 0.45, flag: '🇨🇱', aliases: ['chile','chi','primera chile','ชิลี'] },
+  'peru primera':        { name: "เปรู พรีเมรา ดิวิชั่น", goals: 2.55, rho: -0.10, fh: 0.45, flag: '🇵🇪', aliases: ['peru','per','liga 1 peru','primera peru','เปรู'] },
+  'ecuador ligapro':     { name: "เอกวาดอร์ ลีกาโปร", goals: 2.55, rho: -0.10, fh: 0.45, flag: '🇪🇨', aliases: ['ecuador','ecu','ligapro','liga pro','serie a ecu','เอกวาดอร์'] },
+  'paraguay primera':    { name: "ปารากวัย พรีเมรา", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇵🇾', aliases: ['paraguay','par','primera par','ปารากวัย'] },
+  'bolivia primera':     { name: "โบลิเวีย พรีเมรา", goals: 2.85, rho: -0.08, fh: 0.46, flag: '🇧🇴', aliases: ['bolivia','bol','primera bol','liga bolivia','โบลิเวีย'] },
+  'venezuela primera':   { name: "เวเนซุเอลา พรีเมรา", goals: 2.40, rho: -0.11, fh: 0.44, flag: '🇻🇪', aliases: ['venezuela','ven','primera ven','liga ven','เวเน'] },
+  'colombia primera a':  { name: "โคลอมเบีย พรีเมร่า เอ", goals: 2.35, rho: -0.12, fh: 0.44, flag: '🇨🇴', aliases: ['colombia a','liga betplay','primera a col','col-a','betplay','โคลอมเบีย'] },
+  'uruguay primera':     { name: "อุรุกวัย พรีเมรา", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇺🇾', aliases: ['uruguay primera','primera uru','uru-a'] },
+  'copa do brasil':      { name: "โคปา โด บราซิล", goals: 2.60, rho: -0.10, fh: 0.45, flag: '🇧🇷', aliases: ['copa brasil','brazil cup','copa do bra','cdb'] },
+  'copa argentina':      { name: "โคปา อาร์เจนตินา", goals: 2.30, rho: -0.13, fh: 0.43, flag: '🇦🇷', aliases: ['arg cup','copa arg','argentina cup'] },
+  'copa chile':          { name: "โคปา ชิลี", goals: 2.70, rho: -0.09, fh: 0.45, flag: '🇨🇱', aliases: ['chile cup','copa chi','chi cup'] },
+  'copa paraguay':       { name: "โคปา ปารากวัย", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇵🇾', aliases: ['par cup','copa par','paraguay cup'] },
+  'copa bolivia':        { name: "โคปา โบลิเวีย", goals: 2.80, rho: -0.09, fh: 0.46, flag: '🇧🇴', aliases: ['bol cup','copa bol','bolivia cup'] },
+  'copa libertadores':   { name: "โคปา ลิเบอร์ตาดอเรส", goals: 2.40, rho: -0.12, fh: 0.43, flag: '🏆', aliases: ['libertadores','liberta','conmebol libertadores','lib','ลิเบอร์'] },
+  'copa sudamericana':   { name: "โคปา ซูดาเมริกานา", goals: 2.55, rho: -0.10, fh: 0.44, flag: '🏆', aliases: ['sudamericana','suda','conmebol sudamericana','sud','ซูดา'] },
+  'primeira liga':          { name: "พรีเมรา ลีกา โปรตุเกส", goals: 2.65, rho: -0.10, fh: 0.45, flag: '🇵🇹', aliases: ['portugal','por','liga portugal','primeira','โปรตุเกส'] },
+  'super lig':              { name: "ซูเปอร์ลีก ตุรกี", goals: 2.95, rho: -0.08, fh: 0.46, flag: '🇹🇷', aliases: ['turkey','tur','superlig','turkiye','ตุรกี'] },
+  'belgian pro league':     { name: "เบลเจี้ยน โปรลีก", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇧🇪', aliases: ['belgium','bel','jupiler','pro league bel','เบลเยียม'] },
+  'scottish premiership':   { name: "สก็อตติช พรีเมียร์ชิพ", goals: 2.65, rho: -0.10, fh: 0.45, flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', aliases: ['scotland','sco','spfl','scottish','สก็อต'] },
+  'austrian bundesliga':    { name: "ออสเตรียน บุนเดสลีกา", goals: 3.05, rho: -0.08, fh: 0.46, flag: '🇦🇹', aliases: ['austria','aut','osterreich','ออสเตรีย'] },
+  'swiss super league':     { name: "สวิส ซูเปอร์ลีก", goals: 3.10, rho: -0.08, fh: 0.46, flag: '🇨🇭', aliases: ['switzerland','sui','swiss','สวิส'] },
+  'danish superliga':       { name: "เดนิช ซูเปอร์ลีกา", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇩🇰', aliases: ['denmark','den','superliga den','เดนมาร์ก'] },
+  'norwegian eliteserien':  { name: "นอร์เวย์ เอลิทเซเรียน", goals: 3.10, rho: -0.08, fh: 0.46, flag: '🇳🇴', aliases: ['norway','nor','eliteserien','นอร์เวย์'] },
+  'swedish allsvenskan':    { name: "สวีดิช ออลสเวนสกัน", goals: 2.95, rho: -0.09, fh: 0.46, flag: '🇸🇪', aliases: ['sweden','swe','allsvenskan','สวีเดน'] },
+  'polish ekstraklasa':     { name: "โปแลนด์ เอคสตราคลาซา", goals: 2.65, rho: -0.10, fh: 0.45, flag: '🇵🇱', aliases: ['poland','pol','ekstraklasa','โปแลนด์'] },
+  'greek super league':     { name: "กรีก ซูเปอร์ลีก", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇬🇷', aliases: ['greece','gre','super league gre','กรีซ'] },
+  'russian premier league': { name: "รัสเซีย พรีเมียร์ลีก", goals: 2.65, rho: -0.10, fh: 0.45, flag: '🇷🇺', aliases: ['russia','rus','rpl','รัสเซีย'] },
+  'serie b':                { name: "เซเรียบี อิตาลี", goals: 2.45, rho: -0.11, fh: 0.44, flag: '🇮🇹', aliases: ['serieb','italy b','ita b','serie b ita','อิตาลีบี'] },
+  'bundesliga 2':           { name: "บุนเดสลีกา 2 เยอรมัน", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇩🇪', aliases: ['buli2','germany b','ger b','zweite','เยอรมันบี'] },
+  'champions league':       { name: "ยูฟ่า แชมเปี้ยนส์ลีก", goals: 2.90, rho: -0.08, fh: 0.46, flag: '🏆', aliases: ['ucl','uefa cl','cl','champions','ยูซีแอล'] },
+  'europa league':          { name: "ยูฟ่า ยูโรปาลีก", goals: 2.75, rho: -0.09, fh: 0.45, flag: '🏆', aliases: ['uel','uefa el','el','europa','ยูโรปา'] },
+  'k league 1':             { name: "เคลีก 1 เกาหลี", goals: 2.55, rho: -0.10, fh: 0.45, flag: '🇰🇷', aliases: ['kleague','korea','kor','k league','เกาหลี'] },
+  'k league 2':             { name: "เคลีก 2 เกาหลี", goals: 2.60, rho: -0.10, fh: 0.45, flag: '🇰🇷', aliases: ['kleague2','korea2','kor2','k2','เกาหลี 2'] },
+  'chinese super league':   { name: "ไชนีส ซูเปอร์ลีก", goals: 2.90, rho: -0.08, fh: 0.46, flag: '🇨🇳', aliases: ['csl','china','chn','chinese','จีน'] },
+  'saudi pro league':       { name: "ซาอุดี โปรลีก", goals: 3.00, rho: -0.08, fh: 0.46, flag: '🇸🇦', aliases: ['saudi','ksa','spl','saudi arabia','ซาอุ'] },
+  'uae pro league':         { name: "ยูเออี โปรลีก", goals: 3.10, rho: -0.07, fh: 0.46, flag: '🇦🇪', aliases: ['uae','uaepl','emirates','ยูเออี'] },
+  'qatar stars league':     { name: "กาตาร์ สตาร์สลีก", goals: 2.95, rho: -0.08, fh: 0.46, flag: '🇶🇦', aliases: ['qatar','qat','qsl','stars','กาตาร์'] },
+  'a-league':               { name: "เอ-ลีก ออสเตรเลีย", goals: 3.05, rho: -0.08, fh: 0.46, flag: '🇦🇺', aliases: ['aleague','australia','aus','a league','ออสเตรเลีย'] },
+  'v-league 1':             { name: "วีลีก 1 เวียดนาม", goals: 2.55, rho: -0.10, fh: 0.45, flag: '🇻🇳', aliases: ['vleague','vietnam','vie','viet','เวียดนาม'] },
+  'afc champions league':   { name: "เอเอฟซี แชมเปี้ยนส์ลีก", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🏆', aliases: ['acl','afc cl','afc','เอเอฟซี'] },
+  'egyptian premier league': { name: "อียิปต์ พรีเมียร์ลีก", goals: 2.20, rho: -0.13, fh: 0.43, flag: '🇪🇬', aliases: ['egypt','egy','egypl','อียิปต์'] },
+  'south african psl':       { name: "แอฟริกาใต้ พีเอสแอล", goals: 2.35, rho: -0.11, fh: 0.44, flag: '🇿🇦', aliases: ['psl','south africa','rsa','saf','แอฟริกาใต้'] },
+  'moroccan botola':         { name: "โมร็อกโก โบทอลา", goals: 2.25, rho: -0.12, fh: 0.43, flag: '🇲🇦', aliases: ['morocco','mar','botola','โมร็อกโก'] },
+  'tunisian ligue 1':        { name: "ตูนิเซีย ลีกเอิง 1", goals: 2.20, rho: -0.13, fh: 0.43, flag: '🇹🇳', aliases: ['tunisia','tun','ligue1 tun','ตูนิเซีย'] },
+  'algerian ligue 1':        { name: "แอลจีเรีย ลีกเอิง 1", goals: 2.30, rho: -0.12, fh: 0.44, flag: '🇩🇿', aliases: ['algeria','alg','ligue1 alg','แอลจีเรีย'] },
+  'nigerian npfl':           { name: "ไนจีเรีย เอ็นพีเอฟแอล", goals: 2.30, rho: -0.12, fh: 0.44, flag: '🇳🇬', aliases: ['nigeria','nga','npfl','ไนจีเรีย'] },
+  'caf champions league':    { name: "ซีเอเอฟ แชมเปี้ยนส์ลีก", goals: 2.20, rho: -0.13, fh: 0.43, flag: '🏆', aliases: ['caf cl','cafcl','caf champions','caf','ซีเอเอฟ'] },
+  'caf confederation cup':   { name: "ซีเอเอฟ คอนเฟเดอเรชั่น คัพ", goals: 2.30, rho: -0.12, fh: 0.44, flag: '🏆', aliases: ['caf cc','confederation','caf confed','คอนเฟด'] },
+  'liga mx femenil': { name: "เม็กซิโก พรีเมรา ดิวิชั่น หญิง", goals: 3.10, rho: -0.08, fh: 0.47, flag: '🇲🇽', aliases: ['liga mx femenil','mexico women','mex women','mex fem','femenil'] },
+  'nwsl': { name: "เอ็นดับเบิลยูเอสแอล สหรัฐ", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇺🇸', aliases: ['nwsl','usa women','us women','usa w'] },
+  'wsl': { name: "ดับเบิลยูเอสแอล อังกฤษ (หญิง)", goals: 3.05, rho: -0.08, fh: 0.47, flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', aliases: ['wsl','women super league','england women','eng w'] },
+  'liga f': { name: "ลีกา เอฟ สเปน (หญิง)", goals: 2.90, rho: -0.09, fh: 0.46, flag: '🇪🇸', aliases: ['liga f','spain women','esp w'] },
+  'd1 feminine': { name: "ดิวิชั่น 1 เฟมินีน ฝรั่งเศส", goals: 3.20, rho: -0.07, fh: 0.47, flag: '🇫🇷', aliases: ['d1 feminine','d1f','france women','fra w'] },
+  'frauen bundesliga': { name: "ฟราเอิน บุนเดสลีกา เยอรมัน", goals: 3.15, rho: -0.08, fh: 0.47, flag: '🇩🇪', aliases: ['frauen bundesliga','women bundesliga','germany women','ger w'] },
+  'serie a femminile': { name: "เซเรียอา เฟมมิไนเล่ อิตาลี", goals: 2.95, rho: -0.09, fh: 0.46, flag: '🇮🇹', aliases: ['serie a femminile','women serie a','italy women','ita w'] },
+  'damallsvenskan': { name: "ดามอลสเวนสกัน สวีเดน (หญิง)", goals: 3.05, rho: -0.08, fh: 0.47, flag: '🇸🇪', aliases: ['damallsvenskan','sweden women','swe w'] },
+  'toppserien': { name: "ทอปเซเรียน นอร์เวย์ (หญิง)", goals: 3.10, rho: -0.08, fh: 0.47, flag: '🇳🇴', aliases: ['toppserien','norway women','nor w'] },
+  'brasileirao feminino': { name: "บราซิเลเรียว เฟมินิโน่ บราซิล", goals: 3.25, rho: -0.07, fh: 0.47, flag: '🇧🇷', aliases: ['brasileirao fem','brazil women','bra w'] },
+  'copa libertadores femenina': { name: "โคปา ลิเบอร์ตาดอเรส เฟเมนินา", goals: 2.90, rho: -0.09, fh: 0.46, flag: '🏆', aliases: ['copa libertadores femenina','libertadores women','lib fem'] },
+  'uwcl': { name: "ยูฟ่า วีเมนส์ แชมเปี้ยนส์ลีก", goals: 3.30, rho: -0.07, fh: 0.47, flag: '🏆', aliases: ['uwcl','womens champions league','wcl'] },
+  'womens world cup': { name: "ฟุตบอลหญิงชิงแชมป์โลก", goals: 2.75, rho: -0.10, fh: 0.45, flag: '🏆', aliases: ['wwc','womens world cup','world cup women'] },
+  'thai womens league': { name: "ไทยลีกหญิง", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇹🇭', aliases: ['thai womens','thai w','thailand women'] },
+  'mexico liga premier':         { name: "เม็กซิโก ลีกา พรีเมรา พรีเมียร์", goals: 2.80, rho: -0.09, fh: 0.46, flag: '🇲🇽', aliases: ['mexico liga premier','mexico premier'] },
+  
+  // ลีกที่เพิ่มใหม่ (Custom Added)
+  'hong kong premier league': { name: "ฮ่องกง ดิวิชั่น วัน", goals: 3.10, rho: -0.08, fh: 0.46, flag: '🇭🇰', aliases: ['hong kong','hk','hong kong division 1','hk div 1','hk premier','ฮ่องกง','ฮ่องกง ดิวิชั่น 1','ฮ่องกง ดิวิชั่น วัน'] },
+  'hong kong first division': { name: "ฮ่องกง ดิวิชั่น 2", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇭🇰', aliases: ['hong kong division 2','hk div 2','hk first division','ฮ่องกง ดิวิชั่น 2'] },
+  'hong kong league cup': { name: "ฮ่องกง ลีกคัพ", goals: 2.95, rho: -0.09, fh: 0.45, flag: '🏆', aliases: ['hong kong cup','hk cup','hk league cup','hong kong fa cup','ฮ่องกง ลีกตัพ','ฮ่องกง คัพ'] },
+  'segunda federacion': { name: "สเปน เซกุนด้า เฟเดอร์เรชั่น", goals: 2.45, rho: -0.12, fh: 0.44, flag: '🇪🇸', aliases: ['segunda federacion','segunda rfef','สเปน เซกุนด้า','เซกุนด้า เฟเดอร์เรชั่น','สเปน ลีกรอง','สเปน ดิวิชั่น 4'] },
+  'south africa reserve league': { name: "เซาท์ แอฟริกา รีเสิร์ฟ ลีก", goals: 3.20, rho: -0.05, fh: 0.47, flag: '🇿🇦', aliases: ['south africa reserve','sa reserve','diski challenge','dstv diski','south africa youth','เซาท์ แอฟริกา รีเสิร์ฟ','แอฟริกาใต้ รีเสิร์ฟ','ดิสกี้ ชาเลนจ์'] },
+  'we league': { name: "ญี่ปุ่น หญิง เอ็มพาวเวอร์เมนท์ ลีก (WE League)", goals: 3.00, rho: -0.08, fh: 0.46, flag: '🇯🇵', aliases: ['we league','japan women','jpn w','japan we league','nadeshiko','ญี่ปุ่น หญิง','วีลีก หญิง','เอ็มพาวเวอร์เมนท์'] },
+  'nadeshiko league': { name: "ญี่ปุ่น นาเดชิโกะ ลีก (ลีกรองหญิง)", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇯🇵', aliases: ['nadeshiko league','japan women div 2','ญี่ปุ่น หญิง ดิวิชั่น 2','นาเดชิโกะ'] },
+  'j3 league': { name: "เจลีก J3", goals: 2.90, rho: -0.08, fh: 0.46, flag: '🇯🇵', aliases: ['j3','japan3','jpn3','jleague 3','j3 league','เจลีก 3','เจ 3'] },
+  'china league two': { name: "ไชน่า ลีก 2 (ดิวิชั่น 3)", goals: 2.60, rho: -0.10, fh: 0.45, flag: '🇨🇳', aliases: ['china league 2','china league two','cfa league two','china div 3','จีน ลีก 2','ไชน่า ลีก 2','ไชนีส ลีก 2'] },
+  'spain women segunda federacion': { name: "สเปน หญิง เซกันด้า เฟเดราซิออน", goals: 3.10, rho: -0.07, fh: 0.47, flag: '🇪🇸', aliases: ['spain women segunda','primera federacion femenina','segunda federacion femenina','spain women div 2','สเปน หญิง','สเปน หญิง ดิวิชั่น 2','เซกันด้า เฟเดราซิออน'] },
+  'slovakia 2 liga': { name: "สโลวาเกีย ดิวิชั่น 2", goals: 2.50, rho: -0.11, fh: 0.45, flag: '🇸🇰', aliases: ['slovakia 2','slovak second division','2 liga slovakia','slovakia div 2','สโลวาเกีย','สโลวาเกีย ดิวิชั่น 2','สโลวัก'] },
+  'slovakia super liga': { name: "สโลวาเกีย ซูเปอร์ลีกา (ดิวิชั่น 1)", goals: 2.85, rho: -0.09, fh: 0.46, flag: '🇸🇰', aliases: ['slovakia super liga','slovak first league','slovakia div 1','สโลวาเกีย ดิวิชั่น 1','สโลวาเกีย ซูเปอร์ลีกา'] },
+  'austria regionalliga': { name: "ออสเตรีย แลนเดสลิก้า (ดิวิชั่น 3)", goals: 3.05, rho: -0.08, fh: 0.46, flag: '🇦🇹', aliases: ['austria regionalliga','austria landesliga','austria div 3','regionalliga austria','ออสเตรีย','ออสเตรีย แลนเดสลิก้า','ออสเตรีย ดิวิชั่น 3'] },
+  'russia first league': { name: "รัสเซีย เฟิร์ส ลีก (ดิวิชั่น 2)", goals: 2.30, rho: -0.13, fh: 0.44, flag: '🇷🇺', aliases: ['russia first league','russian first league','fnl','russia div 2','russia 2','รัสเซีย เฟิร์ส ลีก','รัสเซีย ดิวิชั่น 2','รัสเซีย ลีกรอง'] },
+  'belarusian premier league': { 
+    name: "เบลารุส ดิวีชั่น 1 (พรีเมียร์ลีก)", 
+    goals: 2.65, 
+    rho: -0.10, 
+    fh: 0.45, 
+    flag: '🇧🇾', 
+    aliases: ['belarus', 'blr', 'belarusian premier league', 'belarus division 1', 'vysheyshaya liga', 'เบลารุส', 'เบลารุส ดิวีชั่น 1', 'เบลารุส พรีเมียร์ลีก'] },
+};
+
+const I18N = {
+  th: {
+    home_team:'ทีมเหย้า', away_team:'ทีมเยือน',
+    home_strength:'🏠 ความแข็งแกร่งเหย้า', away_strength:'✈️ ความแข็งแกร่งเยือน',
+    auto_estimate:'AI Strength อัตโนมัติ', ah_home_label:'ราคาต่อรอง AH (เหย้า)',
+    live_weight_label:'น้ำหนักสถิติสด (%)', search_league:'-- พิมพ์ชื่อลีกเพื่อค้นหา --',
+    minute_label:'นาที', injury_1:'ทด 1H', injury_2:'ทด 2H', format_label:'รูปแบบ',
+    home_score:'สกอร์เหย้า', away_score:'สกอร์เยือน',
+    red_home:'แดง🏠', red_away:'แดง✈️',
+    shots:'ยิงทั้งหมด', sot:'ยิงตรงกรอบ', big:'Big Chances',
+    btn_predict:'ประมวลผลคาดการณ์', btn_reset:'รีเซ็ตข้อมูล',
+    ah_section:'Live Asian Handicap Probs',
+    top3_section:'สกอร์จบเกมที่เป็นไปได้สูง (Top 3)',
+    fh_section:'ครึ่งแรก 45 นาที', next_goal_section:'ประตูถัดไป',
+    fh_over_section:'โอกาสเกิดประตูครึ่งแรก', ft_over_section:'โอกาสเกิดประตูเต็มเวลา',
+    home_wins_ah:'เหย้าชนะราคา', away_wins_ah:'เยือนชนะราคา', push_ah:'เสมอราคา (Push)',
+    btn_donate:'สนับสนุน', close_btn:'ปิด',
+    placeholder_home:'🏠 ชื่อทีมเหย้า', placeholder_away:'✈️ ชื่อทีมเยือน',
+    placeholder_league:'🔍 พิมพ์ชื่อลีก...',
+  },
+  en: {
+    home_team:'Home Team', away_team:'Away Team',
+    home_strength:'🏠 Home Strength', away_strength:'✈️ Away Strength',
+    auto_estimate:'Automatic AI Strength', ah_home_label:'Asian Handicap (Home)',
+    live_weight_label:'Live stat weight (%)', search_league:'-- Type league name to search --',
+    minute_label:'Minute', injury_1:'Inj 1H', injury_2:'Inj 2H', format_label:'Format',
+    home_score:'Home Score', away_score:'Away Score',
+    red_home:'Red🏠', red_away:'Red✈️',
+    shots:'Total Shots', sot:'Shots on Target', big:'Big Chances',
+    btn_predict:'Run Prediction', btn_reset:'Reset Data',
+    ah_section:'Live Asian Handicap Probs',
+    top3_section:'Most Likely Final Scores (Top 3)',
+    fh_section:'First Half (45 min)', next_goal_section:'Next Goal',
+    fh_over_section:'1st Half Over Probability', ft_over_section:'Full-Time Over Probability',
+    home_wins_ah:'Home covers AH', away_wins_ah:'Away covers AH', push_ah:'Push',
+    btn_donate:'Support', close_btn:'Close',
+    placeholder_home:'🏠 Home Team', placeholder_away:'✈️ Away Team',
+    placeholder_league:'🔍 Type league name...',
+  }
+};
+</script>
+
+<script>
+/* ============================================================
+   JackAI v8.9.7 — Math Engine
+   ============================================================ */
+const _poissonCache = new Map();
+function poisson(lambda, k) {
+  const key = lambda + '|' + k;
+  if (_poissonCache.has(key)) return _poissonCache.get(key);
+  let v;
+  if (lambda <= 0) v = k === 0 ? 1 : 0;
+  else if (lambda < 30) v = Math.exp(-lambda) * Math.pow(lambda, k) / FACT[k];
+  else {
+    let logFk = 0; for (let i = 2; i <= k; i++) logFk += Math.log(i);
+    v = Math.exp(-lambda + k * Math.log(lambda) - logFk);
+  }
+  if (_poissonCache.size > 5000) _poissonCache.clear();
+  _poissonCache.set(key, v);
+  return v;
+}
+
+function makePoissonTable(lambda, maxK) {
+  const table = new Float64Array(maxK + 1);
+  for (let k = 0; k <= maxK; k++) {
+    if (lambda <= 0) { table[k] = k === 0 ? 1 : 0; continue; }
+    if (lambda < 30) table[k] = Math.exp(-lambda) * Math.pow(lambda, k) / FACT[k];
+    else {
+      let logFk = 0; for (let i = 2; i <= k; i++) logFk += Math.log(i);
+      table[k] = Math.exp(-lambda + k * Math.log(lambda) - logFk);
+    }
+  }
+  return table;
+}
+
+function dixonColesTau(h, a, lH, lA, rho) {
+  let r = Number.isFinite(rho) ? rho : -0.11;
+  r = Math.max(-0.3, Math.min(0.3, r));
+  let tau = 1;
+  if (h === 0 && a === 0) tau = 1 - lH * lA * r;
+  else if (h === 0 && a === 1) tau = 1 + lH * r;
+  else if (h === 1 && a === 0) tau = 1 + lA * r;
+  else if (h === 1 && a === 1) tau = 1 - r;
+  return Math.max(0.01, tau);
+}
+
+function timeWeight(minute) {
+  if (minute <= 15) return 0.80; if (minute <= 30) return 0.88; if (minute <= 45) return 0.95;
+  if (minute <= 60) return 1.00; if (minute <= 75) return 1.10; if (minute <= 90) return 1.25;
+  if (minute <= 105) return 1.30; return 1.35;
+}
+
+function expectedGoalsIntegrated(minute, remaining, format, i1, i2, basePerMin) {
+  if (remaining <= 0) return 0;
+  const n = CONFIG.INTEGRATION_STEPS, dt = remaining / n, half2_end = 90 + i1 + i2;
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    const t = minute + (i + 0.5) * dt;
+    let rate = basePerMin;
+    if (format === "120" && t > half2_end) rate *= CONFIG.TEMPO.ET_RATE_MULT;
+    sum += rate * timeWeight(t) * dt;
+  }
+  return sum;
+}
+
+function pickColor(pct) {
+  const n = Number(pct);
+  if (!Number.isFinite(n)) return { bar: 'bg-secondary', text: 'text-muted' };
+  if (n >= 65) return { bar: 'bg-success', text: 'text-success' };
+  if (n >= 35) return { bar: 'bg-warning', text: 'text-warning' };
+  if (n >= 15) return { bar: 'bg-orange', text: 'text-orange' };
+  return { bar: 'bg-danger', text: 'text-danger' };
+}
+
+function calcAHOutcome(fh, fa, h) {
+  const margin = (fh - fa) + h;
+  if (margin > TOL_AH) return 1;
+  if (margin < -TOL_AH) return -1;
+  return 0;
+}
+
+function getAHParts(ah) {
+  const absH = Math.abs(ah), frac = absH - Math.floor(absH);
+  const q = Math.abs(frac - 0.25) < EPS || Math.abs(frac - 0.75) < EPS;
+  if (!q) return { isQuarter: false, parts: [ah] };
+  let h1, h2;
+  if (Math.abs(frac - 0.25) < EPS) { h1 = Math.floor(absH); h2 = Math.floor(absH) + 0.5; }
+  else { h1 = Math.floor(absH) + 0.5; h2 = Math.ceil(absH); }
+  if (ah < 0) { h1 = -h1; h2 = -h2; }
+  return { isQuarter: true, parts: [h1, h2] };
+}
+
+function calcShotXg(sot, big, shots) {
+  big = Math.min(big, sot);
+  const sotNonBig = Math.max(0, sot - big), offTarget = Math.max(0, shots - sot);
+  const xg = big * CONFIG.XG.BIG_CHANCE + sotNonBig * CONFIG.XG.SOT_NON_BIG + offTarget * CONFIG.XG.OFF_TARGET;
+  return { xg, sotNonBig, offTarget };
+}
+
+function strengthToAttackMult(s) {
+  const val = Number(s);
+  if (!Number.isFinite(val)) return 1.0;
+  const raw = Math.exp(CONFIG.STRENGTH.SENSITIVITY * (val - 70));
+  const shrunk = 1 + (raw - 1) * CONFIG.STRENGTH.BAYES_SHRINK;
+  return Math.max(CONFIG.STRENGTH.MIN_MULT, Math.min(CONFIG.STRENGTH.MAX_MULT, shrunk));
+}
+function strengthToDefenseMult(s) {
+  const atk = strengthToAttackMult(s);
+  const inv = atk > 0 ? 1 / atk : 1.0;
+  return Math.max(CONFIG.STRENGTH.MIN_MULT, Math.min(CONFIG.STRENGTH.MAX_MULT, inv));
+}
+
+function getTotalMatchTime(format, i1, i2) { return (format === "90") ? (90 + i1 + i2) : (120 + i1 + i2); }
+
+function calculateRemaining(minute, i1, i2, format) {
+  const h1e = 45 + i1, h2e = 90 + i1 + i2, et1e = 105 + i1, et2e = 120 + i1 + i2;
+  let r = 0;
+  if (format === "90") { if (minute <= h1e) r = (h1e - minute) + (45 + i2); else if (minute <= h2e) r = h2e - minute; }
+  else { if (minute <= h1e) r = (h1e - minute) + (45 + i2) + 30; else if (minute <= h2e) r = (h2e - minute) + 30; else if (minute <= et1e) r = (et1e - minute) + (15 + i2); else if (minute <= et2e) r = et2e - minute; }
+  return { remaining: r, half1_end: h1e, half2_end: h2e, et1_end: et1e, et2_end: et2e };
+}
+
+function calcConfidence({ hShots, aShots, hSot, aSot, hBig, aBig, minute, top3ProbSum, goalDiff = 0 }) {
+  const total = hShots + aShots;
+  const sSample = Math.min(1, total / 25);
+  const acc = total > 0 ? (hSot + aSot) / total : 0;
+  const hasBig = (hBig + aBig) > 0;
+  const qScore = hasBig ? 1.0 : 0.6;
+  const mScore = Math.min(1, minute / 75);
+  const aScore = Math.min(1, top3ProbSum / 0.45);
+  const leadMagnitude = Math.min(3, Math.abs(goalDiff));
+  const leadScore = Math.min(1, (leadMagnitude / 3) * (minute / 75));
+  const C = CONFIG.CONFIDENCE;
+  const comp = C.W_SAMPLE * sSample + C.W_QUALITY * qScore + C.W_AGREEMENT * aScore
+             + C.W_MINUTE * mScore + C.W_ACCURACY * acc + C.W_LEAD * leadScore;
+  const raw = (C.BASE + (1 - C.BASE) * comp) * C.SHRINK * 100;
+  return Math.round(Math.max(0, Math.min(100, raw)));
+}
+function hasBigData(hBig, aBig) { return (hBig + aBig) > 0; }
+
+function fmtPct(v) { if (v == null || !Number.isFinite(Number(v))) return 'N/A'; const n = Number(v); if (n < 0.5) return '<0.5%'; if (n > 99.5) return '>99.5%'; return n.toFixed(0) + '%'; }
+
+function forEachCell(grid, cb) {
+  const { probs, N } = grid;
+  for (let h = 0; h < N; h++) {
+    const rowBase = h * N;
+    for (let a = 0; a < N; a++) cb(h, a, probs[rowBase + a]);
+  }
+}
+function* iterateGrid(grid) {
+  const { probs, N } = grid;
+  for (let h = 0; h < N; h++) {
+    const rowBase = h * N;
+    for (let a = 0; a < N; a++) yield { h, a, p: probs[rowBase + a] };
+  }
+}
+
+function buildScoreGrid(xgH, xgA, rho) {
+  const N = CONFIG.GRID.MAX_GOALS + 1;
+  const probs = new Float64Array(N * N);
+  const pH = makePoissonTable(xgH, CONFIG.GRID.MAX_GOALS);
+  const pA = makePoissonTable(xgA, CONFIG.GRID.MAX_GOALS);
+  let total = 0;
+  for (let h = 0; h < N; h++) {
+    for (let a = 0; a < N; a++) {
+      const p = pH[h] * pA[a] * dixonColesTau(h, a, xgH, xgA, rho);
+      probs[h * N + a] = p;
+      total += p;
+    }
+  }
+  if (total > 0) {
+    const inv = 1 / total;
+    for (let i = 0; i < probs.length; i++) probs[i] *= inv;
+  }
+  return { probs, N, total };
+}
+
+function computeStrength(d) {
+  const ah = Number.isFinite(d.ah) ? d.ah : 0;
+  const minute = Number.isFinite(d.minute) ? d.minute : 0;
+  const cH = Number.isFinite(d.cH) ? d.cH : 0;
+  const cA = Number.isFinite(d.cA) ? d.cA : 0;
+  const hShots = Number.isFinite(d.hShots) ? d.hShots : 0;
+  const aShots = Number.isFinite(d.aShots) ? d.aShots : 0;
+  const hSot = Number.isFinite(d.hSot) ? d.hSot : 0;
+  const aSot = Number.isFinite(d.aSot) ? d.aSot : 0;
+  const hBig = Number.isFinite(d.hBig) ? d.hBig : 0;
+  const aBig = Number.isFinite(d.aBig) ? d.aBig : 0;
+  const redHome = Number.isFinite(d.redHome) ? d.redHome : 0;
+  const redAway = Number.isFinite(d.redAway) ? d.redAway : 0;
+
+  const homeBase = Math.max(25, Math.min(95, 70 - ah * 12));
+  const awayBase = Math.max(25, Math.min(95, 70 + ah * 12));
+  const liveWeight = minute > 0 ? Math.min(0.45, 0.15 + minute / 200) : 0;
+  const scoreEdge = Math.max(-2, Math.min(2, cH - cA)) * 1.6;
+  const shotEdge = Math.max(-12, Math.min(12,
+    (hShots - aShots) * 0.35 + (hSot - aSot) * 0.9 + (hBig - aBig) * 1.4));
+  const redEdge = (redAway - redHome) * 5;
+  const homeLiveEdge = Math.max(-18, Math.min(18, scoreEdge + shotEdge + redEdge));
+  const home = Math.round(Math.max(20, Math.min(98, homeBase * (1 - liveWeight) + (homeBase + homeLiveEdge) * liveWeight)));
+  const away = Math.round(Math.max(20, Math.min(98, awayBase * (1 - liveWeight) + (awayBase - homeLiveEdge) * liveWeight)));
+  return { home, away, homeBase, awayBase, liveWeight, ah };
+}
+
+function readStatsFromDOM() {
+  const hShots = readNum('h_shots', { min: 0, integer: true, fallback: 0 });
+  const aShots = readNum('a_shots', { min: 0, integer: true, fallback: 0 });
+  const rawHSot = isBlankInput('h_sot') ? null : readNum('h_sot', { min: 0, integer: true, fallback: 0 });
+  const rawASot = isBlankInput('a_sot') ? null : readNum('a_sot', { min: 0, integer: true, fallback: 0 });
+  let hSot = rawHSot === null ? Math.round(hShots * 0.35) : rawHSot;
+  let aSot = rawASot === null ? Math.round(aShots * 0.35) : rawASot;
+  const rawHBig = isBlankInput('h_big') ? null : readNum('h_big', { min: 0, integer: true, fallback: 0 });
+  const rawABig = isBlankInput('a_big') ? null : readNum('a_big', { min: 0, integer: true, fallback: 0 });
+  let hBig = rawHBig === null ? Math.round(hSot * 0.20) : rawHBig;
+  let aBig = rawABig === null ? Math.round(aSot * 0.20) : rawABig;
+  hSot = Math.min(hSot, hShots); aSot = Math.min(aSot, aShots);
+  hBig = Math.min(hBig, hSot); aBig = Math.min(aBig, aSot);
+  return {
+    ah: parseFloat(($('handicapSelect') && $('handicapSelect').value) || '0') || 0,
+    minute: readNum('match_minute', { min: 0, max: 120, integer: true, fallback: 0 }),
+    cH: readNum('current_home_score', { min: 0, integer: true, fallback: 0 }),
+    cA: readNum('current_away_score', { min: 0, integer: true, fallback: 0 }),
+    hShots, aShots, hSot, aSot, hBig, aBig,
+    redHome: readNum('red_home', { min: 0, max: 5, integer: true, fallback: 0 }),
+    redAway: readNum('red_away', { min: 0, max: 5, integer: true, fallback: 0 }),
+  };
+}
+
+function readMatchInputs() {
+  const minute = readNum('match_minute', { min: 0, max: 120, integer: true, fallback: 0 });
+  const cH = readNum('current_home_score', { min: 0, integer: true, fallback: 0 });
+  const cA = readNum('current_away_score', { min: 0, integer: true, fallback: 0 });
+  const hShots = readNum('h_shots', { min: 0, integer: true, fallback: 0 });
+  const aShots = readNum('a_shots', { min: 0, integer: true, fallback: 0 });
+  const autoNotes = [];
+
+  const rawHSot = isBlankInput('h_sot') ? null : readNum('h_sot', { min: 0, integer: true, fallback: 0 });
+  const rawASot = isBlankInput('a_sot') ? null : readNum('a_sot', { min: 0, integer: true, fallback: 0 });
+  let hSot = rawHSot === null ? Math.round(hShots * 0.35) : rawHSot;
+  let aSot = rawASot === null ? Math.round(aShots * 0.35) : rawASot;
+  if (rawHSot !== null && rawHSot > hShots) { autoNotes.push('SOT เหย้า > ยิง (ปรับ)'); hSot = hShots; }
+  if (rawASot !== null && rawASot > aShots) { autoNotes.push('SOT เยือน > ยิง (ปรับ)'); aSot = aShots; }
+  if (rawHSot === null && hShots > 0) autoNotes.push(`SOT เหย้า auto=${hSot}`);
+  if (rawASot === null && aShots > 0) autoNotes.push(`SOT เยือน auto=${aSot}`);
+
+  const rawHBig = isBlankInput('h_big') ? null : readNum('h_big', { min: 0, integer: true, fallback: 0 });
+  const rawABig = isBlankInput('a_big') ? null : readNum('a_big', { min: 0, integer: true, fallback: 0 });
+  let hBig = rawHBig === null ? Math.round(hSot * 0.20) : rawHBig;
+  let aBig = rawABig === null ? Math.round(aSot * 0.20) : rawABig;
+  if (rawHBig !== null && rawHBig > hSot) { autoNotes.push('Big เหย้า > SOT (ปรับ)'); hBig = hSot; }
+  if (rawABig !== null && rawABig > aSot) { autoNotes.push('Big เยือน > SOT (ปรับ)'); aBig = aSot; }
+
+  const htH = readNum('ht_home_score', { min: 0, integer: true, fallback: 0 });
+  const htA = readNum('ht_away_score', { min: 0, integer: true, fallback: 0 });
+
+  const ah = parseFloat(($('handicapSelect') && $('handicapSelect').value) || '0') || 0;
+  const redHome = readNum('red_home', { min: 0, max: 5, integer: true, fallback: 0 });
+  const redAway = readNum('red_away', { min: 0, max: 5, integer: true, fallback: 0 });
+  const injury1 = readNum('injury_1', { min: 0, max: 15, integer: true, fallback: 0 });
+  const injury2 = readNum('injury_2', { min: 0, max: 15, integer: true, fallback: 0 });
+  const format = readStr('match_format', '90');
+
+  const hCornersFT = readNum('h_corners', { min: 0, integer: true, fallback: 0 });
+  const aCornersFT = readNum('a_corners', { min: 0, integer: true, fallback: 0 });
+  const hCornersHT = readNum('h_corners_ht', { min: 0, integer: true, fallback: 0 });
+  const aCornersHT = readNum('a_corners_ht', { min: 0, integer: true, fallback: 0 });
+
+  return {
+    minute, cH, cA, hShots, aShots, hSot, aSot, hBig, aBig,
+    htH, htA, ah, redHome, redAway, injury1, injury2, format,
+    hCornersFT, aCornersFT, hCornersHT, aCornersHT, autoNotes,
+    homeName: readStr('home_name', 'Home'),
+    awayName: readStr('away_name', 'Away'),
+    league: AppState.league,
+  };
+}
+</script>
+
+<script>
+/* ============================================================
+   JackAI v8.9.7 — Corner Model v2 (Negative Binomial)
+   ============================================================ */
+const CORNER_CONFIG = {
+  BASE_PER_MATCH: 10.4,
+  FH_SHARE: 0.44,
+  NB_R: 8.0,
+  TEMPO_ELASTICITY: 1.35,
+  TRAILING_BOOST: 0.18,
+  LEADING_PENALTY: 0.10,
+  RED_ATTACK_MULT: 0.82,
+  RED_DEFENSE_MULT: 1.15,
+  HOME_SHARE: 0.53,
+  LATE_BOOST_MINUTE: 70,
+  LATE_BOOST_FACTOR: 1.12,
+};
+
+function negBinomialPmf(k, mu, r) {
+  if (mu <= 0) return k === 0 ? 1 : 0;
+  const p = r / (r + mu);
+  let logNum = 0;
+  for (let i = 0; i < k; i++) logNum += Math.log(r + i);
+  let logK = 0;
+  for (let i = 2; i <= k; i++) logK += Math.log(i);
+  const logP = logNum - logK + r * Math.log(p) + k * Math.log(1 - p);
+  return Math.exp(logP);
+}
+
+function nbOverProb(mu, line, r = CORNER_CONFIG.NB_R) {
+  if (mu <= 0) return 0;
+  const floorLine = Math.floor(line);
+  const kmax = Math.ceil(mu + 8 * Math.sqrt(mu + mu * mu / r)) + 5;
+  let p = 0;
+  for (let k = floorLine + 1; k <= kmax; k++) {
+    p += negBinomialPmf(k, mu, r);
+    if (p > 0.9999) break;
+  }
+  return Math.min(100, p * 100);
+}
+
+function computeCornerRates(inp, baseGoals, strength) {
+  const { minute, cH, cA, redHome, redAway, hCornersFT, aCornersFT } = inp;
+  const leagueGoalFactor = (baseGoals || 2.70) / 2.70;
+  let baseRate = (CORNER_CONFIG.BASE_PER_MATCH / 90) * Math.pow(leagueGoalFactor, CORNER_CONFIG.TEMPO_ELASTICITY);
+
+  const strengthDiff = (strength.home - strength.away) / 100;
+  const homeShareBase = CORNER_CONFIG.HOME_SHARE + strengthDiff * 0.08;
+  const homeShare = Math.max(0.35, Math.min(0.70, homeShareBase));
+
+  const diff = cH - cA;
+  let totalRate = baseRate;
+  let shareH = homeShare;
+
+  if (diff !== 0) {
+    const absDiff = Math.min(2, Math.abs(diff));
+    totalRate *= 1 + 0.05 * absDiff;
+    if (diff > 0) shareH -= CORNER_CONFIG.TRAILING_BOOST * absDiff;
+    else shareH += CORNER_CONFIG.TRAILING_BOOST * absDiff;
+    shareH = Math.max(0.30, Math.min(0.75, shareH));
+  }
+
+  if (redHome > 0 || redAway > 0) {
+    const hRed = Math.min(2, redHome);
+    const aRed = Math.min(2, redAway);
+    if (hRed > aRed) shareH *= Math.pow(CORNER_CONFIG.RED_ATTACK_MULT, hRed - aRed);
+    else if (aRed > hRed) shareH *= Math.pow(1 / CORNER_CONFIG.RED_ATTACK_MULT, aRed - hRed);
+    shareH = Math.max(0.20, Math.min(0.80, shareH));
+  }
+
+  if (minute >= CORNER_CONFIG.LATE_BOOST_MINUTE && minute < 90) {
+    totalRate *= CORNER_CONFIG.LATE_BOOST_FACTOR;
+  }
+
+  if (hCornersFT + aCornersFT >= 3 && minute >= 15) {
+    const observedRate = (hCornersFT + aCornersFT) / minute;
+    const observedShare = hCornersFT / Math.max(1, hCornersFT + aCornersFT);
+    const w = Math.min(0.65, minute / 90);
+    totalRate = totalRate * (1 - w) + observedRate * w;
+    shareH = shareH * (1 - w) + observedShare * w;
+  }
+
+  return { rateH: totalRate * shareH, rateA: totalRate * (1 - shareH), totalRate };
+}
+
+function calcCornerExpectation(inp, baseGoals, strength) {
+  const { minute, hCornersFT, aCornersFT, hCornersHT, aCornersHT } = inp;
+  const { rateH, rateA, totalRate } = computeCornerRates(inp, baseGoals, strength);
+
+  const playedMin = Math.max(0, Math.min(90, minute));
+  const remainFT = Math.max(0, 90 - playedMin);
+  const remain1H = playedMin < 45 ? 45 - playedMin : 0;
+  const remain2H = playedMin < 45 ? 45 : Math.max(0, 90 - playedMin);
+
+  const expRemainFT = totalRate * remainFT;
+  const expFT = (hCornersFT + aCornersFT) + expRemainFT;
+
+  const rate1H = totalRate * (CORNER_CONFIG.FH_SHARE / 0.5) * 0.5;
+  const exp1H = (hCornersHT + aCornersHT) + rate1H * remain1H;
+
+  const rate2H = totalRate * ((1 - CORNER_CONFIG.FH_SHARE) / 0.5) * 0.5;
+  const exp2H = rate2H * remain2H;
+
+  const homeExpFT = rateH * (playedMin + remainFT);
+  const awayExpFT = rateA * (playedMin + remainFT);
+
+  const nbOrPoisson = (mu, line) => mu > 0 && mu < 15 ? nbOverProb(mu, line) : 0;
+
+  return {
+    expFT, exp1H, exp2H, homeExpFT, awayExpFT,
+    rateH, rateA, totalRate,
+    ft: {
+      over45: nbOrPoisson(expFT, 4.5),
+      over55: nbOrPoisson(expFT, 5.5),
+      over65: nbOrPoisson(expFT, 6.5),
+      over75: nbOrPoisson(expFT, 7.5),
+      over85: nbOrPoisson(expFT, 8.5),
+      over95: nbOrPoisson(expFT, 9.5),
+      over105: nbOrPoisson(expFT, 10.5),
+      over115: nbOrPoisson(expFT, 11.5),
+    },
+    h1: {
+      over35: nbOrPoisson(exp1H, 3.5),
+      over45: nbOrPoisson(exp1H, 4.5),
+      over55: nbOrPoisson(exp1H, 5.5),
+      over65: nbOrPoisson(exp1H, 6.5),
+    },
+    h2: {
+      over45: nbOrPoisson(exp2H, 4.5),
+      over55: nbOrPoisson(exp2H, 5.5),
+      over65: nbOrPoisson(exp2H, 6.5),
+      over75: nbOrPoisson(exp2H, 7.5),
+    },
+  };
+}
+</script>
+
+<script>
+/* ============================================================
+   JackAI v8.9.7 — Prediction + Rendering
+   ============================================================ */
+function predictMatch() {
+  try {
+    hideCalcError();
+    const inp = readMatchInputs();
+    const league = inp.league || AppState.league;
+
+    if (inp.format === '90' && inp.minute > 90 + inp.injury1 + inp.injury2) {
+      return showCalcError('นาทีเกินเวลาจบเกม');
+    }
+
+    const strength = computeStrength({
+      ah: inp.ah, minute: inp.minute, cH: inp.cH, cA: inp.cA,
+      hShots: inp.hShots, aShots: inp.aShots, hSot: inp.hSot, aSot: inp.aSot,
+      hBig: inp.hBig, aBig: inp.aBig, redHome: inp.redHome, redAway: inp.redAway,
+    });
+    writeText('homeStrengthDisplay', strength.home);
+    writeText('awayStrengthDisplay', strength.away);
+    writeVal('home_strength', strength.home);
+    writeVal('away_strength', strength.away);
+
+    const shotXgH = calcShotXg(inp.hSot, inp.hBig, inp.hShots).xg;
+    const shotXgA = calcShotXg(inp.aSot, inp.aBig, inp.aShots).xg;
+    const liveWeight = inp.minute > 0 ? Math.min(0.55, inp.minute / 90) : 0;
+    const baselineGoals = (shotXgH + shotXgA) > CONFIG.TEMPO_BASELINE.SHOT_XG_MIN_THRESHOLD
+      ? (shotXgH + shotXgA) * (90 / Math.max(1, inp.minute)) * 0.5 + league.avgGoals * 0.5
+      : league.avgGoals;
+    const baseTotalGoals = league.avgGoals * (1 - liveWeight) + baselineGoals * liveWeight;
+
+    const atkH = strengthToAttackMult(strength.home);
+    const atkA = strengthToAttackMult(strength.away);
+    const defH = strengthToDefenseMult(strength.home);
+    const defA = strengthToDefenseMult(strength.away);
+
+    const homeShare = CONFIG.HOME_ADV.SHARE;
+    let xgHFull = (baseTotalGoals / 2) * atkH * defA * (homeShare / 0.5);
+    let xgAFull = (baseTotalGoals / 2) * atkA * defH * ((1 - homeShare) / 0.5);
+
+    let redImpact = '';
+    if (inp.redHome > 0 || inp.redAway > 0) {
+      const hRed = Math.min(2, inp.redHome);
+      const aRed = Math.min(2, inp.redAway);
+      const netRed = hRed - aRed;
+      if (netRed > 0) {
+        xgHFull *= Math.pow(CONFIG.RED.ATTACK_MULT, netRed);
+        xgAFull *= Math.pow(CONFIG.RED.DEFENSE_MULT, netRed);
+        redImpact = `เหย้าโดนแดง ${hRed} ใบ — ลดโอกาสเหย้า, เพิ่มโอกาสเยือน`;
+      } else if (netRed < 0) {
+        xgAFull *= Math.pow(CONFIG.RED.ATTACK_MULT, -netRed);
+        xgHFull *= Math.pow(CONFIG.RED.DEFENSE_MULT, -netRed);
+        redImpact = `เยือนโดนแดง ${aRed} ใบ — ลดโอกาสเยือน, เพิ่มโอกาสเหย้า`;
+      }
+      if (hRed > 0 && aRed > 0) {
+        const both = Math.pow(CONFIG.RED.BOTH_RED_DISCOUNT, Math.min(hRed, aRed));
+        xgHFull *= both; xgAFull *= both;
+        redImpact += (redImpact ? ' · ' : '') + 'ทั้งสองทีมโดนแดง — เกมเปิดน้อยลง';
+      }
+    }
+
+    const diff = Math.max(-CONFIG.SCORE_EFFECT.MAX_DIFF, Math.min(CONFIG.SCORE_EFFECT.MAX_DIFF, inp.cH - inp.cA));
+    if (diff > 0) {
+      xgHFull *= (1 - CONFIG.SCORE_EFFECT.LEADING_ATTACK_PENALTY);
+      xgAFull *= (1 + CONFIG.SCORE_EFFECT.TRAILING_ATTACK_BOOST);
+    } else if (diff < 0) {
+      xgAFull *= (1 - CONFIG.SCORE_EFFECT.LEADING_ATTACK_PENALTY);
+      xgHFull *= (1 + CONFIG.SCORE_EFFECT.TRAILING_ATTACK_BOOST);
+    }
+
+    const timeInfo = calculateRemaining(inp.minute, inp.injury1, inp.injury2, inp.format);
+    const { remaining } = timeInfo;
+    const fullMatchMinutes = inp.format === '90' ? 90 + inp.injury1 + inp.injury2 : 120 + inp.injury1 + inp.injury2;
+    const baseRateH = xgHFull / fullMatchMinutes;
+    const baseRateA = xgAFull / fullMatchMinutes;
+
+    let expRemH = expectedGoalsIntegrated(inp.minute, remaining, inp.format, inp.injury1, inp.injury2, baseRateH);
+    let expRemA = expectedGoalsIntegrated(inp.minute, remaining, inp.format, inp.injury1, inp.injury2, baseRateA);
+
+    if (inp.cH === 0 && inp.cA === 0 && inp.minute >= TEMPO_0_0_LATE_MINUTE) {
+      expRemH *= TEMPO_0_0_LATE_BOOST;
+      expRemA *= TEMPO_0_0_LATE_BOOST;
+    }
+
+    const rho = Number.isFinite(league.rho) ? league.rho : CONFIG.GRID.RHO_DEFAULT;
+    const grid = buildScoreGrid(expRemH + 0.001, expRemA + 0.001, rho);
+
+    const finalDist = new Map();
+    for (const { h, a, p } of iterateGrid(grid)) {
+      const fh = h + inp.cH, fa = a + inp.cA;
+      const key = `${fh}-${fa}`;
+      finalDist.set(key, (finalDist.get(key) || 0) + p);
+    }
+
+    let pHomeWin = 0, pDraw = 0, pAwayWin = 0;
+    for (const [key, p] of finalDist) {
+      const [fh, fa] = key.split('-').map(Number);
+      if (fh > fa) pHomeWin += p; else if (fh === fa) pDraw += p; else pAwayWin += p;
+    }
+    pHomeWin *= 100; pDraw *= 100; pAwayWin *= 100;
+
+    let pBttsYes = 0;
+    for (const [key, p] of finalDist) {
+      const [fh, fa] = key.split('-').map(Number);
+      if (fh >= 1 && fa >= 1) pBttsYes += p;
+    }
+    pBttsYes *= 100;
+
+    let expTotal = 0;
+    for (const [key, p] of finalDist) {
+      const [fh, fa] = key.split('-').map(Number);
+      expTotal += (fh + fa) * p;
+    }
+
+    const ahParts = getAHParts(inp.ah);
+    let ahHomeWin = 0, ahAwayWin = 0, ahPush = 0;
+    for (const [key, p] of finalDist) {
+      const [fh, fa] = key.split('-').map(Number);
+      let totalOutcome = 0;
+      for (const part of ahParts.parts) totalOutcome += calcAHOutcome(fh, fa, part);
+      const avg = totalOutcome / ahParts.parts.length;
+      if (avg > 0) ahHomeWin += p * avg;
+      else if (avg < 0) ahAwayWin += p * Math.abs(avg);
+      else ahPush += p;
+    }
+    const ahSum = ahHomeWin + ahAwayWin + ahPush;
+    if (ahSum > 0) {
+      ahHomeWin = (ahHomeWin / ahSum) * 100;
+      ahAwayWin = (ahAwayWin / ahSum) * 100;
+      ahPush = (ahPush / ahSum) * 100;
+    }
+
+    const sortedScores = [...finalDist.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
+    const top3Sum = sortedScores.reduce((s, [, p]) => s + p, 0);
+
+    const fhMinutes = 45 + inp.injury1;
+    const fhRemaining = inp.minute < fhMinutes ? (fhMinutes - inp.minute) : 0;
+    let fhExpH = 0, fhExpA = 0;
+    if (fhRemaining > 0) {
+      const steps = CONFIG.INTEGRATION_STEPS, dt = fhRemaining / steps;
+      for (let i = 0; i < steps; i++) {
+        const t = inp.minute + (i + 0.5) * dt;
+        fhExpH += baseRateH * timeWeight(t) * dt;
+        fhExpA += baseRateA * timeWeight(t) * dt;
+      }
+    }
+    const fhGrid = buildScoreGrid(fhExpH + 0.001, fhExpA + 0.001, rho);
+    const curDiffH = (inp.minute < 45) ? inp.cH : 0;
+    const curDiffA = (inp.minute < 45) ? inp.cA : 0;
+    let fhHomeWin = 0, fhDraw = 0, fhAwayWin = 0;
+    for (const { h, a, p } of iterateGrid(fhGrid)) {
+      const finalH = h + curDiffH, finalA = a + curDiffA;
+      if (finalH > finalA) fhHomeWin += p;
+      else if (finalH === finalA) fhDraw += p;
+      else fhAwayWin += p;
+    }
+    fhHomeWin *= 100; fhDraw *= 100; fhAwayWin *= 100;
+
+    const fhOver = (line) => {
+      let p = 0;
+      for (const { h, a, p: pp } of iterateGrid(fhGrid)) {
+        if ((h + a + curDiffH + curDiffA) > line) p += pp;
+      }
+      return Math.min(100, p * 100);
+    };
+    const ftOver = (line) => {
+      let p = 0;
+      for (const [key, pp] of finalDist) {
+        const [fh, fa] = key.split('-').map(Number);
+        if ((fh + fa) > line) p += pp;
+      }
+      return Math.min(100, p * 100);
+    };
+
+    let pNextHome = 0, pNextAway = 0, pNextNone = 0;
+    const totalExpRem = expRemH + expRemA;
+    if (totalExpRem > 0) {
+      const pAtLeastOne = 1 - Math.exp(-totalExpRem);
+      pNextHome = (expRemH / totalExpRem) * pAtLeastOne * 100;
+      pNextAway = (expRemA / totalExpRem) * pAtLeastOne * 100;
+      pNextNone = (1 - pAtLeastOne) * 100;
+    } else {
+      pNextNone = 100;
+    }
+
+    const corners = calcCornerExpectation(inp, baseTotalGoals, strength);
+
+    const confidence = calcConfidence({
+      hShots: inp.hShots, aShots: inp.aShots,
+      hSot: inp.hSot, aSot: inp.aSot,
+      hBig: inp.hBig, aBig: inp.aBig,
+      minute: inp.minute, top3ProbSum: top3Sum, goalDiff: inp.cH - inp.cA,
+    });
+
+    const tempoRatio = baseTotalGoals / (league.avgGoals || 2.70);
+    let tempoLabel = 'ปกติ', tempoBadgeClass = 'bg-secondary';
+    if (tempoRatio > 1.15) { tempoLabel = 'สูง'; tempoBadgeClass = 'bg-danger'; }
+    else if (tempoRatio > 1.05) { tempoLabel = 'ค่อนข้างสูง'; tempoBadgeClass = 'bg-warning'; }
+    else if (tempoRatio < 0.85) { tempoLabel = 'ต่ำ'; tempoBadgeClass = 'bg-info'; }
+    else if (tempoRatio < 0.95) { tempoLabel = 'ค่อนข้างต่ำ'; tempoBadgeClass = 'bg-info'; }
+
+    const hasBig = hasBigData(inp.hBig, inp.aBig);
+    const dataQuality = hasBig ? 'ดี' : (inp.hShots + inp.aShots > 0 ? 'กลาง' : 'ต่ำ');
+    const dataQualityClass = hasBig ? 'bg-success' : (inp.hShots + inp.aShots > 0 ? 'bg-warning' : 'bg-secondary');
+
+    renderResults({
+      inp, league, strength,
+      pHomeWin, pDraw, pAwayWin, pBttsYes, expTotal,
+      ahHomeWin, ahAwayWin, ahPush, sortedScores, top3Sum,
+      fhHomeWin, fhDraw, fhAwayWin, fhOver, ftOver,
+      pNextHome, pNextAway, pNextNone, corners, confidence,
+      tempoLabel, tempoBadgeClass, dataQuality, dataQualityClass,
+      redImpact, remaining, expRemH, expRemA, shotXgH, shotXgA,
+    });
+
+    const fullPrediction = {
+      timestamp: Date.now(),
+      home: inp.homeName, away: inp.awayName,
+      minute: inp.minute, score: `${inp.cH}-${inp.cA}`,
+      pHomeWin, pDraw, pAwayWin,
+      topScores: sortedScores.map(([k, p]) => ({ score: k, prob: p * 100 })),
+      full: {
+        inp, league, strength, pHomeWin, pDraw, pAwayWin, pBttsYes, expTotal,
+        ahHomeWin, ahAwayWin, ahPush, sortedScores, confidence,
+        ftOver, fhOver, pNextHome, pNextAway, pNextNone, corners,
+      },
+    };
+    AppState.setLastPrediction(fullPrediction);
+    saveToHistory(fullPrediction.full);
+    announce(`คาดการณ์เสร็จ: เหย้า ${fmtPct(pHomeWin)}, เสมอ ${fmtPct(pDraw)}, เยือน ${fmtPct(pAwayWin)}`);
+
+  } catch (err) {
+    console.error('[predictMatch]', err);
+    showCalcError(err.message || 'เกิดข้อผิดพลาด');
+  }
+}
+
+function renderResults(r) {
+  const { inp, league, strength, sortedScores, corners, confidence } = r;
+  showEl('emptyState', false);
+  showEl('resultsArea', true);
+
+  writeText('resultTitle', `${inp.homeName || 'เหย้า'} ${inp.cH} - ${inp.cA} ${inp.awayName || 'เยือน'}`);
+  writeText('displayMinute', inp.minute);
+  writeText('displayRemaining', Math.round(r.remaining));
+
+  const leagueBadge = $('leagueInfluenceText');
+  if (leagueBadge) {
+    leagueBadge.textContent = `${league.flag || '🌐'} ${league.text}`;
+    leagueBadge.className = 'badge bg-info text-dark';
+  }
+  const confBadge = $('confidenceBadge');
+  if (confBadge) {
+    confBadge.textContent = `Confidence: ${confidence}%`;
+    confBadge.className = 'badge ' + (confidence >= 70 ? 'bg-success' : confidence >= 50 ? 'bg-warning text-dark' : 'bg-secondary');
+  }
+  const tempoBadge = $('tempoBadge');
+  if (tempoBadge) {
+    tempoBadge.className = `badge ${r.tempoBadgeClass}`;
+    tempoBadge.innerHTML = `<i class="bi bi-speedometer2"></i> Tempo: ${r.tempoLabel}`;
+  }
+  const dqBadge = $('dataQualityBadge');
+  if (dqBadge) {
+    dqBadge.className = `badge ${r.dataQualityClass}`;
+    dqBadge.textContent = `Data: ${r.dataQuality}`;
+  }
+
+  const outcomeEl = $('matchOutcomeTitle');
+  if (outcomeEl) {
+    outcomeEl.style.display = 'inline-block';
+    let predicted = 'เสมอ';
+    if (r.pHomeWin > r.pDraw && r.pHomeWin > r.pAwayWin) predicted = `${inp.homeName || 'เหย้า'} ชนะ`;
+    else if (r.pAwayWin > r.pDraw && r.pAwayWin > r.pHomeWin) predicted = `${inp.awayName || 'เยือน'} ชนะ`;
+    const maxP = Math.max(r.pHomeWin, r.pDraw, r.pAwayWin);
+    outcomeEl.textContent = `🎯 AI คาดการณ์: ${predicted} (${fmtPct(maxP)})`;
+    outcomeEl.style.background = 'rgba(32,214,160,0.2)';
+    outcomeEl.style.borderColor = '#20d6a0';
+  }
+
+  writeText('ftHomeWin', fmtPct(r.pHomeWin));
+  writeText('ftDraw', fmtPct(r.pDraw));
+  writeText('ftAwayWin', fmtPct(r.pAwayWin));
+  writeText('bttsYes', fmtPct(r.pBttsYes));
+  writeText('expectedTotalGoals', r.expTotal.toFixed(2));
+
+  writeText('ahCurrentRate', inp.ah > 0 ? `+${inp.ah}` : String(inp.ah));
+  writeText('ahHomeProb', fmtPct(r.ahHomeWin));
+  writeText('ahAwayProb', fmtPct(r.ahAwayWin));
+  writeText('ahPushProb', fmtPct(r.ahPush));
+
+  renderTopScores(sortedScores, r.top3Sum);
+
+  writeText('fhProbHome', fmtPct(r.fhHomeWin));
+  writeText('fhProbTotal', fmtPct(r.fhDraw));
+  writeText('fhProbAway', fmtPct(r.fhAwayWin));
+
+  writeText('probHome', fmtPct(r.pNextHome));
+  writeText('probNone', fmtPct(r.pNextNone));
+  writeText('probAway', fmtPct(r.pNextAway));
+
+  setBar('fhOver05', 'fhOver05Bar', r.fhOver(0.5));
+  setBar('fhOver15', 'fhOver15Bar', r.fhOver(1.5));
+  setBar('fhOver25', 'fhOver25Bar', r.fhOver(2.5));
+  setBar('fhOver35', 'fhOver35Bar', r.fhOver(3.5));
+
+  setBar('ftOver05', 'ftOver05Bar', r.ftOver(0.5));
+  setBar('ftOver15', 'ftOver15Bar', r.ftOver(1.5));
+  setBar('ftOver25', 'ftOver25Bar', r.ftOver(2.5));
+  setBar('ftOver35', 'ftOver35Bar', r.ftOver(3.5));
+  setBar('ftOver45', 'ftOver45Bar', r.ftOver(4.5));
+  setBar('ftOver55', 'ftOver55Bar', r.ftOver(5.5));
+  setBar('ftOver65', 'ftOver65Bar', r.ftOver(6.5));
+
+  renderCorners(corners);
+
+  if (r.redImpact) {
+    showEl('redCardImpactArea', true);
+    writeText('redImpactText', r.redImpact);
+  } else showEl('redCardImpactArea', false);
+
+  const xgEl = $('xgBreakdown');
+  if (xgEl) {
+    xgEl.innerHTML = `📊 xG เหลือ: <b>${r.expRemH.toFixed(2)}</b> + <b>${r.expRemA.toFixed(2)}</b> · ` +
+      `Shot xG: ${r.shotXgH.toFixed(2)} / ${r.shotXgA.toFixed(2)} · ` +
+      `Strength: 🏠${strength.home} ✈️${strength.away}`;
+  }
+
+  const calibEl = $('calibNote');
+  if (calibEl) {
+    const totalSample = inp.hShots + inp.aShots;
+    if (totalSample < 10) calibEl.textContent = `⚠️ ข้อมูลตัวอย่างน้อย (${totalSample} shots) — ความแม่นยำอาจต่ำ`;
+    else if (totalSample < 20) calibEl.textContent = `ℹ️ ข้อมูลปานกลาง (${totalSample} shots)`;
+    else calibEl.textContent = `✓ ข้อมูลเพียงพอ (${totalSample} shots)`;
+  }
+
+  if (inp.autoNotes && inp.autoNotes.length > 0) {
+    showEl('inputWarning', true);
+    writeText('inputWarningText', inp.autoNotes.join(' · '));
+  } else showEl('inputWarning', false);
+}
+
+function renderTopScores(sortedScores, top3Sum) {
+  const container = $('topScoresContainer');
+  if (!container) return;
+  container.innerHTML = sortedScores.map(([key, p], i) => {
+    const colors = ['bg-danger', 'bg-warning', 'bg-info'];
+    const color = colors[i] || 'bg-secondary';
+    return `<div class="col-4"><div class="score-box ${color}">
+      <div class="fw-bold" style="font-size:1.5rem; line-height:1.2;">${escapeHtml(key)}</div>
+      <div class="fw-bold" style="font-size:1rem;">${fmtPct(p * 100)}</div>
+    </div></div>`;
+  }).join('');
+  const noteEl = $('top3SumNote');
+  if (noteEl) noteEl.textContent = `รวม Top 3 = ${fmtPct(top3Sum * 100)}`;
+}
+
+function renderCorners(c) {
+  writeText('cornerExpFT', c.expFT.toFixed(1));
+  writeText('cornerExp1H', c.exp1H.toFixed(1));
+  writeText('cornerExp2H', c.exp2H.toFixed(1));
+  writeText('cornerHomeExp', c.homeExpFT.toFixed(1));
+  writeText('cornerAwayExp', c.awayExpFT.toFixed(1));
+
+  setBar('cornerFT85', 'cornerFT85Bar', c.ft.over85);
+  setBar('cornerFT95', 'cornerFT95Bar', c.ft.over95);
+  setBar('cornerFT105', 'cornerFT105Bar', c.ft.over105);
+  setBar('cornerFT115', 'cornerFT115Bar', c.ft.over115);
+  setBar('corner1H35', 'corner1H35Bar', c.h1.over35);
+  setBar('corner1H45', 'corner1H45Bar', c.h1.over45);
+  setBar('corner1H55', 'corner1H55Bar', c.h1.over55);
+  setBar('corner1H65', 'corner1H65Bar', c.h1.over65);
+
+  writeText('cornerFT45', fmtPct(c.ft.over45 || 0));
+  writeText('cornerFT55', fmtPct(c.ft.over55 || 0));
+  writeText('cornerFT65', fmtPct(c.ft.over65 || 0));
+  writeText('cornerFT75', fmtPct(c.ft.over75 || 0));
+
+  const note = $('cornerNote');
+  if (note) {
+    note.innerHTML = `คาดการณ์ ${c.expFT.toFixed(1)} corners รวม · ` +
+      `rate ${(c.totalRate * 90).toFixed(1)}/90 นาที · ` +
+      `เหย้า ${(c.rateH * 90).toFixed(1)} / เยือน ${(c.rateA * 90).toFixed(1)} · ` +
+      `<span class="text-info">NB r=${CORNER_CONFIG.NB_R}</span>`;
+  }
+}
+
+function setBar(textId, barId, pct) {
+  const textEl = $(textId);
+  const barEl = $(barId);
+  if (!textEl || !barEl) return;
+  const p = Number.isFinite(pct) ? Math.max(0, Math.min(100, pct)) : 0;
+  textEl.textContent = fmtPct(p);
+  barEl.style.width = p + '%';
+  barEl.setAttribute('aria-valuenow', String(Math.round(p)));
+  const color = pickColor(p);
+  barEl.className = 'progress-bar ' + color.bar;
+  textEl.className = textEl.className.replace(/text-\w+/g, '') + ' ' + color.text;
+}
+
+function showCalcError(msg) {
+  const el = $('calcError'), txt = $('calcErrorText');
+  if (el && txt) {
+    txt.textContent = msg;
+    el.classList.remove('d-none');
+    el.focus();
+  }
+  announce(msg);
+  toast(msg, true);
+}
+function hideCalcError() { const el = $('calcError'); if (el) el.classList.add('d-none'); }
+function announce(text) { const region = $('ariaLiveRegion'); if (region) region.textContent = text; }
+</script>
+
+<script>
+/* ============================================================
+   JackAI v8.9.7 — CSV Export
+   ============================================================ */
+function csvEscape(v) {
+  const s = String(v == null ? '' : v);
+  if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+  return s;
+}
+
+function downloadBlob(filename, content, mime = 'text/csv;charset=utf-8;') {
+  const blob = new Blob(['\uFEFF' + content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function exportPredictionCSV() {
+  const pred = AppState.lastPrediction;
+  if (!pred || !pred.full) { announce('ยังไม่มีผลการพยากรณ์'); toast('ยังไม่มีผลให้ export', true); return; }
+  const f = pred.full;
+  const rows = [];
+  rows.push(['Section', 'Key', 'Value']);
+  rows.push(['Match', 'Home', f.inp.homeName]);
+  rows.push(['Match', 'Away', f.inp.awayName]);
+  rows.push(['Match', 'League', f.league.text]);
+  rows.push(['Match', 'Minute', f.inp.minute]);
+  rows.push(['Match', 'Score', `${f.inp.cH}-${f.inp.cA}`]);
+  rows.push(['Match', 'AH', f.inp.ah]);
+  rows.push(['Match', 'Format', f.inp.format]);
+  rows.push(['Match', 'Timestamp', new Date(pred.timestamp).toISOString()]);
+  rows.push([]);
+  rows.push(['Stats', 'Home', 'Away']);
+  rows.push(['Shots', f.inp.hShots, f.inp.aShots]);
+  rows.push(['Shots on Target', f.inp.hSot, f.inp.aSot]);
+  rows.push(['Big Chances', f.inp.hBig, f.inp.aBig]);
+  rows.push(['Red Cards', f.inp.redHome, f.inp.redAway]);
+  rows.push(['Corners FT', f.inp.hCornersFT, f.inp.aCornersFT]);
+  rows.push(['Corners HT', f.inp.hCornersHT, f.inp.aCornersHT]);
+  rows.push(['AI Strength', f.strength.home, f.strength.away]);
+  rows.push([]);
+  rows.push(['Market', 'Probability (%)']);
+  rows.push(['Home Win', f.pHomeWin.toFixed(2)]);
+  rows.push(['Draw', f.pDraw.toFixed(2)]);
+  rows.push(['Away Win', f.pAwayWin.toFixed(2)]);
+  rows.push(['BTTS Yes', f.pBttsYes.toFixed(2)]);
+  rows.push(['Expected Total Goals', f.expTotal.toFixed(3)]);
+  rows.push(['Confidence', f.confidence]);
+  rows.push([]);
+  rows.push(['AH Line', f.inp.ah]);
+  rows.push(['AH Home %', f.ahHomeWin.toFixed(2)]);
+  rows.push(['AH Away %', f.ahAwayWin.toFixed(2)]);
+  rows.push(['AH Push %', f.ahPush.toFixed(2)]);
+  rows.push([]);
+  rows.push(['Top Score', 'Probability (%)']);
+  f.sortedScores.forEach(([score, p]) => rows.push([score, (p * 100).toFixed(2)]));
+  rows.push([]);
+  rows.push(['Market', 'Line', 'Over %']);
+  [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5].forEach(l => rows.push(['FT Over', l, f.ftOver(l).toFixed(2)]));
+  [0.5, 1.5, 2.5, 3.5].forEach(l => rows.push(['FH Over', l, f.fhOver(l).toFixed(2)]));
+  rows.push([]);
+  rows.push(['Corners', 'Value']);
+  rows.push(['Expected FT', f.corners.expFT.toFixed(2)]);
+  rows.push(['Expected 1H', f.corners.exp1H.toFixed(2)]);
+  rows.push(['Expected 2H', f.corners.exp2H.toFixed(2)]);
+  rows.push(['Home Exp FT', f.corners.homeExpFT.toFixed(2)]);
+  rows.push(['Away Exp FT', f.corners.awayExpFT.toFixed(2)]);
+  rows.push(['Rate/min Total', f.corners.totalRate.toFixed(4)]);
+  Object.entries(f.corners.ft).forEach(([k, v]) => rows.push([`FT ${k}`, v.toFixed(2)]));
+  Object.entries(f.corners.h1).forEach(([k, v]) => rows.push([`1H ${k}`, v.toFixed(2)]));
+  Object.entries(f.corners.h2).forEach(([k, v]) => rows.push([`2H ${k}`, v.toFixed(2)]));
+  rows.push([]);
+  rows.push(['Next Goal', 'Probability (%)']);
+  rows.push(['Home', f.pNextHome.toFixed(2)]);
+  rows.push(['None', f.pNextNone.toFixed(2)]);
+  rows.push(['Away', f.pNextAway.toFixed(2)]);
+
+  const csv = rows.map(r => r.map(csvEscape).join(',')).join('\r\n');
+  const fname = `jackai_${f.inp.homeName || 'home'}_vs_${f.inp.awayName || 'away'}_${Date.now()}.csv`.replace(/[^a-zA-Z0-9._-]/g, '_');
+  downloadBlob(fname, csv);
+  announce('Export CSV สำเร็จ');
+  toast('✓ Export CSV สำเร็จ');
+}
+
+const HISTORY_KEY = 'jackai_history_v1';
+function saveToHistory(entry) {
+  try {
+    const hist = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    hist.push(entry);
+    if (hist.length > 200) hist.shift();
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(hist));
+  } catch (e) { console.warn('[history]', e); }
+}
+function exportHistoryCSV() {
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (e) {}
+  if (!hist.length) { announce('ไม่มีประวัติ'); toast('ไม่มีประวัติให้ export', true); return; }
+  const headers = ['Timestamp', 'Home', 'Away', 'League', 'Minute', 'Score', 'HomeWin%', 'Draw%', 'AwayWin%', 'BTTS%', 'xG Total', 'Confidence'];
+  const rows = [headers];
+  hist.forEach(h => {
+    rows.push([
+      new Date(h.inp ? Date.now() : Date.now()).toISOString(),
+      h.inp?.homeName || '', h.inp?.awayName || '', h.league?.text || '',
+      h.inp?.minute || 0, `${h.inp?.cH || 0}-${h.inp?.cA || 0}`,
+      (h.pHomeWin || 0).toFixed(2), (h.pDraw || 0).toFixed(2), (h.pAwayWin || 0).toFixed(2),
+      (h.pBttsYes || 0).toFixed(2), (h.expTotal || 0).toFixed(2), h.confidence || 0,
+    ]);
+  });
+  const csv = rows.map(r => r.map(csvEscape).join(',')).join('\r\n');
+  downloadBlob(`jackai_history_${Date.now()}.csv`, csv);
+  announce(`Export ${hist.length} รายการสำเร็จ`);
+  toast(`✓ Export ${hist.length} รายการ`);
+}
+function clearHistory() {
+  try { localStorage.removeItem(HISTORY_KEY); } catch (e) {}
+  toast('ล้างประวัติแล้ว');
+}
+</script>
+
+<script>
+/* ============================================================
+   JackAI v8.9.7 — UI Actions
+   ============================================================ */
+function copyResultAsText() {
+  const pred = AppState.lastPrediction;
+  if (!pred) { announce('ยังไม่มีผล'); return; }
+  const txt = [
+    `JackAI Scanner v8.9.7`,
+    `${pred.home} ${pred.score} ${pred.away} (นาที ${pred.minute})`,
+    `1X2: ${fmtPct(pred.pHomeWin)} / ${fmtPct(pred.pDraw)} / ${fmtPct(pred.pAwayWin)}`,
+    `Top scores:`,
+    ...pred.topScores.map(t => `  ${t.score} → ${fmtPct(t.prob)}`),
+    `-- สร้างโดย JackAI Scanner --`,
+  ].join('\n');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(
+      () => { announce('คัดลอกผลแล้ว'); toast('✓ คัดลอกผลแล้ว'); },
+      () => fallbackCopy(txt)
+    );
+  } else fallbackCopy(txt);
+}
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); toast('✓ คัดลอกแล้ว'); }
+  catch (e) { toast('ไม่สามารถคัดลอกได้', true); }
+  document.body.removeChild(ta);
+}
+
+function resetInputs() {
+  ['home_name','away_name','leagueSearch','h_shots','a_shots','h_sot','a_sot','h_big','a_big',
+   'h_corners','a_corners','h_corners_ht','a_corners_ht','ht_home_score','ht_away_score']
+    .forEach(id => { const el = $(id); if (el) el.value = ''; });
+  writeVal('match_minute', 0);
+  writeVal('current_home_score', 0);
+  writeVal('current_away_score', 0);
+  writeVal('red_home', 0);
+  writeVal('red_away', 0);
+  const hc = $('handicapSelect'); if (hc) hc.value = '0';
+  AppState.setDefaultLeague();
+  const lr = $('leagueResult');
+  if (lr) lr.innerHTML = '<span class="text-warning fw-bold">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>';
+  showEl('resultsArea', false);
+  showEl('emptyState', true);
+  hideCalcError();
+  announce('รีเซ็ตแล้ว');
+  toast('✓ รีเซ็ตข้อมูล');
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  $('btnLangTH')?.classList.toggle('active', lang === 'th');
+  $('btnLangEN')?.classList.toggle('active', lang === 'en');
+  const dict = I18N[lang] || I18N.th;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.textContent = dict[key];
+  });
+  document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+    const key = el.getAttribute('data-i18n-aria-label');
+    if (dict[key]) el.setAttribute('aria-label', dict[key]);
+  });
+  ['home_name','away_name','leagueSearch'].forEach(id => {
+    const el = $(id);
+    if (el) {
+      const map = { home_name: 'placeholder_home', away_name: 'placeholder_away', leagueSearch: 'placeholder_league' };
+      if (dict[map[id]]) el.placeholder = dict[map[id]];
+    }
+  });
+}
+
+const PERSIST_IDS = ['home_name','away_name','match_minute','current_home_score','current_away_score',
+  'red_home','red_away','h_shots','a_shots','h_sot','a_sot','h_big','a_big',
+  'h_corners','a_corners','h_corners_ht','a_corners_ht'];
+
+function saveInputs() {
+  const data = {};
+  PERSIST_IDS.forEach(id => { const el = $(id); if (el) data[id] = el.value; });
+  const ah = $('handicapSelect'); if (ah) data.handicapSelect = ah.value;
+  Storage.set('inputs', data);
+}
+function loadSavedInputs() {
+  // 1. ลองเช็คก่อนว่ามีข้อมูลส่งมาจากหน้า 1H หรือไม่
+  let sharedData = null;
+  try {
+    const rawShare = localStorage.getItem('jackai_share_data_1h');
+    const shareTime = localStorage.getItem('jackai_share_time');
+    
+    if (rawShare && shareTime) {
+      const timeDiff = Date.now() - parseInt(shareTime, 10);
+      // ถ้าข้อมูลถูกส่งมาไม่เกิน 2 นาที (120,000 ms) ให้ใช้ข้อมูลนี้
+      if (timeDiff < 120000) {
+        sharedData = JSON.parse(rawShare);
+        toast('✓ ดึงข้อมูลจากโหมด 1H มาใส่ให้แล้ว');
+      }
+    }
+  } catch (e) {}
+
+  // 2. ถ้ามีข้อมูลจากหน้า 1H ให้ใช้ข้อมูลนั้น ถ้าไม่มีให้ใช้ข้อมูลที่เซฟไว้เดิม
+  const data = sharedData || Storage.get('inputs', {});
+  
+  if (!data || typeof data !== 'object') return;
+  
+  PERSIST_IDS.forEach(id => { 
+    if (data[id] != null) { 
+      const el = $(id); 
+      if (el) el.value = data[id]; 
+    } 
+  });
+  
+  if (data.handicapSelect && $('handicapSelect')) {
+    $('handicapSelect').value = data.handicapSelect;
+  }
+
+  // ถ้าเป็นการดึงข้อมูลจาก 1H ให้เคลียร์ค่าเพื่อไม่ให้ดึงซ้ำรอบหน้า
+  if (sharedData) {
+    localStorage.removeItem('jackai_share_data_1h');
+    localStorage.removeItem('jackai_share_time');
+  }
+}
+function bindAutoSave() {
+  PERSIST_IDS.forEach(id => { const el = $(id); if (el) el.addEventListener('change', saveInputs); });
+  $('handicapSelect')?.addEventListener('change', saveInputs);
+}
+
+function buildLeagueDatalist() {
+  const dl = $('leagueList');
+  if (!dl) return;
+  dl.innerHTML = Object.entries(LEAGUE_CONSTANTS).map(([key, v]) =>
+    `<option value="${escapeHtml(v.name)}">${v.flag}</option>`).join('');
+}
+function findLeague(query) {
+  if (!query) return null;
+  const q = query.toLowerCase().trim();
+  for (const [key, v] of Object.entries(LEAGUE_CONSTANTS)) {
+    if (key === q || v.name.toLowerCase().includes(q) ||
+        (v.aliases || []).some(a => a.toLowerCase().includes(q) || q.includes(a.toLowerCase()))) {
+      return { key, ...v };
+    }
+  }
+  return null;
+}
+function handleLeagueSearch() {
+  const q = readStr('leagueSearch');
+  const found = findLeague(q);
+  const resEl = $('leagueResult');
+  if (!resEl) return;
+  if (found) {
+    AppState.setLeague(found.key, found);
+    resEl.innerHTML = `<span class="text-success fw-bold">✓ ${found.flag} ${found.name} — เฉลี่ย ${found.goals} ประตู/เกม · rho ${found.rho}</span>`;
+  } else if (q) {
+    AppState.setDefaultLeague();
+    resEl.innerHTML = `<span class="text-warning fw-bold">⚠️ ไม่พบลีก "${escapeHtml(q)}" — ใช้ค่ากลาง</span>`;
+  } else {
+    AppState.setDefaultLeague();
+    resEl.innerHTML = `<span class="text-warning fw-bold">⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)</span>`;
+  }
+}
+
+function openDonateModal() {
+  const modalEl = $('donateModal');
+  if (!modalEl || !window.bootstrap) return;
+  new bootstrap.Modal(modalEl).show();
+}
+function copyDonateNumber() {
+  const num = '094-475-4282';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(num).then(
+      () => { toast('✓ คัดลอกเบอร์แล้ว'); announce('คัดลอกเบอร์แล้ว'); },
+      () => fallbackCopy(num)
+    );
+  } else fallbackCopy(num);
+}
+</script>
+
+<script>
+/* ============================================================
+   JackAI v8.9.7 — Test Framework
+   ============================================================ */
+const TestRunner = (() => {
+  const suites = [];
+  let current = null;
+  function describe(name, fn) { current = { name, tests: [] }; suites.push(current); fn(); current = null; }
+  function it(name, fn) {
+    if (!current) throw new Error('it() outside describe()');
+    try { fn(); current.tests.push({ name, pass: true }); }
+    catch (e) { current.tests.push({ name, pass: false, error: e.message || String(e) }); }
+  }
+  function expect(actual) {
+    return {
+      toBe: (exp) => { if (actual !== exp) throw new Error(`expected ${exp}, got ${actual}`); },
+      toBeCloseTo: (exp, tol = 1e-6) => { if (Math.abs(actual - exp) > tol) throw new Error(`expected ~${exp} (±${tol}), got ${actual}`); },
+      toBeGreaterThan: (exp) => { if (!(actual > exp)) throw new Error(`expected > ${exp}, got ${actual}`); },
+      toBeLessThan: (exp) => { if (!(actual < exp)) throw new Error(`expected < ${exp}, got ${actual}`); },
+      toBeGreaterThanOrEqual: (exp) => { if (!(actual >= exp)) throw new Error(`expected >= ${exp}, got ${actual}`); },
+      toBeLessThanOrEqual: (exp) => { if (!(actual <= exp)) throw new Error(`expected <= ${exp}, got ${actual}`); },
+      toBeTruthy: () => { if (!actual) throw new Error(`expected truthy, got ${actual}`); },
+      toBeFalsy: () => { if (actual) throw new Error(`expected falsy, got ${actual}`); },
+      toEqual: (exp) => { const a = JSON.stringify(actual), b = JSON.stringify(exp); if (a !== b) throw new Error(`expected ${b}, got ${a}`); },
+      not: {
+        toBe: (exp) => { if (actual === exp) throw new Error(`expected NOT ${exp}, got ${actual}`); },
+        toBeGreaterThan: (exp) => { if (actual <= exp) throw new Error(`expected NOT > ${exp}, got ${actual}`); }
+      },
+    };
+  }
+  function run() {
+    let total = 0, passed = 0;
+    const results = suites.map(s => ({
+      name: s.name,
+      tests: s.tests.map(t => { total++; if (t.pass) passed++; return t; })
+    }));
+    return { suites: results, total, passed, failed: total - passed };
+  }
+  function clear() { suites.length = 0; }
+  return { describe, it, expect, run, clear };
+})();
+
+function defineAllTests() {
+  const { describe, it, expect } = TestRunner;
+
+  describe('Poisson', () => {
+    it('P(0; λ=2) ≈ 0.1353', () => expect(poisson(2, 0)).toBeCloseTo(0.1353, 0.01));
+    it('P(1; λ=2) ≈ 0.2707', () => expect(poisson(2, 1)).toBeCloseTo(0.2707, 0.01));
+    it('λ=0 → P(0)=1', () => expect(poisson(0, 0)).toBe(1));
+    it('sum P(k) ≈ 1', () => {
+      let s = 0; for (let k = 0; k <= 40; k++) s += poisson(3, k);
+      expect(s).toBeCloseTo(1, 0.001);
+    });
+  });
+
+  describe('Dixon-Coles', () => {
+    it('tau(2,2)=1', () => expect(dixonColesTau(2, 2, 1.5, 1.5, -0.1)).toBeCloseTo(1, 0.001));
+    it('tau(0,0)<1 with rho<0', () => expect(dixonColesTau(0, 0, 1.5, 1.5, -0.1)).toBeLessThan(1));
+    it('tau(1,1)>1 with rho<0', () => expect(dixonColesTau(1, 1, 1.5, 1.5, -0.1)).toBeGreaterThan(1));
+  });
+
+  describe('AH', () => {
+    it('home wins', () => expect(calcAHOutcome(1, 0, 0)).toBe(1));
+    it('draw push', () => expect(calcAHOutcome(1, 1, 0)).toBe(0));
+    it('away wins', () => expect(calcAHOutcome(0, 1, 0)).toBe(-1));
+    it('quarter 0.25', () => expect(getAHParts(0.25).isQuarter).toBeTruthy());
+    it('not quarter 0.5', () => expect(getAHParts(0.5).isQuarter).toBeFalsy());
+  });
+
+  describe('xG', () => {
+    it('big=1 → 0.32', () => expect(calcShotXg(1, 1, 1).xg).toBeCloseTo(0.32, 0.01));
+    it('sot non-big → 0.15', () => expect(calcShotXg(1, 0, 1).xg).toBeCloseTo(0.15, 0.01));
+    it('off-target → 0.028', () => expect(calcShotXg(0, 0, 1).xg).toBeCloseTo(0.028, 0.01));
+  });
+
+  describe('Strength', () => {
+    it('70 → ~1', () => expect(strengthToAttackMult(70)).toBeCloseTo(1, 0.05));
+    it('90 > 1.2', () => expect(strengthToAttackMult(90)).toBeGreaterThan(1.2));
+    it('defense inverse', () => {
+      const a = strengthToAttackMult(80), d = strengthToDefenseMult(80);
+      expect(a * d).toBeCloseTo(1, 0.001);
+    });
+    it('NaN → 1', () => expect(strengthToAttackMult(NaN)).toBe(1));
+  });
+
+  describe('Score Grid', () => {
+    it('sums to 1', () => {
+      const g = buildScoreGrid(1.5, 1.2, -0.1);
+      let s = 0; for (const { p } of iterateGrid(g)) s += p;
+      expect(s).toBeCloseTo(1, 0.01);
+    });
+    it('higher xG → higher mean', () => {
+      const g1 = buildScoreGrid(0.5, 0.5, 0), g2 = buildScoreGrid(2.5, 2.5, 0);
+      let m1 = 0, m2 = 0;
+      for (const { h, p } of iterateGrid(g1)) m1 += h * p;
+      for (const { h, p } of iterateGrid(g2)) m2 += h * p;
+      expect(m2).toBeGreaterThan(m1);
+    });
+  });
+
+  describe('Confidence', () => {
+    it('little data → low', () => {
+      const c = calcConfidence({ hShots: 0, aShots: 0, hSot: 0, aSot: 0, hBig: 0, aBig: 0, minute: 0, top3ProbSum: 0.1 });
+      expect(c).toBeLessThan(50);
+    });
+    it('lots of data → higher', () => {
+      const c = calcConfidence({ hShots: 15, aShots: 15, hSot: 6, aSot: 6, hBig: 3, aBig: 3, minute: 75, top3ProbSum: 0.5 });
+      expect(c).toBeGreaterThan(60);
+    });
+  });
+
+  describe('Corner NB', () => {
+    it('NB(0, μ=10, r=8) ~ 0.0001-0.01', () => {
+      const p = negBinomialPmf(0, 10, 8);
+      expect(p).toBeGreaterThan(0.0001);
+      expect(p).toBeLessThan(0.01);
+    });
+    it('NB sums to ~1', () => {
+      let s = 0; for (let k = 0; k <= 60; k++) s += negBinomialPmf(k, 10.5, 8);
+      expect(s).toBeCloseTo(1, 0.01);
+    });
+    it('NB var > Poisson var', () => {
+      const mu = 10.5, r = 8;
+      expect(mu + mu * mu / r).toBeGreaterThan(mu);
+    });
+    it('nbOverProb(10.5, 8.5) → 40-80', () => {
+      const p = nbOverProb(10.5, 8.5);
+      expect(p).toBeGreaterThan(40);
+      expect(p).toBeLessThan(80);
+    });
+    it('over decreases with line', () => {
+      expect(nbOverProb(10.5, 8.5)).toBeGreaterThan(nbOverProb(10.5, 9.5));
+      expect(nbOverProb(10.5, 9.5)).toBeGreaterThan(nbOverProb(10.5, 10.5));
+    });
+  });
+
+  describe('Time Weight', () => {
+    it('increases', () => expect(timeWeight(10)).toBeLessThan(timeWeight(80)));
+    it('bounded', () => {
+      expect(timeWeight(0)).toBeGreaterThanOrEqual(0.8);
+      expect(timeWeight(120)).toBeLessThanOrEqual(1.35);
+    });
+  });
+
+  describe('Integration', () => {
+    it('early > late remaining', () => {
+      expect(expectedGoalsIntegrated(10, 80, '90', 0, 0, 0.03))
+        .toBeGreaterThan(expectedGoalsIntegrated(80, 10, '90', 0, 0, 0.03));
+    });
+    it('zero remaining → 0', () => expect(expectedGoalsIntegrated(90, 0, '90', 0, 0, 0.03)).toBe(0));
+  });
+
+  describe('ComputeStrength', () => {
+    it('neutral → 70/70', () => {
+      const s = computeStrength({ ah: 0, minute: 0, cH: 0, cA: 0, hShots: 0, aShots: 0, hSot: 0, aSot: 0, hBig: 0, aBig: 0, redHome: 0, redAway: 0 });
+      expect(Math.abs(s.home - 70)).toBeLessThan(5);
+    });
+    it('red card reduces strength', () => {
+      const noRed = computeStrength({ ah: 0, minute: 60, cH: 1, cA: 1, hShots: 8, aShots: 8, hSot: 3, aSot: 3, hBig: 1, aBig: 1, redHome: 0, redAway: 0 });
+      const withRed = computeStrength({ ah: 0, minute: 60, cH: 1, cA: 1, hShots: 8, aShots: 8, hSot: 3, aSot: 3, hBig: 1, aBig: 1, redHome: 1, redAway: 0 });
+      expect(withRed.home).toBeLessThan(noRed.home);
+    });
+  });
+
+  describe('CSV', () => {
+    it('plain', () => expect(csvEscape('hello')).toBe('hello'));
+    it('comma', () => expect(csvEscape('a,b')).toBe('"a,b"'));
+    it('quote', () => expect(csvEscape('a"b')).toBe('"a""b"'));
+    it('null → empty', () => expect(csvEscape(null)).toBe(''));
+  });
+
+  describe('League', () => {
+    it('find by Thai name', () => expect(findLeague('พรีเมียร์ลีกอังกฤษ').goals).toBe(3.24));
+    it('find by alias', () => expect(findLeague('epl')).toBeTruthy());
+    it('unknown → null', () => expect(findLeague('xyz123')).toBe(null));
+  });
+
+  describe('Corner Context', () => {
+    it('leading team gets fewer corners share', () => {
+      const inp = { minute: 60, cH: 2, cA: 0, redHome: 0, redAway: 0, hCornersFT: 0, aCornersFT: 0 };
+      const s = { home: 80, away: 60 };
+      const r = computeCornerRates(inp, 2.7, s);
+      expect(r.rateH).toBeLessThan(r.rateA);
+    });
+    it('observed data blends in', () => {
+      const inp1 = { minute: 60, cH: 0, cA: 0, redHome: 0, redAway: 0, hCornersFT: 0, aCornersFT: 0 };
+      const inp2 = { minute: 60, cH: 0, cA: 0, redHome: 0, redAway: 0, hCornersFT: 10, aCornersFT: 5 };
+      const s = { home: 70, away: 70 };
+      const r1 = computeCornerRates(inp1, 2.7, s);
+      const r2 = computeCornerRates(inp2, 2.7, s);
+      expect(r2.totalRate).not.toBe(r1.totalRate);
+    });
+  });
+}
+
+function runAllTests() {
+  TestRunner.clear();
+  defineAllTests();
+  const { suites, total, passed, failed } = TestRunner.run();
+  const panel = $('testPanel'), results = $('testResults');
+  if (panel) panel.style.display = 'block';
+  if (results) {
+    results.innerHTML = suites.map(s => {
+      const rows = s.tests.map(t =>
+        `<div class="test-row ${t.pass ? 'pass' : 'fail'}" title="${escapeHtml(t.error || '')}">
+          ${t.pass ? '✓' : '✗'} ${escapeHtml(t.name)}
+          ${!t.pass && t.error ? `<div style="font-size:0.65rem;opacity:0.7;margin-left:12px;">${escapeHtml(t.error)}</div>` : ''}
+        </div>`).join('');
+      return `<div style="margin-bottom:8px;"><div style="color:#20d6a0;font-weight:bold;margin-bottom:4px;">📦 ${escapeHtml(s.name)}</div>${rows}</div>`;
+    }).join('');
+    const summaryColor = failed === 0 ? '#35d7a4' : '#ff6b6b';
+    results.innerHTML += `<div class="summary" style="color:${summaryColor};">${passed}/${total} passed · ${failed} failed</div>`;
+  }
+  console.log(`Tests: ${passed}/${total} passed, ${failed} failed`);
+  toast(`Tests: ${passed}/${total} passed`, failed > 0);
+  return { total, passed, failed, suites };
+}
+
+function test() { return runAllTests(); }
+function closeTestPanel() { const p = $('testPanel'); if (p) p.style.display = 'none'; }
+</script>
+
+<script>
+/* ============================================================
+   JackAI v8.9.7 — Init
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  buildLeagueDatalist();
+  bindAutoSave();
+  loadSavedInputs();
+
+  $('leagueSearch')?.addEventListener('input', handleLeagueSearch);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.ctrlKey) { e.preventDefault(); predictMatch(); }
+  });
+
+  if (new URLSearchParams(location.search).get('debug') === '1') {
+    const banner = $('debugBanner');
+    if (banner) banner.style.display = 'block';
+  }
+
+  console.log('[JackAI] v8.9.7 initialized — Data Sync Ready');
+});
+</script>
+
 </body>
 </html>
-
-
