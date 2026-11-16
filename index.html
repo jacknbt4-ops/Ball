@@ -4,121 +4,50 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#10b981">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="FP">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="description" content="วิเคราะห์คาดการณ์สกอร์ฟุตบอลล่วงหน้า & บอลสด">
-<link rel="manifest" id="pwaManifest">
-<link rel="apple-touch-icon" id="appleIcon">
-<title>Football Predictor — วิเคราะห์บอล (v26 + API)</title>
+<title>Football Predictor — วิเคราะห์บอล (v27)</title>
 <style>
-  :root {
-    --bg: #0f172a; --card: #1e293b; --card-inner: #0f172a; --border: #334155;
-    --text: #f8fafc; --text-muted: #94a3b8; --primary: #3b82f6; --primary-hover: #2563eb;
-    --accent: #10b981; --accent-hover: #059669; --danger: #ef4444; --warning: #f59e0b;
-    --sticky-h: 78px;
-  }
+  :root { --bg: #0f172a; --card: #1e293b; --card-inner: #0f172a; --border: #334155; --text: #f8fafc; --text-muted: #94a3b8; --primary: #3b82f6; --accent: #10b981; --danger: #ef4444; --warning: #f59e0b; --sticky-h: 78px; }
   * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-  body {
-    margin: 0; padding: 20px; background-color: var(--bg); color: var(--text);
-    line-height: 1.5; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
-  }
+  body { margin: 0; padding: 20px; background-color: var(--bg); color: var(--text); line-height: 1.5; -webkit-text-size-adjust: 100%; }
   .container { max-width: 1100px; margin: 0 auto; }
   header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
   header h1 { margin: 0; font-size: 1.5rem; color: #fff; }
   .header-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-  button { cursor: pointer; border: none; border-radius: 8px; font-weight: 600; transition: all 0.2s; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  button { cursor: pointer; border: none; border-radius: 8px; font-weight: 600; transition: all 0.2s; touch-action: manipulation; }
   .btn-guide { background: #334155; color: #e2e8f0; padding: 8px 14px; font-size: 0.9rem; }
-  .btn-guide:hover { background: #475569; }
   .btn-reset { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 14px; font-size: 0.9rem; }
-  .btn-reset:hover { background: rgba(239, 68, 68, 0.25); }
-  .btn-export { background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.4); padding: 8px 14px; font-size: 0.9rem; }
-  .btn-export:hover { background: rgba(139, 92, 246, 0.3); }
-  .btn-history { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 14px; font-size: 0.9rem; }
-  .btn-history:hover { background: rgba(59, 130, 246, 0.3); }
-  .btn-install { display: none; background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); padding: 8px 14px; font-size: 0.9rem; }
-  .btn-install:hover { background: rgba(16, 185, 129, 0.3); }
-  .btn-install.show { display: inline-block; }
-
-  .offline-indicator { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(245, 158, 11, 0.95); color: #1e293b; padding: 8px 16px; border-radius: 8px; z-index: 1000; font-size: 0.85rem; font-weight: 600; box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
-  .offline-indicator.show { display: block; }
-  .update-toast { display: none; position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(59, 130, 246, 0.95); color: #fff; padding: 12px 18px; border-radius: 8px; z-index: 1500; font-size: 0.88rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4); align-items: center; gap: 12px; max-width: 90vw; }
-  .update-toast.show { display: flex; }
-  .update-toast button { background: rgba(255,255,255,0.2); color: #fff; padding: 6px 12px; font-size: 0.82rem; border-radius: 6px; }
-  .update-toast button:hover { background: rgba(255,255,255,0.35); }
+  .btn-history, .btn-export { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 14px; font-size: 0.9rem; }
 
   .export-wrap { position: relative; display: inline-block; }
-  .export-menu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; min-width: 200px; box-shadow: 0 12px 32px rgba(0,0,0,0.5); z-index: 1000; }
+  .export-menu { display: none; position: absolute; top: 100%; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; min-width: 200px; z-index: 1000; box-shadow: 0 12px 32px rgba(0,0,0,0.5); }
   .export-menu.active { display: block; }
-  .export-menu button { display: block; width: 100%; text-align: left; background: transparent; color: var(--text); padding: 10px 12px; font-size: 0.9rem; border-radius: 6px; font-weight: 500; }
+  .export-menu button { display: block; width: 100%; text-align: left; background: transparent; color: var(--text); padding: 10px 12px; font-size: 0.9rem; border-radius: 6px; }
   .export-menu button:hover { background: var(--card-inner); }
-
-  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1100; align-items: center; justify-content: center; padding: 20px; }
-  .modal-overlay.active { display: flex; }
-  .modal-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; max-width: 600px; width: 100%; max-height: 80vh; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.6); display: flex; flex-direction: column; }
-  .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); }
-  .modal-header h3 { margin: 0; font-size: 1.1rem; }
-  .modal-close { background: transparent; color: var(--text-muted); font-size: 1.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
-  .modal-close:hover { background: var(--card-inner); color: var(--text); }
-  .modal-body { overflow-y: auto; padding: 12px; flex: 1; }
-  .history-empty { text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 0.9rem; }
-  .history-item { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 12px; cursor: pointer; transition: all 0.15s; }
-  .history-item:hover { border-color: var(--primary); }
-  .history-info { flex: 1; min-width: 0; }
-  .history-match { font-weight: 700; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .history-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; display: flex; gap: 8px; flex-wrap: wrap; }
-  .history-score { font-size: 1rem; font-weight: 800; color: #fff; background: rgba(59, 130, 246, 0.2); padding: 4px 10px; border-radius: 6px; white-space: nowrap; }
-  .history-delete { background: rgba(239, 68, 68, 0.15); color: #f87171; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
-  .history-delete:hover { background: rgba(239, 68, 68, 0.3); }
-  .modal-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
-  .btn-clear-history { background: rgba(239, 68, 68, 0.15); color: #f87171; padding: 8px 16px; font-size: 0.85rem; }
-  .btn-clear-history:hover { background: rgba(239, 68, 68, 0.3); }
-
-  #loadIndicator { display: none; position: fixed; top: 20px; right: 20px; background: rgba(16, 185, 129, 0.95); color: #fff; padding: 10px 16px; border-radius: 8px; z-index: 999; font-size: 0.88rem; box-shadow: 0 6px 20px rgba(0,0,0,0.3); transition: opacity 0.4s; }
-  #toast { display: none; position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(16, 185, 129, 0.95); color: #fff; padding: 12px 20px; border-radius: 8px; z-index: 1500; font-size: 0.9rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4); max-width: 90vw; text-align: center; }
-  #toast.error { background: rgba(239, 68, 68, 0.95); }
-
-  .mobile-calc-bar { display: none; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s; }
-  .mobile-calc-bar.hidden { transform: translateY(calc(100% + 20px)); opacity: 0; pointer-events: none; }
-
-  @keyframes stalePulse {
-    0%, 100% { box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35); }
-    50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.4), 0 4px 14px rgba(16, 185, 129, 0.35); }
-  }
-
-  .guide-panel { display: none; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 20px; will-change: transform, opacity; }
-  .guide-panel.active { display: block; }
-  .guide-grabber { display: none; flex-direction: column; align-items: center; gap: 5px; padding: 4px 0 12px; margin-top: -8px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
-  .guide-grabber:active { cursor: grabbing; }
-  .guide-grabber-bar { width: 44px; height: 4px; background: rgba(148, 163, 184, 0.5); border-radius: 2px; }
-  .guide-grabber-hint { font-size: 0.7rem; color: #64748b; font-weight: 500; letter-spacing: 0.02em; }
-  .guide-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-  .guide-tab { background: var(--card-inner); color: var(--text-muted); padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; border: 1px solid var(--border); }
-  .guide-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-  .guide-content { display: none; font-size: 0.9rem; color: #cbd5e1; }
-  .guide-content.active { display: block; }
-  .mock-box { background: #0b1120; border: 1px dashed #64748b; padding: 12px; border-radius: 8px; margin-top: 8px; }
 
   .teams-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
   .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-  .home-badge { color: #38bdf8; }
-  .away-badge { color: #f472b6; }
-
   label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
-  input[type="text"], input[type="number"], select { width: 100%; padding: 10px 12px; background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.95rem; margin-bottom: 14px; text-overflow: ellipsis; }
+  input[type="text"], input[type="number"], select { width: 100%; padding: 10px 12px; background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.95rem; margin-bottom: 14px; }
   input:focus, select:focus { outline: none; border-color: var(--primary); }
+
+  .search-wrap { position: relative; margin-bottom: 14px; }
+  .search-wrap input { margin-bottom: 0; padding-right: 80px; }
+  .search-btn { position: absolute; right: 4px; top: 4px; bottom: 4px; background: var(--primary); color: #fff; padding: 0 12px; font-size: 0.8rem; }
+  .autocomplete-list { position: absolute; top: 100%; left: 0; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 8px; z-index: 100; max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+  .autocomplete-item { padding: 10px 12px; cursor: pointer; display: flex; justify-content: space-between; border-bottom: 1px solid var(--card-inner); }
+  .autocomplete-item:hover { background: var(--card-inner); }
+  .ac-name { font-weight: 600; font-size: 0.9rem; }
+  .ac-country { font-size: 0.75rem; color: var(--text-muted); }
+
+  .preset-select { font-size: 0.8rem; background: var(--card-inner); border-color: var(--border); margin-bottom: 10px; }
 
   .mode-switch { display: flex; background: var(--card-inner); padding: 4px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 14px; }
   .mode-btn { flex: 1; padding: 8px; background: transparent; color: var(--text-muted); font-size: 0.82rem; border-radius: 6px; }
   .mode-btn.active { background: var(--primary); color: #fff; }
 
   .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .stat-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
   .calc-preview { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); color: #34d399; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 14px; }
-
-  .form-hint { display: flex; justify-content: space-between; font-size: 0.72rem; color: #64748b; margin-bottom: 4px; margin-top: -8px; }
   .form-buttons { display: flex; gap: 8px; }
   .form-btn { flex: 1; padding: 10px 0; font-size: 0.95rem; font-weight: 700; border-radius: 8px; background: #334155; color: #cbd5e1; }
   .form-btn[data-val="W"] { background: #10b981; color: #064e3b; }
@@ -126,1812 +55,437 @@
   .form-btn[data-val="L"] { background: #ef4444; color: #fff; }
 
   .live-panel { background: linear-gradient(135deg, #1e293b 0%, #172554 100%); border: 1px solid #3b82f6; border-radius: 12px; padding: 18px; margin-bottom: 20px; }
-  .live-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
-  .live-title { font-weight: 700; color: #93c5fd; font-size: 1rem; display: flex; align-items: center; gap: 8px; line-height: 1.35; }
-  .live-dot { width: 10px; height: 10px; background: #ef4444; border-radius: 50%; display: inline-block; flex-shrink: 0; animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
   .live-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 12px; align-items: end; }
-  .quick-time-btns { display: flex; gap: 6px; margin-top: -8px; margin-bottom: 10px; flex-wrap: wrap; }
-  .q-time { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 4px 8px; font-size: 0.78rem; border-radius: 6px; }
-  .q-time:hover { background: rgba(59, 130, 246, 0.4); }
+  .q-time { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 4px 8px; font-size: 0.78rem; border-radius: 6px; margin-right: 4px; margin-bottom: 6px; }
 
   .settings-bar { display: grid; grid-template-columns: 1fr 1fr 1.1fr 1fr 1fr; gap: 14px; align-items: end; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 20px; }
-  .btn-calc { background: var(--accent); color: #064e3b; padding: 12px 20px; font-size: 1.05rem; font-weight: 800; width: 100%; margin-bottom: 14px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
-  .btn-calc:hover { background: var(--accent-hover); color: #fff; }
-
-  .stale-warning { display: none; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--warning); color: #fbbf24; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 0.9rem; text-align: center; }
+  .btn-calc { background: var(--accent); color: #064e3b; padding: 12px 20px; font-size: 1.05rem; font-weight: 800; width: 100%; margin-bottom: 14px; }
 
   .results-section { display: none; }
   .results-section.active { display: block; }
-  .status-banner { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #bfdbfe; padding: 12px 16px; border-radius: 10px; margin-bottom: 18px; font-size: 0.92rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-  .status-banner .league-tag { background: rgba(139, 92, 246, 0.25); border: 1px solid rgba(139, 92, 246, 0.5); color: #c4b5fd; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
-  .status-banner .dc-tag { background: rgba(236, 72, 153, 0.25); border: 1px solid rgba(236, 72, 153, 0.5); color: #f9a8d4; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
-  .status-banner .poi-tag { background: rgba(34, 197, 94, 0.25); border: 1px solid rgba(34, 197, 94, 0.5); color: #86efac; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+  .status-banner { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #bfdbfe; padding: 12px 16px; border-radius: 10px; margin-bottom: 18px; display: flex; justify-content: space-between; flex-wrap: wrap; }
   .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .res-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-  .res-title { font-size: 1.1rem; font-weight: 700; }
-  .xg-badge { background: rgba(59, 130, 246, 0.2); color: #60a5fa; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; }
-  .xg-badge-wrap { text-align: right; }
-  .xg-total { font-size: 0.72rem; color: #94a3b8; margin-top: 3px; }
   .prob-1x2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
   .prob-box { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; padding: 12px 8px; text-align: center; }
-  .prob-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .prob-val { font-size: 1.25rem; font-weight: 800; color: #fff; }
-
-  .chart-wrap { background: var(--card-inner); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 18px; }
-  .chart-title { font-size: 0.85rem; font-weight: 700; color: #e2e8f0; margin-bottom: 10px; }
-  .chart-svg { width: 100%; height: auto; display: block; }
-
   .ou-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
-  .ou-item { display: flex; justify-content: space-between; align-items: center; background: var(--card-inner); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.9rem; }
-  .ou-over { color: #34d399; font-weight: 700; }
-  .ou-under { color: #f87171; font-weight: 700; }
-
-  .top-scores-title { font-size: 0.95rem; font-weight: 700; color: #e2e8f0; margin-bottom: 10px; }
-  .top-scores-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .ou-item { display: flex; justify-content: space-between; background: var(--card-inner); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.9rem; }
   .score-card { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
   .score-card.rank-1 { border-color: var(--accent); background: rgba(16, 185, 129, 0.08); }
-  .score-rank { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px; }
-  .score-val { font-size: 1.35rem; font-weight: 800; color: #fff; }
-  .score-prob { font-size: 0.85rem; color: #34d399; font-weight: 600; }
-  .ht-ended-note { background: rgba(148, 163, 184, 0.12); border: 1px solid var(--border); color: #cbd5e1; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 12px; text-align: center; }
 
-  @media (max-width: 900px), (pointer: coarse) { input[type="text"], input[type="number"], select, textarea { font-size: 16px; } }
-  @supports (padding: max(0px)) { body { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); padding-top: max(20px, env(safe-area-inset-top)); padding-bottom: max(20px, env(safe-area-inset-bottom)); } }
-  h1, .card-title, .prob-label, .res-title, .live-title, .xg-badge { overflow-wrap: break-word; word-break: break-word; }
+  #toast { display: none; position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(16, 185, 129, 0.95); color: #fff; padding: 12px 20px; border-radius: 8px; z-index: 1500; font-size: 0.9rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4); text-align: center; }
+  #toast.error { background: rgba(239, 68, 68, 0.95); }
+  #loadIndicator { display: none; position: fixed; top: 20px; right: 20px; background: rgba(16, 185, 129, 0.95); color: #fff; padding: 10px 16px; border-radius: 8px; z-index: 999; font-size: 0.88rem; }
 
-  @media (max-width: 900px) { .settings-bar { grid-template-columns: 1fr 1fr; gap: 12px; } .settings-bar > div:last-child { grid-column: 1 / -1; } .btn-calc { margin-bottom: 0; } }
   @media (max-width: 768px) {
-    body { padding: 12px; padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); padding-top: max(12px, env(safe-area-inset-top, 0px)); padding-bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom, 0px) + 8px); }
-    header h1 { font-size: 1.15rem; }
-    .header-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .header-actions button, .export-wrap { width: 100%; }
-    .header-actions .btn-export { width: 100%; }
-    .export-wrap { display: block; }
-    .export-menu { right: 0; left: 0; }
-    .card { padding: 16px; }
-    .live-panel, .settings-bar, .guide-panel { padding: 14px; }
-    .teams-grid { grid-template-columns: 1fr; }
-    .settings-bar { grid-template-columns: 1fr; }
-    .settings-bar > div:last-child { display: none; }
-
-    .btn-guide, .btn-reset, .btn-export, .btn-history, .btn-install { min-height: 40px; padding: 10px 14px; }
-    .mode-btn { min-height: 40px; padding: 10px 8px; font-size: 0.85rem; }
-    .guide-tab { min-height: 40px; padding: 10px 12px; font-size: 0.82rem; }
-    .q-time { min-height: 34px; padding: 6px 10px; font-size: 0.82rem; }
-    .form-btn { min-height: 48px; font-size: 1rem; }
-
-    .live-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    body { padding: 12px; padding-bottom: calc(var(--sticky-h) + 8px); }
+    .teams-grid, .results-grid, .settings-bar { grid-template-columns: 1fr; }
+    .live-grid { grid-template-columns: 1fr 1fr; }
     .live-grid > div:first-child { grid-column: 1 / -1; }
-    #htScoreBox { grid-column: 1 / -1; }
-    .live-title { font-size: 0.9rem; }
-
-    .res-header { flex-direction: column; align-items: flex-start; gap: 6px; }
-    .xg-badge-wrap { text-align: left; width: 100%; }
-    .prob-1x2 { gap: 6px; }
-    .prob-box { padding: 10px 4px; }
-    .prob-val { font-size: 1.1rem; }
-    .prob-label { font-size: 0.72rem; }
-    .top-scores-grid { gap: 6px; }
-    .score-card { padding: 10px 4px; }
-    .score-val { font-size: 1.15rem; }
-    .score-prob { font-size: 0.75rem; }
-    .score-rank { font-size: 0.68rem; }
-    .ou-item { flex-wrap: wrap; gap: 4px; padding: 9px 10px; font-size: 0.85rem; }
-    .status-banner { flex-direction: column; align-items: flex-start; gap: 4px; font-size: 0.85rem; padding: 10px 12px; }
-    .status-banner .league-tag, .status-banner .dc-tag, .status-banner .poi-tag { font-size: 0.72rem; }
-
-    .form-hint { font-size: 0.68rem; }
-    .guide-content { font-size: 0.86rem; }
-    .mock-box { padding: 10px; font-size: 0.82rem; }
-    .calc-preview { font-size: 0.8rem; padding: 8px 10px; }
-    input[type="text"], input[type="number"], select { margin-bottom: 10px; padding: 10px; }
-
-    .guide-grabber { display: flex; }
-
-    .mobile-calc-bar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 900; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--border); padding: 10px 14px; padding-bottom: max(10px, env(safe-area-inset-bottom, 0px)); padding-left: max(14px, env(safe-area-inset-left, 0px)); padding-right: max(14px, env(safe-area-inset-right, 0px)); gap: 12px; align-items: center; box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.45); }
-    .mobile-calc-status { display: flex; flex-direction: column; font-size: 0.72rem; line-height: 1.25; min-width: 62px; max-width: 100px; flex-shrink: 0; }
-    .mobile-calc-status .mcs-time { color: #93c5fd; font-weight: 600; font-size: 0.7rem; }
-    .mobile-calc-status .mcs-score { color: #fff; font-weight: 800; font-size: 0.95rem; line-height: 1.15; }
-    .mobile-calc-status .mcs-xg { color: #94a3b8; font-weight: 600; font-size: 0.62rem; letter-spacing: 0.02em; margin-top: 1px; display: none; white-space: nowrap; }
-    .mobile-calc-status .mcs-xg.visible { display: block; }
-
-    @media (max-width: 480px) { .mobile-calc-status .mcs-xg, .mobile-calc-status .mcs-xg.visible { display: none !important; } }
-
-    .mobile-calc-btn { flex: 1; margin-bottom: 0; padding: 12px 16px; font-size: 1rem; min-height: 48px; font-weight: 800; background: var(--accent); color: #064e3b; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35); }
-    .mobile-calc-btn.stale-pulse { animation: stalePulse 1.6s ease-in-out infinite; }
-
-    #loadIndicator { top: auto; bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom, 0px) + 8px); right: 12px; left: 12px; text-align: center; font-size: 0.85rem; }
-    #toast { bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom, 0px) + 20px); }
-    .offline-indicator { top: auto; bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom, 0px) + 60px); }
-    .update-toast { bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom, 0px) + 20px); }
-
-    .modal-panel { max-height: 90vh; }
-    .modal-header { padding: 12px 16px; }
-    .modal-header h3 { font-size: 1rem; }
-    .modal-body { padding: 10px; }
-    .history-item { padding: 10px; }
-    .history-match { font-size: 0.85rem; }
-    .history-score { font-size: 0.9rem; padding: 3px 8px; }
+    .mobile-calc-bar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); border-top: 1px solid var(--border); padding: 10px 14px; gap: 12px; align-items: center; z-index: 900; }
+    .mobile-calc-bar.hidden { transform: translateY(100%); }
+    .mobile-calc-status { display: flex; flex-direction: column; font-size: 0.72rem; }
+    .mobile-calc-btn { flex: 1; margin: 0; padding: 12px; }
   }
-
-  @media (max-width: 480px) {
-    .xg-badge { font-size: 0.82rem; padding: 4px 8px; }
-    .xg-total { font-size: 0.68rem; }
-    .results-grid { gap: 14px; }
-    .status-banner { font-size: 0.8rem; }
-    .ou-item { font-size: 0.8rem; }
-    .form-buttons { gap: 6px; }
-  }
-
-  @media (max-width: 640px) {
-    body { padding: 10px; padding-left: max(10px, env(safe-area-inset-left, 0px)); padding-right: max(10px, env(safe-area-inset-right, 0px)); padding-top: max(10px, env(safe-area-inset-top, 0px)); padding-bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom, 0px) + 8px); }
-    header h1 { font-size: 1.05rem; margin-bottom: 4px; line-height: 1.35; }
-    .card { padding: 14px; }
-    .live-panel, .settings-bar, .guide-panel { padding: 12px; }
-    .status-banner { padding: 10px; }
-  }
-
-  @media (max-width: 380px) {
-    body { padding: 10px; padding-left: max(10px, env(safe-area-inset-left, 0px)); padding-right: max(10px, env(safe-area-inset-right, 0px)); padding-top: max(10px, env(safe-area-inset-top, 0px)); padding-bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom, 0px) + 8px); }
-    .mobile-calc-status { display: none; }
-    .mobile-calc-btn { width: 100%; }
-
-    .top-scores-grid { grid-template-columns: 1fr; gap: 6px; }
-    .score-card { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; gap: 8px; }
-    .score-card .score-rank { margin: 0; flex: 0 0 auto; }
-    .score-card .score-val { font-size: 1.1rem; flex: 1; text-align: left; padding-left: 8px; }
-    .score-card .score-prob { font-size: 0.85rem; }
-    .form-buttons { gap: 4px; }
-    .form-btn { font-size: 0.85rem; }
-    .prob-val { font-size: 0.95rem; }
-    .prob-label { font-size: 0.68rem; }
-    .stat-row-3 { gap: 6px; }
-    .stat-row-3 input { padding: 8px; }
-    .mode-btn { font-size: 0.78rem; padding: 8px 6px; }
-    .header-actions button { font-size: 0.78rem; }
-  }
-
-  @media (max-width: 340px) {
-    .prob-1x2 { grid-template-columns: 1fr; gap: 6px; }
-    .prob-box { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; text-align: left; }
-    .prob-label { margin: 0; }
-    .prob-val { font-size: 1rem; }
-  }
-
-  @media (orientation: landscape) and (max-height: 500px) and (max-width: 900px) {
-    body { padding: 10px; padding-bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom, 0px) + 8px); }
-    header { flex-direction: row; align-items: center; }
-    header h1 { font-size: 1rem; margin: 0; }
-    .header-actions { display: flex; width: auto; }
-    .header-actions button { flex: none; width: auto; }
-    .live-grid { grid-template-columns: 1fr 1fr 1fr 1fr; }
-    .live-grid > div:first-child { grid-column: auto; }
-    #htScoreBox { grid-column: auto; }
-  }
-
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+  @media (min-width: 769px) { .mobile-calc-bar { display: none !important; } }
 </style>
 </head>
 <body>
 
 <div id="loadIndicator"></div>
 <div id="toast"></div>
-<div class="offline-indicator" id="offlineIndicator">⚠️ ออฟไลน์ — ข้อมูลจะถูกเก็บไว้</div>
-<div class="update-toast" id="updateToast">
-  <span>🔄 มีเวอร์ชันใหม่</span>
-  <button type="button" onclick="reloadForUpdate()">อัปเดต</button>
-</div>
-
-<div class="modal-overlay" id="historyModal">
-  <div class="modal-panel">
-    <div class="modal-header">
-      <h3>📚 ประวัติการวิเคราะห์</h3>
-      <button type="button" class="modal-close" onclick="closeHistoryModal()" aria-label="ปิด">×</button>
-    </div>
-    <div class="modal-body" id="historyList">
-      <div class="history-empty">ยังไม่มีประวัติ</div>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn-clear-history" onclick="clearHistory()">ลบทั้งหมด</button>
-    </div>
-  </div>
-</div>
 
 <div class="container">
   <header>
     <h1>⚽ Football Predictor — วิเคราะห์บอล</h1>
     <div class="header-actions">
-      <button type="button" class="btn-install" id="btnInstall" onclick="promptInstall()" aria-label="ติดตั้ง">📱 ติดตั้ง</button>
-      <button type="button" class="btn-guide" onclick="toggleGuide()" aria-label="เปิด/ปิดคู่มือ">📖 คู่มือ</button>
-      <button type="button" class="btn-history" onclick="openHistoryModal()" aria-label="ประวัติ">📚 ประวัติ</button>
+      <button type="button" class="btn-guide" onclick="toggleGuide()">📖 คู่มือ</button>
+      <button type="button" class="btn-history" onclick="openHistoryModal()">📚 ประวัติ</button>
       <div class="export-wrap">
-        <button type="button" class="btn-export" onclick="toggleExportMenu()" aria-label="แชร์">📤 แชร์</button>
+        <button type="button" class="btn-export" onclick="toggleExportMenu()">📤 แชร์</button>
         <div class="export-menu" id="exportMenu">
           <button type="button" onclick="exportCSV()">📊 ดาวน์โหลด CSV</button>
           <button type="button" onclick="exportPNG()">🖼️ ดาวน์โหลด PNG</button>
-          <button type="button" onclick="exportText()">📋 Copy ข้อความ</button>
         </div>
       </div>
-      <button type="button" class="btn-reset" onclick="resetAll()" aria-label="ล้างค่าเริ่มคู่ใหม่">🔄 ล้างค่า</button>
+      <button type="button" class="btn-reset" onclick="resetAll()">🔄 ล้างค่า</button>
     </div>
   </header>
 
-  <div id="guidePanel" class="guide-panel">
-    <div class="guide-grabber" id="guideGrabber" aria-label="ลากลงเพื่อปิดคู่มือ">
-      <div class="guide-grabber-bar"></div>
-      <div class="guide-grabber-hint">ลากลงเพื่อปิด</div>
-    </div>
-    <div class="guide-tabs">
-      <button type="button" class="guide-tab active" onclick="switchGuideTab(0)">1. H2H</button>
-      <button type="button" class="guide-tab" onclick="switchGuideTab(1)">2. ตารางคะแนน</button>
-      <button type="button" class="guide-tab" onclick="switchGuideTab(2)">3. Odds & ลีก</button>
-    </div>
-    <div id="guideTab0" class="guide-content active">
-      <strong>วิธีดูจากแท็บ H2H:</strong> ข้ามคอลัมน์ซ้ายสุด แล้วดูเฉพาะ 2 คอลัมน์ขวา
-      <div class="mock-box">
-        • <strong>แถบเทาด้านบนของแต่ละทีม:</strong> ตัวเลข <code>1.8 - 1.0 per game</code> -> เลขหน้า (<b>1.8</b>) คือค่าเฉลี่ยยิงได้, เลขหลัง (<b>1.0</b>) คือค่าเฉลี่ยเสียประตู<br>
-        • <strong>ปุ่มฟอร์ม 5 ช่อง:</strong> เขียว (<b>W</b>) = ชนะ | เทา (<b>D</b>) = เสมอ | แดง (<b>L</b>) = แพ้ — <b>ช่องซ้ายสุดคือนัดล่าสุด</b>
-      </div>
-    </div>
-    <div id="guideTab1" class="guide-content">
-      <strong>วิธีดูจากตารางคะแนน:</strong> กดสลับโหมดเป็น "ตัวเลขตารางคะแนน (MP/GF/GA)"
-      <div class="mock-box">
-        • <b>MP (หรือ P):</b> จำนวนนัดที่แข่งไปแล้ว<br>
-        • <b>GF (หรือ F / ได้):</b> ประตูรวมที่ยิงได้<br>
-        • <b>GA (หรือ A / เสีย):</b> ประตูรวมที่เสีย
-      </div>
-    </div>
-    <div id="guideTab2" class="guide-content">
-      <strong>Odds & ลีก:</strong>
-      <div class="mock-box">
-        • <b>AH:</b> เจ้าบ้านต่อ (ติดลบ เช่น <code>-0.5</code>) หรือทีมเยือนต่อ (บวก)<br>
-        • <b>O/U:</b> ราคาประตูรวม เช่น <code>2.5</code>, <code>3.0</code><br>
-        • <b>ลีก:</b> เลือกให้ตรงกับลีกจริง → baseline ต่างกัน 20-25%<br>
-        • <b>ระบบ API:</b> กรอก Team ID แล้วกด 🔍 ดึง API ข้อมูลจะเติมให้อัตโนมัติ
-      </div>
-    </div>
-  </div>
-
   <div class="teams-grid">
+    <!-- HOME TEAM -->
     <div class="card">
-      <div class="card-title"><span class="home-badge">🏠 ทีมเจ้าบ้าน</span></div>
+      <div class="card-title"><span style="color:#38bdf8">🏠 ทีมเจ้าบ้าน</span></div>
       
-      <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-        <input type="number" id="apiHomeTeamId" placeholder="Team ID (API)" style="margin-bottom: 0; flex: 1;" title="ใส่ ID ทีมจาก API-Football">
-        <button type="button" onclick="fetchTeamStats('home', event)" style="background: var(--primary); color: #fff; padding: 0 16px; font-size: 0.85rem; min-height: 42px;">🔍 ดึง API</button>
+      <label>ดึงข้อมูลอัตโนมัติ (API)</label>
+      <select id="presetHome" class="preset-select" onchange="loadPreset('home', this.value)">
+        <option value="">-- เลือกทีมยอดนิยม --</option>
+        <option value="33">แมนเชสเตอร์ ยูไนเต็ด (EPL)</option>
+        <option value="50">แมนเชสเตอร์ ซิตี้ (EPL)</option>
+        <option value="40">ลิเวอร์พูล (EPL)</option>
+        <option value="42">อาร์เซนอล (EPL)</option>
+        <option value="49">เชลซี (EPL)</option>
+        <option value="541">เรอัล มาดริด (La Liga)</option>
+        <option value="529">บาร์เซโลน่า (La Liga)</option>
+        <option value="157">บาเยิร์น มิวนิค (Bundesliga)</option>
+        <option value="85">ปารีส แซงต์-แชร์กแมง (Ligue 1)</option>
+      </select>
+
+      <div class="search-wrap">
+        <input type="text" id="searchHome" placeholder="พิมพ์ชื่อทีม..." autocomplete="off" oninput="handleSearchInput('home', this.value)">
+        <button type="button" class="search-btn" onclick="doSearch('home')">🔍 ค้นหา</button>
+        <div class="autocomplete-list" id="acHome"></div>
       </div>
-      
+
       <label for="homeName">ชื่อทีมเจ้าบ้าน</label>
-      <input type="text" id="homeName" value="ทีมเจ้าบ้าน" oninput="markStale('names')" aria-label="ชื่อทีมเจ้าบ้าน">
+      <input type="text" id="homeName" value="ทีมเจ้าบ้าน" oninput="markStale()">
 
       <div class="mode-switch">
-        <button type="button" id="homeModeAvg" class="mode-btn active" onclick="setInputMode('home', 'avg')">ค่าเฉลี่ยต่อเกม</button>
+        <button type="button" id="homeModeAvg" class="mode-btn active" onclick="setInputMode('home', 'avg')">ค่าเฉลี่ย</button>
         <button type="button" id="homeModeRaw" class="mode-btn" onclick="setInputMode('home', 'raw')">ตารางคะแนน</button>
       </div>
 
       <div id="homeAvgFields">
         <div class="stat-row">
-          <div>
-            <label for="homeAvgGF">ยิงได้ / เกม</label>
-            <input type="number" id="homeAvgGF" step="0.1" min="0" value="1.5" oninput="updateAvgPreview('home'); markStale('stats')" aria-label="ค่าเฉลี่ยยิงได้เจ้าบ้าน">
-          </div>
-          <div>
-            <label for="homeAvgGA">เสียประตู / เกม</label>
-            <input type="number" id="homeAvgGA" step="0.1" min="0" value="1.1" oninput="updateAvgPreview('home'); markStale('stats')" aria-label="ค่าเฉลี่ยเสียประตูเจ้าบ้าน">
-          </div>
+          <div><label>ยิงได้ / เกม</label><input type="number" id="homeAvgGF" step="0.1" value="1.5" oninput="updateAvgPreview('home'); markStale()"></div>
+          <div><label>เสียประตู / เกม</label><input type="number" id="homeAvgGA" step="0.1" value="1.1" oninput="updateAvgPreview('home'); markStale()"></div>
         </div>
       </div>
-
       <div id="homeRawFields" style="display:none;">
-        <div class="stat-row-3">
-          <div>
-            <label for="homeMP">MP</label>
-            <input type="number" id="homeMP" min="1" value="10" oninput="clampMP('home'); updateAvgPreview('home'); markStale('stats')" aria-label="จำนวนนัดเจ้าบ้าน">
-          </div>
-          <div>
-            <label for="homeGF">GF</label>
-            <input type="number" id="homeGF" min="0" value="15" oninput="updateAvgPreview('home'); markStale('stats')" aria-label="ประตูได้รวมเจ้าบ้าน">
-          </div>
-          <div>
-            <label for="homeGA">GA</label>
-            <input type="number" id="homeGA" min="0" value="11" oninput="updateAvgPreview('home'); markStale('stats')" aria-label="ประตูเสียรวมเจ้าบ้าน">
-          </div>
+        <div class="stat-row">
+          <div><label>MP</label><input type="number" id="homeMP" value="10" oninput="updateAvgPreview('home')"></div>
+          <div><label>GF</label><input type="number" id="homeGF" value="15" oninput="updateAvgPreview('home')"></div>
+          <div><label>GA</label><input type="number" id="homeGA" value="11" oninput="updateAvgPreview('home')"></div>
         </div>
       </div>
-
-      <div id="homePreview" class="calc-preview">ค่าเฉลี่ยที่ใช้คำนวณ: ยิง 1.50 | เสีย 1.10 ประตู/เกม</div>
-
-      <label>ฟอร์ม 5 นัดล่าสุด (คลิกสลับ W/D/L)</label>
-      <div class="form-hint"><span>◀ ล่าสุด</span><span>เก่าสุด ▶</span></div>
-      <div class="form-buttons" id="homeFormBtns">
-        <button type="button" class="form-btn" data-val="D" onclick="cycleForm(this)" aria-label="ฟอร์มนัด 1">D</button>
-        <button type="button" class="form-btn" data-val="D" onclick="cycleForm(this)" aria-label="ฟอร์มนัด 2">D</button>
-        <button type="button" class="form-btn" data-val="D" onclick="cycleForm(this)" aria-label="ฟอร์มนัด 3">D</button>
-        <button type="button" class="form-btn" data-val="D" onclick="cycleForm(this)" aria-label="ฟอร์มนัด 4">D</button>
-        <button type="button" class="form-btn" data-val="D" onclick="cycleForm(this)" aria-label="ฟอร์มนัด 5">D</button>
-      </div>
+      <div id="homePreview" class="calc-preview">รอข้อมูล...</div>
     </div>
 
+    <!-- AWAY TEAM -->
     <div class="card">
-      <div class="card-title"><span class="away-badge">✈️ ทีมเยือน</span></div>
+      <div class="card-title"><span style="color:#f472b6">✈️ ทีมเยือน</span></div>
       
-      <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-        <input type="number" id="apiAwayTeamId" placeholder="Team ID (API)" style="margin-bottom: 0; flex: 1;" title="ใส่ ID ทีมจาก API-Football">
-        <button type="button" onclick="fetchTeamStats('away', event)" style="background: var(--primary); color: #fff; padding: 0 16px; font-size: 0.85rem; min-height: 42px;">🔍 ดึง API</button>
+      <label>ดึงข้อมูลอัตโนมัติ (API)</label>
+      <select id="presetAway" class="preset-select" onchange="loadPreset('away', this.value)">
+        <option value="">-- เลือกทีมยอดนิยม --</option>
+        <option value="33">แมนเชสเตอร์ ยูไนเต็ด (EPL)</option>
+        <option value="50">แมนเชสเตอร์ ซิตี้ (EPL)</option>
+        <option value="40">ลิเวอร์พูล (EPL)</option>
+        <option value="42">อาร์เซนอล (EPL)</option>
+        <option value="49">เชลซี (EPL)</option>
+        <option value="541">เรอัล มาดริด (La Liga)</option>
+        <option value="529">บาร์เซโลน่า (La Liga)</option>
+        <option value="157">บาเยิร์น มิวนิค (Bundesliga)</option>
+        <option value="85">ปารีส แซงต์-แชร์กแมง (Ligue 1)</option>
+      </select>
+
+      <div class="search-wrap">
+        <input type="text" id="searchAway" placeholder="พิมพ์ชื่อทีม..." autocomplete="off" oninput="handleSearchInput('away', this.value)">
+        <button type="button" class="search-btn" onclick="doSearch('away')">🔍 ค้นหา</button>
+        <div class="autocomplete-list" id="acAway"></div>
       </div>
-      
+
       <label for="awayName">ชื่อทีมเยือน</label>
-      <input type="text" id="awayName" value="ทีมเยือน" oninput="markStale('names')" aria-label="ชื่อทีมเยือน">
+      <input type="text" id="awayName" value="ทีมเยือน" oninput="markStale()">
 
       <div class="mode-switch">
-        <button type="button" id="awayModeAvg" class="mode-btn active" onclick="setInputMode('away', 'avg')">ค่าเฉลี่ยต่อเกม</button>
+        <button type="button" id="awayModeAvg" class="mode-btn active" onclick="setInputMode('away', 'avg')">ค่าเฉลี่ย</button>
         <button type="button" id="awayModeRaw" class="mode-btn" onclick="setInputMode('away', 'raw')">ตารางคะแนน</button>
       </div>
 
       <div id="awayAvgFields">
         <div class="stat-row">
-          <div>
-            <label for="awayAvgGF">ยิงได้ / เกม</label>
-            <input type="number" id="awayAvgGF" step="0.1" min="0" value="1.2" oninput="updateAvgPreview('away'); markStale('stats')" aria-label="ค่าเฉลี่ยยิงได้ทีมเยือน">
-          </div>
-          <div>
-            <label for="awayAvgGA">เสียประตู / เกม</label>
-            <input type="number" id="awayAvgGA" step="0.1" min="0" value="1.3" oninput="updateAvgPreview('away'); markStale('stats')" aria-label="ค่าเฉลี่ยเสียประตูทีมเยือน">
-          </div>
+          <div><label>ยิงได้ / เกม</label><input type="number" id="awayAvgGF" step="0.1" value="1.2" oninput="updateAvgPreview('away'); markStale()"></div>
+          <div><label>เสียประตู / เกม</label><input type="number" id="awayAvgGA" step="0.1" value="1.3" oninput="updateAvgPreview('away'); markStale()"></div>
         </div>
       </div>
-
       <div id="awayRawFields" style="display:none;">
-        <div class="stat-row-3">
-          <div>
-            <label for="awayMP">MP</label>
-            <input type="number" id="awayMP" min="1" value="10" oninput="clampMP('away'); updateAvgPreview('away'); markStale('stats')" aria-label="จำนวนนัดทีมเยือน">
-          </div>
-          <div>
-            <label for="awayGF">GF</label>
-            <input type="number" id="awayGF" min="0" value="12" oninput="updateAvgPreview('away'); markStale('stats')" aria-label="ประตูได้รวมทีมเยือน">
-          </div>
-          <div>
-            <label for="awayGA">GA</label>
-            <input type="number" id="awayGA" min="0" value="13" oninput="updateAvgPreview('away'); markStale('stats')" aria-label="ประตูเสียรวมทีมเยือน">
-          </div>
+        <div class="stat-row">
+          <div><label>MP</label><input type="number" id="awayMP" value="10" oninput="updateAvgPreview('away')"></div>
+          <div><label>GF</label><input type="number" id="awayGF" value="12" oninput="updateAvgPreview('away')"></div>
+          <div><label>GA</label><input type="number" id="awayGA" value="13" oninput="updateAvgPreview('away')"></div>
         </div>
       </div>
-
-      <div id="awayPreview" class="calc-preview">ค่าเฉลี่ยที่ใช้คำนวณ: ยิง 1.20 | เสีย 1.30 ประตู/เกม</div>
-
-      <label>ฟอร์ม 5 นัดล่าสุด (คลิกสลับ W/D/L)</label>
-      <div class="form-hint"><span>◀ ล่าสุด</span><span>เก่าสุด ▶</span></div>
-      <div class="form-buttons" id="awayFormBtns">
-        <button type="button" class="form-btn" data-val="D" onclick="cycleForm(this)" aria-label="ฟอร์มนัด 1">D</button>
-        <button type="button" class="form-btn" data-val="D" onclick="cycleForm(this)" aria-label="ฟอร์มนัด 2">D</button>
-        <button type="button" class="form-btn" data-val="D" onclick="cycleForm(this)" aria-label="ฟอร์มนัด 3">D</button>
-        <button type="button" class="form-btn" data-val="D" onclick="cycleForm(this)" aria-label="ฟอร์มนัด 4">D</button>
-        <button type="button" class="form-btn" data-val="D" onclick="cycleForm(this)" aria-label="ฟอร์มนัด 5">D</button>
-      </div>
+      <div id="awayPreview" class="calc-preview">รอข้อมูล...</div>
     </div>
   </div>
 
   <div class="live-panel">
-    <div class="live-header">
-      <div class="live-title"><span class="live-dot"></span> สถานะเวลา & สกอร์ (ใส่ 0 หากยังไม่แข่ง)</div>
-    </div>
-    <div class="quick-time-btns">
+    <div style="font-weight:700; color:#93c5fd; margin-bottom:10px;">⏱️ สถานะเวลา & สกอร์</div>
+    <div style="margin-bottom:10px;">
       <button type="button" class="q-time" onclick="setLiveTime(0)">0' ก่อนแข่ง</button>
-      <button type="button" class="q-time" onclick="setLiveTime(15)">15'</button>
-      <button type="button" class="q-time" onclick="setLiveTime(30)">30'</button>
       <button type="button" class="q-time" onclick="setLiveTime(45)">45' พักครึ่ง</button>
       <button type="button" class="q-time" onclick="setLiveTime(60)">60'</button>
       <button type="button" class="q-time" onclick="setLiveTime(75)">75'</button>
-      <button type="button" class="q-time" onclick="setLiveTime(80)">80'</button>
     </div>
     <div class="live-grid">
-      <div>
-        <label style="color:#bfdbfe;" for="elapsedMinutes">⏱️ นาทีที่แข่ง (0-90)</label>
-        <input type="number" id="elapsedMinutes" min="0" max="90" value="0" oninput="handleLiveInput()" aria-label="นาทีที่แข่งขัน">
-      </div>
-      <div>
-        <label style="color:#bfdbfe;" for="liveHomeScore">สกอร์เจ้าบ้าน</label>
-        <input type="number" id="liveHomeScore" min="0" max="20" value="0" oninput="handleLiveInput()" aria-label="สกอร์เจ้าบ้านปัจจุบัน">
-      </div>
-      <div>
-        <label style="color:#bfdbfe;" for="liveAwayScore">สกอร์ทีมเยือน</label>
-        <input type="number" id="liveAwayScore" min="0" max="20" value="0" oninput="handleLiveInput()" aria-label="สกอร์ทีมเยือนปัจจุบัน">
-      </div>
-      <div id="htScoreBox" style="display:none;">
-        <label style="color:#fde047;" for="htHomeScore">สกอร์จบครึ่งแรก</label>
-        <div style="display:flex; gap:6px;">
-          <input type="number" id="htHomeScore" min="0" max="15" value="0" placeholder="เหย้า" oninput="markStale('live')" aria-label="สกอร์จบครึ่งแรกเจ้าบ้าน">
-          <input type="number" id="htAwayScore" min="0" max="15" value="0" placeholder="เยือน" oninput="markStale('live')" aria-label="สกอร์จบครึ่งแรกทีมเยือน">
-        </div>
-        <div style="font-size:0.72rem; color:#94a3b8; margin-top:4px;">* ดึงจากสกอร์ปัจจุบันอัตโนมัติ</div>
-      </div>
+      <div><label>นาทีที่แข่ง</label><input type="number" id="elapsedMinutes" value="0" oninput="handleLiveInput()"></div>
+      <div><label>สกอร์เจ้าบ้าน</label><input type="number" id="liveHomeScore" value="0" oninput="handleLiveInput()"></div>
+      <div><label>สกอร์ทีมเยือน</label><input type="number" id="liveAwayScore" value="0" oninput="handleLiveInput()"></div>
     </div>
   </div>
 
   <div class="settings-bar">
     <div>
-      <label for="league">🏆 ลีก / การแข่งขัน</label>
-      <select id="league" onchange="markStale('settings')" aria-label="ลีก">
-        <option value="standard" selected>ไม่ระบุ / ลีกทั่วไป</option>
+      <label>🏆 ลีก / การแข่งขัน</label>
+      <select id="league" onchange="markStale()">
+        <option value="standard">ไม่ระบุ / ทั่วไป</option>
         <option value="epl">🏴 Premier League</option>
         <option value="laliga">🇪🇸 La Liga</option>
         <option value="bundesliga">🇩🇪 Bundesliga</option>
         <option value="seriea">🇮🇹 Serie A</option>
         <option value="ligue1">🇫🇷 Ligue 1</option>
-        <option value="eredivisie">🇳🇱 Eredivisie</option>
         <option value="thaileague">🇹🇭 Thai League</option>
-        <option value="championship">🏴 Championship</option>
-        <option value="mls">🇺🇸 MLS</option>
       </select>
     </div>
-    <div>
-      <label for="matchType">ประเภทการแข่งขัน</label>
-      <select id="matchType" onchange="markStale('settings')" aria-label="ประเภทการแข่งขัน">
-        <option value="standard">⚽ บอลลีกชายอาชีพ</option>
-        <option value="women">👩 บอลลีกหญิง</option>
-        <option value="youth">🔥 บอลเยาวชน U19/U21</option>
-        <option value="friendly">🤝 บอลกระชับมิตร</option>
-        <option value="attacking">⚡ ลีกเน้นเกมรุก</option>
-        <option value="defensive">🛡️ บอลถ้วยน็อกเอาต์</option>
-      </select>
-    </div>
-    <div>
-      <label for="ahLine">Asian Handicap (เจ้าบ้าน)</label>
-      <select id="ahLine" onchange="markStale('settings')" aria-label="ราคา Asian Handicap">
-        <option value="-2.5">เจ้าบ้านต่อ -2.5</option>
-        <option value="-2.0">เจ้าบ้านต่อ -2.0</option>
-        <option value="-1.75">เจ้าบ้านต่อ -1.75</option>
-        <option value="-1.5">เจ้าบ้านต่อ -1.5</option>
-        <option value="-1.25">เจ้าบ้านต่อ -1.25</option>
-        <option value="-1.0">เจ้าบ้านต่อ -1.0</option>
-        <option value="-0.75">เจ้าบ้านต่อ -0.75</option>
-        <option value="-0.5">เจ้าบ้านต่อ -0.5</option>
-        <option value="-0.25">เจ้าบ้านต่อ -0.25</option>
-        <option value="0" selected>ราคาเสมอ (0)</option>
-        <option value="0.25">ทีมเยือนต่อ +0.25</option>
-        <option value="0.5">ทีมเยือนต่อ +0.5</option>
-        <option value="0.75">ทีมเยือนต่อ +0.75</option>
-        <option value="1.0">ทีมเยือนต่อ +1.0</option>
-        <option value="1.25">ทีมเยือนต่อ +1.25</option>
-        <option value="1.5">ทีมเยือนต่อ +1.5</option>
-        <option value="2.0">ทีมเยือนต่อ +2.0</option>
-      </select>
-    </div>
-    <div>
-      <label for="ouLine">สูง-ต่ำ (O/U)</label>
-      <select id="ouLine" onchange="markStale('settings')" aria-label="ราคาสูงต่ำ">
-        <option value="none" selected>ไม่ระบุ</option>
-        <option value="1.75">1.75</option>
-        <option value="2.0">2.0</option>
-        <option value="2.25">2.25</option>
-        <option value="2.5">2.5</option>
-        <option value="2.75">2.75</option>
-        <option value="3.0">3.0</option>
-        <option value="3.25">3.25</option>
-        <option value="3.5">3.5</option>
-        <option value="3.75">3.75</option>
-        <option value="4.0">4.0</option>
-        <option value="4.5">4.5</option>
-      </select>
-    </div>
-    <div>
-      <button type="button" class="btn-calc" onclick="calculate()">⚡ ประมวลผล</button>
-    </div>
+    <div><label>AH (เจ้าบ้าน)</label><select id="ahLine" onchange="markStale()"><option value="0">0</option><option value="-0.5">-0.5</option><option value="-1.0">-1.0</option><option value="0.5">+0.5</option></select></div>
+    <div><label>O/U</label><select id="ouLine" onchange="markStale()"><option value="none">ไม่ระบุ</option><option value="2.5">2.5</option><option value="3.0">3.0</option></select></div>
+    <div><button type="button" class="btn-calc" onclick="calculate()">⚡ ประมวลผล</button></div>
   </div>
-
-  <div id="staleWarning" class="stale-warning"></div>
 
   <div id="resultsSection" class="results-section">
     <div id="statusBanner" class="status-banner"></div>
-
     <div class="results-grid">
       <div class="card">
-        <div class="res-header">
-          <div class="res-title">⏱️ ครึ่งแรก (45 นาที)</div>
-          <div class="xg-badge-wrap">
-            <div id="htXgBadge" class="xg-badge">xG ที่เหลือ: 0.00 - 0.00</div>
-            <div id="htTotalXg" class="xg-total"></div>
-          </div>
-        </div>
-        <div id="htEndedNote" class="ht-ended-note" style="display:none;"></div>
-
+        <div class="res-title">⏱️ ครึ่งแรก (45 นาที)</div>
         <div class="prob-1x2">
-          <div class="prob-box">
-            <div class="prob-label" id="htHomeLabel">เจ้าบ้าน นำ</div>
-            <div class="prob-val" id="htHomeWin">0%</div>
-          </div>
-          <div class="prob-box">
-            <div class="prob-label">เสมอครึ่งแรก</div>
-            <div class="prob-val" id="htDraw">0%</div>
-          </div>
-          <div class="prob-box">
-            <div class="prob-label" id="htAwayLabel">ทีมเยือน นำ</div>
-            <div class="prob-val" id="htAwayWin">0%</div>
-          </div>
+          <div class="prob-box"><div class="prob-label">เจ้าบ้าน นำ</div><div class="prob-val" id="htHomeWin">0%</div></div>
+          <div class="prob-box"><div class="prob-label">เสมอ</div><div class="prob-val" id="htDraw">0%</div></div>
+          <div class="prob-box"><div class="prob-label">ทีมเยือน นำ</div><div class="prob-val" id="htAwayWin">0%</div></div>
         </div>
-
-        <div class="chart-wrap">
-          <div class="chart-title">📊 Probability Distribution (ครึ่งแรก)</div>
-          <svg id="chartHT" class="chart-svg" viewBox="0 0 340 100" preserveAspectRatio="xMidYMid meet"></svg>
-        </div>
-
         <div class="ou-list">
-          <div class="ou-item"><span>สูง/ต่ำ 0.5 (ครึ่งแรก)</span><span><span class="ou-over" id="htO05">สูง 0%</span> | <span class="ou-under" id="htU05">ต่ำ 0%</span></span></div>
-          <div class="ou-item"><span>สูง/ต่ำ 1.5 (ครึ่งแรก)</span><span><span class="ou-over" id="htO15">สูง 0%</span> | <span class="ou-under" id="htU15">ต่ำ 0%</span></span></div>
-          <div class="ou-item"><span>สูง/ต่ำ 2.5 (ครึ่งแรก)</span><span><span class="ou-over" id="htO25">สูง 0%</span> | <span class="ou-under" id="htU25">ต่ำ 0%</span></span></div>
-          <div class="ou-item"><span>BTTS (ครึ่งแรก)</span><span><span class="ou-over" id="htBttsYes">ได้ 0%</span> | <span class="ou-under" id="htBttsNo">ไม่ได้ 0%</span></span></div>
+          <div class="ou-item"><span>สูง/ต่ำ 1.5</span><span id="htO15">0%</span></div>
         </div>
-
-        <div class="top-scores-title">🎯 3 อันดับสกอร์ครึ่งแรก</div>
-        <div class="top-scores-grid" id="htTopScores"></div>
       </div>
-
       <div class="card">
-        <div class="res-header">
-          <div class="res-title">🏟️ เต็มเวลา (90 นาที)</div>
-          <div class="xg-badge-wrap">
-            <div id="ftXgBadge" class="xg-badge">xG ที่เหลือ: 0.00 - 0.00</div>
-            <div id="ftTotalXg" class="xg-total"></div>
-          </div>
-        </div>
-
+        <div class="res-title">🏟️ เต็มเวลา (90 นาที)</div>
         <div class="prob-1x2">
-          <div class="prob-box">
-            <div class="prob-label" id="ftHomeLabel">เจ้าบ้าน ชนะ</div>
-            <div class="prob-val" id="ftHomeWin">0%</div>
-          </div>
-          <div class="prob-box">
-            <div class="prob-label">เสมอเต็มเวลา</div>
-            <div class="prob-val" id="ftDraw">0%</div>
-          </div>
-          <div class="prob-box">
-            <div class="prob-label" id="ftAwayLabel">ทีมเยือน ชนะ</div>
-            <div class="prob-val" id="ftAwayWin">0%</div>
-          </div>
+          <div class="prob-box"><div class="prob-label">เจ้าบ้าน ชนะ</div><div class="prob-val" id="ftHomeWin">0%</div></div>
+          <div class="prob-box"><div class="prob-label">เสมอ</div><div class="prob-val" id="ftDraw">0%</div></div>
+          <div class="prob-box"><div class="prob-label">ทีมเยือน ชนะ</div><div class="prob-val" id="ftAwayWin">0%</div></div>
         </div>
-
-        <div class="chart-wrap">
-          <div class="chart-title">📊 Probability Distribution (เต็มเวลา)</div>
-          <svg id="chartFT" class="chart-svg" viewBox="0 0 340 100" preserveAspectRatio="xMidYMid meet"></svg>
-        </div>
-
         <div class="ou-list">
-          <div class="ou-item"><span>สูง/ต่ำ 1.5 (เต็มเวลา)</span><span><span class="ou-over" id="ftO15">สูง 0%</span> | <span class="ou-under" id="ftU15">ต่ำ 0%</span></span></div>
-          <div class="ou-item"><span>สูง/ต่ำ 2.5 (เต็มเวลา)</span><span><span class="ou-over" id="ftO25">สูง 0%</span> | <span class="ou-under" id="ftU25">ต่ำ 0%</span></span></div>
-          <div class="ou-item"><span>สูง/ต่ำ 3.5 (เต็มเวลา)</span><span><span class="ou-over" id="ftO35">สูง 0%</span> | <span class="ou-under" id="ftU35">ต่ำ 0%</span></span></div>
-          <div class="ou-item"><span>สูง/ต่ำ 4.5 (เต็มเวลา)</span><span><span class="ou-over" id="ftO45">สูง 0%</span> | <span class="ou-under" id="ftU45">ต่ำ 0%</span></span></div>
-          <div class="ou-item"><span>สูง/ต่ำ 5.5 (เต็มเวลา)</span><span><span class="ou-over" id="ftO55">สูง 0%</span> | <span class="ou-under" id="ftU55">ต่ำ 0%</span></span></div>
-          <div class="ou-item"><span>สูง/ต่ำ 6.5 (เต็มเวลา)</span><span><span class="ou-over" id="ftO65">สูง 0%</span> | <span class="ou-under" id="ftU65">ต่ำ 0%</span></span></div>
-          <div class="ou-item"><span>BTTS (เต็มเวลา)</span><span><span class="ou-over" id="ftBttsYes">ได้ 0%</span> | <span class="ou-under" id="ftBttsNo">ไม่ได้ 0%</span></span></div>
+          <div class="ou-item"><span>สูง/ต่ำ 2.5</span><span id="ftO25">0%</span></div>
         </div>
-
-        <div class="top-scores-title">🎯 3 อันดับสกอร์เต็มเวลา</div>
-        <div class="top-scores-grid" id="ftTopScores"></div>
+        <div style="font-size:0.95rem; font-weight:700; margin-top:15px; margin-bottom:10px;">🎯 3 อันดับสกอร์</div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;" id="ftTopScores"></div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="mobile-calc-bar" id="mobileCalcBar" role="region" aria-label="แถบประมวลผล">
-  <div class="mobile-calc-status" id="mobileCalcStatus" aria-live="polite">
-    <span class="mcs-time">ก่อนแข่ง</span>
-    <span class="mcs-score">0 - 0</span>
-    <span class="mcs-xg" id="mobileCalcXg">xG –</span>
-  </div>
-  <button type="button" class="btn-calc mobile-calc-btn" id="mobileCalcBtn" onclick="handleMobileCalc()" aria-label="ประมวลผล">
-    <span id="mobileCalcBtnText">⚡ ประมวลผล</span>
-  </button>
+<div class="mobile-calc-bar" id="mobileCalcBar">
+  <div class="mobile-calc-status"><span id="mobileTime">ก่อนแข่ง</span><span id="mobileScore">0 - 0</span></div>
+  <button type="button" class="btn-calc mobile-calc-btn" onclick="calculate()">⚡ ประมวลผล</button>
 </div>
 
 <script>
   // ============================================================
-  // PWA Setup
+  // ⚠️ เปลี่ยน URL ตรงนี้เป็นของคุณ
   // ============================================================
-  const PWA_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-    <defs>
-      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#10b981"/>
-        <stop offset="100%" stop-color="#3b82f6"/>
-      </linearGradient>
-    </defs>
-    <rect width="512" height="512" rx="96" fill="url(#g)"/>
-    <text x="256" y="340" text-anchor="middle" font-size="280" font-family="Arial, sans-serif" fill="#fff">⚽</text>
-  </svg>`;
-
-  const PWA_ICON_192 = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(PWA_ICON_SVG);
-  const PWA_ICON_512 = PWA_ICON_192;
-
-  const PWA_MANIFEST = {
-    name: 'Football Predictor — วิเคราะห์บอล',
-    short_name: 'FP',
-    description: 'วิเคราะห์คาดการณ์สกอร์ฟุตบอลล่วงหน้า & บอลสด',
-    start_url: window.location.pathname,
-    scope: window.location.pathname.replace(/\/[^/]*$/, '/') || '/',
-    display: 'standalone',
-    orientation: 'portrait',
-    background_color: '#0f172a',
-    theme_color: '#10b981',
-    lang: 'th',
-    icons: [
-      { src: PWA_ICON_192, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
-      { src: PWA_ICON_512, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
-    ]
-  };
-
-  const manifestURL = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(PWA_MANIFEST));
-  document.getElementById('pwaManifest').href = manifestURL;
-  document.getElementById('appleIcon').href = PWA_ICON_192;
-
-  const SW_CODE = `
-    const CACHE = 'football-predictor-v25';
-    const ASSETS = [self.location.pathname.replace(/sw\\.js$/, 'football.html') || '/'];
-    self.addEventListener('install', e => {
-      e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(()=>{})));
-      self.skipWaiting();
-    });
-    self.addEventListener('activate', e => {
-      e.waitUntil(caches.keys().then(keys => Promise.all(
-        keys.filter(k => k !== CACHE).map(k => caches.delete(k))
-      )));
-      self.clients.claim();
-    });
-    self.addEventListener('fetch', e => {
-      if (e.request.method !== 'GET') return;
-      e.respondWith(
-        caches.match(e.request).then(r => r || fetch(e.request).then(res => {
-          if (res && res.status === 200) {
-            const clone = res.clone();
-            caches.open(CACHE).then(c => c.put(e.request, clone)).catch(()=>{});
-          }
-          return res;
-        }).catch(() => caches.match(e.request)))
-      );
-    });
-  `;
-
-  let deferredPrompt = null;
-  let swRegistration = null;
-
-  function initPWA() {
-    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-      const swBlob = new Blob([SW_CODE], { type: 'application/javascript' });
-      const swURL = URL.createObjectURL(swBlob);
-      navigator.serviceWorker.register(swURL, { scope: './' }).then(reg => {
-        swRegistration = reg;
-        reg.addEventListener('updatefound', () => {
-          const newWorker = reg.installing;
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              document.getElementById('updateToast').classList.add('show');
-            }
-          });
-        });
-      }).catch(err => {
-        console.warn('SW registration failed:', err.message);
-      });
-    }
-  }
-
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById('btnInstall').classList.add('show');
-  });
-
-  window.addEventListener('appinstalled', () => {
-    deferredPrompt = null;
-    document.getElementById('btnInstall').classList.remove('show');
-    showToast('✓ ติดตั้งสำเร็จ!');
-  });
-
-  function promptInstall() {
-    if (!deferredPrompt) {
-      showToast('⚠️ เปิดผ่าน HTTPS/localhost ก่อน แล้วกด "ติดตั้ง" ที่ address bar', true);
-      return;
-    }
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(choice => {
-      if (choice.outcome === 'accepted') showToast('✓ กำลังติดตั้ง...');
-      deferredPrompt = null;
-      document.getElementById('btnInstall').classList.remove('show');
-    });
-  }
-
-  function reloadForUpdate() {
-    if (swRegistration && swRegistration.waiting) {
-      swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
-    }
-    location.reload();
-  }
-
-  function updateOnlineStatus() {
-    const el = document.getElementById('offlineIndicator');
-    if (navigator.onLine) el.classList.remove('show');
-    else el.classList.add('show');
-  }
-  window.addEventListener('online', updateOnlineStatus);
-  window.addEventListener('offline', updateOnlineStatus);
-
-  // ============================================================
-  // State & Constants
-  // ============================================================
-  const SAVE_KEY = 'football_predictor_v25';
-  const HISTORY_KEY = 'football_history_v25';
-  const FALLBACK_KEYS = ['football_predictor_v24', 'football_predictor_v23', 'football_predictor_v22', 'football_predictor_v21', 'football_predictor_v20'];
-  const MAX_HISTORY = 20;
-
-  // ⚠️ URL ของคุณจาก Vercel ให้เอามาใส่ตรงนี้ (จาก Step ก่อนหน้า)
   const VERCEL_API_URL = 'https://football-backend-dun.vercel.app/api/stats'; 
 
-  const LEAGUE_ID_MAP = {
-    'standard': null, 'epl': 39, 'laliga': 140, 'bundesliga': 78,
-    'seriea': 135, 'ligue1': 61, 'eredivisie': 88,
-    'thaileague': 296, 'championship': 40, 'mls': 253
-  };
-
-  let homeMode = 'avg';
-  let awayMode = 'avg';
-  let hasCalculated = false;
-  let prevElapsed = 0;
-  const dirtyGroups = new Set();
-  let lastCalcResult = null;
-  let lastSnapshot = null;
-
-  const GROUP_LABELS = {
-    stats: 'สถิติทีม', form: 'ฟอร์ม 5 นัด',
-    settings: 'การตั้งค่า', live: 'เวลา/สกอร์', names: 'ชื่อทีม'
-  };
-
   const LEAGUE_PROFILES = {
-    standard:     { label: 'ไม่ระบุ / ลีกทั่วไป',  avg: 1.35, homeAdv: 1.10, htShare: 0.43 },
-    epl:          { label: '🏴 Premier League',    avg: 1.42, homeAdv: 1.11, htShare: 0.44 },
-    laliga:       { label: '🇪🇸 La Liga',           avg: 1.28, homeAdv: 1.12, htShare: 0.42 },
-    bundesliga:   { label: '🇩🇪 Bundesliga',        avg: 1.58, homeAdv: 1.08, htShare: 0.47 },
-    seriea:       { label: '🇮🇹 Serie A',           avg: 1.33, homeAdv: 1.10, htShare: 0.41 },
-    ligue1:       { label: '🇫🇷 Ligue 1',           avg: 1.38, homeAdv: 1.09, htShare: 0.43 },
-    eredivisie:   { label: '🇳🇱 Eredivisie',        avg: 1.60, homeAdv: 1.07, htShare: 0.45 },
-    thaileague:   { label: '🇹🇭 Thai League',       avg: 1.45, homeAdv: 1.13, htShare: 0.44 },
-    championship: { label: '🏴 Championship',       avg: 1.28, homeAdv: 1.10, htShare: 0.44 },
-    mls:          { label: '🇺🇸 MLS',               avg: 1.48, homeAdv: 1.15, htShare: 0.46 }
+    standard: { avg: 1.35, homeAdv: 1.10, htShare: 0.43 }, epl: { avg: 1.42, homeAdv: 1.11, htShare: 0.44 },
+    laliga: { avg: 1.28, homeAdv: 1.12, htShare: 0.42 }, bundesliga: { avg: 1.58, homeAdv: 1.08, htShare: 0.47 },
+    seriea: { avg: 1.33, homeAdv: 1.10, htShare: 0.41 }, ligue1: { avg: 1.38, homeAdv: 1.09, htShare: 0.43 },
+    thaileague: { avg: 1.45, homeAdv: 1.13, htShare: 0.44 }
   };
+  const LEAGUE_ID_MAP = { 'epl': 39, 'laliga': 140, 'bundesliga': 78, 'seriea': 135, 'ligue1': 61, 'thaileague': 296 };
 
-  const DC_RHO = -0.13;
+  let hasCalculated = false;
+  let searchTimeout;
 
-  function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
-  function haptic(ms = 20) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
-  function safeNum(id, fallback) {
-    const el = document.getElementById(id);
-    if (!el) return fallback;
-    const v = parseFloat(el.value);
-    return Number.isFinite(v) ? v : fallback;
-  }
   function showToast(msg, isError = false) {
     const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.className = isError ? 'error' : '';
-    el.style.display = 'block';
-    clearTimeout(el._t);
-    el._t = setTimeout(() => { el.style.display = 'none'; }, 2500);
+    el.textContent = msg; el.style.display = 'block';
+    el.style.background = isError ? 'rgba(239, 68, 68, 0.95)' : 'rgba(16, 185, 129, 0.95)';
+    clearTimeout(el._t); el._t = setTimeout(() => { el.style.display = 'none'; }, 3000);
   }
 
-  function toggleGuide() { document.getElementById('guidePanel').classList.toggle('active'); }
-  function switchGuideTab(idx) {
-    haptic(10);
-    document.querySelectorAll('.guide-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
-    document.querySelectorAll('.guide-content').forEach((c, i) => c.classList.toggle('active', i === idx));
-  }
+  // ---------- API SEARCH & AUTOCOMPLETE ----------
+  function handleSearchInput(side, query) {
+    clearTimeout(searchTimeout);
+    const listEl = document.getElementById('ac' + (side === 'home' ? 'Home' : 'Away'));
+    if (query.length < 2) { listEl.style.display = 'none'; return; }
 
-  function setupGuideSwipe() {
-    const guide = document.getElementById('guidePanel');
-    if (!guide) return;
-    let startY = 0, startX = 0, dragging = false, committed = false, vibrated = false;
-    const isInteractive = (el) => !!(el && el.closest && el.closest('button, a, input, select, textarea, [contenteditable="true"]'));
-    const resetGuide = () => { guide.style.transform = ''; guide.style.opacity = ''; guide.style.transition = ''; };
-    const onStart = (e) => {
-      if (e.touches.length !== 1) return;
-      if (isInteractive(e.target)) return;
-      startY = e.touches[0].clientY; startX = e.touches[0].clientX;
-      dragging = true; committed = false; vibrated = false;
-      guide.style.transition = 'none';
-    };
-    const onMove = (e) => {
-      if (!dragging) return;
-      const dy = e.touches[0].clientY - startY;
-      const dx = e.touches[0].clientX - startX;
-      const absDy = Math.abs(dy), absDx = Math.abs(dx);
-      if (dy < -20 && absDy > absDx) { dragging = false; resetGuide(); return; }
-      if (absDy < 8 && absDx < 8) return;
-      committed = true;
-      if (e.cancelable) e.preventDefault();
-      if (absDx > absDy) {
-        guide.style.transform = `translateX(${dx}px)`;
-        guide.style.opacity = String(Math.max(0.2, 1 - absDx / 400));
-        if (!vibrated && absDx > 100) { haptic(15); vibrated = true; }
-      } else if (dy > 0) {
-        guide.style.transform = `translateY(${dy}px)`;
-        guide.style.opacity = String(Math.max(0.2, 1 - dy / 350));
-        if (!vibrated && dy > 80) { haptic(15); vibrated = true; }
+    searchTimeout = setTimeout(async () => {
+      listEl.innerHTML = '<div style="padding:10px; text-align:center;">⏳ กำลังค้นหา...</div>';
+      listEl.style.display = 'block';
+      try {
+        const res = await fetch(`${VERCEL_API_URL}?search=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        
+        if (!data.response || data.response.length === 0) {
+          listEl.innerHTML = '<div style="padding:10px; text-align:center;">ไม่พบทีม</div>';
+          return;
+        }
+        
+        listEl.innerHTML = data.response.slice(0, 8).map(item => `
+          <div class="autocomplete-item" onclick="selectTeam('${side}', ${item.team.id}, '${item.team.name.replace(/'/g, "\\'")}')">
+            <div>
+              <div class="ac-name">${item.team.name}</div>
+              <div class="ac-country">${item.team.country}</div>
+            </div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">ID: ${item.team.id}</div>
+          </div>
+        `).join('');
+      } catch (e) {
+        listEl.innerHTML = '<div style="padding:10px; text-align:center; color:red;">Error API</div>';
       }
-    };
-    const onEnd = (e) => {
-      if (!dragging) return;
-      dragging = false;
-      if (!committed) { resetGuide(); return; }
-      const dy = e.changedTouches[0].clientY - startY;
-      const dx = e.changedTouches[0].clientX - startX;
-      guide.style.transition = 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s';
-      const shouldDismiss = dy > 80 || Math.abs(dx) > 100;
-      if (shouldDismiss) {
-        if (Math.abs(dx) > Math.abs(dy)) guide.style.transform = `translateX(${dx > 0 ? 500 : -500}px)`;
-        else guide.style.transform = `translateY(${guide.offsetHeight + 40}px)`;
-        guide.style.opacity = '0';
-        haptic(30);
-        setTimeout(() => { guide.classList.remove('active'); resetGuide(); }, 260);
-      } else {
-        resetGuide();
-        setTimeout(() => { guide.style.transition = ''; }, 260);
-      }
-    };
-    guide.addEventListener('touchstart', onStart, { passive: true });
-    guide.addEventListener('touchmove', onMove, { passive: false });
-    guide.addEventListener('touchend', onEnd, { passive: true });
-    guide.addEventListener('touchcancel', onEnd, { passive: true });
+    }, 500);
   }
 
-  let lastScrollY = 0, fabHidden = false, scrollTicking = false;
-  function hideFab() {
-    if (fabHidden) return;
-    const bar = document.getElementById('mobileCalcBar');
-    if (!bar) return;
-    fabHidden = true; bar.classList.add('hidden');
-  }
-  function showFab() {
-    if (!fabHidden) return;
-    const bar = document.getElementById('mobileCalcBar');
-    if (!bar) return;
-    fabHidden = false; bar.classList.remove('hidden');
-  }
-  function handleScroll() {
-    const y = window.scrollY;
-    const delta = y - lastScrollY;
-    if (!hasCalculated) showFab();
-    else if (y < 100) showFab();
-    else if (delta > 8) hideFab();
-    else if (delta < -8) showFab();
-    lastScrollY = y;
-  }
-  function setupFabAutoHide() {
-    window.addEventListener('scroll', () => {
-      if (!scrollTicking) {
-        window.requestAnimationFrame(() => { handleScroll(); scrollTicking = false; });
-        scrollTicking = true;
-      }
-    }, { passive: true });
+  function doSearch(side) {
+    const q = document.getElementById('search' + (side === 'home' ? 'Home' : 'Away')).value;
+    if (q) handleSearchInput(side, q);
   }
 
+  function selectTeam(side, teamId, teamName) {
+    document.getElementById('ac' + (side === 'home' ? 'Home' : 'Away')).style.display = 'none';
+    document.getElementById('search' + (side === 'home' ? 'Home' : 'Away')).value = teamName;
+    document.getElementById('preset' + (side === 'home' ? 'Home' : 'Away')).value = "";
+    fetchStatsById(side, teamId, teamName);
+  }
+
+  function loadPreset(side, teamId) {
+    if (!teamId) return;
+    document.getElementById('search' + (side === 'home' ? 'Home' : 'Away')).value = '';
+    fetchStatsById(side, teamId, '');
+  }
+
+  async function fetchStatsById(side, teamId, fallbackName) {
+    const leagueKey = document.getElementById('league').value;
+    let leagueId = LEAGUE_ID_MAP[leagueKey];
+    
+    if (!leagueId) {
+      showToast('⚠️ กรุณาเลือกลีกด้านล่างก่อนดึงข้อมูล', true);
+      document.getElementById('league').scrollIntoView({behavior: 'smooth', block:'center'});
+      return;
+    }
+
+    showToast('⏳ กำลังดึงข้อมูล...');
+    
+    try {
+      const res = await fetch(`${VERCEL_API_URL}?teamId=${teamId}&leagueId=${leagueId}&season=2023`);
+      const data = await res.json();
+      
+      if (data.errors && Object.keys(data.errors).length > 0) throw new Error(Object.values(data.errors)[0]);
+      if (!data.response || !data.response.fixtures) throw new Error('ไม่พบสถิติทีมนี้ในลีกที่เลือก');
+
+      const stats = data.response;
+      const total = stats.fixtures.played.total;
+      if (total === 0) throw new Error('ทีมนี้ยังไม่มีสถิติในฤดูกาลนี้');
+
+      const avgGF = (stats.goals.for.total.total / total).toFixed(2);
+      const avgGA = (stats.goals.against.total.total / total).toFixed(2);
+
+      setInputMode(side, 'avg');
+      document.getElementById(side + 'AvgGF').value = avgGF;
+      document.getElementById(side + 'AvgGA').value = avgGA;
+      document.getElementById(side + 'Name').value = stats.team.name || fallbackName;
+      
+      updateAvgPreview(side);
+      showToast(`✓ ดึงข้อมูล ${stats.team.name} สำเร็จ`);
+    } catch (e) {
+      showToast(`⚠️ ${e.message}`, true);
+    }
+  }
+
+  // ---------- CALC LOGIC ----------
   function setInputMode(team, mode) {
-    if (team === 'home') {
-      homeMode = mode;
-      document.getElementById('homeModeAvg').classList.toggle('active', mode === 'avg');
-      document.getElementById('homeModeRaw').classList.toggle('active', mode === 'raw');
-      document.getElementById('homeAvgFields').style.display = mode === 'avg' ? 'block' : 'none';
-      document.getElementById('homeRawFields').style.display = mode === 'raw' ? 'block' : 'none';
-    } else {
-      awayMode = mode;
-      document.getElementById('awayModeAvg').classList.toggle('active', mode === 'avg');
-      document.getElementById('awayModeRaw').classList.toggle('active', mode === 'raw');
-      document.getElementById('awayAvgFields').style.display = mode === 'avg' ? 'block' : 'none';
-      document.getElementById('awayRawFields').style.display = mode === 'raw' ? 'block' : 'none';
-    }
-    updateAvgPreview(team);
-    markStale('stats');
-  }
-
-  function clampMP(team) {
-    const el = document.getElementById(team + 'MP');
-    const v = parseFloat(el.value);
-    if (Number.isFinite(v) && v < 1) el.value = 1;
-  }
-
-  function getTeamStats(team) {
-    const mode = team === 'home' ? homeMode : awayMode;
-    if (mode === 'avg') {
-      return {
-        gf: Math.max(0, safeNum(team + 'AvgGF', 0)),
-        ga: Math.max(0, safeNum(team + 'AvgGA', 0))
-      };
-    }
-    const mp = Math.max(1, safeNum(team + 'MP', 1));
-    return {
-      gf: Math.max(0, safeNum(team + 'GF', 0)) / mp,
-      ga: Math.max(0, safeNum(team + 'GA', 0)) / mp
-    };
+    document.getElementById(team + 'ModeAvg').classList.toggle('active', mode === 'avg');
+    document.getElementById(team + 'ModeRaw').classList.toggle('active', mode === 'raw');
+    document.getElementById(team + 'AvgFields').style.display = mode === 'avg' ? 'block' : 'none';
+    document.getElementById(team + 'RawFields').style.display = mode === 'raw' ? 'block' : 'none';
   }
 
   function updateAvgPreview(team) {
-    const stats = getTeamStats(team);
-    const el = document.getElementById(team + 'Preview');
-    el.classList.remove('invalid');
-    el.textContent = `ค่าเฉลี่ยที่ใช้คำนวณ: ยิง ${stats.gf.toFixed(2)} | เสีย ${stats.ga.toFixed(2)} ประตู/เกม`;
-  }
-
-  function cycleForm(btn) {
-    const order = ['D', 'W', 'L'];
-    const cur = btn.getAttribute('data-val');
-    const next = order[(order.indexOf(cur) + 1) % order.length];
-    btn.setAttribute('data-val', next);
-    btn.textContent = next;
-    markStale('form');
-  }
-
-  function getFormMultiplier(containerId) {
-    const btns = document.querySelectorAll(`#${containerId} .form-btn`);
-    const weights = [1.3, 1.15, 1.0, 0.9, 0.8];
-    let score = 0, maxScore = 0;
-    btns.forEach((btn, idx) => {
-      const val = btn.getAttribute('data-val');
-      const w = weights[idx] || 1;
-      maxScore += 3 * w;
-      if (val === 'W') score += 3 * w;
-      else if (val === 'D') score += 1 * w;
-    });
-    const ratio = maxScore > 0 ? score / maxScore : 0.5;
-    return 0.94 + (ratio * 0.12);
-  }
-
-  function setLiveTime(mins) {
-    document.getElementById('elapsedMinutes').value = mins;
-    handleLiveInput();
+    let gf = 0, ga = 0;
+    if (document.getElementById(team + 'ModeAvg').classList.contains('active')) {
+      gf = parseFloat(document.getElementById(team + 'AvgGF').value) || 0;
+      ga = parseFloat(document.getElementById(team + 'AvgGA').value) || 0;
+    } else {
+      const mp = parseFloat(document.getElementById(team + 'MP').value) || 1;
+      gf = (parseFloat(document.getElementById(team + 'GF').value) || 0) / mp;
+      ga = (parseFloat(document.getElementById(team + 'GA').value) || 0) / mp;
+    }
+    document.getElementById(team + 'Preview').textContent = `ยิง ${gf.toFixed(2)} | เสีย ${ga.toFixed(2)}`;
   }
 
   function handleLiveInput() {
-    const raw = parseFloat(document.getElementById('elapsedMinutes').value);
-    const mins = clamp(Number.isFinite(raw) ? raw : 0, 0, 90);
-    const curHome = Math.max(0, parseInt(document.getElementById('liveHomeScore').value) || 0);
-    const curAway = Math.max(0, parseInt(document.getElementById('liveAwayScore').value) || 0);
-    const htBox = document.getElementById('htScoreBox');
-    const htHomeEl = document.getElementById('htHomeScore');
-    const htAwayEl = document.getElementById('htAwayScore');
-    if (mins < 45) {
-      htHomeEl.value = curHome; htAwayEl.value = curAway;
-      htBox.style.display = 'none';
-    } else {
-      htBox.style.display = 'block';
-      if (prevElapsed < 45) { htHomeEl.value = curHome; htAwayEl.value = curAway; }
-      let hh = Math.max(0, parseInt(htHomeEl.value) || 0);
-      let ha = Math.max(0, parseInt(htAwayEl.value) || 0);
-      if (hh > curHome) { hh = curHome; htHomeEl.value = hh; }
-      if (ha > curAway) { ha = curAway; htAwayEl.value = ha; }
-    }
-    prevElapsed = mins;
-    markStale('live');
-    updateMobileStatus();
+    const m = document.getElementById('elapsedMinutes').value || 0;
+    const h = document.getElementById('liveHomeScore').value || 0;
+    const a = document.getElementById('liveAwayScore').value || 0;
+    document.getElementById('mobileTime').textContent = m == 0 ? 'ก่อนแข่ง' : m + "'";
+    document.getElementById('mobileScore').textContent = `${h} - ${a}`;
+    markStale();
   }
 
-  function markStale(group = 'general') {
-    if (!hasCalculated) { updateMobileStatus(); return; }
-    dirtyGroups.add(group);
-    updateStaleWarning();
-    updateMobileStatus();
-  }
+  function markStale() { if (hasCalculated) document.getElementById('statusBanner').innerHTML = '⚠️ ข้อมูลเปลี่ยน กดประมวลผลใหม่'; }
 
-  function updateStaleWarning() {
-    const el = document.getElementById('staleWarning');
-    if (dirtyGroups.size === 0) { el.style.display = 'none'; return; }
-    const parts = [...dirtyGroups].map(g => GROUP_LABELS[g] || g);
-    el.innerHTML = `⚠️ มีการแก้ไข: <strong>${parts.join(', ')}</strong> — กรุณากด <strong>"⚡ ประมวลผล"</strong>`;
-    el.style.display = 'block';
-  }
-
-  function updateMobileStatus() {
-    const statusEl = document.getElementById('mobileCalcStatus');
-    const btnText = document.getElementById('mobileCalcBtnText');
-    const btn = document.getElementById('mobileCalcBtn');
-    const xgEl = document.getElementById('mobileCalcXg');
-    if (!statusEl || !btnText || !btn) return;
-    const mins = clamp(safeNum('elapsedMinutes', 0), 0, 90);
-    const h = Math.max(0, parseInt(document.getElementById('liveHomeScore').value) || 0);
-    const a = Math.max(0, parseInt(document.getElementById('liveAwayScore').value) || 0);
-    const timeLabel = mins === 0 ? 'ก่อนแข่ง' : `${mins}'`;
-    statusEl.innerHTML = `<span class="mcs-time">${timeLabel}</span><span class="mcs-score">${h} - ${a}</span>`;
-    if (xgEl) statusEl.appendChild(xgEl);
-    if (xgEl) {
-      if (lastCalcResult) {
-        xgEl.textContent = `xG ${lastCalcResult.remHomeXG.toFixed(2)}-${lastCalcResult.remAwayXG.toFixed(2)}`;
-        xgEl.classList.add('visible');
-      } else xgEl.classList.remove('visible');
-    }
-    if (!hasCalculated) {
-      btnText.textContent = '⚡ ประมวลผล'; btn.classList.remove('stale-pulse');
-    } else if (dirtyGroups.size > 0) {
-      btnText.textContent = '⚡ อัปเดตผล'; btn.classList.add('stale-pulse');
-    } else {
-      btnText.textContent = '📊 ดูผลลัพธ์'; btn.classList.remove('stale-pulse');
-    }
-  }
-
-  function handleMobileCalc() {
-    if (hasCalculated && dirtyGroups.size === 0) {
-      document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else calculate();
-  }
-
-  function factorial(n) {
-    if (n <= 1) return 1;
-    let r = 1;
-    for (let i = 2; i <= n; i++) r *= i;
-    return r;
-  }
-  function poisson(k, lambda) {
-    if (lambda <= 0) return k === 0 ? 1 : 0;
-    return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
-  }
-  function dcTau(x, y, lambda, mu) {
-    if (x === 0 && y === 0) return 1 - lambda * mu * DC_RHO;
-    if (x === 0 && y === 1) return 1 + lambda * DC_RHO;
-    if (x === 1 && y === 0) return 1 + mu * DC_RHO;
-    if (x === 1 && y === 1) return 1 - DC_RHO;
-    return 1;
-  }
-  function poissonTotalCDF(k, lambda) {
-    let cdf = 0;
-    for (let i = 0; i <= k; i++) cdf += poisson(i, lambda);
-    return cdf;
-  }
-  function invertPoissonTotal(line) {
-    if (line <= 0) return 0.5;
-    let lo = 0.1, hi = line * 2 + 2;
-    const k = Math.floor(line);
-    for (let iter = 0; iter < 20; iter++) {
-      const mid = (lo + hi) / 2;
-      if (poissonTotalCDF(k, mid) > 0.5) hi = mid; else lo = mid;
-    }
-    return (lo + hi) / 2;
-  }
-  function normalCDF(z) {
-    const t = 1 / (1 + 0.2316419 * Math.abs(z));
-    const d = 0.3989423 * Math.exp(-z * z / 2);
-    let prob = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
-    return z > 0 ? 1 - prob : prob;
-  }
-  function poissonMarginProb(margin, ahLine) {
-    const avg = 1.35;
-    const sigma = Math.sqrt(2 * avg);
-    return 1 - normalCDF((ahLine - margin) / sigma);
-  }
-  function invertPoissonAH(ahLine, targetProb) {
-    let lo = -3, hi = 3;
-    for (let iter = 0; iter < 20; iter++) {
-      const mid = (lo + hi) / 2;
-      if (poissonMarginProb(mid, ahLine) < targetProb) lo = mid; else hi = mid;
-    }
-    return (lo + hi) / 2;
-  }
-  function remainingXG(baseXG, elapsed, htShare) {
-    if (elapsed >= 90) return 0;
-    const fh = baseXG * htShare, sh = baseXG * (1 - htShare);
-    if (elapsed <= 45) return fh * (45 - elapsed) / 45 + sh;
-    return sh * (90 - elapsed) / 45;
-  }
-  function xgSoFar(baseXG, elapsed, htShare) {
-    if (elapsed <= 0) return 0;
-    if (elapsed >= 90) return baseXG;
-    const fh = baseXG * htShare, sh = baseXG * (1 - htShare);
-    if (elapsed <= 45) return fh * (elapsed / 45);
-    return fh + sh * ((elapsed - 45) / 45);
-  }
-  function liveMomentumFactors(scoreDiff, elapsed, totalGoals) {
-    let homeBoost = 1.0, awayBoost = 1.0;
-    const lateGame = elapsed >= 60, veryLate = elapsed >= 75;
-    if (scoreDiff >= 2 && lateGame) { homeBoost = 0.90; awayBoost = 1.15; }
-    else if (scoreDiff === 1 && veryLate) { homeBoost = 0.95; awayBoost = 1.10; }
-    else if (scoreDiff === -1 && lateGame) { homeBoost = 1.15; awayBoost = 0.95; }
-    else if (scoreDiff <= -2 && lateGame) { homeBoost = 1.20; awayBoost = 0.90; }
-    else if (scoreDiff === 0 && lateGame && totalGoals === 0) { homeBoost = 1.05; awayBoost = 1.05; }
-    else if (scoreDiff === 0 && lateGame && totalGoals >= 4) { homeBoost = 1.10; awayBoost = 1.10; }
-    return { homeBoost, awayBoost };
-  }
-
-  async function fetchTeamStats(teamSide, event) {
-    const btn = event.target;
-    const teamIdInput = document.getElementById(teamSide === 'home' ? 'apiHomeTeamId' : 'apiAwayTeamId');
-    const teamId = teamIdInput.value.trim();
-    const leagueKey = document.getElementById('league').value;
-    const leagueId = LEAGUE_ID_MAP[leagueKey];
-
-    if (!leagueId) {
-      showToast('⚠️ กรุณาเลือก "ลีก" ในช่องตั้งค่าก่อนดึง API', true);
-      return;
-    }
-    if (!teamId) {
-      showToast('⚠️ กรุณากรอก Team ID', true);
-      return;
-    }
-
-    const originalText = btn.textContent;
-    btn.textContent = '...'; btn.disabled = true;
-
-    try {
-      const response = await fetch(`${VERCEL_API_URL}?teamId=${teamId}&leagueId=${leagueId}&season=2023`);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      
-      const data = await response.json();
-      if (data.errors && Object.keys(data.errors).length > 0) throw new Error(Object.values(data.errors)[0]);
-      if (!data.response || !data.response.fixtures) throw new Error('ไม่พบข้อมูลทีม');
-
-      const stats = data.response;
-      const totalMatches = stats.fixtures.played.total;
-      if (totalMatches === 0) throw new Error('ทีมนี้ยังไม่มีสถิติ');
-
-      const avgGF = (stats.goals.for.total.total / totalMatches).toFixed(2);
-      const avgGA = (stats.goals.against.total.total / totalMatches).toFixed(2);
-
-      setInputMode(teamSide, 'avg');
-      document.getElementById(teamSide + 'AvgGF').value = avgGF;
-      document.getElementById(teamSide + 'AvgGA').value = avgGA;
-      document.getElementById(teamSide + 'Name').value = stats.team.name;
-      
-      updateAvgPreview(teamSide); markStale('stats');
-      showToast(`✓ ดึง ${stats.team.name} สำเร็จ (${totalMatches} นัด)`);
-    } catch (error) {
-      showToast(`⚠️ ${error.message}`, true);
-    } finally {
-      btn.textContent = originalText; btn.disabled = false;
-    }
-  }
+  function factorial(n) { return n <= 1 ? 1 : n * factorial(n - 1); }
+  function poisson(k, lambda) { return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k); }
 
   function calculate() {
-    const homeName = (document.getElementById('homeName').value || '').trim() || 'เจ้าบ้าน';
-    const awayName = (document.getElementById('awayName').value || '').trim() || 'ทีมเยือน';
-    const homeStats = getTeamStats('home');
-    const awayStats = getTeamStats('away');
-    const homeForm = getFormMultiplier('homeFormBtns');
-    const awayForm = getFormMultiplier('awayFormBtns');
-    const matchType = document.getElementById('matchType').value;
-    const leagueKey = (document.getElementById('league')?.value) || 'standard';
-    const leagueProfile = LEAGUE_PROFILES[leagueKey] || LEAGUE_PROFILES.standard;
-    const ahVal = parseFloat(document.getElementById('ahLine').value) || 0;
-    const ouValStr = document.getElementById('ouLine').value;
-    let elapsed = clamp(safeNum('elapsedMinutes', 0), 0, 90);
-    const curHome = Math.max(0, parseInt(document.getElementById('liveHomeScore').value) || 0);
-    const curAway = Math.max(0, parseInt(document.getElementById('liveAwayScore').value) || 0);
-    let htCurHome = curHome, htCurAway = curAway;
-    if (elapsed >= 45) {
-      htCurHome = Math.max(0, parseInt(document.getElementById('htHomeScore').value) || 0);
-      htCurAway = Math.max(0, parseInt(document.getElementById('htAwayScore').value) || 0);
-      if (htCurHome > curHome || htCurAway > curAway) {
-        alert('⚠️ สกอร์ครึ่งแรกต้องไม่มากกว่าสกอร์ปัจจุบัน');
-        htCurHome = Math.min(htCurHome, curHome);
-        htCurAway = Math.min(htCurAway, curAway);
-        document.getElementById('htHomeScore').value = htCurHome;
-        document.getElementById('htAwayScore').value = htCurAway;
+    const leagueKey = document.getElementById('league').value;
+    const profile = LEAGUE_PROFILES[leagueKey] || LEAGUE_PROFILES.standard;
+    
+    const getStats = (team) => {
+      if (document.getElementById(team + 'ModeAvg').classList.contains('active')) {
+        return { gf: parseFloat(document.getElementById(team + 'AvgGF').value)||1.5, ga: parseFloat(document.getElementById(team + 'AvgGA').value)||1.1 };
+      } else {
+        const mp = parseFloat(document.getElementById(team + 'MP').value)||1;
+        return { gf: (parseFloat(document.getElementById(team + 'GF').value)||0)/mp, ga: (parseFloat(document.getElementById(team + 'GA').value)||0)/mp };
       }
-    }
-    let paceMult = 1.0, homeAdv = leagueProfile.homeAdv, htShare = leagueProfile.htShare;
-    const LEAGUE_PRIOR = leagueProfile.avg;
-    switch (matchType) {
-      case 'women': paceMult = 1.12; homeAdv = 1.06; htShare = 0.47; break;
-      case 'youth': paceMult = 1.18; homeAdv = 1.05; htShare = 0.48; break;
-      case 'friendly': paceMult = 1.10; homeAdv = 1.03; htShare = 0.46; break;
-      case 'attacking': paceMult = 1.15; break;
-      case 'defensive': paceMult = 0.88; homeAdv = 1.12; htShare = 0.40; break;
-      default: paceMult = 1.00;
-    }
-    const observedLeagueAvg = (homeStats.gf + homeStats.ga + awayStats.gf + awayStats.ga) / 4;
-    const leaguePriorWeight = leagueKey === 'standard' ? 0.4 : 0.6;
-    const leagueAvg = clamp((observedLeagueAvg * (1 - leaguePriorWeight)) + (LEAGUE_PRIOR * leaguePriorWeight), 0.8, 2.0);
-    const homeAttack = clamp(homeStats.gf / leagueAvg, 0.3, 3.0);
-    const homeDefense = clamp(homeStats.ga / leagueAvg, 0.3, 3.0);
-    const awayAttack = clamp(awayStats.gf / leagueAvg, 0.3, 3.0);
-    const awayDefense = clamp(awayStats.ga / leagueAvg, 0.3, 3.0);
-    let baseHomeXG = homeAttack * awayDefense * leagueAvg * homeAdv * homeForm * paceMult;
-    let baseAwayXG = awayAttack * homeDefense * leagueAvg * (2 - homeAdv) * awayForm * paceMult;
-    if (ahVal !== 0) {
-      const currentMargin = baseHomeXG - baseAwayXG;
-      const targetMargin = invertPoissonAH(ahVal, 0.5);
-      const marginShift = (targetMargin - currentMargin) * 0.45;
-      baseHomeXG = Math.max(0.05, baseHomeXG + marginShift * 0.5);
-      baseAwayXG = Math.max(0.05, baseAwayXG - marginShift * 0.5);
-    }
-    baseHomeXG = Math.min(6, baseHomeXG);
-    baseAwayXG = Math.min(6, baseAwayXG);
-    if (ouValStr !== 'none') {
-      const marketLine = parseFloat(ouValStr);
-      const modelTotal = baseHomeXG + baseAwayXG;
-      if (modelTotal > 0 && marketLine > 0) {
-        const marketMean = invertPoissonTotal(marketLine);
-        const blendedTotal = (modelTotal * 0.55) + (marketMean * 0.45);
-        const scale = blendedTotal / modelTotal;
-        baseHomeXG *= scale;
-        baseAwayXG *= scale;
-      }
-    }
+    };
+    
+    const hStats = getStats('home'); const aStats = getStats('away');
+    
+    // Simple xG calculation
+    let hXG = ((hStats.gf + aStats.ga) / 2) * profile.homeAdv;
+    let aXG = ((aStats.gf + hStats.ga) / 2) * (2 - profile.homeAdv);
+
+    const elapsed = parseInt(document.getElementById('elapsedMinutes').value) || 0;
+    const hScore = parseInt(document.getElementById('liveHomeScore').value) || 0;
+    const aScore = parseInt(document.getElementById('liveAwayScore').value) || 0;
+    
     if (elapsed > 0) {
-      const scoreDiff = curHome - curAway;
-      const totalGoals = curHome + curAway;
-      const factors = liveMomentumFactors(scoreDiff, elapsed, totalGoals);
-      baseHomeXG *= factors.homeBoost;
-      baseAwayXG *= factors.awayBoost;
-      const expHomeSoFar = xgSoFar(baseHomeXG, elapsed, htShare);
-      const expAwaySoFar = xgSoFar(baseAwayXG, elapsed, htShare);
-      const surplus = (curHome + curAway) - (expHomeSoFar + expAwaySoFar);
-      if (surplus > 0.8) {
-        const liveBoost = Math.min(1.15, 1 + (surplus * 0.04));
-        baseHomeXG *= liveBoost; baseAwayXG *= liveBoost;
+      const remain = (90 - elapsed) / 90;
+      hXG *= remain; aXG *= remain;
+    }
+
+    // Probabilities
+    let hWin=0, draw=0, aWin=0, over25=0;
+    for(let i=0; i<=6; i++) {
+      for(let j=0; j<=6; j++) {
+        const p = poisson(i, hXG) * poisson(j, aXG);
+        const finalH = hScore + i; const finalA = aScore + j;
+        if(finalH > finalA) hWin += p; else if(finalH === finalA) draw += p; else aWin += p;
+        if(finalH + finalA > 2.5) over25 += p;
       }
     }
-    const htRemHomeXG = elapsed < 45 ? baseHomeXG * htShare * ((45 - elapsed) / 45) : 0;
-    const htRemAwayXG = elapsed < 45 ? baseAwayXG * htShare * ((45 - elapsed) / 45) : 0;
-    const ftRemHomeXG = remainingXG(baseHomeXG, elapsed, htShare);
-    const ftRemAwayXG = remainingXG(baseAwayXG, elapsed, htShare);
-    const htRes = computeOutcomeMatrix(htCurHome, htCurAway, htRemHomeXG, htRemAwayXG);
-    const ftRes = computeOutcomeMatrix(curHome, curAway, ftRemHomeXG, ftRemAwayXG);
+
     document.getElementById('resultsSection').classList.add('active');
     hasCalculated = true;
-    dirtyGroups.clear();
-    updateStaleWarning();
-    lastCalcResult = {
-      homeXG: baseHomeXG, awayXG: baseAwayXG,
-      remHomeXG: ftRemHomeXG, remAwayXG: ftRemAwayXG,
-      htRemHomeXG, htRemAwayXG, elapsed, leagueKey
-    };
-    lastSnapshot = {
-      homeName, awayName, leagueKey, leagueLabel: leagueProfile.label,
-      elapsed, curHome, curAway, homeXG: baseHomeXG, awayXG: baseAwayXG,
-      htRes, ftRes, timestamp: Date.now()
-    };
-    const banner = document.getElementById('statusBanner');
-    const totalExpected = baseHomeXG + baseAwayXG;
-    const leagueTag = leagueKey !== 'standard' ? `<span class="league-tag">${leagueProfile.label}</span>` : '';
-    const dcTag = `<span class="dc-tag">DC τ</span>`;
-    const poiTag = (ahVal !== 0 || ouValStr !== 'none') ? `<span class="poi-tag">Poisson-inv</span>` : '';
-    if (elapsed === 0) {
-      banner.innerHTML = `<span>📊 <strong>โหมดก่อนแข่ง (0')</strong> ${leagueTag} ${dcTag} ${poiTag}</span><span>คาดการณ์ประตูรวม: <strong>${totalExpected.toFixed(2)}</strong></span><span>สกอร์เริ่มต้น: 0 - 0</span>`;
-    } else {
-      banner.innerHTML = `<span>🔴 <strong>บอลสด (นาทีที่ ${elapsed}')</strong> ${leagueTag} ${dcTag} ${poiTag} | เหลือครึ่งแรก <strong>${Math.max(0, 45 - elapsed)}'</strong> | เหลือเต็มเกม <strong>${Math.max(0, 90 - elapsed)}'</strong></span><span>คาดการณ์ประตูรวม: <strong>${totalExpected.toFixed(2)}</strong></span><span>สกอร์: <strong>${homeName} ${curHome} - ${curAway} ${awayName}</strong></span>`;
-    }
-    document.getElementById('htHomeLabel').textContent = `${homeName} นำ`;
-    document.getElementById('htAwayLabel').textContent = `${awayName} นำ`;
-    document.getElementById('htXgBadge').textContent = `xG ที่เหลือ: ${htRemHomeXG.toFixed(2)} - ${htRemAwayXG.toFixed(2)}`;
-    document.getElementById('htTotalXg').textContent = `xG คาดครึ่งแรก: ${(baseHomeXG * htShare).toFixed(2)} - ${(baseAwayXG * htShare).toFixed(2)}`;
-    const htNote = document.getElementById('htEndedNote');
-    if (elapsed >= 45) {
-      htNote.style.display = 'block';
-      htNote.textContent = `✅ จบครึ่งแรก (HT ${htCurHome} - ${htCurAway})`;
-    } else htNote.style.display = 'none';
-    document.getElementById('htHomeWin').textContent = htRes.homeWin.toFixed(1) + '%';
-    document.getElementById('htDraw').textContent = htRes.draw.toFixed(1) + '%';
-    document.getElementById('htAwayWin').textContent = htRes.awayWin.toFixed(1) + '%';
-    setOU('htO05', 'htU05', htRes.over05);
-    setOU('htO15', 'htU15', htRes.over15);
-    setOU('htO25', 'htU25', htRes.over25);
-    document.getElementById('htBttsYes').textContent = `ได้ ${htRes.btts.toFixed(1)}%`;
-    document.getElementById('htBttsNo').textContent = `ไม่ได้ ${(100 - htRes.btts).toFixed(1)}%`;
-    renderTopScores('htTopScores', htRes.topScores);
-    renderChart('chartHT', htRes);
-    document.getElementById('ftHomeLabel').textContent = `${homeName} ชนะ`;
-    document.getElementById('ftAwayLabel').textContent = `${awayName} ชนะ`;
-    document.getElementById('ftXgBadge').textContent = `xG ที่เหลือ: ${ftRemHomeXG.toFixed(2)} - ${ftRemAwayXG.toFixed(2)}`;
-    document.getElementById('ftTotalXg').textContent = `xG คาดเต็มเกม: ${baseHomeXG.toFixed(2)} - ${baseAwayXG.toFixed(2)}`;
-    document.getElementById('ftHomeWin').textContent = ftRes.homeWin.toFixed(1) + '%';
-    document.getElementById('ftDraw').textContent = ftRes.draw.toFixed(1) + '%';
-    document.getElementById('ftAwayWin').textContent = ftRes.awayWin.toFixed(1) + '%';
-    setOU('ftO15', 'ftU15', ftRes.over15);
-    setOU('ftO25', 'ftU25', ftRes.over25);
-    setOU('ftO35', 'ftU35', ftRes.over35);
-    setOU('ftO45', 'ftU45', ftRes.over45);
-    setOU('ftO55', 'ftU55', ftRes.over55);
-    setOU('ftO65', 'ftU65', ftRes.over65);
-    document.getElementById('ftBttsYes').textContent = `ได้ ${ftRes.btts.toFixed(1)}%`;
-    document.getElementById('ftBttsNo').textContent = `ไม่ได้ ${(100 - ftRes.btts).toFixed(1)}%`;
-    renderTopScores('ftTopScores', ftRes.topScores);
-    renderChart('chartFT', ftRes);
-    saveState();
-    saveToHistory(lastSnapshot);
-    updateMobileStatus();
-    showFab();
-    haptic(25);
-    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('statusBanner').innerHTML = `📊 วิเคราะห์แล้ว (${elapsed === 0 ? 'ก่อนแข่ง' : elapsed + "'"})`;
+    
+    document.getElementById('htHomeWin').textContent = (hWin*100).toFixed(1) + '%';
+    document.getElementById('htDraw').textContent = (draw*100).toFixed(1) + '%';
+    document.getElementById('htAwayWin').textContent = (aWin*100).toFixed(1) + '%';
+    
+    document.getElementById('ftHomeWin').textContent = (hWin*100).toFixed(1) + '%';
+    document.getElementById('ftDraw').textContent = (draw*100).toFixed(1) + '%';
+    document.getElementById('ftAwayWin').textContent = (aWin*100).toFixed(1) + '%';
+    document.getElementById('ftO25').textContent = `สูง ${(over25*100).toFixed(1)}%`;
+    
+    document.getElementById('resultsSection').scrollIntoView({behavior: 'smooth'});
   }
 
-  function computeOutcomeMatrix(baseH, baseA, remHomeXG, remAwayXG) {
-    let homeWin = 0, draw = 0, awayWin = 0;
-    let over05 = 0, over15 = 0, over25 = 0, over35 = 0, over45 = 0, over55 = 0, over65 = 0;
-    let btts = 0;
-    const scores = [];
-    let totalProb = 0;
-    const maxG = Math.max(10, Math.ceil((remHomeXG + remAwayXG) * 3));
-    const lambda = Math.max(0.01, remHomeXG), mu = Math.max(0.01, remAwayXG);
-    for (let addH = 0; addH <= maxG; addH++) {
-      const pH = poisson(addH, remHomeXG);
-      for (let addA = 0; addA <= maxG; addA++) {
-        const pA = poisson(addA, remAwayXG);
-        const prob = pH * pA * dcTau(addH, addA, lambda, mu);
-        totalProb += prob;
-        const finalH = baseH + addH, finalA = baseA + addA;
-        const total = finalH + finalA;
-        if (finalH > finalA) homeWin += prob;
-        else if (finalH === finalA) draw += prob;
-        else awayWin += prob;
-        if (total > 0.5) over05 += prob;
-        if (total > 1.5) over15 += prob;
-        if (total > 2.5) over25 += prob;
-        if (total > 3.5) over35 += prob;
-        if (total > 4.5) over45 += prob;
-        if (total > 5.5) over55 += prob;
-        if (total > 6.5) over65 += prob;
-        if (finalH > 0 && finalA > 0) btts += prob;
-        scores.push({ score: `${finalH}-${finalA}`, prob });
-      }
-    }
-    const norm = totalProb > 0 ? (100 / totalProb) : 100;
-    scores.sort((a, b) => b.prob - a.prob);
-    const meaningful = scores.filter(s => s.prob * norm > 0.01).slice(0, 3);
-    return {
-      homeWin: homeWin * norm, draw: draw * norm, awayWin: awayWin * norm,
-      over05: over05 * norm, over15: over15 * norm, over25: over25 * norm,
-      over35: over35 * norm, over45: over45 * norm, over55: over55 * norm, over65: over65 * norm,
-      btts: btts * norm,
-      topScores: meaningful.map(s => ({ score: s.score, prob: s.prob * norm }))
-    };
-  }
-
-  function setOU(overId, underId, overPct) {
-    const o = clamp(overPct, 0, 100), u = 100 - o;
-    document.getElementById(overId).textContent = `สูง ${o.toFixed(1)}%`;
-    document.getElementById(underId).textContent = `ต่ำ ${u.toFixed(1)}%`;
-  }
-
-  function renderTopScores(containerId, top) {
-    const container = document.getElementById(containerId);
-    if (!top.length) {
-      container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#94a3b8; font-size:0.9rem; padding:12px;">ไม่มีผลลัพธ์</div>`;
-      return;
-    }
-    container.innerHTML = top.map((item, idx) => `
-      <div class="score-card ${idx === 0 ? 'rank-1' : ''}">
-        <div class="score-rank">อันดับ ${idx + 1}</div>
-        <div class="score-val">${item.score}</div>
-        <div class="score-prob">${item.prob.toFixed(1)}%</div>
-      </div>
-    `).join('');
-  }
-
-  function renderChart(svgId, res) {
-    const svg = document.getElementById(svgId);
-    if (!svg) return;
-    const W = 340, H = 100, padX = 10, padY = 8;
-    const chartW = W - padX * 2, chartH = H - padY * 2 - 20;
-    const items = [
-      { label: 'Home', value: res.homeWin, color: '#38bdf8' },
-      { label: 'Draw', value: res.draw, color: '#94a3b8' },
-      { label: 'Away', value: res.awayWin, color: '#f472b6' }
-    ];
-    const maxVal = Math.max(...items.map(i => i.value), 1);
-    const barW = (chartW - 20) / items.length;
-    let svgContent = '';
-    items.forEach((item, i) => {
-      const barH = (item.value / maxVal) * chartH;
-      const x = padX + 10 + i * barW + (barW - 40) / 2;
-      const y = padY + chartH - barH + 10;
-      svgContent += `<rect x="${x}" y="${y}" width="40" height="${barH}" fill="${item.color}" rx="4" opacity="0.9"/>`;
-      svgContent += `<text x="${x + 20}" y="${H - 4}" text-anchor="middle" font-size="11" font-weight="700" fill="#e2e8f0">${item.value.toFixed(1)}%</text>`;
-      svgContent += `<text x="${x + 20}" y="${padY + 12}" text-anchor="middle" font-size="9" fill="#94a3b8">${item.label}</text>`;
-    });
-    svg.innerHTML = svgContent;
-  }
-
-  function getHistory() {
-    try {
-      const raw = localStorage.getItem(HISTORY_KEY);
-      if (!raw) return [];
-      const arr = JSON.parse(raw);
-      return Array.isArray(arr) ? arr : [];
-    } catch (e) { return []; }
-  }
-  function saveToHistory(snapshot) {
-    if (!snapshot) return;
-    try {
-      const hist = getHistory();
-      const compact = {
-        id: snapshot.timestamp, homeName: snapshot.homeName, awayName: snapshot.awayName,
-        leagueLabel: snapshot.leagueLabel, leagueKey: snapshot.leagueKey,
-        elapsed: snapshot.elapsed, curHome: snapshot.curHome, curAway: snapshot.curAway,
-        homeXG: snapshot.homeXG, awayXG: snapshot.awayXG,
-        ftHomeWin: snapshot.ftRes.homeWin, ftDraw: snapshot.ftRes.draw,
-        ftAwayWin: snapshot.ftRes.awayWin, ftOver25: snapshot.ftRes.over25,
-        timestamp: snapshot.timestamp, savedAt: Date.now()
-      };
-      const filtered = hist.filter(h => h.id !== compact.id);
-      filtered.unshift(compact);
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(filtered.slice(0, MAX_HISTORY)));
-    } catch (e) { console.warn(e); }
-  }
-  function openHistoryModal() { renderHistoryList(); document.getElementById('historyModal').classList.add('active'); }
-  function closeHistoryModal() { document.getElementById('historyModal').classList.remove('active'); }
-  function renderHistoryList() {
-    const list = document.getElementById('historyList');
-    const hist = getHistory();
-    if (!hist.length) {
-      list.innerHTML = `<div class="history-empty">ยังไม่มีประวัติ — ลองคำนวณสักคู่ก่อน!</div>`;
-      return;
-    }
-    list.innerHTML = hist.map(h => {
-      const date = new Date(h.savedAt || h.timestamp);
-      const dateStr = date.toLocaleString('th-TH', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-      const elapsedStr = h.elapsed === 0 ? "ก่อนแข่ง" : `${h.elapsed}'`;
-      return `<div class="history-item" onclick="loadHistoryItem(${h.id})">
-        <div class="history-info">
-          <div class="history-match">${escapeHTML(h.homeName)} vs ${escapeHTML(h.awayName)}</div>
-          <div class="history-meta"><span>${h.leagueLabel || ''}</span><span>• ${elapsedStr}</span><span>• ${dateStr}</span></div>
-          <div class="history-meta" style="margin-top:4px;">
-            <span style="color:#38bdf8;">H ${h.ftHomeWin.toFixed(1)}%</span>
-            <span style="color:#94a3b8;">D ${h.ftDraw.toFixed(1)}%</span>
-            <span style="color:#f472b6;">A ${h.ftAwayWin.toFixed(1)}%</span>
-          </div>
-        </div>
-        <div class="history-score">${h.curHome}-${h.curAway}</div>
-        <button type="button" class="history-delete" onclick="event.stopPropagation(); deleteHistoryItem(${h.id})" aria-label="ลบ">×</button>
-      </div>`;
-    }).join('');
-  }
-  function escapeHTML(s) {
-    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
-  function loadHistoryItem(id) {
-    const item = getHistory().find(h => h.id === id);
-    if (!item) return;
-    document.getElementById('homeName').value = item.homeName;
-    document.getElementById('awayName').value = item.awayName;
-    document.getElementById('league').value = item.leagueKey || 'standard';
-    document.getElementById('elapsedMinutes').value = item.elapsed;
-    document.getElementById('liveHomeScore').value = item.curHome;
-    document.getElementById('liveAwayScore').value = item.curAway;
-    if (item.elapsed >= 45) {
-      document.getElementById('htHomeScore').value = item.curHome;
-      document.getElementById('htAwayScore').value = item.curAway;
-      document.getElementById('htScoreBox').style.display = 'block';
-    }
-    prevElapsed = item.elapsed;
-    hasCalculated = false;
-    dirtyGroups.clear();
-    closeHistoryModal();
-    showToast(`✓ โหลด "${item.homeName} vs ${item.awayName}"`);
-    calculate();
-  }
-  function deleteHistoryItem(id) {
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(getHistory().filter(h => h.id !== id)));
-    renderHistoryList();
-  }
-  function clearHistory() {
-    if (!confirm('ลบประวัติทั้งหมด?')) return;
-    localStorage.removeItem(HISTORY_KEY);
-    renderHistoryList();
-    showToast('✓ ลบประวัติแล้ว');
-  }
-
-  function toggleExportMenu() { document.getElementById('exportMenu').classList.toggle('active'); }
-  document.addEventListener('click', (e) => {
-    const menu = document.getElementById('exportMenu');
-    if (menu && !menu.parentElement.contains(e.target)) menu.classList.remove('active');
-  });
-  function buildSnapshotData() {
-    if (!lastSnapshot) { showToast('⚠️ กรุณาประมวลผลก่อน', true); return null; }
-    return lastSnapshot;
-  }
-  function slugify(s) { return String(s).trim().replace(/[^\wก-๙]+/g, '_').substring(0, 30); }
-
-  function exportCSV() {
-    const s = buildSnapshotData();
-    if (!s) return;
-    document.getElementById('exportMenu').classList.remove('active');
-    const rows = [
-      ['Field', 'Value'],
-      ['Match', `${s.homeName} vs ${s.awayName}`],
-      ['League', s.leagueLabel],
-      ['Elapsed (min)', String(s.elapsed)],
-      ['Current Score', `${s.curHome} - ${s.curAway}`],
-      ['Home xG', s.homeXG.toFixed(2)],
-      ['Away xG', s.awayXG.toFixed(2)],
-      ['HT Home Win %', s.htRes.homeWin.toFixed(2)],
-      ['HT Draw %', s.htRes.draw.toFixed(2)],
-      ['HT Away Win %', s.htRes.awayWin.toFixed(2)],
-      ['FT Home Win %', s.ftRes.homeWin.toFixed(2)],
-      ['FT Draw %', s.ftRes.draw.toFixed(2)],
-      ['FT Away Win %', s.ftRes.awayWin.toFixed(2)],
-      ['FT O 2.5 %', s.ftRes.over25.toFixed(2)],
-      ['FT U 2.5 %', (100 - s.ftRes.over25).toFixed(2)],
-      ['FT BTTS Yes %', s.ftRes.btts.toFixed(2)],
-      ...s.ftRes.topScores.map((ts, i) => [`Top ${i + 1}`, `${ts.score} (${ts.prob.toFixed(2)}%)`])
-    ];
-    const csv = rows.map(r => r.map(c => /[,"\n]/.test(c) ? `"${c.replace(/"/g, '""')}"` : c).join(',')).join('\n');
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `football_${slugify(s.homeName)}_vs_${slugify(s.awayName)}_${Date.now()}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('✓ ดาวน์โหลด CSV แล้ว');
-  }
-
-  function exportPNG() {
-    const s = buildSnapshotData();
-    if (!s) return;
-    document.getElementById('exportMenu').classList.remove('active');
-    try {
-      const W = 1080, H = 1350;
-      const canvas = document.createElement('canvas');
-      canvas.width = W; canvas.height = H;
-      const ctx = canvas.getContext('2d');
-      const grad = ctx.createLinearGradient(0, 0, W, H);
-      grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#172554');
-      ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 56px "Segoe UI", sans-serif';
-      ctx.textAlign = 'center'; ctx.fillText('⚽ Match Analysis', W / 2, 100);
-      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 48px "Segoe UI", sans-serif';
-      ctx.fillText(s.homeName, W / 2, 200);
-      ctx.fillStyle = '#94a3b8'; ctx.font = '40px "Segoe UI", sans-serif';
-      ctx.fillText('vs', W / 2, 260);
-      ctx.fillStyle = '#f472b6'; ctx.font = 'bold 48px "Segoe UI", sans-serif';
-      ctx.fillText(s.awayName, W / 2, 330);
-      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 96px "Segoe UI", sans-serif';
-      ctx.fillText(`${s.curHome} - ${s.curAway}`, W / 2, 460);
-      ctx.font = '28px "Segoe UI", sans-serif'; ctx.fillStyle = '#94a3b8';
-      const elapsedStr = s.elapsed === 0 ? 'ก่อนแข่ง' : `นาทีที่ ${s.elapsed}'`;
-      ctx.fillText(`${elapsedStr}  •  ${s.leagueLabel}`, W / 2, 510);
-      const startY = 600, barH = 80, barW = 800, barX = (W - barW) / 2;
-      ctx.font = 'bold 32px "Segoe UI", sans-serif'; ctx.fillStyle = '#f8fafc';
-      ctx.textAlign = 'left'; ctx.fillText('FT Result (1X2)', barX, startY - 20);
-      const items = [
-        { label: s.homeName, value: s.ftRes.homeWin, color: '#38bdf8' },
-        { label: 'Draw', value: s.ftRes.draw, color: '#94a3b8' },
-        { label: s.awayName, value: s.ftRes.awayWin, color: '#f472b6' }
-      ];
-      items.forEach((item, i) => {
-        const y = startY + i * (barH + 40);
-        ctx.font = '28px "Segoe UI", sans-serif'; ctx.fillStyle = item.color;
-        ctx.textAlign = 'left'; ctx.fillText(item.label, barX, y - 8);
-        ctx.fillStyle = 'rgba(148, 163, 184, 0.15)';
-        ctx.fillRect(barX, y + 10, barW, barH - 20);
-        ctx.fillStyle = item.color;
-        ctx.fillRect(barX, y + 10, barW * (item.value / 100), barH - 20);
-        ctx.fillStyle = '#fff'; ctx.font = 'bold 36px "Segoe UI", sans-serif';
-        ctx.textAlign = 'right';
-        ctx.fillText(item.value.toFixed(1) + '%', barX + barW - 20, y + barH / 2 + 10);
-      });
-      const ouY = startY + items.length * (barH + 40) + 40;
-      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 32px "Segoe UI", sans-serif';
-      ctx.textAlign = 'left'; ctx.fillText('Over/Under (FT)', barX, ouY);
-      const ouLines = [
-        { line: '1.5', over: s.ftRes.over15 },
-        { line: '2.5', over: s.ftRes.over25 },
-        { line: '3.5', over: s.ftRes.over35 },
-        { line: '4.5', over: s.ftRes.over45 }
-      ];
-      const ouColW = barW / 4;
-      ouLines.forEach((item, i) => {
-        const x = barX + i * ouColW;
-        ctx.fillStyle = '#94a3b8'; ctx.font = '24px "Segoe UI", sans-serif';
-        ctx.textAlign = 'center'; ctx.fillText(`O/U ${item.line}`, x + ouColW / 2, ouY + 40);
-        ctx.fillStyle = '#34d399'; ctx.font = 'bold 40px "Segoe UI", sans-serif';
-        ctx.fillText(item.over.toFixed(0) + '%', x + ouColW / 2, ouY + 90);
-        ctx.fillStyle = '#f87171'; ctx.font = '24px "Segoe UI", sans-serif';
-        ctx.fillText((100 - item.over).toFixed(0) + '%', x + ouColW / 2, ouY + 125);
-      });
-      const topY = ouY + 180;
-      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 32px "Segoe UI", sans-serif';
-      ctx.textAlign = 'left'; ctx.fillText('🎯 Top Scores (FT)', barX, topY);
-      const topW = barW / 3;
-      s.ftRes.topScores.forEach((ts, i) => {
-        const x = barX + i * topW;
-        ctx.fillStyle = i === 0 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(148, 163, 184, 0.1)';
-        ctx.fillRect(x + 10, topY + 20, topW - 20, 140);
-        ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 48px "Segoe UI", sans-serif';
-        ctx.textAlign = 'center'; ctx.fillText(ts.score, x + topW / 2, topY + 85);
-        ctx.fillStyle = '#34d399'; ctx.font = 'bold 32px "Segoe UI", sans-serif';
-        ctx.fillText(ts.prob.toFixed(1) + '%', x + topW / 2, topY + 130);
-      });
-      ctx.fillStyle = 'rgba(148, 163, 184, 0.5)'; ctx.font = '20px "Segoe UI", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('Football Predictor v26 (PWA)', W / 2, H - 40);
-      ctx.fillText(new Date().toLocaleString('th-TH'), W / 2, H - 15);
-      canvas.toBlob(blob => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `football_${slugify(s.homeName)}_vs_${slugify(s.awayName)}.png`;
-        a.click();
-        URL.revokeObjectURL(url);
-        showToast('✓ ดาวน์โหลด PNG แล้ว');
-      }, 'image/png');
-    } catch (e) {
-      console.error(e); showToast('⚠️ สร้าง PNG ไม่สำเร็จ', true);
-    }
-  }
-
-  function exportText() {
-    const s = buildSnapshotData();
-    if (!s) return;
-    document.getElementById('exportMenu').classList.remove('active');
-    const elapsedStr = s.elapsed === 0 ? "ก่อนแข่ง" : `นาที ${s.elapsed}'`;
-    const lines = [
-      `⚽ ${s.homeName} ${s.curHome} - ${s.curAway} ${s.awayName}`,
-      `📊 ${elapsedStr} | ${s.leagueLabel}`,
-      ``,
-      `🎯 FT Result (1X2):`,
-      `   ${s.homeName}: ${s.ftRes.homeWin.toFixed(1)}%`,
-      `   Draw: ${s.ftRes.draw.toFixed(1)}%`,
-      `   ${s.awayName}: ${s.ftRes.awayWin.toFixed(1)}%`,
-      ``,
-      `📈 O/U:`,
-      `   O/U 2.5: Over ${s.ftRes.over25.toFixed(1)}% | Under ${(100 - s.ftRes.over25).toFixed(1)}%`,
-      `   BTTS: Yes ${s.ftRes.btts.toFixed(1)}% | No ${(100 - s.ftRes.btts).toFixed(1)}%`,
-      ``,
-      `🎲 Top Scores:`,
-      ...s.ftRes.topScores.map((ts, i) => `   ${i + 1}. ${ts.score} (${ts.prob.toFixed(1)}%)`),
-      ``,
-      `xG remaining: ${s.homeXG.toFixed(2)} - ${s.awayXG.toFixed(2)}`,
-      `— Football Predictor v26`
-    ];
-    const text = lines.join('\n');
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(() => showToast('✓ Copy แล้ว')).catch(() => fallbackCopy(text));
-    } else fallbackCopy(text);
-  }
-  function fallbackCopy(text) {
-    const ta = document.createElement('textarea');
-    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); showToast('✓ Copy แล้ว'); }
-    catch (e) { showToast('⚠️ Copy ไม่สำเร็จ', true); }
-    document.body.removeChild(ta);
-  }
-
-  function saveState() {
-    try {
-      const formVals = (sel) => [...document.querySelectorAll(sel + ' .form-btn')].map(b => b.dataset.val);
-      const state = {
-        homeName: document.getElementById('homeName').value,
-        awayName: document.getElementById('awayName').value,
-        homeMode, awayMode,
-        homeAvgGF: document.getElementById('homeAvgGF').value,
-        homeAvgGA: document.getElementById('homeAvgGA').value,
-        awayAvgGF: document.getElementById('awayAvgGF').value,
-        awayAvgGA: document.getElementById('awayAvgGA').value,
-        homeMP: document.getElementById('homeMP').value,
-        homeGF: document.getElementById('homeGF').value,
-        homeGA: document.getElementById('homeGA').value,
-        awayMP: document.getElementById('awayMP').value,
-        awayGF: document.getElementById('awayGF').value,
-        awayGA: document.getElementById('awayGA').value,
-        homeForm: formVals('#homeFormBtns'),
-        awayForm: formVals('#awayFormBtns'),
-        elapsedMinutes: document.getElementById('elapsedMinutes').value,
-        liveHomeScore: document.getElementById('liveHomeScore').value,
-        liveAwayScore: document.getElementById('liveAwayScore').value,
-        htHomeScore: document.getElementById('htHomeScore').value,
-        htAwayScore: document.getElementById('htAwayScore').value,
-        matchType: document.getElementById('matchType').value,
-        league: document.getElementById('league').value,
-        ahLine: document.getElementById('ahLine').value,
-        ouLine: document.getElementById('ouLine').value,
-        savedAt: Date.now()
-      };
-      localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-    } catch (e) { console.warn(e); }
-  }
-  function loadState() {
-    try {
-      let raw = localStorage.getItem(SAVE_KEY);
-      let migratedFrom = null;
-      if (!raw) {
-        for (const key of FALLBACK_KEYS) {
-          raw = localStorage.getItem(key);
-          if (raw) { migratedFrom = key.replace('football_predictor_', ''); break; }
-        }
-      }
-      if (!raw) return null;
-      const s = JSON.parse(raw);
-      if (!s || typeof s !== 'object') return null;
-      const setVal = (id, v) => {
-        const el = document.getElementById(id);
-        if (el && v !== undefined && v !== null) el.value = v;
-      };
-      ['homeName','awayName','homeAvgGF','homeAvgGA','awayAvgGF','awayAvgGA',
-       'homeMP','homeGF','homeGA','awayMP','awayGF','awayGA',
-       'elapsedMinutes','liveHomeScore','liveAwayScore','htHomeScore','htAwayScore',
-       'matchType','ahLine','ouLine'].forEach(k => setVal(k, s[k]));
-      setVal('league', s.league || 'standard');
-      const restoreForm = (sel, arr) => {
-        if (!Array.isArray(arr)) return;
-        document.querySelectorAll(sel + ' .form-btn').forEach((btn, i) => {
-          if (arr[i]) { btn.dataset.val = arr[i]; btn.textContent = arr[i]; }
-        });
-      };
-      restoreForm('#homeFormBtns', s.homeForm);
-      restoreForm('#awayFormBtns', s.awayForm);
-      if (s.homeMode) setInputMode('home', s.homeMode);
-      if (s.awayMode) setInputMode('away', s.awayMode);
-      updateAvgPreview('home'); updateAvgPreview('away');
-      if (migratedFrom) try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); } catch (e) {}
-      return { savedAt: s.savedAt || null, migratedFrom };
-    } catch (e) { console.warn(e); return null; }
-  }
-  function showLoadIndicator(info) {
-    if (!info) return;
-    const el = document.getElementById('loadIndicator');
-    const when = info.savedAt ? new Date(info.savedAt).toLocaleString('th-TH') : '';
-    const prefix = info.migratedFrom ? `🔄 อัปเกรด ${info.migratedFrom}→v25` : '✓ โหลดข้อมูล';
-    el.textContent = `${prefix}${when ? ' (' + when + ')' : ''}`;
-    el.style.display = 'block';
-    setTimeout(() => { el.style.opacity = '0'; }, 3500);
-    setTimeout(() => { el.style.display = 'none'; el.style.opacity = '1'; }, 4200);
-  }
-
-  function resetAll() {
-    if (!confirm('ล้างค่าทั้งหมดและเริ่มคู่ใหม่?')) return;
-    document.getElementById('homeName').value = 'ทีมเจ้าบ้าน';
-    document.getElementById('awayName').value = 'ทีมเยือน';
-    setInputMode('home', 'avg');
-    setInputMode('away', 'avg');
-    document.getElementById('homeAvgGF').value = '1.5';
-    document.getElementById('homeAvgGA').value = '1.1';
-    document.getElementById('homeMP').value = '10';
-    document.getElementById('homeGF').value = '15';
-    document.getElementById('homeGA').value = '11';
-    document.getElementById('awayAvgGF').value = '1.2';
-    document.getElementById('awayAvgGA').value = '1.3';
-    document.getElementById('awayMP').value = '10';
-    document.getElementById('awayGF').value = '12';
-    document.getElementById('awayGA').value = '13';
-    updateAvgPreview('home'); updateAvgPreview('away');
-    document.querySelectorAll('.form-btn').forEach(btn => {
-      btn.setAttribute('data-val', 'D'); btn.textContent = 'D';
-    });
-    document.getElementById('elapsedMinutes').value = '0';
-    document.getElementById('liveHomeScore').value = '0';
-    document.getElementById('liveAwayScore').value = '0';
-    document.getElementById('htHomeScore').value = '0';
-    document.getElementById('htAwayScore').value = '0';
-    document.getElementById('htScoreBox').style.display = 'none';
-    document.getElementById('matchType').value = 'standard';
-    document.getElementById('league').value = 'standard';
-    document.getElementById('ahLine').value = '0';
-    document.getElementById('ouLine').value = 'none';
-    hasCalculated = false;
-    prevElapsed = 0;
-    dirtyGroups.clear();
-    lastCalcResult = null;
-    lastSnapshot = null;
-    updateStaleWarning();
-    document.getElementById('resultsSection').classList.remove('active');
-    updateMobileStatus();
-    showFab();
-    haptic(15);
-    try { [SAVE_KEY, ...FALLBACK_KEYS].forEach(k => localStorage.removeItem(k)); } catch (e) {}
-    showToast('✓ ล้างค่าแล้ว');
-  }
-
+  // Minimal init
   window.addEventListener('load', () => {
-    initPWA();
-    updateOnlineStatus();
     updateAvgPreview('home'); updateAvgPreview('away');
-    const info = loadState();
-    if (info) showLoadIndicator(info);
-    updateMobileStatus();
-    setupGuideSwipe();
-    setupFabAutoHide();
-    prevElapsed = clamp(safeNum('elapsedMinutes', 0), 0, 90);
-    lastScrollY = window.scrollY;
-    document.getElementById('historyModal').addEventListener('click', (e) => {
-      if (e.target.id === 'historyModal') closeHistoryModal();
-    });
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      document.getElementById('btnInstall').classList.remove('show');
-    }
+    document.getElementById('league').value = 'epl';
   });
 </script>
 </body>
