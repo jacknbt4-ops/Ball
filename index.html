@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#10b981">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Football Predictor — Manual Mode (v48 - AH/O-U Active Lines)</title>
+<title>Football Predictor — Manual Mode (v50 - No BTTS)</title>
 <style>
   :root { --bg:#0f172a; --card:#1e293b; --card-inner:#0f172a; --border:#334155; --text:#f8fafc; --text-muted:#94a3b8; --primary:#3b82f6; --accent:#10b981; --danger:#ef4444; --sticky-h:78px; }
   * { box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
@@ -460,7 +460,6 @@
           <div class="ou-item"><span>สูง/ต่ำ 0.5</span><span><span class="ou-over" id="htO05">สูง 0%</span> | <span class="ou-under" id="htU05">ต่ำ 0%</span></span></div>
           <div class="ou-item"><span>สูง/ต่ำ 1.5</span><span><span class="ou-over" id="htO15">สูง 0%</span> | <span class="ou-under" id="htU15">ต่ำ 0%</span></span></div>
           <div class="ou-item"><span>สูง/ต่ำ 2.5</span><span><span class="ou-over" id="htO25">สูง 0%</span> | <span class="ou-under" id="htU25">ต่ำ 0%</span></span></div>
-          <div class="ou-item"><span>BTTS (ครึ่งแรก)</span><span><span class="ou-over" id="htBttsYes">ได้ 0%</span> | <span class="ou-under" id="htBttsNo">ไม่ได้ 0%</span></span></div>
         </div>
         <div class="top-scores-title">🎯 3 อันดับสกอร์ (ครึ่งแรก)</div>
         <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;" id="htTopScores"></div>
@@ -480,7 +479,6 @@
           <div class="ou-item"><span>สูง/ต่ำ 4.5</span><span><span class="ou-over" id="ftO45">สูง 0%</span> | <span class="ou-under" id="ftU45">ต่ำ 0%</span></span></div>
           <div class="ou-item"><span>สูง/ต่ำ 5.5</span><span><span class="ou-over" id="ftO55">สูง 0%</span> | <span class="ou-under" id="ftU55">ต่ำ 0%</span></span></div>
           <div class="ou-item"><span>สูง/ต่ำ 6.5</span><span><span class="ou-over" id="ftO65">สูง 0%</span> | <span class="ou-under" id="ftU65">ต่ำ 0%</span></span></div>
-          <div class="ou-item"><span>BTTS (เต็มเวลา)</span><span><span class="ou-over" id="ftBttsYes">ได้ 0%</span> | <span class="ou-under" id="ftBttsNo">ไม่ได้ 0%</span></span></div>
         </div>
         <div class="top-scores-title">🎯 3 อันดับสกอร์ (เต็มเวลา)</div>
         <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;" id="ftTopScores"></div>
@@ -871,7 +869,6 @@
   function calcAhProb(scoresDist, ahLine, hScore, aScore) {
     const frac = Math.abs(ahLine % 1);
     if (Math.abs(frac - 0.25) < 0.001 || Math.abs(frac - 0.75) < 0.001) {
-      // quarter-ball: แยกเป็น 2 เส้นครึ่ง
       const line1 = ahLine - 0.25;
       const line2 = ahLine + 0.25;
       const r1 = calcAhProbSimple(scoresDist, line1, hScore, aScore);
@@ -939,14 +936,13 @@
     const htAXG = aXG * htShareAdj * (elapsed < 45 ? remainHT : 1);
 
     // ---- FT ----
-    let ftHWin=0, ftDraw=0, ftAWin=0, ftBtts=0;
+    let ftHWin=0, ftDraw=0, ftAWin=0;
     const ftScores = [];
     const ftTotalGoalsDist = {};
     for (let i=0;i<=10;i++) for (let j=0;j<=10;j++) {
       const p = poisson(i,ftHXG)*poisson(j,ftAXG);
       const fH=hScore+i, fA=aScore+j, total=fH+fA;
       if (fH>fA) ftHWin+=p; else if (fH===fA) ftDraw+=p; else ftAWin+=p;
-      if (fH>0 && fA>0) ftBtts+=p;
       ftScores.push({score:`${fH}-${fA}`, h:i, a:j, prob:p});
       ftTotalGoalsDist[total] = (ftTotalGoalsDist[total]||0) + p;
     }
@@ -955,14 +951,13 @@
     ftScores.sort((a,b)=>b.prob-a.prob);
 
     // ---- HT ----
-    let htHWin=0, htDraw=0, htAWin=0, htBtts=0;
+    let htHWin=0, htDraw=0, htAWin=0;
     const htScores = [];
     const htTotalGoalsDist = {};
     for (let i=0;i<=10;i++) for (let j=0;j<=10;j++) {
       const p = poisson(i,htHXG)*poisson(j,htAXG);
       const fH=htHScore+i, fA=htAScore+j, total=fH+fA;
       if (fH>fA) htHWin+=p; else if (fH===fA) htDraw+=p; else htAWin+=p;
-      if (fH>0 && fA>0) htBtts+=p;
       htScores.push({score:`${fH}-${fA}`, h:i, a:j, prob:p});
       htTotalGoalsDist[total] = (htTotalGoalsDist[total]||0) + p;
     }
@@ -1002,8 +997,6 @@
       if (oEl) oEl.textContent = `สูง ${(over*100).toFixed(1)}%`;
       if (uEl) uEl.textContent = `ต่ำ ${(100-over*100).toFixed(1)}%`;
     });
-    document.getElementById('htBttsYes').textContent = `ได้ ${(htBtts*100).toFixed(1)}%`;
-    document.getElementById('htBttsNo').textContent = `ไม่ได้ ${(100-htBtts*100).toFixed(1)}%`;
 
     document.getElementById('ftHomeWin').textContent = (ftHWin*100).toFixed(1)+'%';
     document.getElementById('ftDraw').textContent = (ftDraw*100).toFixed(1)+'%';
@@ -1017,8 +1010,6 @@
       if (oEl) oEl.textContent = `สูง ${(over*100).toFixed(1)}%`;
       if (uEl) uEl.textContent = `ต่ำ ${(100-over*100).toFixed(1)}%`;
     });
-    document.getElementById('ftBttsYes').textContent = `ได้ ${(ftBtts*100).toFixed(1)}%`;
-    document.getElementById('ftBttsNo').textContent = `ไม่ได้ ${(100-ftBtts*100).toFixed(1)}%`;
 
     document.getElementById('htTopScores').innerHTML = htScores.slice(0,3).map((s,i) => `
       <div class="score-card ${i===0?'rank-1':''}">
@@ -1034,29 +1025,25 @@
         <div class="score-prob">${(s.prob*100).toFixed(1)}%</div>
       </div>`).join('');
 
-    // ---- แสดง AH และ O/U ที่เลือกใน settings ----
+    // ---- AH + O/U ที่เลือก ----
     const ahLine = parseFloat(document.getElementById('ahLine').value) || 0;
     const ouLine = document.getElementById('ouLine').value;
     const banner = document.getElementById('selectedLineBanner');
 
     const ftDistForAh = ftScores.map(s => ({ h: s.h, a: s.a, p: s.prob }));
     const ahRes = calcAhProb(ftDistForAh, ahLine, hScore, aScore);
-    const ahWinPct = (ahRes.win * 100).toFixed(1);
-    const ahLosePct = (ahRes.lose * 100).toFixed(1);
-    const ahPushPct = (ahRes.push * 100).toFixed(1);
 
     let bannerHtml = `<div>📌 <strong>AH ${ahLine > 0 ? '+' + ahLine : ahLine}</strong> (เจ้าบ้าน): `;
-    bannerHtml += `<span style="color:#34d399; font-weight:700;">ชนะ ${ahWinPct}%</span>`;
-    if (ahRes.push > 0.001) bannerHtml += ` | <span style="color:#fbbf24; font-weight:700;">คืน ${ahPushPct}%</span>`;
-    bannerHtml += ` | <span style="color:#f87171; font-weight:700;">แพ้ ${ahLosePct}%</span></div>`;
+    bannerHtml += `<span style="color:#34d399; font-weight:700;">ชนะ ${(ahRes.win*100).toFixed(1)}%</span>`;
+    if (ahRes.push > 0.001) bannerHtml += ` | <span style="color:#fbbf24; font-weight:700;">คืน ${(ahRes.push*100).toFixed(1)}%</span>`;
+    bannerHtml += ` | <span style="color:#f87171; font-weight:700;">แพ้ ${(ahRes.lose*100).toFixed(1)}%</span></div>`;
 
     if (ouLine && ouLine !== 'none') {
       const line = parseFloat(ouLine);
       const ftOver = overProb(ftTotalGoalsDist, line);
-      const ftUnder = 1 - ftOver;
       bannerHtml += `<div>📌 <strong>O/U ${line}</strong> (เต็มเวลา): `;
       bannerHtml += `<span style="color:#34d399; font-weight:700;">สูง ${(ftOver*100).toFixed(1)}%</span>`;
-      bannerHtml += ` | <span style="color:#f87171; font-weight:700;">ต่ำ ${(ftUnder*100).toFixed(1)}%</span></div>`;
+      bannerHtml += ` | <span style="color:#f87171; font-weight:700;">ต่ำ ${((1-ftOver)*100).toFixed(1)}%</span></div>`;
     }
 
     banner.innerHTML = bannerHtml;
