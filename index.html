@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#10b981">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Football Predictor — Manual Mode (v42 - Global Leagues + HT/FT + Autocomplete)</title>
+<title>Football Predictor — Manual Mode (v44 - HT Top Scores)</title>
 <style>
   :root { --bg:#0f172a; --card:#1e293b; --card-inner:#0f172a; --border:#334155; --text:#f8fafc; --text-muted:#94a3b8; --primary:#3b82f6; --accent:#10b981; --danger:#ef4444; --sticky-h:78px; }
   * { box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
@@ -103,13 +103,12 @@
     </div>
   </header>
 
-  <!-- 🏆 ลีก / การแข่งขัน (ย้ายขึ้นมาอยู่เหนือ teams-grid) -->
+  <!-- 🏆 ลีก / การแข่งขัน -->
   <div class="card" style="margin-bottom:20px;">
     <div class="league-search" id="leagueSearchWrap">
       <label>🏆 ลีก / การแข่งขัน (พิมพ์ค้นหา)</label>
       <input type="text" id="leagueSearch" placeholder="เช่น epl, premier, ไทย, ยุโรป..." autocomplete="off" oninput="filterLeagues()" onfocus="filterLeagues()" onkeydown="leagueKeydown(event)">
       <div class="league-dropdown" id="leagueDropdown"></div>
-      <!-- select เดิม ซ่อนไว้เป็น source of truth -->
       <select id="league" onchange="markStale()" style="display:none">
         <option value="standard">ไม่ระบุ / ทั่วไป</option>
 
@@ -278,6 +277,7 @@
           <option value="afc_cl">🏆 AFC Champions League</option>
           <option value="caf_cl">🏆 CAF Champions League</option>
           <option value="copa_libertadores">🏆 Copa Libertadores</option>
+          <option value="afcon">🌍 Africa Cup of Nations</option>
           <option value="worldcup">🌍 FIFA World Cup</option>
           <option value="euro">🇪🇺 UEFA Euro</option>
         </optgroup>
@@ -397,9 +397,13 @@
           <div class="prob-box"><div class="prob-label" id="htAwayLabel">ทีมเยือน นำ</div><div class="prob-val" id="htAwayWin">0%</div></div>
         </div>
         <div class="ou-list">
+          <div class="ou-item"><span>สูง/ต่ำ 0.5</span><span><span class="ou-over" id="htO05">สูง 0%</span> | <span class="ou-under" id="htU05">ต่ำ 0%</span></span></div>
           <div class="ou-item"><span>สูง/ต่ำ 1.5</span><span><span class="ou-over" id="htO15">สูง 0%</span> | <span class="ou-under" id="htU15">ต่ำ 0%</span></span></div>
+          <div class="ou-item"><span>สูง/ต่ำ 2.5</span><span><span class="ou-over" id="htO25">สูง 0%</span> | <span class="ou-under" id="htU25">ต่ำ 0%</span></span></div>
           <div class="ou-item"><span>BTTS (ครึ่งแรก)</span><span><span class="ou-over" id="htBttsYes">ได้ 0%</span> | <span class="ou-under" id="htBttsNo">ไม่ได้ 0%</span></span></div>
         </div>
+        <div class="top-scores-title">🎯 3 อันดับสกอร์ (ครึ่งแรก)</div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;" id="htTopScores"></div>
       </div>
       <div class="card">
         <div class="res-title">🏟️ เต็มเวลา (90 นาที)</div>
@@ -409,10 +413,16 @@
           <div class="prob-box"><div class="prob-label" id="ftAwayLabel">ทีมเยือน ชนะ</div><div class="prob-val" id="ftAwayWin">0%</div></div>
         </div>
         <div class="ou-list">
+          <div class="ou-item"><span>สูง/ต่ำ 0.5</span><span><span class="ou-over" id="ftO05">สูง 0%</span> | <span class="ou-under" id="ftU05">ต่ำ 0%</span></span></div>
+          <div class="ou-item"><span>สูง/ต่ำ 1.5</span><span><span class="ou-over" id="ftO15">สูง 0%</span> | <span class="ou-under" id="ftU15">ต่ำ 0%</span></span></div>
           <div class="ou-item"><span>สูง/ต่ำ 2.5</span><span><span class="ou-over" id="ftO25">สูง 0%</span> | <span class="ou-under" id="ftU25">ต่ำ 0%</span></span></div>
+          <div class="ou-item"><span>สูง/ต่ำ 3.5</span><span><span class="ou-over" id="ftO35">สูง 0%</span> | <span class="ou-under" id="ftU35">ต่ำ 0%</span></span></div>
+          <div class="ou-item"><span>สูง/ต่ำ 4.5</span><span><span class="ou-over" id="ftO45">สูง 0%</span> | <span class="ou-under" id="ftU45">ต่ำ 0%</span></span></div>
+          <div class="ou-item"><span>สูง/ต่ำ 5.5</span><span><span class="ou-over" id="ftO55">สูง 0%</span> | <span class="ou-under" id="ftU55">ต่ำ 0%</span></span></div>
+          <div class="ou-item"><span>สูง/ต่ำ 6.5</span><span><span class="ou-over" id="ftO65">สูง 0%</span> | <span class="ou-under" id="ftU65">ต่ำ 0%</span></span></div>
           <div class="ou-item"><span>BTTS (เต็มเวลา)</span><span><span class="ou-over" id="ftBttsYes">ได้ 0%</span> | <span class="ou-under" id="ftBttsNo">ไม่ได้ 0%</span></span></div>
         </div>
-        <div class="top-scores-title">🎯 3 อันดับสกอร์</div>
+        <div class="top-scores-title">🎯 3 อันดับสกอร์ (เต็มเวลา)</div>
         <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;" id="ftTopScores"></div>
       </div>
     </div>
@@ -425,7 +435,7 @@
 </div>
 
 <script>
-  // ===== League Profiles (avg = ประตู/ทีม/เกม, homeAdv = ตัวคูณเจ้าบ้าน, htShare = สัดส่วนประตูครึ่งแรก) =====
+  // ===== League Profiles =====
   const LEAGUE_PROFILES = {
     standard: { avg:1.35, homeAdv:1.10, htShare:0.43 },
 
@@ -517,6 +527,7 @@
     ucl:{avg:1.30,homeAdv:1.08,htShare:0.43}, uel:{avg:1.28,homeAdv:1.08,htShare:0.42},
     uecl:{avg:1.32,homeAdv:1.08,htShare:0.43}, afc_cl:{avg:1.35,homeAdv:1.10,htShare:0.44},
     caf_cl:{avg:1.18,homeAdv:1.14,htShare:0.41}, copa_libertadores:{avg:1.20,homeAdv:1.18,htShare:0.41},
+    afcon:{avg:1.12,homeAdv:1.05,htShare:0.41},
     worldcup:{avg:1.25,homeAdv:1.05,htShare:0.43}, euro:{avg:1.28,homeAdv:1.05,htShare:0.43}
   };
 
@@ -578,7 +589,8 @@
 
     ucl:'ยูฟ่า แชมเปียนส์ลีก', uel:'ยูฟ่า ยูโรปาลีก', uecl:'ยูฟ่า คอนเฟอเรนซ์ลีก',
     afc_cl:'เอเอฟซี แชมเปียนส์ลีก', caf_cl:'ซีเอเอฟ แชมเปียนส์ลีก',
-    copa_libertadores:'โคปา ลิเบอร์ตาดอเรส', worldcup:'ฟุตบอลโลก', euro:'ยูฟ่า ยูโร'
+    copa_libertadores:'โคปา ลิเบอร์ตาดอเรส', afcon:'แอฟริกา คัพ ออฟ เนชั่นส์',
+    worldcup:'ฟุตบอลโลก', euro:'ยูฟ่า ยูโร'
   };
 
   // ===== Fallback ธง =====
@@ -595,7 +607,7 @@
     tunisia2:'🇹🇳',egypt2:'🇪🇬',zambia:'🇿🇲',uganda:'🇺🇬',tanzania:'🇹🇿',cameroon:'🇨🇲',
     ivorycoast:'🇨🇮',senegal:'🇸🇳',angola:'🇦🇴',mozambique:'🇲🇿',fiji:'🇫🇯',papua:'🇵🇬',
     tahiti:'🇵🇫',solomon:'🇸🇧',ucl:'🏆',uel:'🏆',uecl:'🏆',afc_cl:'🏆',caf_cl:'🏆',
-    copa_libertadores:'🏆',worldcup:'🌍',euro:'🇪🇺'
+    copa_libertadores:'🏆',afcon:'🌍',worldcup:'🌍',euro:'🇪🇺'
   };
 
   // ===== คำค้นตามทวีป =====
@@ -791,17 +803,14 @@
     const hName = document.getElementById('homeName').value || 'เจ้าบ้าน';
     const aName = document.getElementById('awayName').value || 'ทีมเยือน';
 
-    // 1) xG เต็มเวลา
     let hXG = ((hStats.gf + aStats.ga)/2) * profile.homeAdv;
     let aXG = ((aStats.gf + hStats.ga)/2) * (2 - profile.homeAdv);
 
-    // 2) ใบแดง
     const hRed = Math.max(0, Math.min(5, parseInt(document.getElementById('homeRedCards').value)||0));
     const aRed = Math.max(0, Math.min(5, parseInt(document.getElementById('awayRedCards').value)||0));
     if (hRed > 0) { hXG *= Math.pow(0.80,hRed); aXG *= Math.pow(1.10,hRed); }
     if (aRed > 0) { aXG *= Math.pow(0.80,aRed); hXG *= Math.pow(1.10,aRed); }
 
-    // 3) เวลา/สกอร์
     const elapsed = Math.max(0, Math.min(90, parseInt(document.getElementById('elapsedMinutes').value)||0));
     const hScore = Math.max(0, parseInt(document.getElementById('liveHomeScore').value)||0);
     const aScore = Math.max(0, parseInt(document.getElementById('liveAwayScore').value)||0);
@@ -811,18 +820,16 @@
     const remainFT = (90 - elapsed) / 90;
     const remainHT = elapsed < 45 ? (45 - elapsed) / 45 : 0;
 
-    // 4) λ เต็มเวลา
     const ftHXG = hXG * remainFT;
     const ftAXG = aXG * remainFT;
 
-    // 5) λ ครึ่งแรก + secondHalfAdjust
     const strength = document.getElementById('halfStrength').value || 'medium';
     const baseHtShare = profile.htShare;
     let slope;
     if (strength === 'light') slope = 0.5;
     else if (strength === 'medium') slope = 0.8;
     else if (strength === 'strong') slope = 1.2;
-    else slope = 0.5 + 1.0 * (0.5 - baseHtShare) * 10; // dynamic
+    else slope = 0.5 + 1.0 * (0.5 - baseHtShare) * 10;
     const secondHalfAdjust = 1 - slope * (0.5 - baseHtShare);
     let htShareAdj = baseHtShare * secondHalfAdjust;
     htShareAdj = Math.max(0.35, Math.min(0.50, htShareAdj));
@@ -830,35 +837,45 @@
     const htHXG = hXG * htShareAdj * (elapsed < 45 ? remainHT : 1);
     const htAXG = aXG * htShareAdj * (elapsed < 45 ? remainHT : 1);
 
-    // 6) Poisson FT + normalize
-    let ftHWin=0, ftDraw=0, ftAWin=0, ftOver25=0, ftBtts=0;
+    // ---- FT: คำนวณ O/U + Top Scores ----
+    let ftHWin=0, ftDraw=0, ftAWin=0, ftBtts=0;
     const ftScores = [];
-    for (let i=0;i<=6;i++) for (let j=0;j<=6;j++) {
+    const ftTotalGoalsDist = {};
+    for (let i=0;i<=10;i++) for (let j=0;j<=10;j++) {
       const p = poisson(i,ftHXG)*poisson(j,ftAXG);
       const fH=hScore+i, fA=aScore+j, total=fH+fA;
       if (fH>fA) ftHWin+=p; else if (fH===fA) ftDraw+=p; else ftAWin+=p;
-      if (total>2.5) ftOver25+=p;
       if (fH>0 && fA>0) ftBtts+=p;
       ftScores.push({score:`${fH}-${fA}`, prob:p});
+      ftTotalGoalsDist[total] = (ftTotalGoalsDist[total]||0) + p;
     }
     const ftTotal = ftHWin+ftDraw+ftAWin || 1;
     ftHWin/=ftTotal; ftDraw/=ftTotal; ftAWin/=ftTotal;
+    ftScores.sort((a,b)=>b.prob-a.prob);
 
-    // 7) Poisson HT + normalize
-    let htHWin=0, htDraw=0, htAWin=0, htOver15=0, htBtts=0;
-    for (let i=0;i<=6;i++) for (let j=0;j<=6;j++) {
+    // ---- HT: คำนวณ O/U + Top Scores ----
+    let htHWin=0, htDraw=0, htAWin=0, htBtts=0;
+    const htScores = [];
+    const htTotalGoalsDist = {};
+    for (let i=0;i<=10;i++) for (let j=0;j<=10;j++) {
       const p = poisson(i,htHXG)*poisson(j,htAXG);
       const fH=htHScore+i, fA=htAScore+j, total=fH+fA;
       if (fH>fA) htHWin+=p; else if (fH===fA) htDraw+=p; else htAWin+=p;
-      if (total>1.5) htOver15+=p;
       if (fH>0 && fA>0) htBtts+=p;
+      htScores.push({score:`${fH}-${fA}`, prob:p});
+      htTotalGoalsDist[total] = (htTotalGoalsDist[total]||0) + p;
     }
     const htTotal = htHWin+htDraw+htAWin || 1;
     htHWin/=htTotal; htDraw/=htTotal; htAWin/=htTotal;
+    htScores.sort((a,b)=>b.prob-a.prob);
 
-    ftScores.sort((a,b)=>b.prob-a.prob);
+    function overProb(dist, line) {
+      let s = 0;
+      for (const k in dist) if (parseFloat(k) > line) s += dist[k];
+      return s;
+    }
 
-    // 8) แสดงผล
+    // ---- แสดงผล ----
     document.getElementById('resultsSection').classList.add('active');
     hasCalculated = true;
 
@@ -875,19 +892,42 @@
     document.getElementById('htHomeWin').textContent = (htHWin*100).toFixed(1)+'%';
     document.getElementById('htDraw').textContent = (htDraw*100).toFixed(1)+'%';
     document.getElementById('htAwayWin').textContent = (htAWin*100).toFixed(1)+'%';
-    document.getElementById('htO15').textContent = `สูง ${(htOver15*100).toFixed(1)}%`;
-    document.getElementById('htU15').textContent = `ต่ำ ${(100-htOver15*100).toFixed(1)}%`;
+
+    [0.5,1.5,2.5].forEach(line => {
+      const over = overProb(htTotalGoalsDist, line);
+      const key = line.toString().replace('.','');
+      const oEl = document.getElementById('htO'+key);
+      const uEl = document.getElementById('htU'+key);
+      if (oEl) oEl.textContent = `สูง ${(over*100).toFixed(1)}%`;
+      if (uEl) uEl.textContent = `ต่ำ ${(100-over*100).toFixed(1)}%`;
+    });
     document.getElementById('htBttsYes').textContent = `ได้ ${(htBtts*100).toFixed(1)}%`;
     document.getElementById('htBttsNo').textContent = `ไม่ได้ ${(100-htBtts*100).toFixed(1)}%`;
 
     document.getElementById('ftHomeWin').textContent = (ftHWin*100).toFixed(1)+'%';
     document.getElementById('ftDraw').textContent = (ftDraw*100).toFixed(1)+'%';
     document.getElementById('ftAwayWin').textContent = (ftAWin*100).toFixed(1)+'%';
-    document.getElementById('ftO25').textContent = `สูง ${(ftOver25*100).toFixed(1)}%`;
-    document.getElementById('ftU25').textContent = `ต่ำ ${(100-ftOver25*100).toFixed(1)}%`;
+
+    [0.5,1.5,2.5,3.5,4.5,5.5,6.5].forEach(line => {
+      const over = overProb(ftTotalGoalsDist, line);
+      const key = line.toString().replace('.','');
+      const oEl = document.getElementById('ftO'+key);
+      const uEl = document.getElementById('ftU'+key);
+      if (oEl) oEl.textContent = `สูง ${(over*100).toFixed(1)}%`;
+      if (uEl) uEl.textContent = `ต่ำ ${(100-over*100).toFixed(1)}%`;
+    });
     document.getElementById('ftBttsYes').textContent = `ได้ ${(ftBtts*100).toFixed(1)}%`;
     document.getElementById('ftBttsNo').textContent = `ไม่ได้ ${(100-ftBtts*100).toFixed(1)}%`;
 
+    // HT Top Scores
+    document.getElementById('htTopScores').innerHTML = htScores.slice(0,3).map((s,i) => `
+      <div class="score-card ${i===0?'rank-1':''}">
+        <div class="score-rank">อันดับ ${i+1}</div>
+        <div class="score-val">${s.score}</div>
+        <div class="score-prob">${(s.prob*100).toFixed(1)}%</div>
+      </div>`).join('');
+
+    // FT Top Scores
     document.getElementById('ftTopScores').innerHTML = ftScores.slice(0,3).map((s,i) => `
       <div class="score-card ${i===0?'rank-1':''}">
         <div class="score-rank">อันดับ ${i+1}</div>
