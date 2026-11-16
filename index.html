@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#10b981">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Football Predictor — Manual Mode (v45 - Nations League A/B/C/D)</title>
+<title>Football Predictor — Manual Mode (v47 - Full AH + O/U Lines)</title>
 <style>
   :root { --bg:#0f172a; --card:#1e293b; --card-inner:#0f172a; --border:#334155; --text:#f8fafc; --text-muted:#94a3b8; --primary:#3b82f6; --accent:#10b981; --danger:#ef4444; --sticky-h:78px; }
   * { box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
@@ -38,7 +38,7 @@
   .q-time { background:rgba(59,130,246,0.2); color:#93c5fd; border:1px solid rgba(59,130,246,0.4); padding:4px 8px; font-size:0.78rem; border-radius:6px; margin-right:4px; margin-bottom:6px; }
   .q-time:hover { background:rgba(59,130,246,0.4); }
 
-  .settings-bar { display:grid; grid-template-columns:1fr 1fr 1.2fr 1fr; gap:14px; align-items:end; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:20px; }
+  .settings-bar { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:14px; align-items:end; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:20px; }
   .btn-calc { background:var(--accent); color:#064e3b; padding:12px 20px; font-size:1.05rem; font-weight:800; width:100%; margin-bottom:14px; box-shadow:0 4px 14px rgba(16,185,129,0.3); }
   .btn-calc:hover { background:#059669; color:#fff; }
 
@@ -385,8 +385,62 @@
       </select>
     </div>
 
-    <div><label>AH (เจ้าบ้าน)</label><select id="ahLine" onchange="markStale()"><option value="0">0</option><option value="-0.5">-0.5</option><option value="-1.0">-1.0</option><option value="0.5">+0.5</option></select></div>
-    <div><label>O/U</label><select id="ouLine" onchange="markStale()"><option value="none">ไม่ระบุ</option><option value="2.5">2.5</option><option value="3.0">3.0</option></select></div>
+    <div>
+      <label>AH (เจ้าบ้าน)</label>
+      <select id="ahLine" onchange="markStale()">
+        <option value="3.0">+3.0</option>
+        <option value="2.75">+2.75</option>
+        <option value="2.5">+2.5</option>
+        <option value="2.25">+2.25</option>
+        <option value="2.0">+2.0</option>
+        <option value="1.75">+1.75</option>
+        <option value="1.5">+1.5</option>
+        <option value="1.25">+1.25</option>
+        <option value="1.0">+1.0</option>
+        <option value="0.75">+0.75</option>
+        <option value="0.5">+0.5</option>
+        <option value="0.25">+0.25</option>
+        <option value="0" selected>0</option>
+        <option value="-0.25">-0.25</option>
+        <option value="-0.5">-0.5</option>
+        <option value="-0.75">-0.75</option>
+        <option value="-1.0">-1.0</option>
+        <option value="-1.25">-1.25</option>
+        <option value="-1.5">-1.5</option>
+        <option value="-1.75">-1.75</option>
+        <option value="-2.0">-2.0</option>
+        <option value="-2.25">-2.25</option>
+        <option value="-2.5">-2.5</option>
+        <option value="-2.75">-2.75</option>
+        <option value="-3.0">-3.0</option>
+      </select>
+    </div>
+
+    <div>
+      <label>O/U (ประตูรวม)</label>
+      <select id="ouLine" onchange="markStale()">
+        <option value="none">ไม่ระบุ</option>
+        <option value="0.5">0.5</option>
+        <option value="1.0">1.0</option>
+        <option value="1.5">1.5</option>
+        <option value="2.0">2.0</option>
+        <option value="2.5" selected>2.5</option>
+        <option value="3.0">3.0</option>
+        <option value="3.5">3.5</option>
+        <option value="4.0">4.0</option>
+        <option value="4.5">4.5</option>
+        <option value="5.0">5.0</option>
+        <option value="5.5">5.5</option>
+        <option value="6.0">6.0</option>
+        <option value="6.5">6.5</option>
+        <option value="7.0">7.0</option>
+        <option value="7.5">7.5</option>
+        <option value="8.0">8.0</option>
+        <option value="8.5">8.5</option>
+        <option value="9.0">9.0</option>
+        <option value="9.5">9.5</option>
+      </select>
+    </div>
     <div><button type="button" class="btn-calc" onclick="calculate()">⚡ ประมวลผล</button></div>
   </div>
 
@@ -964,7 +1018,7 @@
     document.getElementById('liveHomeScore').value='0'; document.getElementById('liveAwayScore').value='0';
     document.getElementById('htHomeScore').value='0'; document.getElementById('htAwayScore').value='0';
     document.getElementById('halfStrength').value='medium';
-    document.getElementById('ahLine').value='0'; document.getElementById('ouLine').value='none';
+    document.getElementById('ahLine').value='0'; document.getElementById('ouLine').value='2.5';
 
     document.getElementById('league').value='standard';
     const stdOpt = leagueItems.find(it => it.value==='standard');
