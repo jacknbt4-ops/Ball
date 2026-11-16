@@ -3,8 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
-<title>วิเคราะห์คาดการณ์สกอร์ฟุตบอลล่วงหน้า & บอลสด (v24)</title>
+<meta name="theme-color" content="#10b981">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FP">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="วิเคราะห์คาดการณ์สกอร์ฟุตบอลล่วงหน้า & บอลสด">
+<link rel="manifest" id="pwaManifest">
+<link rel="apple-touch-icon" id="appleIcon">
+<title>Football Predictor — วิเคราะห์บอล (v25)</title>
 <style>
   :root {
     --bg: #0f172a;
@@ -57,6 +64,43 @@
     border: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 14px; font-size: 0.9rem;
   }
   .btn-history:hover { background: rgba(59, 130, 246, 0.3); }
+  .btn-install {
+    display: none;
+    background: rgba(16, 185, 129, 0.15); color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.4); padding: 8px 14px; font-size: 0.9rem;
+  }
+  .btn-install:hover { background: rgba(16, 185, 129, 0.3); }
+  .btn-install.show { display: inline-block; }
+
+  /* Offline indicator */
+  .offline-indicator {
+    display: none;
+    position: fixed; top: 20px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(245, 158, 11, 0.95); color: #1e293b;
+    padding: 8px 16px; border-radius: 8px; z-index: 1000;
+    font-size: 0.85rem; font-weight: 600;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  }
+  .offline-indicator.show { display: block; }
+
+  /* Update toast */
+  .update-toast {
+    display: none;
+    position: fixed; bottom: 100px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(59, 130, 246, 0.95); color: #fff;
+    padding: 12px 18px; border-radius: 8px; z-index: 1500;
+    font-size: 0.88rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    align-items: center; gap: 12px;
+    max-width: 90vw;
+  }
+  .update-toast.show { display: flex; }
+  .update-toast button {
+    background: rgba(255,255,255,0.2); color: #fff;
+    padding: 6px 12px; font-size: 0.82rem; border-radius: 6px;
+  }
+  .update-toast button:hover { background: rgba(255,255,255,0.35); }
 
   /* Export dropdown */
   .export-wrap { position: relative; display: inline-block; }
@@ -101,9 +145,7 @@
     border-radius: 6px;
   }
   .modal-close:hover { background: var(--card-inner); color: var(--text); }
-  .modal-body {
-    overflow-y: auto; padding: 12px; flex: 1;
-  }
+  .modal-body { overflow-y: auto; padding: 12px; flex: 1; }
   .history-empty {
     text-align: center; color: var(--text-muted);
     padding: 40px 20px; font-size: 0.9rem;
@@ -112,8 +154,7 @@
     background: var(--card-inner); border: 1px solid var(--border);
     border-radius: 8px; padding: 12px; margin-bottom: 8px;
     display: flex; justify-content: space-between; align-items: center;
-    gap: 12px; cursor: pointer;
-    transition: all 0.15s;
+    gap: 12px; cursor: pointer; transition: all 0.15s;
   }
   .history-item:hover { border-color: var(--primary); }
   .history-info { flex: 1; min-width: 0; }
@@ -123,8 +164,7 @@
   }
   .history-meta {
     font-size: 0.75rem; color: var(--text-muted);
-    margin-top: 2px;
-    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-top: 2px; display: flex; gap: 8px; flex-wrap: wrap;
   }
   .history-score {
     font-size: 1rem; font-weight: 800; color: #fff;
@@ -391,7 +431,6 @@
   }
   .prob-val { font-size: 1.25rem; font-weight: 800; color: #fff; }
 
-  /* Chart */
   .chart-wrap {
     background: var(--card-inner); border: 1px solid var(--border);
     border-radius: 10px; padding: 14px; margin-bottom: 18px;
@@ -475,7 +514,7 @@
     .settings-bar { grid-template-columns: 1fr; }
     .settings-bar > div:last-child { display: none; }
 
-    .btn-guide, .btn-reset, .btn-export, .btn-history { min-height: 40px; padding: 10px 14px; }
+    .btn-guide, .btn-reset, .btn-export, .btn-history, .btn-install { min-height: 40px; padding: 10px 14px; }
     .mode-btn { min-height: 40px; padding: 10px 8px; font-size: 0.85rem; }
     .guide-tab { min-height: 40px; padding: 10px 12px; font-size: 0.82rem; }
     .q-time { min-height: 34px; padding: 6px 10px; font-size: 0.82rem; }
@@ -534,13 +573,9 @@
       box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.45);
     }
     .mobile-calc-status {
-      display: flex;
-      flex-direction: column;
-      font-size: 0.72rem;
-      line-height: 1.25;
-      min-width: 62px;
-      max-width: 100px;
-      flex-shrink: 0;
+      display: flex; flex-direction: column;
+      font-size: 0.72rem; line-height: 1.25;
+      min-width: 62px; max-width: 100px; flex-shrink: 0;
     }
     .mobile-calc-status .mcs-time {
       color: #93c5fd; font-weight: 600; font-size: 0.7rem;
@@ -577,6 +612,8 @@
       text-align: center; font-size: 0.85rem;
     }
     #toast { bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom, 0px) + 20px); }
+    .offline-indicator { top: auto; bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom, 0px) + 60px); }
+    .update-toast { bottom: calc(var(--sticky-h) + env(safe-area-inset-bottom, 0px) + 20px); }
 
     .modal-panel { max-height: 90vh; }
     .modal-header { padding: 12px 16px; }
@@ -675,8 +712,12 @@
 
 <div id="loadIndicator"></div>
 <div id="toast"></div>
+<div class="offline-indicator" id="offlineIndicator">⚠️ ออฟไลน์ — ข้อมูลจะถูกเก็บไว้</div>
+<div class="update-toast" id="updateToast">
+  <span>🔄 มีเวอร์ชันใหม่</span>
+  <button type="button" onclick="reloadForUpdate()">อัปเดต</button>
+</div>
 
-<!-- History Modal -->
 <div class="modal-overlay" id="historyModal">
   <div class="modal-panel">
     <div class="modal-header">
@@ -694,8 +735,9 @@
 
 <div class="container">
   <header>
-    <h1>⚽ วิเคราะห์คาดการณ์สกอร์ฟุตบอลล่วงหน้า & บอลสด</h1>
+    <h1>⚽ Football Predictor — วิเคราะห์บอล</h1>
     <div class="header-actions">
+      <button type="button" class="btn-install" id="btnInstall" onclick="promptInstall()" aria-label="ติดตั้ง">📱 ติดตั้ง</button>
       <button type="button" class="btn-guide" onclick="toggleGuide()" aria-label="เปิด/ปิดคู่มือ">📖 คู่มือ</button>
       <button type="button" class="btn-history" onclick="openHistoryModal()" aria-label="ประวัติ">📚 ประวัติ</button>
       <div class="export-wrap">
@@ -743,7 +785,8 @@
         • <b>ลีก:</b> เลือกให้ตรงกับลีกจริง → baseline ต่างกัน 20-25%<br>
         • <b>v22 Dixon-Coles:</b> เปิดอัตโนมัติ — ปรับ low-score bias<br>
         • <b>v23 Poisson-inverse:</b> AH/O/U ใช้ distribution-inverse<br>
-        • <b>v24:</b> Export + History + Chart
+        • <b>v24:</b> Export + History + Chart<br>
+        • <b>v25 PWA:</b> ติดตั้งลงหน้าจอ + offline mode
       </div>
     </div>
   </div>
@@ -1070,11 +1113,141 @@
 
 <script>
   // ============================================================
+  // PWA Setup
+  // ============================================================
+  const PWA_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <defs>
+      <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#10b981"/>
+        <stop offset="100%" stop-color="#3b82f6"/>
+      </linearGradient>
+    </defs>
+    <rect width="512" height="512" rx="96" fill="url(#g)"/>
+    <text x="256" y="340" text-anchor="middle" font-size="280" font-family="Arial, sans-serif" fill="#fff">⚽</text>
+  </svg>`;
+
+  const PWA_ICON_192 = 'data:image/svg+xml;base64,' + btoa(PWA_ICON_SVG);
+  const PWA_ICON_512 = PWA_ICON_192;
+
+  const PWA_MANIFEST = {
+    name: 'Football Predictor — วิเคราะห์บอล',
+    short_name: 'FP',
+    description: 'วิเคราะห์คาดการณ์สกอร์ฟุตบอลล่วงหน้า & บอลสด',
+    start_url: window.location.pathname,
+    scope: window.location.pathname.replace(/\/[^/]*$/, '/') || '/',
+    display: 'standalone',
+    orientation: 'portrait',
+    background_color: '#0f172a',
+    theme_color: '#10b981',
+    lang: 'th',
+    icons: [
+      { src: PWA_ICON_192, sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
+      { src: PWA_ICON_512, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+    ]
+  };
+
+  const manifestURL = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(PWA_MANIFEST));
+  document.getElementById('pwaManifest').href = manifestURL;
+  document.getElementById('appleIcon').href = PWA_ICON_192;
+
+  // Service Worker (inline via Blob URL)
+  const SW_CODE = `
+    const CACHE = 'football-predictor-v25';
+    const ASSETS = [self.location.pathname.replace(/sw\\.js$/, 'football.html') || '/'];
+    self.addEventListener('install', e => {
+      e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(()=>{})));
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(keys => Promise.all(
+        keys.filter(k => k !== CACHE).map(k => caches.delete(k))
+      )));
+      self.clients.claim();
+    });
+    self.addEventListener('fetch', e => {
+      if (e.request.method !== 'GET') return;
+      e.respondWith(
+        caches.match(e.request).then(r => r || fetch(e.request).then(res => {
+          if (res && res.status === 200) {
+            const clone = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, clone)).catch(()=>{});
+          }
+          return res;
+        }).catch(() => caches.match(e.request)))
+      );
+    });
+  `;
+
+  let deferredPrompt = null;
+  let swRegistration = null;
+
+  function initPWA() {
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      const swBlob = new Blob([SW_CODE], { type: 'application/javascript' });
+      const swURL = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swURL, { scope: './' }).then(reg => {
+        swRegistration = reg;
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              document.getElementById('updateToast').classList.add('show');
+            }
+          });
+        });
+      }).catch(err => {
+        console.warn('SW registration failed (likely file:// or unsupported):', err.message);
+      });
+    }
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('btnInstall').classList.add('show');
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredPrompt = null;
+    document.getElementById('btnInstall').classList.remove('show');
+    showToast('✓ ติดตั้งสำเร็จ!');
+  });
+
+  function promptInstall() {
+    if (!deferredPrompt) {
+      showToast('⚠️ เปิดผ่าน HTTPS/localhost ก่อน แล้วกด "ติดตั้ง" ที่ address bar', true);
+      return;
+    }
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      if (choice.outcome === 'accepted') showToast('✓ กำลังติดตั้ง...');
+      deferredPrompt = null;
+      document.getElementById('btnInstall').classList.remove('show');
+    });
+  }
+
+  function reloadForUpdate() {
+    if (swRegistration && swRegistration.waiting) {
+      swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
+    location.reload();
+  }
+
+  // Online/offline
+  function updateOnlineStatus() {
+    const el = document.getElementById('offlineIndicator');
+    if (navigator.onLine) el.classList.remove('show');
+    else el.classList.add('show');
+  }
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+
+  // ============================================================
   // State & Constants
   // ============================================================
-  const SAVE_KEY = 'football_predictor_v24';
-  const HISTORY_KEY = 'football_history_v24';
-  const FALLBACK_KEYS = ['football_predictor_v23', 'football_predictor_v22', 'football_predictor_v21', 'football_predictor_v20'];
+  const SAVE_KEY = 'football_predictor_v25';
+  const HISTORY_KEY = 'football_history_v25';
+  const FALLBACK_KEYS = ['football_predictor_v24', 'football_predictor_v23', 'football_predictor_v22', 'football_predictor_v21', 'football_predictor_v20'];
   const MAX_HISTORY = 20;
 
   let homeMode = 'avg';
@@ -1083,13 +1256,11 @@
   let prevElapsed = 0;
   const dirtyGroups = new Set();
   let lastCalcResult = null;
+  let lastSnapshot = null;
 
   const GROUP_LABELS = {
-    stats: 'สถิติทีม',
-    form: 'ฟอร์ม 5 นัด',
-    settings: 'การตั้งค่า',
-    live: 'เวลา/สกอร์',
-    names: 'ชื่อทีม'
+    stats: 'สถิติทีม', form: 'ฟอร์ม 5 นัด',
+    settings: 'การตั้งค่า', live: 'เวลา/สกอร์', names: 'ชื่อทีม'
   };
 
   const LEAGUE_PROFILES = {
@@ -1107,22 +1278,14 @@
 
   const DC_RHO = -0.13;
 
-  // ============================================================
-  // Utilities
-  // ============================================================
   function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
-
-  function haptic(ms = 20) {
-    try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {}
-  }
-
+  function haptic(ms = 20) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
   function safeNum(id, fallback) {
     const el = document.getElementById(id);
     if (!el) return fallback;
     const v = parseFloat(el.value);
     return Number.isFinite(v) ? v : fallback;
   }
-
   function showToast(msg, isError = false) {
     const el = document.getElementById('toast');
     el.textContent = msg;
@@ -1132,12 +1295,8 @@
     el._t = setTimeout(() => { el.style.display = 'none'; }, 2500);
   }
 
-  // ============================================================
   // Guide
-  // ============================================================
-  function toggleGuide() {
-    document.getElementById('guidePanel').classList.toggle('active');
-  }
+  function toggleGuide() { document.getElementById('guidePanel').classList.toggle('active'); }
   function switchGuideTab(idx) {
     haptic(10);
     document.querySelectorAll('.guide-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
@@ -1148,11 +1307,8 @@
     const guide = document.getElementById('guidePanel');
     if (!guide) return;
     let startY = 0, startX = 0, dragging = false, committed = false, vibrated = false;
-    const isInteractive = (el) =>
-      !!(el && el.closest && el.closest('button, a, input, select, textarea, [contenteditable="true"]'));
-    const resetGuide = () => {
-      guide.style.transform = ''; guide.style.opacity = ''; guide.style.transition = '';
-    };
+    const isInteractive = (el) => !!(el && el.closest && el.closest('button, a, input, select, textarea, [contenteditable="true"]'));
+    const resetGuide = () => { guide.style.transform = ''; guide.style.opacity = ''; guide.style.transition = ''; };
     const onStart = (e) => {
       if (e.touches.length !== 1) return;
       if (isInteractive(e.target)) return;
@@ -1188,11 +1344,8 @@
       guide.style.transition = 'transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s';
       const shouldDismiss = dy > 80 || Math.abs(dx) > 100;
       if (shouldDismiss) {
-        if (Math.abs(dx) > Math.abs(dy)) {
-          guide.style.transform = `translateX(${dx > 0 ? 500 : -500}px)`;
-        } else {
-          guide.style.transform = `translateY(${guide.offsetHeight + 40}px)`;
-        }
+        if (Math.abs(dx) > Math.abs(dy)) guide.style.transform = `translateX(${dx > 0 ? 500 : -500}px)`;
+        else guide.style.transform = `translateY(${guide.offsetHeight + 40}px)`;
         guide.style.opacity = '0';
         haptic(30);
         setTimeout(() => { guide.classList.remove('active'); resetGuide(); }, 260);
@@ -1207,9 +1360,7 @@
     guide.addEventListener('touchcancel', onEnd, { passive: true });
   }
 
-  // ============================================================
-  // Auto-hide FAB
-  // ============================================================
+  // FAB
   let lastScrollY = 0, fabHidden = false, scrollTicking = false;
   function hideFab() {
     if (fabHidden) return;
@@ -1241,9 +1392,7 @@
     }, { passive: true });
   }
 
-  // ============================================================
   // Input modes
-  // ============================================================
   function setInputMode(team, mode) {
     if (team === 'home') {
       homeMode = mode;
@@ -1271,14 +1420,16 @@
   function getTeamStats(team) {
     const mode = team === 'home' ? homeMode : awayMode;
     if (mode === 'avg') {
-      const gf = Math.max(0, safeNum(team + 'AvgGF', 0));
-      const ga = Math.max(0, safeNum(team + 'AvgGA', 0));
-      return { gf, ga };
+      return {
+        gf: Math.max(0, safeNum(team + 'AvgGF', 0)),
+        ga: Math.max(0, safeNum(team + 'AvgGA', 0))
+      };
     }
     const mp = Math.max(1, safeNum(team + 'MP', 1));
-    const totalGF = Math.max(0, safeNum(team + 'GF', 0));
-    const totalGA = Math.max(0, safeNum(team + 'GA', 0));
-    return { gf: totalGF / mp, ga: totalGA / mp };
+    return {
+      gf: Math.max(0, safeNum(team + 'GF', 0)) / mp,
+      ga: Math.max(0, safeNum(team + 'GA', 0)) / mp
+    };
   }
 
   function updateAvgPreview(team) {
@@ -1312,9 +1463,6 @@
     return 0.94 + (ratio * 0.12);
   }
 
-  // ============================================================
-  // Live
-  // ============================================================
   function setLiveTime(mins) {
     document.getElementById('elapsedMinutes').value = mins;
     handleLiveInput();
@@ -1333,9 +1481,7 @@
       htBox.style.display = 'none';
     } else {
       htBox.style.display = 'block';
-      if (prevElapsed < 45) {
-        htHomeEl.value = curHome; htAwayEl.value = curAway;
-      }
+      if (prevElapsed < 45) { htHomeEl.value = curHome; htAwayEl.value = curAway; }
       let hh = Math.max(0, parseInt(htHomeEl.value) || 0);
       let ha = Math.max(0, parseInt(htAwayEl.value) || 0);
       if (hh > curHome) { hh = curHome; htHomeEl.value = hh; }
@@ -1346,9 +1492,6 @@
     updateMobileStatus();
   }
 
-  // ============================================================
-  // Stale
-  // ============================================================
   function markStale(group = 'general') {
     if (!hasCalculated) { updateMobileStatus(); return; }
     dirtyGroups.add(group);
@@ -1380,33 +1523,24 @@
       if (lastCalcResult) {
         xgEl.textContent = `xG ${lastCalcResult.remHomeXG.toFixed(2)}-${lastCalcResult.remAwayXG.toFixed(2)}`;
         xgEl.classList.add('visible');
-      } else {
-        xgEl.classList.remove('visible');
-      }
+      } else xgEl.classList.remove('visible');
     }
     if (!hasCalculated) {
-      btnText.textContent = '⚡ ประมวลผล';
-      btn.classList.remove('stale-pulse');
+      btnText.textContent = '⚡ ประมวลผล'; btn.classList.remove('stale-pulse');
     } else if (dirtyGroups.size > 0) {
-      btnText.textContent = '⚡ อัปเดตผล';
-      btn.classList.add('stale-pulse');
+      btnText.textContent = '⚡ อัปเดตผล'; btn.classList.add('stale-pulse');
     } else {
-      btnText.textContent = '📊 ดูผลลัพธ์';
-      btn.classList.remove('stale-pulse');
+      btnText.textContent = '📊 ดูผลลัพธ์'; btn.classList.remove('stale-pulse');
     }
   }
 
   function handleMobileCalc() {
     if (hasCalculated && dirtyGroups.size === 0) {
       document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      calculate();
-    }
+    } else calculate();
   }
 
-  // ============================================================
   // Math
-  // ============================================================
   function factorial(n) {
     if (n <= 1) return 1;
     let r = 1;
@@ -1435,8 +1569,7 @@
     const k = Math.floor(line);
     for (let iter = 0; iter < 20; iter++) {
       const mid = (lo + hi) / 2;
-      const cdf = poissonTotalCDF(k, mid);
-      if (cdf > 0.5) hi = mid; else lo = mid;
+      if (poissonTotalCDF(k, mid) > 0.5) hi = mid; else lo = mid;
     }
     return (lo + hi) / 2;
   }
@@ -1449,37 +1582,32 @@
   function poissonMarginProb(margin, ahLine) {
     const avg = 1.35;
     const sigma = Math.sqrt(2 * avg);
-    const z = (ahLine - margin) / sigma;
-    return 1 - normalCDF(z);
+    return 1 - normalCDF((ahLine - margin) / sigma);
   }
   function invertPoissonAH(ahLine, targetProb) {
     let lo = -3, hi = 3;
     for (let iter = 0; iter < 20; iter++) {
       const mid = (lo + hi) / 2;
-      const prob = poissonMarginProb(mid, ahLine);
-      if (prob < targetProb) lo = mid; else hi = mid;
+      if (poissonMarginProb(mid, ahLine) < targetProb) lo = mid; else hi = mid;
     }
     return (lo + hi) / 2;
   }
   function remainingXG(baseXG, elapsed, htShare) {
     if (elapsed >= 90) return 0;
-    const fh = baseXG * htShare;
-    const sh = baseXG * (1 - htShare);
+    const fh = baseXG * htShare, sh = baseXG * (1 - htShare);
     if (elapsed <= 45) return fh * (45 - elapsed) / 45 + sh;
     return sh * (90 - elapsed) / 45;
   }
   function xgSoFar(baseXG, elapsed, htShare) {
     if (elapsed <= 0) return 0;
     if (elapsed >= 90) return baseXG;
-    const fh = baseXG * htShare;
-    const sh = baseXG * (1 - htShare);
+    const fh = baseXG * htShare, sh = baseXG * (1 - htShare);
     if (elapsed <= 45) return fh * (elapsed / 45);
     return fh + sh * ((elapsed - 45) / 45);
   }
   function liveMomentumFactors(scoreDiff, elapsed, totalGoals) {
     let homeBoost = 1.0, awayBoost = 1.0;
-    const lateGame = elapsed >= 60;
-    const veryLate = elapsed >= 75;
+    const lateGame = elapsed >= 60, veryLate = elapsed >= 75;
     if (scoreDiff >= 2 && lateGame) { homeBoost = 0.90; awayBoost = 1.15; }
     else if (scoreDiff === 1 && veryLate) { homeBoost = 0.95; awayBoost = 1.10; }
     else if (scoreDiff === -1 && lateGame) { homeBoost = 1.15; awayBoost = 0.95; }
@@ -1489,72 +1617,52 @@
     return { homeBoost, awayBoost };
   }
 
-  // ============================================================
-  // Main Calculate
-  // ============================================================
-  let lastSnapshot = null;
-
   function calculate() {
     const homeName = (document.getElementById('homeName').value || '').trim() || 'เจ้าบ้าน';
     const awayName = (document.getElementById('awayName').value || '').trim() || 'ทีมเยือน';
-
     const homeStats = getTeamStats('home');
     const awayStats = getTeamStats('away');
     const homeForm = getFormMultiplier('homeFormBtns');
     const awayForm = getFormMultiplier('awayFormBtns');
-
     const matchType = document.getElementById('matchType').value;
     const leagueKey = (document.getElementById('league')?.value) || 'standard';
     const leagueProfile = LEAGUE_PROFILES[leagueKey] || LEAGUE_PROFILES.standard;
     const ahVal = parseFloat(document.getElementById('ahLine').value) || 0;
     const ouValStr = document.getElementById('ouLine').value;
-
     let elapsed = clamp(safeNum('elapsedMinutes', 0), 0, 90);
     const curHome = Math.max(0, parseInt(document.getElementById('liveHomeScore').value) || 0);
     const curAway = Math.max(0, parseInt(document.getElementById('liveAwayScore').value) || 0);
-
     let htCurHome = curHome, htCurAway = curAway;
     if (elapsed >= 45) {
       htCurHome = Math.max(0, parseInt(document.getElementById('htHomeScore').value) || 0);
       htCurAway = Math.max(0, parseInt(document.getElementById('htAwayScore').value) || 0);
       if (htCurHome > curHome || htCurAway > curAway) {
-        alert('⚠️ สกอร์ครึ่งแรกต้องไม่มากกว่าสกอร์ปัจจุบัน\nระบบจะปรับให้ไม่เกินสกอร์ปัจจุบัน');
+        alert('⚠️ สกอร์ครึ่งแรกต้องไม่มากกว่าสกอร์ปัจจุบัน');
         htCurHome = Math.min(htCurHome, curHome);
         htCurAway = Math.min(htCurAway, curAway);
         document.getElementById('htHomeScore').value = htCurHome;
         document.getElementById('htAwayScore').value = htCurAway;
       }
     }
-
-    let paceMult = 1.0;
-    let homeAdv = leagueProfile.homeAdv;
-    let htShare = leagueProfile.htShare;
+    let paceMult = 1.0, homeAdv = leagueProfile.homeAdv, htShare = leagueProfile.htShare;
     const LEAGUE_PRIOR = leagueProfile.avg;
-
     switch (matchType) {
-      case 'women':    paceMult = 1.12; homeAdv = 1.06; htShare = 0.47; break;
-      case 'youth':    paceMult = 1.18; homeAdv = 1.05; htShare = 0.48; break;
+      case 'women': paceMult = 1.12; homeAdv = 1.06; htShare = 0.47; break;
+      case 'youth': paceMult = 1.18; homeAdv = 1.05; htShare = 0.48; break;
       case 'friendly': paceMult = 1.10; homeAdv = 1.03; htShare = 0.46; break;
-      case 'attacking':paceMult = 1.15; break;
-      case 'defensive':paceMult = 0.88; homeAdv = 1.12; htShare = 0.40; break;
-      default:         paceMult = 1.00;
+      case 'attacking': paceMult = 1.15; break;
+      case 'defensive': paceMult = 0.88; homeAdv = 1.12; htShare = 0.40; break;
+      default: paceMult = 1.00;
     }
-
     const observedLeagueAvg = (homeStats.gf + homeStats.ga + awayStats.gf + awayStats.ga) / 4;
     const leaguePriorWeight = leagueKey === 'standard' ? 0.4 : 0.6;
-    const leagueAvg = clamp(
-      (observedLeagueAvg * (1 - leaguePriorWeight)) + (LEAGUE_PRIOR * leaguePriorWeight),
-      0.8, 2.0
-    );
-
+    const leagueAvg = clamp((observedLeagueAvg * (1 - leaguePriorWeight)) + (LEAGUE_PRIOR * leaguePriorWeight), 0.8, 2.0);
     const homeAttack = clamp(homeStats.gf / leagueAvg, 0.3, 3.0);
     const homeDefense = clamp(homeStats.ga / leagueAvg, 0.3, 3.0);
     const awayAttack = clamp(awayStats.gf / leagueAvg, 0.3, 3.0);
     const awayDefense = clamp(awayStats.ga / leagueAvg, 0.3, 3.0);
-
     let baseHomeXG = homeAttack * awayDefense * leagueAvg * homeAdv * homeForm * paceMult;
     let baseAwayXG = awayAttack * homeDefense * leagueAvg * (2 - homeAdv) * awayForm * paceMult;
-
     if (ahVal !== 0) {
       const currentMargin = baseHomeXG - baseAwayXG;
       const targetMargin = invertPoissonAH(ahVal, 0.5);
@@ -1562,10 +1670,8 @@
       baseHomeXG = Math.max(0.05, baseHomeXG + marginShift * 0.5);
       baseAwayXG = Math.max(0.05, baseAwayXG - marginShift * 0.5);
     }
-
     baseHomeXG = Math.min(6, baseHomeXG);
     baseAwayXG = Math.min(6, baseAwayXG);
-
     if (ouValStr !== 'none') {
       const marketLine = parseFloat(ouValStr);
       const modelTotal = baseHomeXG + baseAwayXG;
@@ -1577,7 +1683,6 @@
         baseAwayXG *= scale;
       }
     }
-
     if (elapsed > 0) {
       const scoreDiff = curHome - curAway;
       const totalGoals = curHome + curAway;
@@ -1589,61 +1694,48 @@
       const surplus = (curHome + curAway) - (expHomeSoFar + expAwaySoFar);
       if (surplus > 0.8) {
         const liveBoost = Math.min(1.15, 1 + (surplus * 0.04));
-        baseHomeXG *= liveBoost;
-        baseAwayXG *= liveBoost;
+        baseHomeXG *= liveBoost; baseAwayXG *= liveBoost;
       }
     }
-
     const htRemHomeXG = elapsed < 45 ? baseHomeXG * htShare * ((45 - elapsed) / 45) : 0;
     const htRemAwayXG = elapsed < 45 ? baseAwayXG * htShare * ((45 - elapsed) / 45) : 0;
     const ftRemHomeXG = remainingXG(baseHomeXG, elapsed, htShare);
     const ftRemAwayXG = remainingXG(baseAwayXG, elapsed, htShare);
-
     const htRes = computeOutcomeMatrix(htCurHome, htCurAway, htRemHomeXG, htRemAwayXG);
     const ftRes = computeOutcomeMatrix(curHome, curAway, ftRemHomeXG, ftRemAwayXG);
-
     document.getElementById('resultsSection').classList.add('active');
     hasCalculated = true;
     dirtyGroups.clear();
     updateStaleWarning();
-
     lastCalcResult = {
       homeXG: baseHomeXG, awayXG: baseAwayXG,
       remHomeXG: ftRemHomeXG, remAwayXG: ftRemAwayXG,
       htRemHomeXG, htRemAwayXG, elapsed, leagueKey
     };
-
     lastSnapshot = {
       homeName, awayName, leagueKey, leagueLabel: leagueProfile.label,
       elapsed, curHome, curAway, homeXG: baseHomeXG, awayXG: baseAwayXG,
       htRes, ftRes, timestamp: Date.now()
     };
-
     const banner = document.getElementById('statusBanner');
     const totalExpected = baseHomeXG + baseAwayXG;
     const leagueTag = leagueKey !== 'standard' ? `<span class="league-tag">${leagueProfile.label}</span>` : '';
     const dcTag = `<span class="dc-tag">DC τ</span>`;
     const poiTag = (ahVal !== 0 || ouValStr !== 'none') ? `<span class="poi-tag">Poisson-inv</span>` : '';
-
     if (elapsed === 0) {
       banner.innerHTML = `<span>📊 <strong>โหมดก่อนแข่ง (0')</strong> ${leagueTag} ${dcTag} ${poiTag}</span><span>คาดการณ์ประตูรวม: <strong>${totalExpected.toFixed(2)}</strong></span><span>สกอร์เริ่มต้น: 0 - 0</span>`;
     } else {
       banner.innerHTML = `<span>🔴 <strong>บอลสด (นาทีที่ ${elapsed}')</strong> ${leagueTag} ${dcTag} ${poiTag} | เหลือครึ่งแรก <strong>${Math.max(0, 45 - elapsed)}'</strong> | เหลือเต็มเกม <strong>${Math.max(0, 90 - elapsed)}'</strong></span><span>คาดการณ์ประตูรวม: <strong>${totalExpected.toFixed(2)}</strong></span><span>สกอร์: <strong>${homeName} ${curHome} - ${curAway} ${awayName}</strong></span>`;
     }
-
     document.getElementById('htHomeLabel').textContent = `${homeName} นำ`;
     document.getElementById('htAwayLabel').textContent = `${awayName} นำ`;
     document.getElementById('htXgBadge').textContent = `xG ที่เหลือ: ${htRemHomeXG.toFixed(2)} - ${htRemAwayXG.toFixed(2)}`;
     document.getElementById('htTotalXg').textContent = `xG คาดครึ่งแรก: ${(baseHomeXG * htShare).toFixed(2)} - ${(baseAwayXG * htShare).toFixed(2)}`;
-
     const htNote = document.getElementById('htEndedNote');
     if (elapsed >= 45) {
       htNote.style.display = 'block';
       htNote.textContent = `✅ จบครึ่งแรก (HT ${htCurHome} - ${htCurAway})`;
-    } else {
-      htNote.style.display = 'none';
-    }
-
+    } else htNote.style.display = 'none';
     document.getElementById('htHomeWin').textContent = htRes.homeWin.toFixed(1) + '%';
     document.getElementById('htDraw').textContent = htRes.draw.toFixed(1) + '%';
     document.getElementById('htAwayWin').textContent = htRes.awayWin.toFixed(1) + '%';
@@ -1654,12 +1746,10 @@
     document.getElementById('htBttsNo').textContent = `ไม่ได้ ${(100 - htRes.btts).toFixed(1)}%`;
     renderTopScores('htTopScores', htRes.topScores);
     renderChart('chartHT', htRes);
-
     document.getElementById('ftHomeLabel').textContent = `${homeName} ชนะ`;
     document.getElementById('ftAwayLabel').textContent = `${awayName} ชนะ`;
     document.getElementById('ftXgBadge').textContent = `xG ที่เหลือ: ${ftRemHomeXG.toFixed(2)} - ${ftRemAwayXG.toFixed(2)}`;
     document.getElementById('ftTotalXg').textContent = `xG คาดเต็มเกม: ${baseHomeXG.toFixed(2)} - ${baseAwayXG.toFixed(2)}`;
-
     document.getElementById('ftHomeWin').textContent = ftRes.homeWin.toFixed(1) + '%';
     document.getElementById('ftDraw').textContent = ftRes.draw.toFixed(1) + '%';
     document.getElementById('ftAwayWin').textContent = ftRes.awayWin.toFixed(1) + '%';
@@ -1673,13 +1763,11 @@
     document.getElementById('ftBttsNo').textContent = `ไม่ได้ ${(100 - ftRes.btts).toFixed(1)}%`;
     renderTopScores('ftTopScores', ftRes.topScores);
     renderChart('chartFT', ftRes);
-
     saveState();
     saveToHistory(lastSnapshot);
     updateMobileStatus();
     showFab();
     haptic(25);
-
     document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -1690,17 +1778,14 @@
     const scores = [];
     let totalProb = 0;
     const maxG = Math.max(10, Math.ceil((remHomeXG + remAwayXG) * 3));
-    const lambda = Math.max(0.01, remHomeXG);
-    const mu = Math.max(0.01, remAwayXG);
+    const lambda = Math.max(0.01, remHomeXG), mu = Math.max(0.01, remAwayXG);
     for (let addH = 0; addH <= maxG; addH++) {
       const pH = poisson(addH, remHomeXG);
       for (let addA = 0; addA <= maxG; addA++) {
         const pA = poisson(addA, remAwayXG);
-        const tau = dcTau(addH, addA, lambda, mu);
-        const prob = pH * pA * tau;
+        const prob = pH * pA * dcTau(addH, addA, lambda, mu);
         totalProb += prob;
-        const finalH = baseH + addH;
-        const finalA = baseA + addA;
+        const finalH = baseH + addH, finalA = baseA + addA;
         const total = finalH + finalA;
         if (finalH > finalA) homeWin += prob;
         else if (finalH === finalA) draw += prob;
@@ -1729,8 +1814,7 @@
   }
 
   function setOU(overId, underId, overPct) {
-    const o = clamp(overPct, 0, 100);
-    const u = 100 - o;
+    const o = clamp(overPct, 0, 100), u = 100 - o;
     document.getElementById(overId).textContent = `สูง ${o.toFixed(1)}%`;
     document.getElementById(underId).textContent = `ต่ำ ${u.toFixed(1)}%`;
   }
@@ -1738,7 +1822,7 @@
   function renderTopScores(containerId, top) {
     const container = document.getElementById(containerId);
     if (!top.length) {
-      container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#94a3b8; font-size:0.9rem; padding:12px;">ไม่มีผลลัพธ์ (ไม่เหลือเวลาแข่งขัน)</div>`;
+      container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#94a3b8; font-size:0.9rem; padding:12px;">ไม่มีผลลัพธ์</div>`;
       return;
     }
     container.innerHTML = top.map((item, idx) => `
@@ -1750,17 +1834,11 @@
     `).join('');
   }
 
-  // ============================================================
-  // Chart (SVG)
-  // ============================================================
   function renderChart(svgId, res) {
     const svg = document.getElementById(svgId);
     if (!svg) return;
-    const W = 340, H = 100;
-    const padX = 10, padY = 8;
-    const chartW = W - padX * 2;
-    const chartH = H - padY * 2 - 20;
-
+    const W = 340, H = 100, padX = 10, padY = 8;
+    const chartW = W - padX * 2, chartH = H - padY * 2 - 20;
     const items = [
       { label: 'Home', value: res.homeWin, color: '#38bdf8' },
       { label: 'Draw', value: res.draw, color: '#94a3b8' },
@@ -1769,7 +1847,6 @@
     const maxVal = Math.max(...items.map(i => i.value), 1);
     const barW = (chartW - 20) / items.length;
     let svgContent = '';
-
     items.forEach((item, i) => {
       const barH = (item.value / maxVal) * chartH;
       const x = padX + 10 + i * barW + (barW - 40) / 2;
@@ -1778,13 +1855,10 @@
       svgContent += `<text x="${x + 20}" y="${H - 4}" text-anchor="middle" font-size="11" font-weight="700" fill="#e2e8f0">${item.value.toFixed(1)}%</text>`;
       svgContent += `<text x="${x + 20}" y="${padY + 12}" text-anchor="middle" font-size="9" fill="#94a3b8">${item.label}</text>`;
     });
-
     svg.innerHTML = svgContent;
   }
 
-  // ============================================================
   // History
-  // ============================================================
   function getHistory() {
     try {
       const raw = localStorage.getItem(HISTORY_KEY);
@@ -1793,44 +1867,26 @@
       return Array.isArray(arr) ? arr : [];
     } catch (e) { return []; }
   }
-
   function saveToHistory(snapshot) {
     if (!snapshot) return;
     try {
       const hist = getHistory();
       const compact = {
-        id: snapshot.timestamp,
-        homeName: snapshot.homeName,
-        awayName: snapshot.awayName,
-        leagueLabel: snapshot.leagueLabel,
-        leagueKey: snapshot.leagueKey,
-        elapsed: snapshot.elapsed,
-        curHome: snapshot.curHome,
-        curAway: snapshot.curAway,
-        homeXG: snapshot.homeXG,
-        awayXG: snapshot.awayXG,
-        ftHomeWin: snapshot.ftRes.homeWin,
-        ftDraw: snapshot.ftRes.draw,
-        ftAwayWin: snapshot.ftRes.awayWin,
-        ftOver25: snapshot.ftRes.over25,
-        timestamp: snapshot.timestamp,
-        savedAt: Date.now()
+        id: snapshot.timestamp, homeName: snapshot.homeName, awayName: snapshot.awayName,
+        leagueLabel: snapshot.leagueLabel, leagueKey: snapshot.leagueKey,
+        elapsed: snapshot.elapsed, curHome: snapshot.curHome, curAway: snapshot.curAway,
+        homeXG: snapshot.homeXG, awayXG: snapshot.awayXG,
+        ftHomeWin: snapshot.ftRes.homeWin, ftDraw: snapshot.ftRes.draw,
+        ftAwayWin: snapshot.ftRes.awayWin, ftOver25: snapshot.ftRes.over25,
+        timestamp: snapshot.timestamp, savedAt: Date.now()
       };
       const filtered = hist.filter(h => h.id !== compact.id);
       filtered.unshift(compact);
-      const trimmed = filtered.slice(0, MAX_HISTORY);
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed));
-    } catch (e) { console.warn('History save failed:', e); }
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(filtered.slice(0, MAX_HISTORY)));
+    } catch (e) { console.warn(e); }
   }
-
-  function openHistoryModal() {
-    renderHistoryList();
-    document.getElementById('historyModal').classList.add('active');
-  }
-  function closeHistoryModal() {
-    document.getElementById('historyModal').classList.remove('active');
-  }
-
+  function openHistoryModal() { renderHistoryList(); document.getElementById('historyModal').classList.add('active'); }
+  function closeHistoryModal() { document.getElementById('historyModal').classList.remove('active'); }
   function renderHistoryList() {
     const list = document.getElementById('historyList');
     const hist = getHistory();
@@ -1842,37 +1898,26 @@
       const date = new Date(h.savedAt || h.timestamp);
       const dateStr = date.toLocaleString('th-TH', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
       const elapsedStr = h.elapsed === 0 ? "ก่อนแข่ง" : `${h.elapsed}'`;
-      return `
-        <div class="history-item" onclick="loadHistoryItem(${h.id})">
-          <div class="history-info">
-            <div class="history-match">${escapeHTML(h.homeName)} vs ${escapeHTML(h.awayName)}</div>
-            <div class="history-meta">
-              <span>${h.leagueLabel || ''}</span>
-              <span>• ${elapsedStr}</span>
-              <span>• ${dateStr}</span>
-            </div>
-            <div class="history-meta" style="margin-top:4px;">
-              <span style="color:#38bdf8;">H ${h.ftHomeWin.toFixed(1)}%</span>
-              <span style="color:#94a3b8;">D ${h.ftDraw.toFixed(1)}%</span>
-              <span style="color:#f472b6;">A ${h.ftAwayWin.toFixed(1)}%</span>
-            </div>
+      return `<div class="history-item" onclick="loadHistoryItem(${h.id})">
+        <div class="history-info">
+          <div class="history-match">${escapeHTML(h.homeName)} vs ${escapeHTML(h.awayName)}</div>
+          <div class="history-meta"><span>${h.leagueLabel || ''}</span><span>• ${elapsedStr}</span><span>• ${dateStr}</span></div>
+          <div class="history-meta" style="margin-top:4px;">
+            <span style="color:#38bdf8;">H ${h.ftHomeWin.toFixed(1)}%</span>
+            <span style="color:#94a3b8;">D ${h.ftDraw.toFixed(1)}%</span>
+            <span style="color:#f472b6;">A ${h.ftAwayWin.toFixed(1)}%</span>
           </div>
-          <div class="history-score">${h.curHome}-${h.curAway}</div>
-          <button type="button" class="history-delete" onclick="event.stopPropagation(); deleteHistoryItem(${h.id})" aria-label="ลบ">×</button>
         </div>
-      `;
+        <div class="history-score">${h.curHome}-${h.curAway}</div>
+        <button type="button" class="history-delete" onclick="event.stopPropagation(); deleteHistoryItem(${h.id})" aria-label="ลบ">×</button>
+      </div>`;
     }).join('');
   }
-
   function escapeHTML(s) {
-    return String(s).replace(/[&<>"']/g, (c) => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
-
   function loadHistoryItem(id) {
-    const hist = getHistory();
-    const item = hist.find(h => h.id === id);
+    const item = getHistory().find(h => h.id === id);
     if (!item) return;
     document.getElementById('homeName').value = item.homeName;
     document.getElementById('awayName').value = item.awayName;
@@ -1889,86 +1934,56 @@
     hasCalculated = false;
     dirtyGroups.clear();
     closeHistoryModal();
-    showToast(`✓ โหลด "${item.homeName} vs ${item.awayName}" แล้ว`);
+    showToast(`✓ โหลด "${item.homeName} vs ${item.awayName}"`);
     calculate();
   }
-
   function deleteHistoryItem(id) {
-    const hist = getHistory().filter(h => h.id !== id);
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(hist));
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(getHistory().filter(h => h.id !== id)));
     renderHistoryList();
   }
-
   function clearHistory() {
     if (!confirm('ลบประวัติทั้งหมด?')) return;
     localStorage.removeItem(HISTORY_KEY);
     renderHistoryList();
-    showToast('✓ ลบประวัติทั้งหมดแล้ว');
+    showToast('✓ ลบประวัติแล้ว');
   }
 
-  // ============================================================
   // Export
-  // ============================================================
-  function toggleExportMenu() {
-    document.getElementById('exportMenu').classList.toggle('active');
-  }
+  function toggleExportMenu() { document.getElementById('exportMenu').classList.toggle('active'); }
   document.addEventListener('click', (e) => {
     const menu = document.getElementById('exportMenu');
-    const wrap = menu?.parentElement;
-    if (menu && wrap && !wrap.contains(e.target)) {
-      menu.classList.remove('active');
-    }
+    if (menu && !menu.parentElement.contains(e.target)) menu.classList.remove('active');
   });
-
   function buildSnapshotData() {
-    if (!lastSnapshot) {
-      showToast('⚠️ กรุณาประมวลผลก่อน', true);
-      return null;
-    }
+    if (!lastSnapshot) { showToast('⚠️ กรุณาประมวลผลก่อน', true); return null; }
     return lastSnapshot;
   }
+  function slugify(s) { return String(s).trim().replace(/[^\wก-๙]+/g, '_').substring(0, 30); }
 
   function exportCSV() {
     const s = buildSnapshotData();
     if (!s) return;
     document.getElementById('exportMenu').classList.remove('active');
-
-    const elapsedLabel = s.elapsed === 0 ? '0' : String(s.elapsed);
     const rows = [
       ['Field', 'Value'],
       ['Match', `${s.homeName} vs ${s.awayName}`],
       ['League', s.leagueLabel],
-      ['Elapsed (min)', elapsedLabel],
+      ['Elapsed (min)', String(s.elapsed)],
       ['Current Score', `${s.curHome} - ${s.curAway}`],
-      ['Home xG (remaining)', s.homeXG.toFixed(2)],
-      ['Away xG (remaining)', s.awayXG.toFixed(2)],
-      ['--- HT ---', ''],
+      ['Home xG', s.homeXG.toFixed(2)],
+      ['Away xG', s.awayXG.toFixed(2)],
       ['HT Home Win %', s.htRes.homeWin.toFixed(2)],
       ['HT Draw %', s.htRes.draw.toFixed(2)],
       ['HT Away Win %', s.htRes.awayWin.toFixed(2)],
-      ['HT O 1.5 %', s.htRes.over15.toFixed(2)],
-      ['HT U 1.5 %', (100 - s.htRes.over15).toFixed(2)],
-      ['HT BTTS Yes %', s.htRes.btts.toFixed(2)],
-      ['--- FT ---', ''],
       ['FT Home Win %', s.ftRes.homeWin.toFixed(2)],
       ['FT Draw %', s.ftRes.draw.toFixed(2)],
       ['FT Away Win %', s.ftRes.awayWin.toFixed(2)],
-      ['FT O 1.5 %', s.ftRes.over15.toFixed(2)],
       ['FT O 2.5 %', s.ftRes.over25.toFixed(2)],
-      ['FT O 3.5 %', s.ftRes.over35.toFixed(2)],
-      ['FT O 4.5 %', s.ftRes.over45.toFixed(2)],
-      ['FT O 5.5 %', s.ftRes.over55.toFixed(2)],
-      ['FT O 6.5 %', s.ftRes.over65.toFixed(2)],
+      ['FT U 2.5 %', (100 - s.ftRes.over25).toFixed(2)],
       ['FT BTTS Yes %', s.ftRes.btts.toFixed(2)],
-      ['--- Top Scores FT ---', ''],
       ...s.ftRes.topScores.map((ts, i) => [`Top ${i + 1}`, `${ts.score} (${ts.prob.toFixed(2)}%)`])
     ];
-
-    const csv = rows.map(r => r.map(cell => {
-      const str = String(cell);
-      return /[,"\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
-    }).join(',')).join('\n');
-
+    const csv = rows.map(r => r.map(c => /[,"\n]/.test(c) ? `"${c.replace(/"/g, '""')}"` : c).join(',')).join('\n');
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1977,10 +1992,6 @@
     a.click();
     URL.revokeObjectURL(url);
     showToast('✓ ดาวน์โหลด CSV แล้ว');
-  }
-
-  function slugify(s) {
-    return String(s).trim().replace(/[^\wก-๙]+/g, '_').substring(0, 30);
   }
 
   function exportPNG() {
@@ -1992,52 +2003,25 @@
       const canvas = document.createElement('canvas');
       canvas.width = W; canvas.height = H;
       const ctx = canvas.getContext('2d');
-
-      // Background gradient
       const grad = ctx.createLinearGradient(0, 0, W, H);
-      grad.addColorStop(0, '#0f172a');
-      grad.addColorStop(1, '#172554');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H);
-
-      // Title
-      ctx.fillStyle = '#f8fafc';
-      ctx.font = 'bold 56px "Segoe UI", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('⚽ Match Analysis', W / 2, 100);
-
-      // Teams
-      ctx.font = 'bold 48px "Segoe UI", sans-serif';
-      ctx.fillStyle = '#38bdf8';
+      grad.addColorStop(0, '#0f172a'); grad.addColorStop(1, '#172554');
+      ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 56px "Segoe UI", sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText('⚽ Match Analysis', W / 2, 100);
+      ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 48px "Segoe UI", sans-serif';
       ctx.fillText(s.homeName, W / 2, 200);
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = '40px "Segoe UI", sans-serif';
+      ctx.fillStyle = '#94a3b8'; ctx.font = '40px "Segoe UI", sans-serif';
       ctx.fillText('vs', W / 2, 260);
-      ctx.fillStyle = '#f472b6';
-      ctx.font = 'bold 48px "Segoe UI", sans-serif';
+      ctx.fillStyle = '#f472b6'; ctx.font = 'bold 48px "Segoe UI", sans-serif';
       ctx.fillText(s.awayName, W / 2, 330);
-
-      // Score
-      ctx.fillStyle = '#f8fafc';
-      ctx.font = 'bold 96px "Segoe UI", sans-serif';
+      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 96px "Segoe UI", sans-serif';
       ctx.fillText(`${s.curHome} - ${s.curAway}`, W / 2, 460);
-
-      // Meta
-      ctx.font = '28px "Segoe UI", sans-serif';
-      ctx.fillStyle = '#94a3b8';
+      ctx.font = '28px "Segoe UI", sans-serif'; ctx.fillStyle = '#94a3b8';
       const elapsedStr = s.elapsed === 0 ? 'ก่อนแข่ง' : `นาทีที่ ${s.elapsed}'`;
       ctx.fillText(`${elapsedStr}  •  ${s.leagueLabel}`, W / 2, 510);
-
-      // 1X2 bars
-      const startY = 600;
-      const barH = 80;
-      const barW = 800;
-      const barX = (W - barW) / 2;
-      ctx.font = 'bold 32px "Segoe UI", sans-serif';
-      ctx.fillStyle = '#f8fafc';
-      ctx.textAlign = 'left';
-      ctx.fillText('FT Result (1X2)', barX, startY - 20);
-
+      const startY = 600, barH = 80, barW = 800, barX = (W - barW) / 2;
+      ctx.font = 'bold 32px "Segoe UI", sans-serif'; ctx.fillStyle = '#f8fafc';
+      ctx.textAlign = 'left'; ctx.fillText('FT Result (1X2)', barX, startY - 20);
       const items = [
         { label: s.homeName, value: s.ftRes.homeWin, color: '#38bdf8' },
         { label: 'Draw', value: s.ftRes.draw, color: '#94a3b8' },
@@ -2045,30 +2029,19 @@
       ];
       items.forEach((item, i) => {
         const y = startY + i * (barH + 40);
-        ctx.font = '28px "Segoe UI", sans-serif';
-        ctx.fillStyle = item.color;
-        ctx.textAlign = 'left';
-        ctx.fillText(item.label, barX, y - 8);
-        // bar background
+        ctx.font = '28px "Segoe UI", sans-serif'; ctx.fillStyle = item.color;
+        ctx.textAlign = 'left'; ctx.fillText(item.label, barX, y - 8);
         ctx.fillStyle = 'rgba(148, 163, 184, 0.15)';
         ctx.fillRect(barX, y + 10, barW, barH - 20);
-        // bar fill
         ctx.fillStyle = item.color;
         ctx.fillRect(barX, y + 10, barW * (item.value / 100), barH - 20);
-        // percent
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 36px "Segoe UI", sans-serif';
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 36px "Segoe UI", sans-serif';
         ctx.textAlign = 'right';
         ctx.fillText(item.value.toFixed(1) + '%', barX + barW - 20, y + barH / 2 + 10);
       });
-
-      // O/U summary
       const ouY = startY + items.length * (barH + 40) + 40;
-      ctx.fillStyle = '#f8fafc';
-      ctx.font = 'bold 32px "Segoe UI", sans-serif';
-      ctx.textAlign = 'left';
-      ctx.fillText('Over / Under (FT)', barX, ouY);
-
+      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 32px "Segoe UI", sans-serif';
+      ctx.textAlign = 'left'; ctx.fillText('Over/Under (FT)', barX, ouY);
       const ouLines = [
         { line: '1.5', over: s.ftRes.over15 },
         { line: '2.5', over: s.ftRes.over25 },
@@ -2078,47 +2051,30 @@
       const ouColW = barW / 4;
       ouLines.forEach((item, i) => {
         const x = barX + i * ouColW;
-        ctx.fillStyle = '#94a3b8';
-        ctx.font = '24px "Segoe UI", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(`O/U ${item.line}`, x + ouColW / 2, ouY + 40);
-        ctx.fillStyle = '#34d399';
-        ctx.font = 'bold 40px "Segoe UI", sans-serif';
+        ctx.fillStyle = '#94a3b8'; ctx.font = '24px "Segoe UI", sans-serif';
+        ctx.textAlign = 'center'; ctx.fillText(`O/U ${item.line}`, x + ouColW / 2, ouY + 40);
+        ctx.fillStyle = '#34d399'; ctx.font = 'bold 40px "Segoe UI", sans-serif';
         ctx.fillText(item.over.toFixed(0) + '%', x + ouColW / 2, ouY + 90);
-        ctx.fillStyle = '#f87171';
-        ctx.font = '24px "Segoe UI", sans-serif';
+        ctx.fillStyle = '#f87171'; ctx.font = '24px "Segoe UI", sans-serif';
         ctx.fillText((100 - item.over).toFixed(0) + '%', x + ouColW / 2, ouY + 125);
       });
-
-      // Top scores
       const topY = ouY + 180;
-      ctx.fillStyle = '#f8fafc';
-      ctx.font = 'bold 32px "Segoe UI", sans-serif';
-      ctx.textAlign = 'left';
-      ctx.fillText('🎯 Top Scores (FT)', barX, topY);
-
+      ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 32px "Segoe UI", sans-serif';
+      ctx.textAlign = 'left'; ctx.fillText('🎯 Top Scores (FT)', barX, topY);
       const topW = barW / 3;
       s.ftRes.topScores.forEach((ts, i) => {
         const x = barX + i * topW;
         ctx.fillStyle = i === 0 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(148, 163, 184, 0.1)';
         ctx.fillRect(x + 10, topY + 20, topW - 20, 140);
-        ctx.fillStyle = '#f8fafc';
-        ctx.font = 'bold 48px "Segoe UI", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(ts.score, x + topW / 2, topY + 85);
-        ctx.fillStyle = '#34d399';
-        ctx.font = 'bold 32px "Segoe UI", sans-serif';
+        ctx.fillStyle = '#f8fafc'; ctx.font = 'bold 48px "Segoe UI", sans-serif';
+        ctx.textAlign = 'center'; ctx.fillText(ts.score, x + topW / 2, topY + 85);
+        ctx.fillStyle = '#34d399'; ctx.font = 'bold 32px "Segoe UI", sans-serif';
         ctx.fillText(ts.prob.toFixed(1) + '%', x + topW / 2, topY + 130);
       });
-
-      // Watermark
-      ctx.fillStyle = 'rgba(148, 163, 184, 0.5)';
-      ctx.font = '20px "Segoe UI", sans-serif';
+      ctx.fillStyle = 'rgba(148, 163, 184, 0.5)'; ctx.font = '20px "Segoe UI", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('Generated by Football Predictor v24', W / 2, H - 40);
-      const dateStr = new Date().toLocaleString('th-TH');
-      ctx.fillText(dateStr, W / 2, H - 15);
-
+      ctx.fillText('Football Predictor v25 (PWA)', W / 2, H - 40);
+      ctx.fillText(new Date().toLocaleString('th-TH'), W / 2, H - 15);
       canvas.toBlob(blob => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -2126,11 +2082,10 @@
         a.download = `football_${slugify(s.homeName)}_vs_${slugify(s.awayName)}.png`;
         a.click();
         URL.revokeObjectURL(url);
-        showToast('✓ ดาวน์โหลด PNG แล้ว (1080×1350)');
+        showToast('✓ ดาวน์โหลด PNG แล้ว');
       }, 'image/png');
     } catch (e) {
-      console.error(e);
-      showToast('⚠️ สร้าง PNG ไม่สำเร็จ', true);
+      console.error(e); showToast('⚠️ สร้าง PNG ไม่สำเร็จ', true);
     }
   }
 
@@ -2138,62 +2093,41 @@
     const s = buildSnapshotData();
     if (!s) return;
     document.getElementById('exportMenu').classList.remove('active');
-
     const elapsedStr = s.elapsed === 0 ? "ก่อนแข่ง" : `นาที ${s.elapsed}'`;
     const lines = [
       `⚽ ${s.homeName} ${s.curHome} - ${s.curAway} ${s.awayName}`,
       `📊 ${elapsedStr} | ${s.leagueLabel}`,
       ``,
-      `🎯 ผลเต็มเวลา (1X2):`,
+      `🎯 FT Result (1X2):`,
       `   ${s.homeName}: ${s.ftRes.homeWin.toFixed(1)}%`,
-      `   เสมอ: ${s.ftRes.draw.toFixed(1)}%`,
+      `   Draw: ${s.ftRes.draw.toFixed(1)}%`,
       `   ${s.awayName}: ${s.ftRes.awayWin.toFixed(1)}%`,
       ``,
-      `📈 สูง/ต่ำ:`,
-      `   O/U 1.5: Over ${s.ftRes.over15.toFixed(1)}% | Under ${(100 - s.ftRes.over15).toFixed(1)}%`,
+      `📈 O/U:`,
       `   O/U 2.5: Over ${s.ftRes.over25.toFixed(1)}% | Under ${(100 - s.ftRes.over25).toFixed(1)}%`,
-      `   O/U 3.5: Over ${s.ftRes.over35.toFixed(1)}% | Under ${(100 - s.ftRes.over35).toFixed(1)}%`,
-      `   BTTS: ได้ ${s.ftRes.btts.toFixed(1)}% | ไม่ได้ ${(100 - s.ftRes.btts).toFixed(1)}%`,
+      `   BTTS: Yes ${s.ftRes.btts.toFixed(1)}% | No ${(100 - s.ftRes.btts).toFixed(1)}%`,
       ``,
       `🎲 Top Scores:`,
       ...s.ftRes.topScores.map((ts, i) => `   ${i + 1}. ${ts.score} (${ts.prob.toFixed(1)}%)`),
       ``,
-      `⏱️ ครึ่งแรก (1X2):`,
-      `   ${s.homeName}: ${s.htRes.homeWin.toFixed(1)}% | เสมอ: ${s.htRes.draw.toFixed(1)}% | ${s.awayName}: ${s.htRes.awayWin.toFixed(1)}%`,
-      ``,
-      `xG ที่เหลือ FT: ${s.homeXG.toFixed(2)} - ${s.awayXG.toFixed(2)}`,
-      `— Football Predictor v24`
+      `xG remaining: ${s.homeXG.toFixed(2)} - ${s.awayXG.toFixed(2)}`,
+      `— Football Predictor v25`
     ];
     const text = lines.join('\n');
-
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(() => {
-        showToast('✓ Copy ข้อความแล้ว');
-      }).catch(() => fallbackCopy(text));
-    } else {
-      fallbackCopy(text);
-    }
+      navigator.clipboard.writeText(text).then(() => showToast('✓ Copy แล้ว')).catch(() => fallbackCopy(text));
+    } else fallbackCopy(text);
   }
-
   function fallbackCopy(text) {
     const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      showToast('✓ Copy ข้อความแล้ว');
-    } catch (e) {
-      showToast('⚠️ Copy ไม่สำเร็จ', true);
-    }
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showToast('✓ Copy แล้ว'); }
+    catch (e) { showToast('⚠️ Copy ไม่สำเร็จ', true); }
     document.body.removeChild(ta);
   }
 
-  // ============================================================
   // Save/Load
-  // ============================================================
   function saveState() {
     try {
       const formVals = (sel) => [...document.querySelectorAll(sel + ' .form-btn')].map(b => b.dataset.val);
@@ -2225,9 +2159,8 @@
         savedAt: Date.now()
       };
       localStorage.setItem(SAVE_KEY, JSON.stringify(state));
-    } catch (e) { console.warn('Save failed:', e); }
+    } catch (e) { console.warn(e); }
   }
-
   function loadState() {
     try {
       let raw = localStorage.getItem(SAVE_KEY);
@@ -2260,23 +2193,16 @@
       restoreForm('#awayFormBtns', s.awayForm);
       if (s.homeMode) setInputMode('home', s.homeMode);
       if (s.awayMode) setInputMode('away', s.awayMode);
-      updateAvgPreview('home');
-      updateAvgPreview('away');
-      if (migratedFrom) {
-        try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); } catch (e) {}
-      }
+      updateAvgPreview('home'); updateAvgPreview('away');
+      if (migratedFrom) try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); } catch (e) {}
       return { savedAt: s.savedAt || null, migratedFrom };
-    } catch (e) {
-      console.warn('Load failed:', e);
-      return null;
-    }
+    } catch (e) { console.warn(e); return null; }
   }
-
   function showLoadIndicator(info) {
     if (!info) return;
     const el = document.getElementById('loadIndicator');
     const when = info.savedAt ? new Date(info.savedAt).toLocaleString('th-TH') : '';
-    const prefix = info.migratedFrom ? `🔄 อัปเกรด ${info.migratedFrom}→v24` : '✓ โหลดข้อมูล';
+    const prefix = info.migratedFrom ? `🔄 อัปเกรด ${info.migratedFrom}→v25` : '✓ โหลดข้อมูล';
     el.textContent = `${prefix}${when ? ' (' + when + ')' : ''}`;
     el.style.display = 'block';
     setTimeout(() => { el.style.opacity = '0'; }, 3500);
@@ -2299,11 +2225,9 @@
     document.getElementById('awayMP').value = '10';
     document.getElementById('awayGF').value = '12';
     document.getElementById('awayGA').value = '13';
-    updateAvgPreview('home');
-    updateAvgPreview('away');
+    updateAvgPreview('home'); updateAvgPreview('away');
     document.querySelectorAll('.form-btn').forEach(btn => {
-      btn.setAttribute('data-val', 'D');
-      btn.textContent = 'D';
+      btn.setAttribute('data-val', 'D'); btn.textContent = 'D';
     });
     document.getElementById('elapsedMinutes').value = '0';
     document.getElementById('liveHomeScore').value = '0';
@@ -2325,18 +2249,15 @@
     updateMobileStatus();
     showFab();
     haptic(15);
-    try {
-      [SAVE_KEY, ...FALLBACK_KEYS].forEach(k => localStorage.removeItem(k));
-    } catch (e) {}
+    try { [SAVE_KEY, ...FALLBACK_KEYS].forEach(k => localStorage.removeItem(k)); } catch (e) {}
     showToast('✓ ล้างค่าแล้ว');
   }
 
-  // ============================================================
   // Init
-  // ============================================================
   window.addEventListener('load', () => {
-    updateAvgPreview('home');
-    updateAvgPreview('away');
+    initPWA();
+    updateOnlineStatus();
+    updateAvgPreview('home'); updateAvgPreview('away');
     const info = loadState();
     if (info) showLoadIndicator(info);
     updateMobileStatus();
@@ -2347,6 +2268,10 @@
     document.getElementById('historyModal').addEventListener('click', (e) => {
       if (e.target.id === 'historyModal') closeHistoryModal();
     });
+    // Show install button if already installed (edge case)
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      document.getElementById('btnInstall').classList.remove('show');
+    }
   });
 </script>
 </body>
