@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<title>วิเคราะห์คาดการณ์สกอร์ฟุตบอลล่วงหน้า & บอลสด (v19)</title>
+<title>วิเคราะห์คาดการณ์สกอร์ฟุตบอลล่วงหน้า & บอลสด (v21)</title>
 <style>
   :root {
     --bg: #0f172a;
@@ -217,7 +217,7 @@
   .q-time:hover { background: rgba(59, 130, 246, 0.4); }
 
   .settings-bar {
-    display: grid; grid-template-columns: 1.2fr 1.2fr 1fr 1fr;
+    display: grid; grid-template-columns: 1fr 1fr 1.1fr 1fr 1fr;
     gap: 14px; align-items: end;
     background: var(--card); border: 1px solid var(--border);
     border-radius: 12px; padding: 18px; margin-bottom: 20px;
@@ -247,6 +247,15 @@
     margin-bottom: 18px; font-size: 0.92rem;
     display: flex; justify-content: space-between;
     flex-wrap: wrap; gap: 10px;
+  }
+  .status-banner .league-tag {
+    background: rgba(139, 92, 246, 0.25);
+    border: 1px solid rgba(139, 92, 246, 0.5);
+    color: #c4b5fd;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
   }
   .results-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
@@ -310,9 +319,6 @@
     font-size: 0.85rem; margin-bottom: 12px; text-align: center;
   }
 
-  /* ============================================
-     📱 MOBILE & TOUCH OPTIMIZATIONS
-     ============================================ */
   @media (max-width: 900px), (pointer: coarse) {
     input[type="text"], input[type="number"], select, textarea {
       font-size: 16px;
@@ -378,6 +384,7 @@
       flex-direction: column; align-items: flex-start; gap: 4px;
       font-size: 0.85rem; padding: 10px 12px;
     }
+    .status-banner .league-tag { font-size: 0.72rem; }
 
     .form-hint { font-size: 0.68rem; }
     .guide-content { font-size: 0.86rem; }
@@ -389,7 +396,6 @@
 
     .guide-grabber { display: flex; }
 
-    /* ============ STICKY CALC BAR ============ */
     .mobile-calc-bar {
       display: flex;
       position: fixed;
@@ -438,7 +444,6 @@
     }
     .mobile-calc-status .mcs-xg.visible { display: block; }
 
-    /* PATCH 1: Hide xG on ≤480px */
     @media (max-width: 480px) {
       .mobile-calc-status .mcs-xg,
       .mobile-calc-status .mcs-xg.visible {
@@ -578,7 +583,7 @@
     <div class="guide-tabs">
       <button type="button" class="guide-tab active" onclick="switchGuideTab(0)">1. H2H</button>
       <button type="button" class="guide-tab" onclick="switchGuideTab(1)">2. ตารางคะแนน</button>
-      <button type="button" class="guide-tab" onclick="switchGuideTab(2)">3. Odds</button>
+      <button type="button" class="guide-tab" onclick="switchGuideTab(2)">3. Odds & ลีก</button>
     </div>
     <div id="guideTab0" class="guide-content active">
       <strong>วิธีดูจากแท็บ H2H:</strong> ข้ามคอลัมน์ซ้ายสุด แล้วดูเฉพาะ 2 คอลัมน์ขวา
@@ -600,6 +605,13 @@
       <div class="mock-box">
         • <b>Handicap (AH):</b> ดูฝั่งเจ้าบ้านต่อ (ติดลบ เช่น <code>-0.5</code>, <code>-1.5</code>) หรือทีมเยือนต่อ (บวก)<br>
         • <b>Goals (สูง-ต่ำ):</b> ตัวเลขราคาประตูรวม เช่น <code>2.5</code>, <code>3.0</code>, <code>3.5</code>
+      </div>
+      <strong style="display:block;margin-top:12px;">🏆 การเลือกลีก (ใหม่ v21):</strong>
+      <div class="mock-box">
+        • <b>ลีก / การแข่งขัน:</b> เลือกลีกที่แข่งอยู่ → โมเดลจะใช้ <b>baseline ประตู</b>, <b>home advantage</b>, และ <b>สัดส่วนประตูครึ่งแรก</b> ของลีกนั้น<br>
+        • ตัวอย่าง: Eredivisie baseline <b>1.60</b> (สูง) | Serie A baseline <b>1.33</b> (ต่ำ) | Thai League adv <b>1.13x</b> (สูง)<br>
+        • ถ้าไม่แน่ใจ/ลีกแปลก → เลือก <b>"ไม่ระบุ / ลีกทั่วไป"</b> (ใช้ baseline 1.35)<br>
+        • <b>หมายเหตุ:</b> ถ้าเลือกลีกที่ pace สูงอยู่แล้ว (Bundesliga/Eredivisie) ไม่จำเป็นต้องเลือก "⚡ ลีกเน้นเกมรุก" ในช่องประเภทการแข่งขันซ้ำ
       </div>
     </div>
   </div>
@@ -751,6 +763,21 @@
 
   <div class="settings-bar">
     <div>
+      <label for="league">🏆 ลีก / การแข่งขัน</label>
+      <select id="league" onchange="markStale('settings')" aria-label="ลีก">
+        <option value="standard" selected>ไม่ระบุ / ลีกทั่วไป</option>
+        <option value="epl">🏴 Premier League</option>
+        <option value="laliga">🇪🇸 La Liga</option>
+        <option value="bundesliga">🇩🇪 Bundesliga</option>
+        <option value="seriea">🇮🇹 Serie A</option>
+        <option value="ligue1">🇫🇷 Ligue 1</option>
+        <option value="eredivisie">🇳🇱 Eredivisie</option>
+        <option value="thaileague">🇹🇭 Thai League</option>
+        <option value="championship">🏴 Championship</option>
+        <option value="mls">🇺🇸 MLS</option>
+      </select>
+    </div>
+    <div>
       <label for="matchType">ประเภทการแข่งขัน</label>
       <select id="matchType" onchange="markStale('settings')" aria-label="ประเภทการแข่งขัน">
         <option value="standard">⚽ บอลลีกชายอาชีพ</option>
@@ -900,7 +927,8 @@
 </div>
 
 <script>
-  const SAVE_KEY = 'football_predictor_v19';
+  const SAVE_KEY = 'football_predictor_v21';
+  const SAVE_KEY_V20 = 'football_predictor_v20';
   let homeMode = 'avg';
   let awayMode = 'avg';
   let hasCalculated = false;
@@ -916,9 +944,22 @@
     names: 'ชื่อทีม'
   };
 
+  // v21: League profiles
+  const LEAGUE_PROFILES = {
+    standard:     { label: 'ไม่ระบุ / ลีกทั่วไป',  avg: 1.35, homeAdv: 1.10, htShare: 0.43 },
+    epl:          { label: '🏴 Premier League',    avg: 1.42, homeAdv: 1.11, htShare: 0.44 },
+    laliga:       { label: '🇪🇸 La Liga',           avg: 1.28, homeAdv: 1.12, htShare: 0.42 },
+    bundesliga:   { label: '🇩🇪 Bundesliga',        avg: 1.58, homeAdv: 1.08, htShare: 0.47 },
+    seriea:       { label: '🇮🇹 Serie A',           avg: 1.33, homeAdv: 1.10, htShare: 0.41 },
+    ligue1:       { label: '🇫🇷 Ligue 1',           avg: 1.38, homeAdv: 1.09, htShare: 0.43 },
+    eredivisie:   { label: '🇳🇱 Eredivisie',        avg: 1.60, homeAdv: 1.07, htShare: 0.45 },
+    thaileague:   { label: '🇹🇭 Thai League',       avg: 1.45, homeAdv: 1.13, htShare: 0.44 },
+    championship: { label: '🏴 Championship',       avg: 1.28, homeAdv: 1.10, htShare: 0.44 },
+    mls:          { label: '🇺🇸 MLS',               avg: 1.48, homeAdv: 1.15, htShare: 0.46 }
+  };
+
   function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
 
-  /* PATCH 2: Haptic helper */
   function haptic(ms = 20) {
     try {
       if (navigator.vibrate) navigator.vibrate(ms);
@@ -926,7 +967,9 @@
   }
 
   function safeNum(id, fallback) {
-    const v = parseFloat(document.getElementById(id).value);
+    const el = document.getElementById(id);
+    if (!el) return fallback;
+    const v = parseFloat(el.value);
     return Number.isFinite(v) ? v : fallback;
   }
 
@@ -934,14 +977,12 @@
     document.getElementById('guidePanel').classList.toggle('active');
   }
 
-  /* PATCH 4: haptic on tab switch */
   function switchGuideTab(idx) {
     haptic(10);
     document.querySelectorAll('.guide-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
     document.querySelectorAll('.guide-content').forEach((c, i) => c.classList.toggle('active', i === idx));
   }
 
-  /* PATCH 3: Swipe from whole panel + haptic + up-scroll cancel */
   function setupGuideSwipe() {
     const guide = document.getElementById('guidePanel');
     if (!guide) return;
@@ -977,14 +1018,12 @@
       const dx = e.touches[0].clientX - startX;
       const absDy = Math.abs(dy), absDx = Math.abs(dx);
 
-      // Swipe up significantly → cancel drag, allow page scroll
       if (dy < -20 && absDy > absDx) {
         dragging = false;
         resetGuide();
         return;
       }
 
-      // Deadzone
       if (absDy < 8 && absDx < 8) return;
 
       committed = true;
@@ -1043,7 +1082,6 @@
     guide.addEventListener('touchcancel', onEnd, { passive: true });
   }
 
-  /* Auto-hide FAB on scroll */
   let lastScrollY = 0;
   let fabHidden = false;
   let scrollTicking = false;
@@ -1158,7 +1196,8 @@
       else if (val === 'D') score += 1 * w;
     });
     const ratio = maxScore > 0 ? score / maxScore : 0.5;
-    return 0.85 + (ratio * 0.30);
+    // Reduced swing ±6% (from v20)
+    return 0.94 + (ratio * 0.12);
   }
 
   function setLiveTime(mins) {
@@ -1299,6 +1338,8 @@
     const awayForm = getFormMultiplier('awayFormBtns');
 
     const matchType = document.getElementById('matchType').value;
+    const leagueKey = (document.getElementById('league')?.value) || 'standard';
+    const leagueProfile = LEAGUE_PROFILES[leagueKey] || LEAGUE_PROFILES.standard;
     const ahVal = parseFloat(document.getElementById('ahLine').value) || 0;
     const ouValStr = document.getElementById('ouLine').value;
 
@@ -1319,18 +1360,39 @@
       }
     }
 
-    let paceMult = 1.0, homeAdv = 1.10, htShare = 0.43;
+    // v21: Start from league profile
+    let paceMult = 1.0;
+    let homeAdv = leagueProfile.homeAdv;
+    let htShare = leagueProfile.htShare;
+    const LEAGUE_PRIOR = leagueProfile.avg;
+
+    // matchType still applies (overrides homeAdv/htShare for special contexts)
     switch (matchType) {
       case 'women':    paceMult = 1.12; homeAdv = 1.06; htShare = 0.47; break;
       case 'youth':    paceMult = 1.18; homeAdv = 1.05; htShare = 0.48; break;
       case 'friendly': paceMult = 1.10; homeAdv = 1.03; htShare = 0.46; break;
-      case 'attacking':paceMult = 1.15; homeAdv = 1.08; htShare = 0.45; break;
+      case 'attacking':paceMult = 1.15; break;
       case 'defensive':paceMult = 0.88; homeAdv = 1.12; htShare = 0.40; break;
-      default:         paceMult = 1.00; homeAdv = 1.10; htShare = 0.43;
+      default:         paceMult = 1.00;
     }
 
-    let baseHomeXG = ((homeStats.gf + awayStats.ga) / 2) * homeForm * homeAdv * paceMult;
-    let baseAwayXG = ((awayStats.gf + homeStats.ga) / 2) * awayForm * (2 - homeAdv) * paceMult;
+    // v21: Prior weight depends on specificity
+    // standard league -> trust observed more (40% prior)
+    // specific league -> trust profile more (60% prior)
+    const observedLeagueAvg = (homeStats.gf + homeStats.ga + awayStats.gf + awayStats.ga) / 4;
+    const leaguePriorWeight = leagueKey === 'standard' ? 0.4 : 0.6;
+    const leagueAvg = clamp(
+      (observedLeagueAvg * (1 - leaguePriorWeight)) + (LEAGUE_PRIOR * leaguePriorWeight),
+      0.8, 2.0
+    );
+
+    const homeAttack = clamp(homeStats.gf / leagueAvg, 0.3, 3.0);
+    const homeDefense = clamp(homeStats.ga / leagueAvg, 0.3, 3.0);
+    const awayAttack = clamp(awayStats.gf / leagueAvg, 0.3, 3.0);
+    const awayDefense = clamp(awayStats.ga / leagueAvg, 0.3, 3.0);
+
+    let baseHomeXG = homeAttack * awayDefense * leagueAvg * homeAdv * homeForm * paceMult;
+    let baseAwayXG = awayAttack * homeDefense * leagueAvg * (2 - homeAdv) * awayForm * paceMult;
 
     const expectedDiff = -ahVal * 0.85;
     const currentDiff = baseHomeXG - baseAwayXG;
@@ -1382,15 +1444,18 @@
       remAwayXG: ftRemAwayXG,
       htRemHomeXG,
       htRemAwayXG,
-      elapsed
+      elapsed,
+      leagueKey
     };
 
     const banner = document.getElementById('statusBanner');
     const totalExpected = baseHomeXG + baseAwayXG;
+    const leagueTag = leagueKey !== 'standard' ? `<span class="league-tag">${leagueProfile.label}</span>` : '';
+
     if (elapsed === 0) {
-      banner.innerHTML = `<span>📊 <strong>โหมดก่อนแข่ง (0')</strong></span><span>คาดการณ์ประตูรวม: <strong>${totalExpected.toFixed(2)}</strong></span><span>สกอร์เริ่มต้น: 0 - 0</span>`;
+      banner.innerHTML = `<span>📊 <strong>โหมดก่อนแข่ง (0')</strong> ${leagueTag}</span><span>คาดการณ์ประตูรวม: <strong>${totalExpected.toFixed(2)}</strong></span><span>สกอร์เริ่มต้น: 0 - 0</span>`;
     } else {
-      banner.innerHTML = `<span>🔴 <strong>บอลสด (นาทีที่ ${elapsed}')</strong> | เหลือครึ่งแรก <strong>${Math.max(0, 45 - elapsed)}'</strong> | เหลือเต็มเกม <strong>${Math.max(0, 90 - elapsed)}'</strong></span><span>คาดการณ์ประตูรวม: <strong>${totalExpected.toFixed(2)}</strong></span><span>สกอร์: <strong>${homeName} ${curHome} - ${curAway} ${awayName}</strong></span>`;
+      banner.innerHTML = `<span>🔴 <strong>บอลสด (นาทีที่ ${elapsed}')</strong> ${leagueTag} | เหลือครึ่งแรก <strong>${Math.max(0, 45 - elapsed)}'</strong> | เหลือเต็มเกม <strong>${Math.max(0, 90 - elapsed)}'</strong></span><span>คาดการณ์ประตูรวม: <strong>${totalExpected.toFixed(2)}</strong></span><span>สกอร์: <strong>${homeName} ${curHome} - ${curAway} ${awayName}</strong></span>`;
     }
 
     document.getElementById('htHomeLabel').textContent = `${homeName} นำ`;
@@ -1437,8 +1502,6 @@
     saveState();
     updateMobileStatus();
     showFab();
-
-    /* PATCH 5: haptic on calculation success */
     haptic(25);
 
     document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1549,6 +1612,7 @@
         htHomeScore: document.getElementById('htHomeScore').value,
         htAwayScore: document.getElementById('htAwayScore').value,
         matchType: document.getElementById('matchType').value,
+        league: document.getElementById('league').value,  // v21
         ahLine: document.getElementById('ahLine').value,
         ouLine: document.getElementById('ouLine').value,
         savedAt: Date.now()
@@ -1561,16 +1625,30 @@
 
   function loadState() {
     try {
-      const raw = localStorage.getItem(SAVE_KEY);
+      let raw = localStorage.getItem(SAVE_KEY);
+      let migrated = false;
+
+      // v21: Fall back to v20 for migration
+      if (!raw) {
+        raw = localStorage.getItem(SAVE_KEY_V20);
+        if (raw) migrated = true;
+      }
+
       if (!raw) return null;
       const s = JSON.parse(raw);
       if (!s || typeof s !== 'object') return null;
 
-      const setVal = (id, v) => { if (v !== undefined && v !== null) document.getElementById(id).value = v; };
+      const setVal = (id, v) => {
+        const el = document.getElementById(id);
+        if (el && v !== undefined && v !== null) el.value = v;
+      };
       ['homeName','awayName','homeAvgGF','homeAvgGA','awayAvgGF','awayAvgGA',
        'homeMP','homeGF','homeGA','awayMP','awayGF','awayGA',
        'elapsedMinutes','liveHomeScore','liveAwayScore','htHomeScore','htAwayScore',
        'matchType','ahLine','ouLine'].forEach(k => setVal(k, s[k]));
+
+      // v21: league — default to 'standard' if not in saved state (v20 migration)
+      setVal('league', s.league || 'standard');
 
       const restoreForm = (sel, arr) => {
         if (!Array.isArray(arr)) return;
@@ -1585,17 +1663,28 @@
       if (s.awayMode) setInputMode('away', s.awayMode);
       updateAvgPreview('home');
       updateAvgPreview('away');
-      return s.savedAt || null;
+
+      // Save in v21 key if migrated
+      if (migrated) {
+        console.log('[v21] Migrated state from v20');
+        try {
+          localStorage.setItem(SAVE_KEY, JSON.stringify(s));
+        } catch (e) { /* ignore */ }
+      }
+
+      return { savedAt: s.savedAt || null, migrated };
     } catch (e) {
       console.warn('Load failed:', e);
       return null;
     }
   }
 
-  function showLoadIndicator(savedAt) {
+  function showLoadIndicator(info) {
+    if (!info) return;
     const el = document.getElementById('loadIndicator');
-    const when = savedAt ? new Date(savedAt).toLocaleString('th-TH') : '';
-    el.textContent = `✓ โหลดข้อมูลที่บันทึกไว้${when ? ' (' + when + ')' : ''}`;
+    const when = info.savedAt ? new Date(info.savedAt).toLocaleString('th-TH') : '';
+    const prefix = info.migrated ? '🔄 อัปเกรด v20→v21' : '✓ โหลดข้อมูล';
+    el.textContent = `${prefix}${when ? ' (' + when + ')' : ''}`;
     el.style.display = 'block';
     setTimeout(() => { el.style.opacity = '0'; }, 3500);
     setTimeout(() => { el.style.display = 'none'; el.style.opacity = '1'; }, 4200);
@@ -1629,6 +1718,7 @@
     document.getElementById('htAwayScore').value = '0';
     document.getElementById('htScoreBox').style.display = 'none';
     document.getElementById('matchType').value = 'standard';
+    document.getElementById('league').value = 'standard';  // v21
     document.getElementById('ahLine').value = '0';
     document.getElementById('ouLine').value = 'none';
     hasCalculated = false;
@@ -1640,14 +1730,17 @@
     updateMobileStatus();
     showFab();
     haptic(15);
-    try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+    try {
+      localStorage.removeItem(SAVE_KEY);
+      localStorage.removeItem(SAVE_KEY_V20);
+    } catch (e) {}
   }
 
   window.addEventListener('load', () => {
     updateAvgPreview('home');
     updateAvgPreview('away');
-    const savedAt = loadState();
-    if (savedAt) showLoadIndicator(savedAt);
+    const info = loadState();
+    if (info) showLoadIndicator(info);
     updateMobileStatus();
     setupGuideSwipe();
     setupFabAutoHide();
