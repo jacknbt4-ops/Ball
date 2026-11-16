@@ -4,31 +4,108 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#10b981">
-<title>Football Predictor — วิเคราะห์บอล (v27)</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FP">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Football Predictor — วิเคราะห์บอล (v28)</title>
+<link rel="manifest" id="pwaManifest">
 <style>
-  :root { --bg: #0f172a; --card: #1e293b; --card-inner: #0f172a; --border: #334155; --text: #f8fafc; --text-muted: #94a3b8; --primary: #3b82f6; --accent: #10b981; --danger: #ef4444; --warning: #f59e0b; --sticky-h: 78px; }
+  :root {
+    --bg: #0f172a; --card: #1e293b; --card-inner: #0f172a; --border: #334155;
+    --text: #f8fafc; --text-muted: #94a3b8; --primary: #3b82f6; --primary-hover: #2563eb;
+    --accent: #10b981; --accent-hover: #059669; --danger: #ef4444; --warning: #f59e0b;
+    --sticky-h: 78px;
+  }
   * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-  body { margin: 0; padding: 20px; background-color: var(--bg); color: var(--text); line-height: 1.5; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; padding: 20px; background-color: var(--bg); color: var(--text);
+    line-height: 1.5; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+  }
   .container { max-width: 1100px; margin: 0 auto; }
   header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
   header h1 { margin: 0; font-size: 1.5rem; color: #fff; }
   .header-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-  button { cursor: pointer; border: none; border-radius: 8px; font-weight: 600; transition: all 0.2s; touch-action: manipulation; }
+  button { cursor: pointer; border: none; border-radius: 8px; font-weight: 600; transition: all 0.2s; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .btn-guide { background: #334155; color: #e2e8f0; padding: 8px 14px; font-size: 0.9rem; }
+  .btn-guide:hover { background: #475569; }
   .btn-reset { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 14px; font-size: 0.9rem; }
-  .btn-history, .btn-export { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 14px; font-size: 0.9rem; }
+  .btn-reset:hover { background: rgba(239, 68, 68, 0.25); }
+  .btn-export { background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.4); padding: 8px 14px; font-size: 0.9rem; }
+  .btn-export:hover { background: rgba(139, 92, 246, 0.3); }
+  .btn-history { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 14px; font-size: 0.9rem; }
+  .btn-history:hover { background: rgba(59, 130, 246, 0.3); }
+  .btn-install { display: none; background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); padding: 8px 14px; font-size: 0.9rem; }
+  .btn-install:hover { background: rgba(16, 185, 129, 0.3); }
+  .btn-install.show { display: inline-block; }
+
+  .offline-indicator { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(245, 158, 11, 0.95); color: #1e293b; padding: 8px 16px; border-radius: 8px; z-index: 1000; font-size: 0.85rem; font-weight: 600; box-shadow: 0 4px 14px rgba(0,0,0,0.3); }
+  .offline-indicator.show { display: block; }
+  .update-toast { display: none; position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(59, 130, 246, 0.95); color: #fff; padding: 12px 18px; border-radius: 8px; z-index: 1500; font-size: 0.88rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4); align-items: center; gap: 12px; max-width: 90vw; }
+  .update-toast.show { display: flex; }
+  .update-toast button { background: rgba(255,255,255,0.2); color: #fff; padding: 6px 12px; font-size: 0.82rem; border-radius: 6px; }
+  .update-toast button:hover { background: rgba(255,255,255,0.35); }
 
   .export-wrap { position: relative; display: inline-block; }
-  .export-menu { display: none; position: absolute; top: 100%; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; min-width: 200px; z-index: 1000; box-shadow: 0 12px 32px rgba(0,0,0,0.5); }
+  .export-menu { display: none; position: absolute; top: calc(100% + 6px); right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; min-width: 200px; box-shadow: 0 12px 32px rgba(0,0,0,0.5); z-index: 1000; }
   .export-menu.active { display: block; }
-  .export-menu button { display: block; width: 100%; text-align: left; background: transparent; color: var(--text); padding: 10px 12px; font-size: 0.9rem; border-radius: 6px; }
+  .export-menu button { display: block; width: 100%; text-align: left; background: transparent; color: var(--text); padding: 10px 12px; font-size: 0.9rem; border-radius: 6px; font-weight: 500; }
   .export-menu button:hover { background: var(--card-inner); }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1100; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.active { display: flex; }
+  .modal-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; max-width: 600px; width: 100%; max-height: 80vh; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.6); display: flex; flex-direction: column; }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+  .modal-header h3 { margin: 0; font-size: 1.1rem; }
+  .modal-close { background: transparent; color: var(--text-muted); font-size: 1.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; }
+  .modal-close:hover { background: var(--card-inner); color: var(--text); }
+  .modal-body { overflow-y: auto; padding: 12px; flex: 1; }
+  .history-empty { text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 0.9rem; }
+  .history-item { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 12px; cursor: pointer; transition: all 0.15s; }
+  .history-item:hover { border-color: var(--primary); }
+  .history-info { flex: 1; min-width: 0; }
+  .history-match { font-weight: 700; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .history-meta { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .history-score { font-size: 1rem; font-weight: 800; color: #fff; background: rgba(59, 130, 246, 0.2); padding: 4px 10px; border-radius: 6px; white-space: nowrap; }
+  .history-delete { background: rgba(239, 68, 68, 0.15); color: #f87171; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .history-delete:hover { background: rgba(239, 68, 68, 0.3); }
+  .modal-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+  .btn-clear-history { background: rgba(239, 68, 68, 0.15); color: #f87171; padding: 8px 16px; font-size: 0.85rem; }
+  .btn-clear-history:hover { background: rgba(239, 68, 68, 0.3); }
+
+  #loadIndicator { display: none; position: fixed; top: 20px; right: 20px; background: rgba(16, 185, 129, 0.95); color: #fff; padding: 10px 16px; border-radius: 8px; z-index: 999; font-size: 0.88rem; box-shadow: 0 6px 20px rgba(0,0,0,0.3); transition: opacity 0.4s; }
+  #toast { display: none; position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(16, 185, 129, 0.95); color: #fff; padding: 12px 20px; border-radius: 8px; z-index: 1500; font-size: 0.9rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4); max-width: 90vw; text-align: center; }
+  #toast.error { background: rgba(239, 68, 68, 0.95); }
+
+  .mobile-calc-bar { display: none; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s; }
+  .mobile-calc-bar.hidden { transform: translateY(calc(100% + 20px)); opacity: 0; pointer-events: none; }
+
+  @keyframes stalePulse {
+    0%, 100% { box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35); }
+    50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.4), 0 4px 14px rgba(16, 185, 129, 0.35); }
+  }
+
+  .guide-panel { display: none; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 20px; will-change: transform, opacity; }
+  .guide-panel.active { display: block; }
+  .guide-grabber { display: none; flex-direction: column; align-items: center; gap: 5px; padding: 4px 0 12px; margin-top: -8px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .guide-grabber:active { cursor: grabbing; }
+  .guide-grabber-bar { width: 44px; height: 4px; background: rgba(148, 163, 184, 0.5); border-radius: 2px; }
+  .guide-grabber-hint { font-size: 0.7rem; color: #64748b; font-weight: 500; letter-spacing: 0.02em; }
+  .guide-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .guide-tab { background: var(--card-inner); color: var(--text-muted); padding: 6px 12px; border-radius: 6px; font-size: 0.85rem; border: 1px solid var(--border); }
+  .guide-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .guide-content { display: none; font-size: 0.9rem; color: #cbd5e1; }
+  .guide-content.active { display: block; }
+  .mock-box { background: #0b1120; border: 1px dashed #64748b; padding: 12px; border-radius: 8px; margin-top: 8px; }
 
   .teams-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
   .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .home-badge { color: #38bdf8; }
+  .away-badge { color: #f472b6; }
+
   label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
-  input[type="text"], input[type="number"], select { width: 100%; padding: 10px 12px; background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.95rem; margin-bottom: 14px; }
+  input[type="text"], input[type="number"], select { width: 100%; padding: 10px 12px; background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 0.95rem; margin-bottom: 14px; text-overflow: ellipsis; }
   input:focus, select:focus { outline: none; border-color: var(--primary); }
 
   .search-wrap { position: relative; margin-bottom: 14px; }
@@ -39,7 +116,6 @@
   .autocomplete-item:hover { background: var(--card-inner); }
   .ac-name { font-weight: 600; font-size: 0.9rem; }
   .ac-country { font-size: 0.75rem; color: var(--text-muted); }
-
   .preset-select { font-size: 0.8rem; background: var(--card-inner); border-color: var(--border); margin-bottom: 10px; }
 
   .mode-switch { display: flex; background: var(--card-inner); padding: 4px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 14px; }
@@ -47,7 +123,10 @@
   .mode-btn.active { background: var(--primary); color: #fff; }
 
   .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .stat-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
   .calc-preview { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); color: #34d399; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 14px; }
+
+  .form-hint { display: flex; justify-content: space-between; font-size: 0.72rem; color: #64748b; margin-bottom: 4px; margin-top: -8px; }
   .form-buttons { display: flex; gap: 8px; }
   .form-btn { flex: 1; padding: 10px 0; font-size: 0.95rem; font-weight: 700; border-radius: 8px; background: #334155; color: #cbd5e1; }
   .form-btn[data-val="W"] { background: #10b981; color: #064e3b; }
@@ -55,27 +134,44 @@
   .form-btn[data-val="L"] { background: #ef4444; color: #fff; }
 
   .live-panel { background: linear-gradient(135deg, #1e293b 0%, #172554 100%); border: 1px solid #3b82f6; border-radius: 12px; padding: 18px; margin-bottom: 20px; }
+  .live-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .live-title { font-weight: 700; color: #93c5fd; font-size: 1rem; display: flex; align-items: center; gap: 8px; line-height: 1.35; }
+  .live-dot { width: 10px; height: 10px; background: #ef4444; border-radius: 50%; display: inline-block; flex-shrink: 0; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
   .live-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 12px; align-items: end; }
-  .q-time { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 4px 8px; font-size: 0.78rem; border-radius: 6px; margin-right: 4px; margin-bottom: 6px; }
+  .quick-time-btns { display: flex; gap: 6px; margin-top: -8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .q-time { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 4px 8px; font-size: 0.78rem; border-radius: 6px; }
+  .q-time:hover { background: rgba(59, 130, 246, 0.4); }
 
   .settings-bar { display: grid; grid-template-columns: 1fr 1fr 1.1fr 1fr 1fr; gap: 14px; align-items: end; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 20px; }
-  .btn-calc { background: var(--accent); color: #064e3b; padding: 12px 20px; font-size: 1.05rem; font-weight: 800; width: 100%; margin-bottom: 14px; }
+  .btn-calc { background: var(--accent); color: #064e3b; padding: 12px 20px; font-size: 1.05rem; font-weight: 800; width: 100%; margin-bottom: 14px; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
+  .btn-calc:hover { background: var(--accent-hover); color: #fff; }
+
+  .stale-warning { display: none; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--warning); color: #fbbf24; padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 0.9rem; text-align: center; }
 
   .results-section { display: none; }
   .results-section.active { display: block; }
-  .status-banner { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #bfdbfe; padding: 12px 16px; border-radius: 10px; margin-bottom: 18px; display: flex; justify-content: space-between; flex-wrap: wrap; }
+  .status-banner { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); color: #bfdbfe; padding: 12px 16px; border-radius: 10px; margin-bottom: 18px; font-size: 0.92rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .res-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .res-title { font-size: 1.1rem; font-weight: 700; }
+  .xg-badge-wrap { text-align: right; }
+  .xg-badge { background: rgba(59, 130, 246, 0.2); color: #60a5fa; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.9rem; }
   .prob-1x2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
   .prob-box { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; padding: 12px 8px; text-align: center; }
+  .prob-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .prob-val { font-size: 1.25rem; font-weight: 800; color: #fff; }
   .ou-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
-  .ou-item { display: flex; justify-content: space-between; background: var(--card-inner); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.9rem; }
+  .ou-item { display: flex; justify-content: space-between; align-items: center; background: var(--card-inner); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.9rem; }
+  .ou-over { color: #34d399; font-weight: 700; }
+  .ou-under { color: #f87171; font-weight: 700; }
+  .top-scores-title { font-size: 0.95rem; font-weight: 700; color: #e2e8f0; margin-bottom: 10px; }
+  .top-scores-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .score-card { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
   .score-card.rank-1 { border-color: var(--accent); background: rgba(16, 185, 129, 0.08); }
-
-  #toast { display: none; position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: rgba(16, 185, 129, 0.95); color: #fff; padding: 12px 20px; border-radius: 8px; z-index: 1500; font-size: 0.9rem; box-shadow: 0 8px 24px rgba(0,0,0,0.4); text-align: center; }
-  #toast.error { background: rgba(239, 68, 68, 0.95); }
-  #loadIndicator { display: none; position: fixed; top: 20px; right: 20px; background: rgba(16, 185, 129, 0.95); color: #fff; padding: 10px 16px; border-radius: 8px; z-index: 999; font-size: 0.88rem; }
+  .score-rank { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px; }
+  .score-val { font-size: 1.35rem; font-weight: 800; color: #fff; }
+  .score-prob { font-size: 0.85rem; color: #34d399; font-weight: 600; }
 
   @media (max-width: 768px) {
     body { padding: 12px; padding-bottom: calc(var(--sticky-h) + 8px); }
@@ -86,6 +182,9 @@
     .mobile-calc-bar.hidden { transform: translateY(100%); }
     .mobile-calc-status { display: flex; flex-direction: column; font-size: 0.72rem; }
     .mobile-calc-btn { flex: 1; margin: 0; padding: 12px; }
+    .guide-grabber { display: flex; }
+    .header-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .header-actions button, .export-wrap { width: 100%; }
   }
   @media (min-width: 769px) { .mobile-calc-bar { display: none !important; } }
 </style>
@@ -94,6 +193,22 @@
 
 <div id="loadIndicator"></div>
 <div id="toast"></div>
+<div class="offline-indicator" id="offlineIndicator">⚠️ ออฟไลน์ — ข้อมูลจะถูกเก็บไว้</div>
+
+<div class="modal-overlay" id="historyModal">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <h3>📚 ประวัติการวิเคราะห์</h3>
+      <button type="button" class="modal-close" onclick="closeHistoryModal()" aria-label="ปิด">×</button>
+    </div>
+    <div class="modal-body" id="historyList">
+      <div class="history-empty">ยังไม่มีประวัติ</div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-clear-history" onclick="clearHistory()">ลบทั้งหมด</button>
+    </div>
+  </div>
+</div>
 
 <div class="container">
   <header>
@@ -112,10 +227,36 @@
     </div>
   </header>
 
+  <div id="guidePanel" class="guide-panel">
+    <div class="guide-grabber" onclick="toggleGuide()">
+      <div class="guide-grabber-bar"></div>
+      <div class="guide-grabber-hint">ลากลงเพื่อปิด</div>
+    </div>
+    <div class="guide-tabs">
+      <button type="button" class="guide-tab active" onclick="switchGuideTab(0)">1. วิธีดึง API</button>
+      <button type="button" class="guide-tab" onclick="switchGuideTab(1)">2. วิธีดูสถิติ</button>
+    </div>
+    <div id="guideTab0" class="guide-content active">
+      <strong>วิธีดึงข้อมูลอัตโนมัติ:</strong>
+      <div class="mock-box">
+        1. เลือก <b>"ลีก / การแข่งขัน"</b> ด้านล่างให้ตรงกับทีมที่จะวิเคราะห์<br>
+        2. พิมพ์ชื่อทีมภาษาไทย (เช่น <code>แมนยู</code>, <code>หงส์แดง</code>) หรือภาษาอังกฤษ ในช่องค้นหา<br>
+        3. รอระบบค้นหา แล้วคลิกเลือกทีมจากรายการ ระบบจะดึงสถิติมาให้ทันที
+      </div>
+    </div>
+    <div id="guideTab1" class="guide-content">
+      <strong>การดูค่าสถิติ:</strong>
+      <div class="mock-box">
+        • <b>ยิงได้ / เกม:</b> ค่าเฉลี่ยประตูที่ทีมยิงได้ต่อนัด<br>
+        • <b>เสียประตู / เกม:</b> ค่าเฉลี่ยประตูที่ทีมเสียต่อนัด
+      </div>
+    </div>
+  </div>
+
   <div class="teams-grid">
     <!-- HOME TEAM -->
     <div class="card">
-      <div class="card-title"><span style="color:#38bdf8">🏠 ทีมเจ้าบ้าน</span></div>
+      <div class="card-title"><span class="home-badge">🏠 ทีมเจ้าบ้าน</span></div>
       
       <label>ดึงข้อมูลอัตโนมัติ (API)</label>
       <select id="presetHome" class="preset-select" onchange="loadPreset('home', this.value)">
@@ -132,7 +273,7 @@
       </select>
 
       <div class="search-wrap">
-        <input type="text" id="searchHome" placeholder="พิมพ์ชื่อทีม..." autocomplete="off" oninput="handleSearchInput('home', this.value)">
+        <input type="text" id="searchHome" placeholder="พิมพ์ชื่อทีม (ไทย/อังกฤษ)..." autocomplete="off" oninput="handleSearchInput('home', this.value)">
         <button type="button" class="search-btn" onclick="doSearch('home')">🔍 ค้นหา</button>
         <div class="autocomplete-list" id="acHome"></div>
       </div>
@@ -163,7 +304,7 @@
 
     <!-- AWAY TEAM -->
     <div class="card">
-      <div class="card-title"><span style="color:#f472b6">✈️ ทีมเยือน</span></div>
+      <div class="card-title"><span class="away-badge">✈️ ทีมเยือน</span></div>
       
       <label>ดึงข้อมูลอัตโนมัติ (API)</label>
       <select id="presetAway" class="preset-select" onchange="loadPreset('away', this.value)">
@@ -180,7 +321,7 @@
       </select>
 
       <div class="search-wrap">
-        <input type="text" id="searchAway" placeholder="พิมพ์ชื่อทีม..." autocomplete="off" oninput="handleSearchInput('away', this.value)">
+        <input type="text" id="searchAway" placeholder="พิมพ์ชื่อทีม (ไทย/อังกฤษ)..." autocomplete="off" oninput="handleSearchInput('away', this.value)">
         <button type="button" class="search-btn" onclick="doSearch('away')">🔍 ค้นหา</button>
         <div class="autocomplete-list" id="acAway"></div>
       </div>
@@ -211,25 +352,39 @@
   </div>
 
   <div class="live-panel">
-    <div style="font-weight:700; color:#93c5fd; margin-bottom:10px;">⏱️ สถานะเวลา & สกอร์</div>
-    <div style="margin-bottom:10px;">
+    <div class="live-header">
+      <div class="live-title"><span class="live-dot"></span> สถานะเวลา & สกอร์ (ใส่ 0 หากยังไม่แข่ง)</div>
+    </div>
+    <div class="quick-time-btns">
       <button type="button" class="q-time" onclick="setLiveTime(0)">0' ก่อนแข่ง</button>
+      <button type="button" class="q-time" onclick="setLiveTime(15)">15'</button>
+      <button type="button" class="q-time" onclick="setLiveTime(30)">30'</button>
       <button type="button" class="q-time" onclick="setLiveTime(45)">45' พักครึ่ง</button>
       <button type="button" class="q-time" onclick="setLiveTime(60)">60'</button>
       <button type="button" class="q-time" onclick="setLiveTime(75)">75'</button>
+      <button type="button" class="q-time" onclick="setLiveTime(80)">80'</button>
     </div>
     <div class="live-grid">
-      <div><label>นาทีที่แข่ง</label><input type="number" id="elapsedMinutes" value="0" oninput="handleLiveInput()"></div>
-      <div><label>สกอร์เจ้าบ้าน</label><input type="number" id="liveHomeScore" value="0" oninput="handleLiveInput()"></div>
-      <div><label>สกอร์ทีมเยือน</label><input type="number" id="liveAwayScore" value="0" oninput="handleLiveInput()"></div>
+      <div>
+        <label style="color:#bfdbfe;" for="elapsedMinutes">⏱️ นาทีที่แข่ง (0-90)</label>
+        <input type="number" id="elapsedMinutes" min="0" max="90" value="0" oninput="handleLiveInput()">
+      </div>
+      <div>
+        <label style="color:#bfdbfe;" for="liveHomeScore">สกอร์เจ้าบ้าน</label>
+        <input type="number" id="liveHomeScore" min="0" max="20" value="0" oninput="handleLiveInput()">
+      </div>
+      <div>
+        <label style="color:#bfdbfe;" for="liveAwayScore">สกอร์ทีมเยือน</label>
+        <input type="number" id="liveAwayScore" min="0" max="20" value="0" oninput="handleLiveInput()">
+      </div>
     </div>
   </div>
 
   <div class="settings-bar">
     <div>
-      <label>🏆 ลีก / การแข่งขัน</label>
+      <label for="league">🏆 ลีก / การแข่งขัน</label>
       <select id="league" onchange="markStale()">
-        <option value="standard">ไม่ระบุ / ทั่วไป</option>
+        <option value="standard" selected>ไม่ระบุ / ลีกทั่วไป</option>
         <option value="epl">🏴 Premier League</option>
         <option value="laliga">🇪🇸 La Liga</option>
         <option value="bundesliga">🇩🇪 Bundesliga</option>
@@ -238,37 +393,81 @@
         <option value="thaileague">🇹🇭 Thai League</option>
       </select>
     </div>
-    <div><label>AH (เจ้าบ้าน)</label><select id="ahLine" onchange="markStale()"><option value="0">0</option><option value="-0.5">-0.5</option><option value="-1.0">-1.0</option><option value="0.5">+0.5</option></select></div>
-    <div><label>O/U</label><select id="ouLine" onchange="markStale()"><option value="none">ไม่ระบุ</option><option value="2.5">2.5</option><option value="3.0">3.0</option></select></div>
-    <div><button type="button" class="btn-calc" onclick="calculate()">⚡ ประมวลผล</button></div>
+    <div>
+      <label for="ahLine">Asian Handicap</label>
+      <select id="ahLine" onchange="markStale()">
+        <option value="0" selected>ราคาเสมอ (0)</option>
+        <option value="-0.5">เจ้าบ้านต่อ -0.5</option>
+        <option value="-1.0">เจ้าบ้านต่อ -1.0</option>
+        <option value="0.5">ทีมเยือนต่อ +0.5</option>
+      </select>
+    </div>
+    <div>
+      <label for="ouLine">สูง-ต่ำ (O/U)</label>
+      <select id="ouLine" onchange="markStale()">
+        <option value="none" selected>ไม่ระบุ</option>
+        <option value="2.5">2.5</option>
+        <option value="3.0">3.0</option>
+      </select>
+    </div>
+    <div>
+      <button type="button" class="btn-calc" onclick="calculate()">⚡ ประมวลผล</button>
+    </div>
   </div>
+
+  <div id="staleWarning" class="stale-warning"></div>
 
   <div id="resultsSection" class="results-section">
     <div id="statusBanner" class="status-banner"></div>
     <div class="results-grid">
       <div class="card">
-        <div class="res-title">⏱️ ครึ่งแรก (45 นาที)</div>
+        <div class="res-header">
+          <div class="res-title">⏱️ ครึ่งแรก (45 นาที)</div>
+        </div>
         <div class="prob-1x2">
-          <div class="prob-box"><div class="prob-label">เจ้าบ้าน นำ</div><div class="prob-val" id="htHomeWin">0%</div></div>
-          <div class="prob-box"><div class="prob-label">เสมอ</div><div class="prob-val" id="htDraw">0%</div></div>
-          <div class="prob-box"><div class="prob-label">ทีมเยือน นำ</div><div class="prob-val" id="htAwayWin">0%</div></div>
+          <div class="prob-box">
+            <div class="prob-label" id="htHomeLabel">เจ้าบ้าน นำ</div>
+            <div class="prob-val" id="htHomeWin">0%</div>
+          </div>
+          <div class="prob-box">
+            <div class="prob-label">เสมอ</div>
+            <div class="prob-val" id="htDraw">0%</div>
+          </div>
+          <div class="prob-box">
+            <div class="prob-label" id="htAwayLabel">ทีมเยือน นำ</div>
+            <div class="prob-val" id="htAwayWin">0%</div>
+          </div>
         </div>
         <div class="ou-list">
-          <div class="ou-item"><span>สูง/ต่ำ 1.5</span><span id="htO15">0%</span></div>
+          <div class="ou-item"><span>สูง/ต่ำ 1.5 (ครึ่งแรก)</span><span><span class="ou-over" id="htO15">สูง 0%</span> | <span class="ou-under" id="htU15">ต่ำ 0%</span></span></div>
+          <div class="ou-item"><span>BTTS (ครึ่งแรก)</span><span><span class="ou-over" id="htBttsYes">ได้ 0%</span> | <span class="ou-under" id="htBttsNo">ไม่ได้ 0%</span></span></div>
         </div>
       </div>
+
       <div class="card">
-        <div class="res-title">🏟️ เต็มเวลา (90 นาที)</div>
+        <div class="res-header">
+          <div class="res-title">🏟️ เต็มเวลา (90 นาที)</div>
+        </div>
         <div class="prob-1x2">
-          <div class="prob-box"><div class="prob-label">เจ้าบ้าน ชนะ</div><div class="prob-val" id="ftHomeWin">0%</div></div>
-          <div class="prob-box"><div class="prob-label">เสมอ</div><div class="prob-val" id="ftDraw">0%</div></div>
-          <div class="prob-box"><div class="prob-label">ทีมเยือน ชนะ</div><div class="prob-val" id="ftAwayWin">0%</div></div>
+          <div class="prob-box">
+            <div class="prob-label" id="ftHomeLabel">เจ้าบ้าน ชนะ</div>
+            <div class="prob-val" id="ftHomeWin">0%</div>
+          </div>
+          <div class="prob-box">
+            <div class="prob-label">เสมอ</div>
+            <div class="prob-val" id="ftDraw">0%</div>
+          </div>
+          <div class="prob-box">
+            <div class="prob-label" id="ftAwayLabel">ทีมเยือน ชนะ</div>
+            <div class="prob-val" id="ftAwayWin">0%</div>
+          </div>
         </div>
         <div class="ou-list">
-          <div class="ou-item"><span>สูง/ต่ำ 2.5</span><span id="ftO25">0%</span></div>
+          <div class="ou-item"><span>สูง/ต่ำ 2.5 (เต็มเวลา)</span><span><span class="ou-over" id="ftO25">สูง 0%</span> | <span class="ou-under" id="ftU25">ต่ำ 0%</span></span></div>
+          <div class="ou-item"><span>BTTS (เต็มเวลา)</span><span><span class="ou-over" id="ftBttsYes">ได้ 0%</span> | <span class="ou-under" id="ftBttsNo">ไม่ได้ 0%</span></span></div>
         </div>
-        <div style="font-size:0.95rem; font-weight:700; margin-top:15px; margin-bottom:10px;">🎯 3 อันดับสกอร์</div>
-        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;" id="ftTopScores"></div>
+        <div class="top-scores-title">🎯 3 อันดับสกอร์เต็มเวลา</div>
+        <div class="top-scores-grid" id="ftTopScores"></div>
       </div>
     </div>
   </div>
@@ -303,7 +502,38 @@
     clearTimeout(el._t); el._t = setTimeout(() => { el.style.display = 'none'; }, 3000);
   }
 
-  // ---------- API SEARCH & AUTOCOMPLETE ----------
+  // ============================================================
+  // 🚀 Thai Dictionary สำหรับแปลงชื่อทีม
+  // ============================================================
+  const THAI_TEAM_DICT = {
+    'แมนยู': 'Manchester United', 'แมนเชสเตอร์ยูไนเต็ด': 'Manchester United', 'ปิศาจแดง': 'Manchester United', 'ผีแดง': 'Manchester United',
+    'แมนซิตี้': 'Manchester City', 'แมนเชสเตอร์ซิตี้': 'Manchester City', 'เรือใบ': 'Manchester City',
+    'หงส์แดง': 'Liverpool', 'ลิเวอร์พูล': 'Liverpool',
+    'ปืนใหญ่': 'Arsenal', 'อาร์เซนอล': 'Arsenal',
+    'สิงโตน้ำเงินคราม': 'Chelsea', 'เชลซี': 'Chelsea',
+    'ไก่เดือยทอง': 'Tottenham', 'สเปอร์ส': 'Tottenham',
+    'ราชันชุดขาว': 'Real Madrid', 'เรอัลมาดริด': 'Real Madrid',
+    'ต่างดาว': 'Barcelona', 'บาร์เซโลน่า': 'Barcelona', 'บาร์ซ่า': 'Barcelona',
+    'เสือใต้': 'Bayern Munich', 'บาเยิร์น': 'Bayern Munich',
+    'เปแอสเช': 'Paris Saint Germain', 'ปารีส': 'Paris Saint Germain',
+    'ปิศาจแดงดำ': 'AC Milan', 'เอซี มิลาน': 'AC Milan',
+    'ม้าลาย': 'Juventus', 'ยูเวนตุส': 'Juventus',
+    'งูใหญ่': 'Inter', 'อินเตอร์': 'Inter',
+    'หมาป่า': 'AS Roma', 'โรม่า': 'AS Roma',
+    'นาโปลี': 'Napoli', 'นโปเลียน': 'Napoli',
+    'ปีศาจแดง': 'Manchester United',
+    'แชมป์เก่า': 'Manchester City'
+  };
+
+  function translateTeamName(input) {
+    const cleanInput = input.trim().toLowerCase();
+    if (THAI_TEAM_DICT[cleanInput]) return THAI_TEAM_DICT[cleanInput];
+    for (const [thai, eng] of Object.entries(THAI_TEAM_DICT)) {
+      if (cleanInput.includes(thai)) return eng;
+    }
+    return input;
+  }
+
   function handleSearchInput(side, query) {
     clearTimeout(searchTimeout);
     const listEl = document.getElementById('ac' + (side === 'home' ? 'Home' : 'Away'));
@@ -312,8 +542,11 @@
     searchTimeout = setTimeout(async () => {
       listEl.innerHTML = '<div style="padding:10px; text-align:center;">⏳ กำลังค้นหา...</div>';
       listEl.style.display = 'block';
+      
+      const searchQuery = translateTeamName(query);
+      
       try {
-        const res = await fetch(`${VERCEL_API_URL}?search=${encodeURIComponent(query)}`);
+        const res = await fetch(`${VERCEL_API_URL}?search=${encodeURIComponent(searchQuery)}`);
         const data = await res.json();
         
         if (!data.response || data.response.length === 0) {
@@ -360,7 +593,7 @@
     
     if (!leagueId) {
       showToast('⚠️ กรุณาเลือกลีกด้านล่างก่อนดึงข้อมูล', true);
-      document.getElementById('league').scrollIntoView({behavior: 'smooth', block:'center'});
+      document.getElementById('league').scrollIntoView({behavior: 'smooth', block: 'center'});
       return;
     }
 
@@ -441,6 +674,8 @@
     };
     
     const hStats = getStats('home'); const aStats = getStats('away');
+    const hName = document.getElementById('homeName').value || 'เจ้าบ้าน';
+    const aName = document.getElementById('awayName').value || 'ทีมเยือน';
     
     // Simple xG calculation
     let hXG = ((hStats.gf + aStats.ga) / 2) * profile.homeAdv;
@@ -456,33 +691,60 @@
     }
 
     // Probabilities
-    let hWin=0, draw=0, aWin=0, over25=0;
+    let hWin=0, draw=0, aWin=0, over25=0, btts=0, over15=0;
+    const scores = [];
     for(let i=0; i<=6; i++) {
       for(let j=0; j<=6; j++) {
         const p = poisson(i, hXG) * poisson(j, aXG);
         const finalH = hScore + i; const finalA = aScore + j;
+        const total = finalH + finalA;
         if(finalH > finalA) hWin += p; else if(finalH === finalA) draw += p; else aWin += p;
-        if(finalH + finalA > 2.5) over25 += p;
+        if(total > 2.5) over25 += p;
+        if(total > 1.5) over15 += p;
+        if(finalH > 0 && finalA > 0) btts += p;
+        scores.push({ score: `${finalH}-${finalA}`, prob: p });
       }
     }
+
+    scores.sort((a,b) => b.prob - a.prob);
 
     document.getElementById('resultsSection').classList.add('active');
     hasCalculated = true;
     document.getElementById('statusBanner').innerHTML = `📊 วิเคราะห์แล้ว (${elapsed === 0 ? 'ก่อนแข่ง' : elapsed + "'"})`;
     
+    document.getElementById('htHomeLabel').textContent = `${hName} นำ`;
+    document.getElementById('htAwayLabel').textContent = `${aName} นำ`;
+    document.getElementById('ftHomeLabel').textContent = `${hName} ชนะ`;
+    document.getElementById('ftAwayLabel').textContent = `${aName} ชนะ`;
+    
     document.getElementById('htHomeWin').textContent = (hWin*100).toFixed(1) + '%';
     document.getElementById('htDraw').textContent = (draw*100).toFixed(1) + '%';
     document.getElementById('htAwayWin').textContent = (aWin*100).toFixed(1) + '%';
+    document.getElementById('htO15').textContent = `สูง ${(over15*100).toFixed(1)}%`;
+    document.getElementById('htU15').textContent = `ต่ำ ${(100-over15*100).toFixed(1)}%`;
+    document.getElementById('htBttsYes').textContent = `ได้ ${(btts*100).toFixed(1)}%`;
+    document.getElementById('htBttsNo').textContent = `ไม่ได้ ${(100-btts*100).toFixed(1)}%`;
     
     document.getElementById('ftHomeWin').textContent = (hWin*100).toFixed(1) + '%';
     document.getElementById('ftDraw').textContent = (draw*100).toFixed(1) + '%';
     document.getElementById('ftAwayWin').textContent = (aWin*100).toFixed(1) + '%';
     document.getElementById('ftO25').textContent = `สูง ${(over25*100).toFixed(1)}%`;
+    document.getElementById('ftU25').textContent = `ต่ำ ${(100-over25*100).toFixed(1)}%`;
+    document.getElementById('ftBttsYes').textContent = `ได้ ${(btts*100).toFixed(1)}%`;
+    document.getElementById('ftBttsNo').textContent = `ไม่ได้ ${(100-btts*100).toFixed(1)}%`;
+    
+    document.getElementById('ftTopScores').innerHTML = scores.slice(0, 3).map((s, i) => `
+      <div class="score-card ${i === 0 ? 'rank-1' : ''}">
+        <div class="score-rank">อันดับ ${i + 1}</div>
+        <div class="score-val">${s.score}</div>
+        <div class="score-prob">${(s.prob * 100).toFixed(1)}%</div>
+      </div>
+    `).join('');
     
     document.getElementById('resultsSection').scrollIntoView({behavior: 'smooth'});
   }
 
-  // Minimal init
+  // Init
   window.addEventListener('load', () => {
     updateAvgPreview('home'); updateAvgPreview('away');
     document.getElementById('league').value = 'epl';
