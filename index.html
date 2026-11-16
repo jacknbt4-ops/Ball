@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#10b981">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Football Predictor — Manual Mode (v44 - HT Top Scores)</title>
+<title>Football Predictor — Manual Mode (v45 - Nations League A/B/C/D)</title>
 <style>
   :root { --bg:#0f172a; --card:#1e293b; --card-inner:#0f172a; --border:#334155; --text:#f8fafc; --text-muted:#94a3b8; --primary:#3b82f6; --accent:#10b981; --danger:#ef4444; --sticky-h:78px; }
   * { box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
@@ -280,6 +280,10 @@
           <option value="afcon">🌍 Africa Cup of Nations</option>
           <option value="worldcup">🌍 FIFA World Cup</option>
           <option value="euro">🇪🇺 UEFA Euro</option>
+          <option value="nations_league_a">🇪🇺 UEFA Nations League A</option>
+          <option value="nations_league_b">🇪🇺 UEFA Nations League B</option>
+          <option value="nations_league_c">🇪🇺 UEFA Nations League C</option>
+          <option value="nations_league_d">🇪🇺 UEFA Nations League D</option>
         </optgroup>
       </select>
     </div>
@@ -528,7 +532,13 @@
     uecl:{avg:1.32,homeAdv:1.08,htShare:0.43}, afc_cl:{avg:1.35,homeAdv:1.10,htShare:0.44},
     caf_cl:{avg:1.18,homeAdv:1.14,htShare:0.41}, copa_libertadores:{avg:1.20,homeAdv:1.18,htShare:0.41},
     afcon:{avg:1.12,homeAdv:1.05,htShare:0.41},
-    worldcup:{avg:1.25,homeAdv:1.05,htShare:0.43}, euro:{avg:1.28,homeAdv:1.05,htShare:0.43}
+    worldcup:{avg:1.25,homeAdv:1.05,htShare:0.43}, euro:{avg:1.28,homeAdv:1.05,htShare:0.43},
+
+    // UEFA Nations League (A/B/C/D)
+    nations_league_a:{avg:1.30,homeAdv:1.06,htShare:0.43},
+    nations_league_b:{avg:1.25,homeAdv:1.08,htShare:0.42},
+    nations_league_c:{avg:1.20,homeAdv:1.10,htShare:0.42},
+    nations_league_d:{avg:1.15,homeAdv:1.12,htShare:0.41}
   };
 
   // ===== ชื่อไทยของลีก =====
@@ -590,7 +600,11 @@
     ucl:'ยูฟ่า แชมเปียนส์ลีก', uel:'ยูฟ่า ยูโรปาลีก', uecl:'ยูฟ่า คอนเฟอเรนซ์ลีก',
     afc_cl:'เอเอฟซี แชมเปียนส์ลีก', caf_cl:'ซีเอเอฟ แชมเปียนส์ลีก',
     copa_libertadores:'โคปา ลิเบอร์ตาดอเรส', afcon:'แอฟริกา คัพ ออฟ เนชั่นส์',
-    worldcup:'ฟุตบอลโลก', euro:'ยูฟ่า ยูโร'
+    worldcup:'ฟุตบอลโลก', euro:'ยูฟ่า ยูโร',
+    nations_league_a:'ยูฟ่า เนชั่นส์ ลีก เอ',
+    nations_league_b:'ยูฟ่า เนชั่นส์ ลีก บี',
+    nations_league_c:'ยูฟ่า เนชั่นส์ ลีก ซี',
+    nations_league_d:'ยูฟ่า เนชั่นส์ ลีก ดี'
   };
 
   // ===== Fallback ธง =====
@@ -607,7 +621,8 @@
     tunisia2:'🇹🇳',egypt2:'🇪🇬',zambia:'🇿🇲',uganda:'🇺🇬',tanzania:'🇹🇿',cameroon:'🇨🇲',
     ivorycoast:'🇨🇮',senegal:'🇸🇳',angola:'🇦🇴',mozambique:'🇲🇿',fiji:'🇫🇯',papua:'🇵🇬',
     tahiti:'🇵🇫',solomon:'🇸🇧',ucl:'🏆',uel:'🏆',uecl:'🏆',afc_cl:'🏆',caf_cl:'🏆',
-    copa_libertadores:'🏆',afcon:'🌍',worldcup:'🌍',euro:'🇪🇺'
+    copa_libertadores:'🏆',afcon:'🌍',worldcup:'🌍',euro:'🇪🇺',
+    nations_league_a:'🇪🇺',nations_league_b:'🇪🇺',nations_league_c:'🇪🇺',nations_league_d:'🇪🇺'
   };
 
   // ===== คำค้นตามทวีป =====
@@ -622,7 +637,7 @@
     'โอเชียเนีย':'โอเชียเนีย oceania ofc แปซิฟิก pacific',
     'บอลหญิง':'บอลหญิง women หญิง',
     'บอลเยาวชน':'บอลเยาวชน youth เยาวชน u19 u21',
-    'ถ้วย':'ถ้วย cups cup ucl uel uefa ยูฟ่า แชมเปียนส์ champion นานาชาติ international'
+    'ถ้วย':'ถ้วย cups cup ucl uel uefa ยูฟ่า แชมเปียนส์ champion นานาชาติ international nations league เนชั่นส์'
   };
 
   function getGroupKeywords(groupLabel) {
@@ -837,7 +852,7 @@
     const htHXG = hXG * htShareAdj * (elapsed < 45 ? remainHT : 1);
     const htAXG = aXG * htShareAdj * (elapsed < 45 ? remainHT : 1);
 
-    // ---- FT: คำนวณ O/U + Top Scores ----
+    // ---- FT ----
     let ftHWin=0, ftDraw=0, ftAWin=0, ftBtts=0;
     const ftScores = [];
     const ftTotalGoalsDist = {};
@@ -853,7 +868,7 @@
     ftHWin/=ftTotal; ftDraw/=ftTotal; ftAWin/=ftTotal;
     ftScores.sort((a,b)=>b.prob-a.prob);
 
-    // ---- HT: คำนวณ O/U + Top Scores ----
+    // ---- HT ----
     let htHWin=0, htDraw=0, htAWin=0, htBtts=0;
     const htScores = [];
     const htTotalGoalsDist = {};
@@ -919,7 +934,6 @@
     document.getElementById('ftBttsYes').textContent = `ได้ ${(ftBtts*100).toFixed(1)}%`;
     document.getElementById('ftBttsNo').textContent = `ไม่ได้ ${(100-ftBtts*100).toFixed(1)}%`;
 
-    // HT Top Scores
     document.getElementById('htTopScores').innerHTML = htScores.slice(0,3).map((s,i) => `
       <div class="score-card ${i===0?'rank-1':''}">
         <div class="score-rank">อันดับ ${i+1}</div>
@@ -927,7 +941,6 @@
         <div class="score-prob">${(s.prob*100).toFixed(1)}%</div>
       </div>`).join('');
 
-    // FT Top Scores
     document.getElementById('ftTopScores').innerHTML = ftScores.slice(0,3).map((s,i) => `
       <div class="score-card ${i===0?'rank-1':''}">
         <div class="score-rank">อันดับ ${i+1}</div>
