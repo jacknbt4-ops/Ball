@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#10b981">
-<title>Football Predictor — วิเคราะห์บอล (v30)</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Football Predictor — วิเคราะห์บอล (v33)</title>
 <style>
-  :root { --bg: #0f172a; --card: #1e293b; --card-inner: #0f172a; --border: #334155; --text: #f8fafc; --text-muted: #94a3b8; --primary: #3b82f6; --accent: #10b981; --sticky-h: 78px; }
+  :root { --bg: #0f172a; --card: #1e293b; --card-inner: #0f172a; --border: #334155; --text: #f8fafc; --text-muted: #94a3b8; --primary: #3b82f6; --accent: #10b981; --danger: #ef4444; --sticky-h: 78px; }
   * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
   body { margin: 0; padding: 20px; background-color: var(--bg); color: var(--text); line-height: 1.5; -webkit-text-size-adjust: 100%; }
   .container { max-width: 1100px; margin: 0 auto; }
@@ -14,15 +15,21 @@
   header h1 { margin: 0; font-size: 1.5rem; color: #fff; }
   .header-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
   button { cursor: pointer; border: none; border-radius: 8px; font-weight: 600; transition: all 0.2s; touch-action: manipulation; }
-  .btn-guide { background: #334155; color: #e2e8f0; padding: 8px 14px; font-size: 0.9rem; }
   .btn-reset { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 14px; font-size: 0.9rem; }
-  .btn-history, .btn-export { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 14px; font-size: 0.9rem; }
+  .btn-export { background: rgba(139, 92, 246, 0.15); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.4); padding: 8px 14px; font-size: 0.9rem; }
+  .btn-history { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 14px; font-size: 0.9rem; }
 
   .export-wrap { position: relative; display: inline-block; }
   .export-menu { display: none; position: absolute; top: 100%; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; min-width: 200px; z-index: 1000; box-shadow: 0 12px 32px rgba(0,0,0,0.5); }
   .export-menu.active { display: block; }
   .export-menu button { display: block; width: 100%; text-align: left; background: transparent; color: var(--text); padding: 10px 12px; font-size: 0.9rem; border-radius: 6px; }
   .export-menu button:hover { background: var(--card-inner); }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1100; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.active { display: flex; }
+  .modal-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; max-width: 600px; width: 100%; max-height: 80vh; display: flex; flex-direction: column; }
+  .modal-header { display: flex; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+  .modal-body { overflow-y: auto; padding: 12px; flex: 1; }
 
   .teams-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
@@ -89,16 +96,26 @@
 <div id="loadIndicator"></div>
 <div id="toast"></div>
 
+<div class="modal-overlay" id="historyModal">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <h3>📚 ประวัติการวิเคราะห์</h3>
+      <button type="button" style="background:transparent; color:#fff; font-size:1.5rem;" onclick="closeHistoryModal()">×</button>
+    </div>
+    <div class="modal-body" id="historyList">
+      <div style="text-align:center; padding:20px; color:#94a3b8;">ยังไม่มีประวัติ</div>
+    </div>
+  </div>
+</div>
+
 <div class="container">
   <header>
     <h1>⚽ Football Predictor — วิเคราะห์บอล</h1>
     <div class="header-actions">
-      <button type="button" class="btn-guide" onclick="toggleGuide()">📖 คู่มือ</button>
       <button type="button" class="btn-history" onclick="openHistoryModal()">📚 ประวัติ</button>
       <div class="export-wrap">
         <button type="button" class="btn-export" onclick="toggleExportMenu()">📤 แชร์</button>
         <div class="export-menu" id="exportMenu">
-          <button type="button" onclick="exportCSV()">📊 ดาวน์โหลด CSV</button>
           <button type="button" onclick="exportPNG()">🖼️ ดาวน์โหลด PNG</button>
         </div>
       </div>
@@ -152,7 +169,14 @@
           <div><label>GA</label><input type="number" id="homeGA" value="11" oninput="updateAvgPreview('home')"></div>
         </div>
       </div>
-      <div id="homePreview" class="calc-preview">รอข้อมูล...</div>
+
+      <!-- 🔥 ใบแดง -->
+      <div style="margin-top: 15px; padding: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px;">
+        <label for="homeRedCards" style="color: #f87171;">🟥 ใบแดง (Red Cards)</label>
+        <input type="number" id="homeRedCards" min="0" max="5" value="0" oninput="markStale()">
+      </div>
+
+      <div id="homePreview" class="calc-preview" style="margin-top: 14px;">รอข้อมูล...</div>
     </div>
 
     <!-- AWAY TEAM -->
@@ -200,7 +224,14 @@
           <div><label>GA</label><input type="number" id="awayGA" value="13" oninput="updateAvgPreview('away')"></div>
         </div>
       </div>
-      <div id="awayPreview" class="calc-preview">รอข้อมูล...</div>
+
+      <!-- 🔥 ใบแดง -->
+      <div style="margin-top: 15px; padding: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px;">
+        <label for="awayRedCards" style="color: #f87171;">🟥 ใบแดง (Red Cards)</label>
+        <input type="number" id="awayRedCards" min="0" max="5" value="0" oninput="markStale()">
+      </div>
+
+      <div id="awayPreview" class="calc-preview" style="margin-top: 14px;">รอข้อมูล...</div>
     </div>
   </div>
 
@@ -224,12 +255,23 @@
       <label>🏆 ลีก / การแข่งขัน</label>
       <select id="league" onchange="markStale()">
         <option value="standard">ไม่ระบุ / ทั่วไป</option>
-        <option value="epl">🏴 Premier League</option>
-        <option value="laliga">🇪🇸 La Liga</option>
-        <option value="bundesliga">🇩🇪 Bundesliga</option>
-        <option value="seriea">🇮🇹 Serie A</option>
-        <option value="ligue1">🇫🇷 Ligue 1</option>
-        <option value="thaileague">🇹🇭 Thai League</option>
+        <optgroup label="ยุโรป">
+          <option value="epl">🏴 Premier League</option>
+          <option value="laliga">🇪🇸 La Liga</option>
+          <option value="bundesliga">🇩🇪 Bundesliga</option>
+          <option value="seriea">🇮🇹 Serie A</option>
+          <option value="ligue1">🇫🇷 Ligue 1</option>
+          <option value="eredivisie">🇳🇱 Eredivisie</option>
+          <option value="portugal">🇵🇹 Primeira Liga</option>
+          <option value="turkey">🇹🇷 Süper Lig</option>
+        </optgroup>
+        <optgroup label="เอเชีย & อเมริกา">
+          <option value="thaileague">🇹🇭 Thai League</option>
+          <option value="jleague">🇯🇵 J1 League</option>
+          <option value="saudiarabia">🇸🇦 Saudi Pro League</option>
+          <option value="mls">🇺🇸 MLS</option>
+          <option value="brasil">🇧🇷 Brasileirão</option>
+        </optgroup>
       </select>
     </div>
     <div><label>AH (เจ้าบ้าน)</label><select id="ahLine" onchange="markStale()"><option value="0">0</option><option value="-0.5">-0.5</option><option value="-1.0">-1.0</option><option value="0.5">+0.5</option></select></div>
@@ -280,12 +322,27 @@
   const VERCEL_API_URL = 'https://football-backend-v2-phi.vercel.app/api/stats'; 
 
   const LEAGUE_PROFILES = {
-    standard: { avg: 1.35, homeAdv: 1.10, htShare: 0.43 }, epl: { avg: 1.42, homeAdv: 1.11, htShare: 0.44 },
-    laliga: { avg: 1.28, homeAdv: 1.12, htShare: 0.42 }, bundesliga: { avg: 1.58, homeAdv: 1.08, htShare: 0.47 },
-    seriea: { avg: 1.33, homeAdv: 1.10, htShare: 0.41 }, ligue1: { avg: 1.38, homeAdv: 1.09, htShare: 0.43 },
-    thaileague: { avg: 1.45, homeAdv: 1.13, htShare: 0.44 }
+    standard: { avg: 1.35, homeAdv: 1.10, htShare: 0.43 }, 
+    epl: { avg: 1.42, homeAdv: 1.11, htShare: 0.44 },
+    laliga: { avg: 1.28, homeAdv: 1.12, htShare: 0.42 }, 
+    bundesliga: { avg: 1.58, homeAdv: 1.08, htShare: 0.47 },
+    seriea: { avg: 1.33, homeAdv: 1.10, htShare: 0.41 }, 
+    ligue1: { avg: 1.38, homeAdv: 1.09, htShare: 0.43 },
+    eredivisie: { avg: 1.60, homeAdv: 1.07, htShare: 0.45 },
+    portugal: { avg: 1.30, homeAdv: 1.15, htShare: 0.42 },
+    turkey: { avg: 1.38, homeAdv: 1.20, htShare: 0.43 },
+    thaileague: { avg: 1.45, homeAdv: 1.13, htShare: 0.44 },
+    jleague: { avg: 1.28, homeAdv: 1.08, htShare: 0.43 },
+    saudiarabia: { avg: 1.50, homeAdv: 1.14, htShare: 0.44 },
+    mls: { avg: 1.48, homeAdv: 1.15, htShare: 0.46 },
+    brasil: { avg: 1.20, homeAdv: 1.18, htShare: 0.40 }
   };
-  const LEAGUE_ID_MAP = { 'epl': 39, 'laliga': 140, 'bundesliga': 78, 'seriea': 135, 'ligue1': 61, 'thaileague': 296 };
+
+  const LEAGUE_ID_MAP = { 
+    'epl': 39, 'laliga': 140, 'bundesliga': 78, 'seriea': 135, 'ligue1': 61, 
+    'eredivisie': 88, 'portugal': 94, 'turkey': 203,
+    'thaileague': 296, 'jleague': 98, 'saudiarabia': 307, 'mls': 253, 'brasil': 71 
+  };
 
   let hasCalculated = false;
   let searchTimeout;
@@ -328,7 +385,6 @@
     return input;
   }
 
-  // 🔥 แก้บั๊กตรงนี้: รับค่าเป็น String ปลอดภัย ไม่พังเวลาเจอภาษาไทย
   function handleSearchInput(side, val) {
     clearTimeout(searchTimeout);
     const listEl = document.getElementById('ac' + (side === 'home' ? 'Home' : 'Away'));
@@ -347,7 +403,7 @@
         const data = await res.json();
         
         if (!data.response || data.response.length === 0) {
-          listEl.innerHTML = '<div style="padding:10px; text-align:center;">ไม่พบทีม (ลองเช็กว่ายิง API ติดไหม)</div>';
+          listEl.innerHTML = '<div style="padding:10px; text-align:center;">ไม่พบทีม</div>';
           return;
         }
         
@@ -361,7 +417,7 @@
           </div>
         `).join('');
       } catch (e) {
-        listEl.innerHTML = '<div style="padding:10px; text-align:center; color:red;">Error: หลังบ้านยังไม่ตอบสนอง</div>';
+        listEl.innerHTML = '<div style="padding:10px; text-align:center; color:red;">Error API</div>';
       }
     }, 500);
   }
@@ -474,8 +530,22 @@
     const hName = document.getElementById('homeName').value || 'เจ้าบ้าน';
     const aName = document.getElementById('awayName').value || 'ทีมเยือน';
     
+    // 🚀 คำนวณพื้นฐาน
     let hXG = ((hStats.gf + aStats.ga) / 2) * profile.homeAdv;
     let aXG = ((aStats.gf + hStats.ga) / 2) * (2 - profile.homeAdv);
+
+    // 🚀 ระบบใบแดง (Red Card Impact)
+    const hRed = parseInt(document.getElementById('homeRedCards').value) || 0;
+    const aRed = parseInt(document.getElementById('awayRedCards').value) || 0;
+    
+    if (hRed > 0) {
+      hXG *= Math.pow(0.80, hRed); // ถ้าโดน 1 ใบ ลด 20%, 2 ใบ ลด 36%
+      aXG *= Math.pow(1.10, hRed); // ทีมเยือนได้เปรียบตัว เพิ่ม 10%, 21%
+    }
+    if (aRed > 0) {
+      aXG *= Math.pow(0.80, aRed); 
+      hXG *= Math.pow(1.10, aRed); 
+    }
 
     const elapsed = parseInt(document.getElementById('elapsedMinutes').value) || 0;
     const hScore = parseInt(document.getElementById('liveHomeScore').value) || 0;
@@ -505,7 +575,12 @@
 
     document.getElementById('resultsSection').classList.add('active');
     hasCalculated = true;
-    document.getElementById('statusBanner').innerHTML = `📊 วิเคราะห์แล้ว (${elapsed === 0 ? 'ก่อนแข่ง' : elapsed + "'"})`;
+    
+    let bannerMsg = `📊 วิเคราะห์แล้ว (${elapsed === 0 ? 'ก่อนแข่ง' : elapsed + "'"})`;
+    if (hRed > 0 || aRed > 0) {
+      bannerMsg += ` | 🟥 ใบแดง: ${hName} ${hRed} - ${aRed} ${aName}`;
+    }
+    document.getElementById('statusBanner').innerHTML = bannerMsg;
     
     document.getElementById('htHomeWin').textContent = (hWin*100).toFixed(1) + '%';
     document.getElementById('htDraw').textContent = (draw*100).toFixed(1) + '%';
@@ -527,6 +602,59 @@
     
     document.getElementById('resultsSection').scrollIntoView({behavior: 'smooth'});
   }
+
+  // ============================================================
+  // 🛠️ ฟังก์ชันเมนูด้านบน (แก้บั๊กให้ทำงานแล้ว)
+  // ============================================================
+  function openHistoryModal() {
+    const modal = document.getElementById('historyModal');
+    if (modal) modal.classList.add('active');
+  }
+  function closeHistoryModal() {
+    const modal = document.getElementById('historyModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  function toggleExportMenu() {
+    const menu = document.getElementById('exportMenu');
+    if (menu) menu.classList.toggle('active');
+  }
+
+  function exportPNG() {
+    showToast('⚠️ ฟีเจอร์ Export ถูกปิดใช้งานชั่วคราว');
+  }
+
+  function resetAll() {
+    document.getElementById('homeName').value = 'ทีมเจ้าบ้าน';
+    document.getElementById('awayName').value = 'ทีมเยือน';
+    document.getElementById('homeAvgGF').value = '1.5';
+    document.getElementById('homeAvgGA').value = '1.1';
+    document.getElementById('awayAvgGF').value = '1.2';
+    document.getElementById('awayAvgGA').value = '1.3';
+    document.getElementById('searchHome').value = '';
+    document.getElementById('searchAway').value = '';
+    document.getElementById('presetHome').value = '';
+    document.getElementById('presetAway').value = '';
+    document.getElementById('homeRedCards').value = '0';
+    document.getElementById('awayRedCards').value = '0';
+    document.getElementById('elapsedMinutes').value = '0';
+    document.getElementById('liveHomeScore').value = '0';
+    document.getElementById('liveAwayScore').value = '0';
+    
+    updateAvgPreview('home');
+    updateAvgPreview('away');
+    document.getElementById('resultsSection').classList.remove('active');
+    hasCalculated = false;
+    
+    showToast('✓ ล้างค่าเรียบร้อยแล้ว');
+  }
+  
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('exportMenu');
+    if (menu && !menu.parentElement.contains(e.target)) {
+      menu.classList.remove('active');
+    }
+  });
 
   window.addEventListener('load', () => {
     updateAvgPreview('home'); updateAvgPreview('away');
