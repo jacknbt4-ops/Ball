@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#10b981">
-<title>Football Predictor — วิเคราะห์บอล (v27)</title>
+<title>Football Predictor — วิเคราะห์บอล (v30)</title>
 <style>
-  :root { --bg: #0f172a; --card: #1e293b; --card-inner: #0f172a; --border: #334155; --text: #f8fafc; --text-muted: #94a3b8; --primary: #3b82f6; --accent: #10b981; --danger: #ef4444; --warning: #f59e0b; --sticky-h: 78px; }
+  :root { --bg: #0f172a; --card: #1e293b; --card-inner: #0f172a; --border: #334155; --text: #f8fafc; --text-muted: #94a3b8; --primary: #3b82f6; --accent: #10b981; --sticky-h: 78px; }
   * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
   body { margin: 0; padding: 20px; background-color: var(--bg); color: var(--text); line-height: 1.5; -webkit-text-size-adjust: 100%; }
   .container { max-width: 1100px; margin: 0 auto; }
@@ -39,7 +39,6 @@
   .autocomplete-item:hover { background: var(--card-inner); }
   .ac-name { font-weight: 600; font-size: 0.9rem; }
   .ac-country { font-size: 0.75rem; color: var(--text-muted); }
-
   .preset-select { font-size: 0.8rem; background: var(--card-inner); border-color: var(--border); margin-bottom: 10px; }
 
   .mode-switch { display: flex; background: var(--card-inner); padding: 4px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 14px; }
@@ -48,11 +47,6 @@
 
   .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .calc-preview { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); color: #34d399; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 14px; }
-  .form-buttons { display: flex; gap: 8px; }
-  .form-btn { flex: 1; padding: 10px 0; font-size: 0.95rem; font-weight: 700; border-radius: 8px; background: #334155; color: #cbd5e1; }
-  .form-btn[data-val="W"] { background: #10b981; color: #064e3b; }
-  .form-btn[data-val="D"] { background: #64748b; color: #fff; }
-  .form-btn[data-val="L"] { background: #ef4444; color: #fff; }
 
   .live-panel { background: linear-gradient(135deg, #1e293b 0%, #172554 100%); border: 1px solid #3b82f6; border-radius: 12px; padding: 18px; margin-bottom: 20px; }
   .live-grid { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 12px; align-items: end; }
@@ -281,7 +275,7 @@
 
 <script>
   // ============================================================
-  // ⚠️ เปลี่ยน URL ตรงนี้เป็นของคุณ
+  // ⚠️ URL ของคุณคือ v2
   // ============================================================
   const VERCEL_API_URL = 'https://football-backend-v2-phi.vercel.app/api/stats'; 
 
@@ -303,21 +297,57 @@
     clearTimeout(el._t); el._t = setTimeout(() => { el.style.display = 'none'; }, 3000);
   }
 
-  // ---------- API SEARCH & AUTOCOMPLETE ----------
-  function handleSearchInput(side, query) {
+  // ============================================================
+  // 🚀 Thai Dictionary
+  // ============================================================
+  const THAI_TEAM_DICT = {
+    'แมนยู': 'Manchester United', 'แมนเชสเตอร์ยูไนเต็ด': 'Manchester United', 'ปิศาจแดง': 'Manchester United', 'ผีแดง': 'Manchester United',
+    'แมนซิตี้': 'Manchester City', 'แมนเชสเตอร์ซิตี้': 'Manchester City', 'เรือใบ': 'Manchester City',
+    'หงส์แดง': 'Liverpool', 'ลิเวอร์พูล': 'Liverpool',
+    'ปืนใหญ่': 'Arsenal', 'อาร์เซนอล': 'Arsenal',
+    'สิงโตน้ำเงินคราม': 'Chelsea', 'เชลซี': 'Chelsea',
+    'ไก่เดือยทอง': 'Tottenham', 'สเปอร์ส': 'Tottenham',
+    'ราชันชุดขาว': 'Real Madrid', 'เรอัลมาดริด': 'Real Madrid',
+    'ต่างดาว': 'Barcelona', 'บาร์เซโลน่า': 'Barcelona', 'บาร์ซ่า': 'Barcelona',
+    'เสือใต้': 'Bayern Munich', 'บาเยิร์น': 'Bayern Munich',
+    'เปแอสเช': 'Paris Saint Germain', 'ปารีส': 'Paris Saint Germain',
+    'ปิศาจแดงดำ': 'AC Milan', 'เอซี มิลาน': 'AC Milan',
+    'ม้าลาย': 'Juventus', 'ยูเวนตุส': 'Juventus',
+    'งูใหญ่': 'Inter', 'อินเตอร์': 'Inter',
+    'หมาป่า': 'AS Roma', 'โรม่า': 'AS Roma',
+    'นาโปลี': 'Napoli', 'นโปเลียน': 'Napoli',
+    'แชมป์เก่า': 'Manchester City'
+  };
+
+  function translateTeamName(input) {
+    const cleanInput = input.trim().toLowerCase();
+    if (THAI_TEAM_DICT[cleanInput]) return THAI_TEAM_DICT[cleanInput];
+    for (const [thai, eng] of Object.entries(THAI_TEAM_DICT)) {
+      if (cleanInput.includes(thai)) return eng;
+    }
+    return input;
+  }
+
+  // 🔥 แก้บั๊กตรงนี้: รับค่าเป็น String ปลอดภัย ไม่พังเวลาเจอภาษาไทย
+  function handleSearchInput(side, val) {
     clearTimeout(searchTimeout);
     const listEl = document.getElementById('ac' + (side === 'home' ? 'Home' : 'Away'));
+    const query = String(val);
+    
     if (query.length < 2) { listEl.style.display = 'none'; return; }
 
     searchTimeout = setTimeout(async () => {
       listEl.innerHTML = '<div style="padding:10px; text-align:center;">⏳ กำลังค้นหา...</div>';
       listEl.style.display = 'block';
+      
+      const searchQuery = translateTeamName(query);
+      
       try {
-        const res = await fetch(`${VERCEL_API_URL}?search=${encodeURIComponent(query)}`);
+        const res = await fetch(`${VERCEL_API_URL}?search=${encodeURIComponent(searchQuery)}`);
         const data = await res.json();
         
         if (!data.response || data.response.length === 0) {
-          listEl.innerHTML = '<div style="padding:10px; text-align:center;">ไม่พบทีม</div>';
+          listEl.innerHTML = '<div style="padding:10px; text-align:center;">ไม่พบทีม (ลองเช็กว่ายิง API ติดไหม)</div>';
           return;
         }
         
@@ -331,7 +361,7 @@
           </div>
         `).join('');
       } catch (e) {
-        listEl.innerHTML = '<div style="padding:10px; text-align:center; color:red;">Error API</div>';
+        listEl.innerHTML = '<div style="padding:10px; text-align:center; color:red;">Error: หลังบ้านยังไม่ตอบสนอง</div>';
       }
     }, 500);
   }
@@ -360,7 +390,7 @@
     
     if (!leagueId) {
       showToast('⚠️ กรุณาเลือกลีกด้านล่างก่อนดึงข้อมูล', true);
-      document.getElementById('league').scrollIntoView({behavior: 'smooth', block:'center'});
+      document.getElementById('league').scrollIntoView({behavior: 'smooth', block: 'center'});
       return;
     }
 
@@ -441,8 +471,9 @@
     };
     
     const hStats = getStats('home'); const aStats = getStats('away');
+    const hName = document.getElementById('homeName').value || 'เจ้าบ้าน';
+    const aName = document.getElementById('awayName').value || 'ทีมเยือน';
     
-    // Simple xG calculation
     let hXG = ((hStats.gf + aStats.ga) / 2) * profile.homeAdv;
     let aXG = ((aStats.gf + hStats.ga) / 2) * (2 - profile.homeAdv);
 
@@ -455,16 +486,22 @@
       hXG *= remain; aXG *= remain;
     }
 
-    // Probabilities
-    let hWin=0, draw=0, aWin=0, over25=0;
+    let hWin=0, draw=0, aWin=0, over25=0, btts=0, over15=0;
+    const scores = [];
     for(let i=0; i<=6; i++) {
       for(let j=0; j<=6; j++) {
         const p = poisson(i, hXG) * poisson(j, aXG);
         const finalH = hScore + i; const finalA = aScore + j;
+        const total = finalH + finalA;
         if(finalH > finalA) hWin += p; else if(finalH === finalA) draw += p; else aWin += p;
-        if(finalH + finalA > 2.5) over25 += p;
+        if(total > 2.5) over25 += p;
+        if(total > 1.5) over15 += p;
+        if(finalH > 0 && finalA > 0) btts += p;
+        scores.push({ score: `${finalH}-${finalA}`, prob: p });
       }
     }
+
+    scores.sort((a,b) => b.prob - a.prob);
 
     document.getElementById('resultsSection').classList.add('active');
     hasCalculated = true;
@@ -473,16 +510,24 @@
     document.getElementById('htHomeWin').textContent = (hWin*100).toFixed(1) + '%';
     document.getElementById('htDraw').textContent = (draw*100).toFixed(1) + '%';
     document.getElementById('htAwayWin').textContent = (aWin*100).toFixed(1) + '%';
+    document.getElementById('htO15').textContent = `สูง ${(over15*100).toFixed(1)}%`;
     
     document.getElementById('ftHomeWin').textContent = (hWin*100).toFixed(1) + '%';
     document.getElementById('ftDraw').textContent = (draw*100).toFixed(1) + '%';
     document.getElementById('ftAwayWin').textContent = (aWin*100).toFixed(1) + '%';
     document.getElementById('ftO25').textContent = `สูง ${(over25*100).toFixed(1)}%`;
     
+    document.getElementById('ftTopScores').innerHTML = scores.slice(0, 3).map((s, i) => `
+      <div class="score-card ${i === 0 ? 'rank-1' : ''}">
+        <div class="score-rank">อันดับ ${i + 1}</div>
+        <div class="score-val">${s.score}</div>
+        <div class="score-prob">${(s.prob * 100).toFixed(1)}%</div>
+      </div>
+    `).join('');
+    
     document.getElementById('resultsSection').scrollIntoView({behavior: 'smooth'});
   }
 
-  // Minimal init
   window.addEventListener('load', () => {
     updateAvgPreview('home'); updateAvgPreview('away');
     document.getElementById('league').value = 'epl';
