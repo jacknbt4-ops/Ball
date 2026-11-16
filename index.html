@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#10b981">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Football Predictor — Manual Mode (v47 - Full AH + O/U Lines)</title>
+<title>Football Predictor — Manual Mode (v48 - AH/O-U Active Lines)</title>
 <style>
   :root { --bg:#0f172a; --card:#1e293b; --card-inner:#0f172a; --border:#334155; --text:#f8fafc; --text-muted:#94a3b8; --primary:#3b82f6; --accent:#10b981; --danger:#ef4444; --sticky-h:78px; }
   * { box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
@@ -60,6 +60,7 @@
   .results-section { display:none; }
   .results-section.active { display:block; }
   .status-banner { background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.4); color:#bfdbfe; padding:12px 16px; border-radius:10px; margin-bottom:18px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+  .selected-line-banner { background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.4); color:#a7f3d0; padding:12px 16px; border-radius:10px; margin-bottom:18px; font-size:0.92rem; line-height:1.8; }
   .results-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
   .res-title { font-size:1.1rem; font-weight:700; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border); }
   .prob-1x2 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:16px; }
@@ -446,6 +447,7 @@
 
   <div id="resultsSection" class="results-section">
     <div id="statusBanner" class="status-banner"></div>
+    <div id="selectedLineBanner" class="selected-line-banner" style="display:none;"></div>
     <div class="results-grid">
       <div class="card">
         <div class="res-title">⏱️ ครึ่งแรก (45 นาที)</div>
@@ -853,6 +855,36 @@
     if (wrap && !wrap.contains(e.target)) document.getElementById('leagueDropdown').classList.remove('open');
   });
 
+  // ===== คำนวณ AH จาก distribution =====
+  function calcAhProbSimple(scoresDist, line, hScore, aScore) {
+    let win = 0, push = 0, lose = 0;
+    for (const item of scoresDist) {
+      const diff = (hScore + item.h) - (aScore + item.a);
+      const adjusted = diff + line;
+      if (adjusted > 0.001) win += item.p;
+      else if (Math.abs(adjusted) < 0.001) push += item.p;
+      else lose += item.p;
+    }
+    return { win, push, lose };
+  }
+
+  function calcAhProb(scoresDist, ahLine, hScore, aScore) {
+    const frac = Math.abs(ahLine % 1);
+    if (Math.abs(frac - 0.25) < 0.001 || Math.abs(frac - 0.75) < 0.001) {
+      // quarter-ball: แยกเป็น 2 เส้นครึ่ง
+      const line1 = ahLine - 0.25;
+      const line2 = ahLine + 0.25;
+      const r1 = calcAhProbSimple(scoresDist, line1, hScore, aScore);
+      const r2 = calcAhProbSimple(scoresDist, line2, hScore, aScore);
+      return {
+        win: (r1.win + r2.win) / 2,
+        push: (r1.push + r2.push) / 2,
+        lose: (r1.lose + r2.lose) / 2
+      };
+    }
+    return calcAhProbSimple(scoresDist, ahLine, hScore, aScore);
+  }
+
   // ===== คำนวณหลัก =====
   function calculate() {
     const leagueKey = document.getElementById('league').value;
@@ -915,7 +947,7 @@
       const fH=hScore+i, fA=aScore+j, total=fH+fA;
       if (fH>fA) ftHWin+=p; else if (fH===fA) ftDraw+=p; else ftAWin+=p;
       if (fH>0 && fA>0) ftBtts+=p;
-      ftScores.push({score:`${fH}-${fA}`, prob:p});
+      ftScores.push({score:`${fH}-${fA}`, h:i, a:j, prob:p});
       ftTotalGoalsDist[total] = (ftTotalGoalsDist[total]||0) + p;
     }
     const ftTotal = ftHWin+ftDraw+ftAWin || 1;
@@ -931,7 +963,7 @@
       const fH=htHScore+i, fA=htAScore+j, total=fH+fA;
       if (fH>fA) htHWin+=p; else if (fH===fA) htDraw+=p; else htAWin+=p;
       if (fH>0 && fA>0) htBtts+=p;
-      htScores.push({score:`${fH}-${fA}`, prob:p});
+      htScores.push({score:`${fH}-${fA}`, h:i, a:j, prob:p});
       htTotalGoalsDist[total] = (htTotalGoalsDist[total]||0) + p;
     }
     const htTotal = htHWin+htDraw+htAWin || 1;
@@ -1002,6 +1034,34 @@
         <div class="score-prob">${(s.prob*100).toFixed(1)}%</div>
       </div>`).join('');
 
+    // ---- แสดง AH และ O/U ที่เลือกใน settings ----
+    const ahLine = parseFloat(document.getElementById('ahLine').value) || 0;
+    const ouLine = document.getElementById('ouLine').value;
+    const banner = document.getElementById('selectedLineBanner');
+
+    const ftDistForAh = ftScores.map(s => ({ h: s.h, a: s.a, p: s.prob }));
+    const ahRes = calcAhProb(ftDistForAh, ahLine, hScore, aScore);
+    const ahWinPct = (ahRes.win * 100).toFixed(1);
+    const ahLosePct = (ahRes.lose * 100).toFixed(1);
+    const ahPushPct = (ahRes.push * 100).toFixed(1);
+
+    let bannerHtml = `<div>📌 <strong>AH ${ahLine > 0 ? '+' + ahLine : ahLine}</strong> (เจ้าบ้าน): `;
+    bannerHtml += `<span style="color:#34d399; font-weight:700;">ชนะ ${ahWinPct}%</span>`;
+    if (ahRes.push > 0.001) bannerHtml += ` | <span style="color:#fbbf24; font-weight:700;">คืน ${ahPushPct}%</span>`;
+    bannerHtml += ` | <span style="color:#f87171; font-weight:700;">แพ้ ${ahLosePct}%</span></div>`;
+
+    if (ouLine && ouLine !== 'none') {
+      const line = parseFloat(ouLine);
+      const ftOver = overProb(ftTotalGoalsDist, line);
+      const ftUnder = 1 - ftOver;
+      bannerHtml += `<div>📌 <strong>O/U ${line}</strong> (เต็มเวลา): `;
+      bannerHtml += `<span style="color:#34d399; font-weight:700;">สูง ${(ftOver*100).toFixed(1)}%</span>`;
+      bannerHtml += ` | <span style="color:#f87171; font-weight:700;">ต่ำ ${(ftUnder*100).toFixed(1)}%</span></div>`;
+    }
+
+    banner.innerHTML = bannerHtml;
+    banner.style.display = 'block';
+
     document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'});
   }
 
@@ -1028,6 +1088,7 @@
     updateAvgPreview('home'); updateAvgPreview('away');
     handleLiveInput();
     document.getElementById('resultsSection').classList.remove('active');
+    document.getElementById('selectedLineBanner').style.display = 'none';
     hasCalculated = false;
     showToast('✓ ล้างค่าเรียบร้อยแล้ว');
   }
