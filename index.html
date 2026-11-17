@@ -1212,14 +1212,43 @@ function predictMatch() {
     let topScoresFT = [];
     let topScoresFH = [];
 
-    // ✅ คำนวณ xG ครึ่งแรก โดยอิงตามเวลาที่เหลือจริงในครึ่งแรก (แม่นยำขึ้น)
+    // ========== คำนวณครึ่งแรก (First Half) อย่างถูกต้อง ==========
     const fhMinute = Math.min(45, inputs.minute);
     const fhRemaining = Math.max(0, 45 - fhMinute);
-    const fhRatio = fhRemaining / 90; // สัดส่วนเวลาที่เหลือเทียบกับทั้งเกม
 
-    // xG เฉพาะช่วงเวลาที่เหลือในครึ่งแรก (ใช้ xG ต่อนาทีของทั้งเกมมาคูณ)
-    const fhXgH = (xgH / Math.max(1, 90 - inputs.minute)) * fhRemaining * inputs.league.fhShare * 1.5;
-    const fhXgA = (xgA / Math.max(1, 90 - inputs.minute)) * fhRemaining * inputs.league.fhShare * 1.5;
+    // คำนวณ xG ที่เหลือในครึ่งแรก
+    let fhXgH = 0, fhXgA = 0;
+    if (inputs.minute < 45 && fhRemaining > 0) {
+      const remTotal = Math.max(1, 90 - inputs.minute);
+      const rateH = xgH / remTotal;
+      const rateA = xgA / remTotal;
+      const fhFactor = (inputs.league.fhShare || 0.44) * 1.35;
+      fhXgH = Math.min(rateH * fhRemaining * fhFactor, 3.5);
+      fhXgA = Math.min(rateA * fhRemaining * fhFactor, 3.5);
+    }
+
+    // สร้างกริดสกอร์ครึ่งแรกแยก (normalize จริง)
+    if (inputs.minute < 45) {
+      const fhGrid = buildScoreGrid(fhXgH, fhXgA, inputs.league.rho);
+      forEachCell(fhGrid, (h, a, p) => {
+        const htH = inputs.cH + h;
+        const htA = inputs.cA + a;
+        const htTotal = htH + htA;
+
+        if (htH > htA) fhHome += p;
+        else if (htA > htH) fhAway += p;
+        else fhDraw += p;
+
+        if (htTotal > 0.5) fhOver05 += p;
+        if (htTotal > 1.5) fhOver15 += p;
+        if (htTotal > 2.5) fhOver25 += p;
+        if (htTotal > 3.5) fhOver35 += p;
+
+        if (h < 6 && a < 6) {
+          topScoresFH.push({ score: `${htH}-${htA}`, p: p });
+        }
+      });
+    }
 
     forEachCell(grid, (h, a, p) => {
       const ftH = inputs.cH + h, ftA = inputs.cA + a;
@@ -1244,21 +1273,6 @@ function predictMatch() {
       else pAHPush += p;
 
       if (h < 6 && a < 6) topScoresFT.push({ score: `${ftH}-${ftA}`, p: p });
-
-      // ✅ ตรรกะใหม่: คำนวณ Top 3 ครึ่งแรก และ Over/Under ครึ่งแรก โดยอิงเวลาที่เหลือจริง
-      if (inputs.minute < 45) {
-        const po = poisson(fhXgH, h) * poisson(fhXgA, a) * dixonColesTau(h, a, fhXgH, fhXgA, inputs.league.rho);
-        if (h < 6 && a < 6) {
-          topScoresFH.push({ score: `${h}-${a}`, p: po });
-        }
-        
-        // Over/Under เช็คจากผลรวมประตู "ที่เหลือ" + ประตูที่มีอยู่แล้ว
-        const currentTotal = inputs.cH + inputs.cA; 
-        if (currentTotal + h + a > 0.5) fhOver05 += po; 
-        if (currentTotal + h + a > 1.5) fhOver15 += po; 
-        if (currentTotal + h + a > 2.5) fhOver25 += po; 
-        if (currentTotal + h + a > 3.5) fhOver35 += po;
-      }
     });
 
     topScoresFT.sort((a, b) => b.p - a.p);
@@ -1318,10 +1332,24 @@ function predictMatch() {
     writeText('probNone', fmtPct(pNone * 100));
     writeText('probAway', fmtPct(pAN * 100));
 
-    const fhSum = fhHome + fhDraw + fhAway;
-    writeText('fhProbHome', fmtPct((fhHome/fhSum)*100));
-    writeText('fhProbTotal', fmtPct((fhDraw/fhSum)*100));
-    writeText('fhProbAway', fmtPct((fhAway/fhSum)*100));
+    // แสดงผลครึ่งแรก
+    if (inputs.minute >= 45) {
+      const curH = inputs.cH, curA = inputs.cA;
+      writeText('fhProbHome', curH > curA ? '100%' : '0%');
+      writeText('fhProbTotal', curH === curA ? '100%' : '0%');
+      writeText('fhProbAway', curA > curH ? '100%' : '0%');
+    } else {
+      const fhSum = fhHome + fhDraw + fhAway;
+      if (fhSum > 0) {
+        writeText('fhProbHome', fmtPct((fhHome / fhSum) * 100));
+        writeText('fhProbTotal', fmtPct((fhDraw / fhSum) * 100));
+        writeText('fhProbAway', fmtPct((fhAway / fhSum) * 100));
+      } else {
+        writeText('fhProbHome', '—');
+        writeText('fhProbTotal', '—');
+        writeText('fhProbAway', '—');
+      }
+    }
 
     const setFt = (id, bar, val, trig) => {
       const v = trig ? 100 : val * 100;
