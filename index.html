@@ -364,14 +364,6 @@ body{background:radial-gradient(ellipse at 15% 0%,#18304b 0%,#091526 42%,#060d18
     <div class="right-panel">
       <div id="resultsArea" class="d-flex flex-column gap-2 h-100 d-none">
         <div class="card p-2 text-center position-relative border">
-          <div class="position-absolute d-flex gap-1" style="top:6px; right:6px;">
-            <button class="btn btn-outline-success btn-copy" onclick="exportPredictionCSV()" title="Export CSV" type="button" aria-label="Export CSV">
-              <i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i> CSV
-            </button>
-            <button class="btn btn-outline-secondary btn-copy" onclick="copyResultAsText()" title="Copy result as text" type="button" aria-label="คัดลอกผล">
-              <i class="bi bi-clipboard" aria-hidden="true"></i> Copy
-            </button>
-          </div>
           <div id="resultTitle" class="fw-bold mb-1" style="font-size:1.1rem;">ทีมเหย้า 0 - 0 ทีมเยือน</div>
           <div id="matchOutcomeTitle" class="fs-6 fw-bold px-2 py-1 rounded mt-1 mb-2 d-inline-block" style="background: rgba(0,0,0,0.2); border: 1px solid transparent; display: none;">
             🎯 AI คาดการณ์: -
@@ -1573,6 +1565,118 @@ document.addEventListener('DOMContentLoaded', () => {
   // โหลดข้อมูลนาฬิกาเริ่มต้น
   clockSeconds = readNum('match_minute', { min: 0, max: 120, integer: true, fallback: 0 }) * 60;
   updateClockDisplay();
+});
+</script>
+<script>
+/* ===== Language switch (TH/EN) + Donate modal ===== */
+const EN = {
+'สนับสนุน':'Support','AH: 0.0 (เสมอ)':'AH: 0.0 (Level)','⚠️ ยังไม่เลือกลีก — ใช้ค่ากลาง (2.70 ประตู/เกม)':'⚠️ No league selected — using default (2.70 goals/game)',
+'⏱️ นาที':'⏱️ Min','🏠 เหย้า':'🏠 Home','✈️ เยือน':'✈️ Away','สถานะ':'Format','90 นาที':'90 min','120 นาที':'120 min',
+'🟥 ใบแดง 🏠 เหย้า':'🟥 Red 🏠 Home','🟥 ใบแดง ✈️ เยือน':'🟥 Red ✈️ Away','🚩 ลูกเตะมุม (Corners)':'🚩 Corners',
+'* ช่องบน = เตะมุมสะสมจนถึงปัจจุบัน, ช่องล่าง = เตะมุมเฉพาะครึ่งแรก':'* Top box = corners so far, bottom box = first-half corners only',
+'ประมวลผลคาดการณ์':'Run Prediction','ตัวเลือกเพิ่มเติม (AI Strength · Big)':'More options (AI Strength · Big)','AI Strength อัตโนมัติ':'Auto AI Strength',
+'คำนวณจาก AH และสถิติการแข่งขันที่มีอยู่':'Calculated from AH and available match stats','🏠 Big (ว่าง=auto)':'🏠 Big (blank=auto)','✈️ Big (ว่าง=auto)':'✈️ Big (blank=auto)',
+'รีเซ็ตข้อมูล':'Reset data','⚠️ ไม่สามารถคำนวณได้:':'⚠️ Cannot calculate:','ทีมเหย้า 0 - 0 ทีมเยือน':'Home 0 - 0 Away','🎯 AI คาดการณ์: -':'🎯 AI prediction: -',
+'นาทีที่':'Minute','(เหลือ':'(remaining','นาที)':'min)','ลีกมาตรฐาน':'Default league','Tempo: ปกติ':'Tempo: Normal','⚠️ คำเตือน:':'⚠️ Warning:','🟥 ใบแดง:':'🟥 Red card:',
+'เจ้าบ้านชนะ':'Home win','เสมอ':'Draw','ทีมเยือนชนะ':'Away win','ทั้งสองทีมยิง (BTTS)':'Both teams score (BTTS)','คาดการณ์ประตูรวม':'Expected total goals',
+'อัตราต่อรอง':'Handicap line','เหย้าชนะราคา':'Home covers','เยือนชนะราคา':'Away covers','เสมอราคา (Push)':'Push','ครึ่งแรก 45 นาที':'First half (45 min)',
+'เหย้า':'Home','เยือน':'Away','🎯 สกอร์ครึ่งแรก (Top 3)':'🎯 1H score (Top 3)','ประตูถัดไป':'Next goal','ไม่มี':'None','🎯 สกอร์จบเกม (Top 3)':'🎯 Final score (Top 3)',
+'โอกาสเกิดประตูครึ่งแรก':'First-half goal chances','โอกาสเกิดประตูเต็มเวลา':'Full-time goal chances','🚩 วิเคราะห์ลูกเตะมุม (Corner Analysis v2)':'🚩 Corner Analysis v2',
+'คาดการณ์เต็มเวลา':'Full-time forecast','ครึ่งแรก (1H)':'First half (1H)','ครึ่งหลัง (2H)':'Second half (2H)','🏠 เหย้า (คาดการณ์)':'🏠 Home (forecast)','✈️ เยือน (คาดการณ์)':'✈️ Away (forecast)',
+'เต็มเวลา (Full Time)':'Full Time','กรอกข้อมูลแล้วกด "ประมวลผลคาดการณ์"':'Enter data and press "Run Prediction"','ผลวิเคราะห์จะแสดงตรงนี้':'Results will appear here',
+'สนับสนุนผู้พัฒนา':'Support the developer','หากโปรแกรม JackAI Scanner นี้มีประโยชน์กับคุณ':'If JackAI Scanner is useful to you','พร้อมเพย์ / ทรูมันนี่ วอลเล็ท':'PromptPay / TrueMoney Wallet',
+'คัดลอกเบอร์โอนเงิน':'Copy transfer number','ขอบคุณที่สนับสนุนครับ ❤️':'Thank you for your support ❤️','จบครึ่งแรกแล้ว':'First half is over',
+'กรุณาระบุจำนวนการยิงอย่างน้อย 1 ครั้ง':'Please enter at least 1 shot','หมดเวลาแข่งขันแล้ว (90:00)':'Full time reached (90:00)','จบครึ่งแรก (45:00)':'Half-time (45:00)','จบเกม (90:00)':'Full time (90:00)',
+'หมายเหตุ: ค่าคาดการณ์คำนวณจากแบบจำลอง Negative Binomial (r=8.0) • สูตรปรับตามทีมนำ/ตาม, ใบแดง, และเวลา':'Note: forecasts use a Negative Binomial model (r=8.0), adjusted for leading/trailing team, red cards and time',
+/* attributes */
+'เลือกภาษา':'Select language','🏠 ชื่อทีมเหย้า':'🏠 Home team name','ชื่อทีมเหย้า':'Home team name','✈️ ชื่อทีมเยือน':'✈️ Away team name','ชื่อทีมเยือน':'Away team name',
+'🔍 พิมพ์ชื่อลีก...':'🔍 Type league name...','ค้นหาลีก':'Search league','นาทีที่แข่งขัน':'Match minute','สกอร์เหย้า':'Home score','สกอร์เยือน':'Away score','รูปแบบการแข่งขัน':'Match format',
+'ใบแดงเหย้า':'Home red cards','ใบแดงเยือน':'Away red cards','ยิง (Shots)':'Shots','ยิงเหย้า':'Home shots','ยิงเยือน':'Away shots','เข้ากรอบ (ว่าง=auto)':'On target (blank=auto)',
+'เข้ากรอบเหย้า':'Home shots on target','เข้ากรอบเยือน':'Away shots on target','รวมทั้งเกม (FT)':'Total (FT)','ตอนจบครึ่งแรก (HT)':'At half-time (HT)',
+'เตะมุมเหย้า FT':'Home corners FT','เตะมุมเหย้า HT':'Home corners HT','เตะมุมเยือน FT':'Away corners FT','เตะมุมเยือน HT':'Away corners HT','Big เหย้า':'Home big chances','Big เยือน':'Away big chances',
+'สนับสนุนผู้พัฒนา ':'Support the developer','ปิด':'Close'
+};
+const RX = [[/ประตู\/เกม/g,'goals/game'],[/^สูง /,'Over '],[/เหย้าต่อ /,'Home gives '],[/เยือนต่อ /,'Away gives '],[/เสมอ \(0\.0\)/,'Level (0.0)'],[/Top 3 รวม/,'Top 3 total']];
+const ATTRS = ['placeholder','aria-label','title'];
+let curLang = 'th';
+const origText = new Map();
+
+function trText(s) {
+  const t = s.trim(); if (!t) return s;
+  let r = EN[t];
+  if (r === undefined) { r = t; for (const [a, b] of RX) r = r.replace(a, b); }
+  return r === t ? s : s.replace(t, r);
+}
+function trNode(n) {
+  if (!n || n.nodeType !== 3 || !n.parentNode) return;
+  const tag = n.parentNode.nodeName;
+  if (tag === 'SCRIPT' || tag === 'STYLE') return;
+  const out = trText(n.nodeValue);
+  if (out !== n.nodeValue) { if (!origText.has(n)) origText.set(n, n.nodeValue); n.nodeValue = out; }
+}
+function trTree(root) {
+  if (root.nodeType === 3) { trNode(root); return; }
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let n; while ((n = w.nextNode())) trNode(n);
+}
+function trAttrs(toEn) {
+  document.querySelectorAll('[placeholder],[aria-label],[title]').forEach(el => {
+    el._thAttr = el._thAttr || {};
+    ATTRS.forEach(a => {
+      if (!el.hasAttribute(a)) return;
+      if (toEn) {
+        const v = el.getAttribute(a), out = trText(v);
+        if (out !== v) { if (!(a in el._thAttr)) el._thAttr[a] = v; el.setAttribute(a, out); }
+      } else if (a in el._thAttr) { el.setAttribute(a, el._thAttr[a]); delete el._thAttr[a]; }
+    });
+  });
+}
+function setLang(lang) {
+  curLang = lang === 'en' ? 'en' : 'th';
+  if (curLang === 'en') { trTree($('appScanner')); trAttrs(true); }
+  else {
+    origText.forEach((orig, n) => { if (n.isConnected) n.nodeValue = orig; });
+    origText.clear(); trAttrs(false);
+  }
+  document.documentElement.lang = curLang;
+  $('btnLangTH').classList.toggle('active', curLang === 'th');
+  $('btnLangEN').classList.toggle('active', curLang === 'en');
+  try { localStorage.setItem('jackai_lang', curLang); } catch (e) {}
+}
+// Translate results/toasts that are rendered after switching to EN
+new MutationObserver(muts => {
+  if (curLang !== 'en') return;
+  muts.forEach(m => {
+    if (m.type === 'characterData') trNode(m.target);
+    else m.addedNodes.forEach(trTree);
+  });
+}).observe(document.body, { childList: true, subtree: true, characterData: true });
+
+/* Donate modal */
+function openDonateModal() {
+  const el = $('donateModal');
+  if (!el || !window.bootstrap) return;
+  bootstrap.Modal.getOrCreateInstance(el).show();
+}
+function copyDonateNumber() {
+  const box = document.querySelector('#donateModal .donate-box h4');
+  const num = box ? box.textContent.replace(/\D/g, '') : '';
+  const ok = () => toast(curLang === 'en' ? 'Number copied' : 'คัดลอกเบอร์แล้ว');
+  const fail = () => toast(curLang === 'en' ? 'Copy failed' : 'คัดลอกไม่สำเร็จ', true);
+  const fallback = () => {
+    const ta = document.createElement('textarea');
+    ta.value = num; ta.style.cssText = 'position:fixed;opacity:0;';
+    document.body.appendChild(ta); ta.select();
+    let done = false; try { done = document.execCommand('copy'); } catch (e) {}
+    ta.remove(); done ? ok() : fail();
+  };
+  if (!num) return fail();
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(num).then(ok, fallback);
+  else fallback();
+}
+document.addEventListener('DOMContentLoaded', () => {
+  let saved = 'th'; try { saved = localStorage.getItem('jackai_lang') || 'th'; } catch (e) {}
+  if (saved === 'en') setLang('en');
 });
 </script>
 </body>
