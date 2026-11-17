@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>⚽ 1H Predictor Pro - JackZaa AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
             --bg-color: #0b1120;
-            --card-bg: rgba(30, 41, 59, 0.85);
-            --card-border: rgba(255, 255, 255, 0.12);
+            --card-bg: rgba(30, 41, 59, 0.75);
+            --card-border: rgba(255, 255, 255, 0.1);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent-blue: #38bdf8;
@@ -19,94 +21,29 @@
             --input-border: #334155;
         }
 
-        * {
-            box-sizing: border-box;
-        }
-
         body {
-            margin: 0;
             background: radial-gradient(circle at top left, #1e293b 0%, #0b1120 60%);
             color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Tahoma, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
             padding: 15px;
             min-height: 100vh;
-            line-height: 1.5;
-        }
-
-        .container {
-            max-width: 1120px;
-            margin: 0 auto;
-        }
-
-        .header-wrap {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .header-wrap h2 {
-            margin: 0 0 4px 0;
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: #ffffff;
-            text-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
-        }
-
-        .badge-pro {
-            display: inline-block;
-            background-color: #38bdf8;
-            color: #0f172a;
-            font-size: 0.48em;
-            font-weight: 800;
-            padding: 3px 8px;
-            border-radius: 6px;
-            vertical-align: middle;
-        }
-
-        .sub-brand {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-        }
-
-        .sub-brand span {
-            color: var(--accent-blue);
-            font-weight: 600;
-        }
-
-        .main-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            align-items: stretch;
-        }
-
-        .col-left {
-            flex: 1 1 400px;
-            min-width: 0;
-        }
-
-        .col-right {
-            flex: 1.35 1 500px;
-            min-width: 0;
         }
 
         .card {
             background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--card-border);
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            color: var(--text-main);
             overflow: hidden;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
         }
 
         .card-header {
             background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, rgba(30, 41, 59, 0) 100%);
             border-bottom: 1px solid var(--card-border);
-            padding: 14px 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 15px 20px;
         }
 
         .card-header h5 {
@@ -114,138 +51,41 @@
             margin: 0;
             letter-spacing: 0.5px;
             color: var(--accent-blue);
-            font-size: 0.98rem;
-        }
-
-        .status-pill {
-            font-size: 0.72rem;
-            font-weight: 700;
-            padding: 3px 9px;
-            border-radius: 6px;
-            background: rgba(52, 211, 153, 0.15);
-            color: var(--accent-green);
-            border: 1px solid rgba(52, 211, 153, 0.4);
-        }
-
-        .status-pill.neutral {
-            background: rgba(148, 163, 184, 0.2);
-            color: #e2e8f0;
-            border-color: rgba(148, 163, 184, 0.3);
-        }
-
-        .status-pill.active {
-            background: #38bdf8;
-            color: #0f172a;
-            border-color: #38bdf8;
+            text-transform: uppercase;
+            font-size: 1rem;
         }
 
         .card-body {
-            padding: 18px;
-            flex: 1;
-        }
-
-        .row-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .row-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .panel-box {
-            padding: 10px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(15, 23, 42, 0.45);
-        }
-
-        .panel-box.box-warning {
-            background: rgba(251, 191, 36, 0.08);
-            border-color: rgba(251, 191, 36, 0.3);
-        }
-
-        .panel-box.box-info {
-            background: rgba(56, 189, 248, 0.08);
-            border-color: rgba(56, 189, 248, 0.3);
-        }
-
-        .panel-box.box-danger {
-            background: rgba(248, 113, 113, 0.08);
-            border-color: rgba(248, 113, 113, 0.3);
-        }
-
-        .panel-box.box-primary {
-            background: rgba(59, 130, 246, 0.08);
-            border-color: rgba(59, 130, 246, 0.3);
+            padding: 20px;
         }
 
         .form-label {
-            display: block;
             color: var(--text-muted);
             font-size: 0.82rem;
             font-weight: 600;
             margin-bottom: 5px;
         }
 
-        .text-center { text-align: center; }
-        .text-success { color: var(--accent-green) !important; }
-        .text-danger { color: var(--accent-red) !important; }
-        .text-warning { color: var(--accent-orange) !important; }
-        .text-info { color: var(--accent-blue) !important; }
-        .text-primary { color: #60a5fa !important; }
-        .text-muted { color: var(--text-muted) !important; }
-
         .form-control, .form-select {
-            width: 100%;
             background-color: var(--input-bg);
             border: 1px solid var(--input-border);
             color: var(--text-main);
             border-radius: 10px;
-            padding: 9px 11px;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            padding: 8px 10px;
+            transition: all 0.2s ease;
         }
 
         .form-control:focus, .form-select:focus {
             background-color: #263346;
             border-color: var(--accent-blue);
             box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+            color: white;
         }
 
-        .form-select.border-warning {
-            border-color: var(--accent-orange);
-            color: var(--accent-orange);
-            font-weight: 700;
+        .form-control::placeholder {
+            color: #64748b;
         }
 
-        .ah-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .ah-badge {
-            font-size: 0.72rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 6px;
-            background: var(--accent-orange);
-            color: #0f172a;
-        }
-
-        .ah-badge.home-fav { background: #10b981; color: #ffffff; }
-        .ah-badge.away-fav { background: #ef4444; color: #ffffff; }
-
-        /* Stepper Buttons (+/-) */
         .stepper-group {
             display: flex;
             align-items: center;
@@ -255,16 +95,16 @@
             overflow: hidden;
         }
 
-        .stepper-group.border-info { border-color: var(--accent-blue); }
-        .stepper-group.border-danger { border-color: var(--accent-red); }
-        .stepper-group.border-primary { border-color: #60a5fa; }
+        .stepper-group.border-info { border-color: #0dcaf0 !important; }
+        .stepper-group.border-danger { border-color: #dc3545 !important; }
+        .stepper-group.border-primary { border-color: #0d6efd !important; }
 
         .btn-step {
             background: rgba(255, 255, 255, 0.05);
             border: none;
             color: var(--text-main);
             font-weight: 800;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             width: 38px;
             height: 40px;
             display: flex;
@@ -272,11 +112,12 @@
             justify-content: center;
             cursor: pointer;
             user-select: none;
+            transition: background 0.15s;
             padding: 0;
         }
 
         .btn-step:hover {
-            background: rgba(56, 189, 248, 0.22);
+            background: rgba(56, 189, 248, 0.2);
             color: var(--accent-blue);
         }
 
@@ -289,7 +130,6 @@
             background: transparent !important;
             text-align: center;
             font-weight: 700;
-            font-size: 1rem;
             padding: 6px 2px !important;
             box-shadow: none !important;
             width: 100%;
@@ -303,50 +143,23 @@
             margin: 0;
         }
 
-        .adv-toggle-wrap {
-            text-align: center;
-            margin: 10px 0;
-        }
-
-        .adv-toggle {
-            background: none;
-            border: none;
-            color: var(--accent-blue);
-            font-size: 0.82rem;
-            text-decoration: underline;
-            cursor: pointer;
-            padding: 4px 8px;
-        }
-
-        .adv-panel {
-            display: none;
-        }
-
-        .adv-panel.open {
-            display: block;
-        }
-
-        .btn-actions {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 10px;
-            margin-top: 14px;
-        }
-
         .btn-primary {
             background: linear-gradient(135deg, #0ea5e9, #3b82f6);
             border: none;
-            color: #ffffff;
             font-weight: 700;
             font-size: 1rem;
             padding: 12px;
             border-radius: 10px;
-            cursor: pointer;
             box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn-primary:hover {
             background: linear-gradient(135deg, #38bdf8, #60a5fa);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.6);
         }
 
         .btn-reset {
@@ -354,10 +167,10 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: var(--text-muted);
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 1rem;
             padding: 12px;
             border-radius: 10px;
-            cursor: pointer;
+            transition: all 0.2s;
         }
 
         .btn-reset:hover {
@@ -366,75 +179,103 @@
             color: var(--accent-red);
         }
 
-        /* Signal Box */
         .signal-box {
             border-radius: 12px;
             padding: 14px 16px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(56, 189, 248, 0.35);
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.16), rgba(30, 41, 59, 0.65));
+            margin-bottom: 18px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(30, 41, 59, 0.6));
+            animation: pulseGlow 3s infinite alternate;
         }
 
         .signal-box.signal-hot {
-            border-color: rgba(52, 211, 153, 0.55);
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(30, 41, 59, 0.75));
+            border-color: rgba(52, 211, 153, 0.5);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(30, 41, 59, 0.7));
         }
 
         .signal-box.signal-warn {
-            border-color: rgba(251, 191, 36, 0.55);
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(30, 41, 59, 0.75));
+            border-color: rgba(251, 191, 36, 0.5);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(30, 41, 59, 0.7));
         }
 
-        .signal-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-            gap: 8px;
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 8px rgba(56, 189, 248, 0.1); }
+            to { box-shadow: 0 0 18px rgba(56, 189, 248, 0.25); }
         }
 
         .signal-badge {
             display: inline-block;
-            font-size: 0.74rem;
+            font-size: 0.75rem;
             font-weight: 800;
-            padding: 3px 9px;
+            padding: 3px 8px;
             border-radius: 6px;
-            background: var(--accent-blue);
-            color: #0f172a;
+            text-transform: uppercase;
+            margin-bottom: 6px;
         }
 
-        .signal-badge.hot { background: #10b981; color: #ffffff; }
-        .signal-badge.warn { background: #fbbf24; color: #0f172a; }
-        .signal-badge.danger { background: #ef4444; color: #ffffff; }
-        .signal-badge.muted { background: #64748b; color: #ffffff; }
-
-        .signal-title {
-            font-weight: 700;
-            font-size: 1rem;
-            color: #ffffff;
-            margin-bottom: 4px;
+        .result-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 14px 10px;
+            text-align: center;
+            border: 1px solid var(--card-border);
+            transition: transform 0.2s;
         }
 
-        .signal-desc {
-            font-size: 0.83rem;
-            color: #cbd5e1;
+        .result-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.06);
         }
 
-        /* Section Titles & Result Cards */
+        .result-card .prob-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        .bg-home { color: var(--accent-green); }
+        .bg-draw { color: var(--accent-orange); }
+        .bg-away { color: var(--accent-red); }
+
+        .progress {
+            background-color: #1e293b;
+            border-radius: 10px;
+            height: 8px !important;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 10px;
+        }
+
+        .bg-success { background: linear-gradient(90deg, #059669, #34d399) !important; }
+        .bg-warning { background: linear-gradient(90deg, #d97706, #fbbf24) !important; }
+        .bg-danger { background: linear-gradient(90deg, #dc2626, #f87171) !important; }
+        .bg-info { background: linear-gradient(90deg, #0284c7, #38bdf8) !important; }
+        .bg-primary { background: linear-gradient(90deg, #2563eb, #60a5fa) !important; }
+        .bg-dark { background: linear-gradient(90deg, #4b5563, #9ca3af) !important; }
+
+        .bg-score-1 { background: linear-gradient(135deg, #059669, #10b981); color: white; }
+        .bg-score-2 { background: linear-gradient(135deg, #d97706, #f59e0b); color: white; }
+        .bg-score-3 { background: linear-gradient(135deg, #4b5563, #6b7280); color: white; }
+
         .section-title {
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--text-muted);
             text-align: center;
-            margin: 16px 0 12px 0;
+            margin: 18px 0 12px 0;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
-
+        
         .section-title::before, .section-title::after {
             content: "";
             flex: 1;
@@ -442,172 +283,83 @@
             background: var(--card-border);
         }
 
-        .result-card {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 12px;
-            padding: 12px 8px;
-            text-align: center;
-            border: 1px solid var(--card-border);
-        }
-
-        .result-card.border-info {
-            border-color: rgba(56, 189, 248, 0.5);
-        }
-
-        .prob-text {
-            font-size: 1.45rem;
-            font-weight: 800;
-            margin-top: 4px;
-        }
-
-        /* Progress Bars */
-        .bar-item {
-            margin-bottom: 10px;
-        }
-
-        .bar-label {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 700;
-            font-size: 0.84rem;
-            margin-bottom: 4px;
-        }
-
-        .progress {
-            background-color: #1e293b;
-            border-radius: 10px;
-            height: 8px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.4s ease;
-        }
-
-        .bg-success { background: linear-gradient(90deg, #059669, #34d399); }
-        .bg-warning { background: linear-gradient(90deg, #d97706, #fbbf24); }
-        .bg-danger { background: linear-gradient(90deg, #dc2626, #f87171); }
-        .bg-info { background: linear-gradient(90deg, #0284c7, #38bdf8); }
-        .bg-primary { background: linear-gradient(90deg, #2563eb, #60a5fa); }
-        .bg-dark { background: linear-gradient(90deg, #4b5563, #9ca3af); }
-
-        /* Top 3 Score Cards */
-        .score-card {
-            border-radius: 12px;
-            padding: 10px 6px;
-            text-align: center;
-            color: #ffffff;
-        }
-
-        .bg-score-1 { background: linear-gradient(135deg, #059669, #10b981); }
-        .bg-score-2 { background: linear-gradient(135deg, #d97706, #f59e0b); }
-        .bg-score-3 { background: linear-gradient(135deg, #4b5563, #6b7280); }
-
-        .score-card h4 {
-            margin: 0 0 2px 0;
-            font-size: 1.35rem;
-            font-weight: 800;
-        }
-
-        .score-card .pct {
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-
-        .score-card small {
-            font-size: 0.68rem;
-            opacity: 0.85;
-        }
-
-        .d-none { display: none !important; }
-
-        .empty-state {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 50px 15px;
-        }
-
-        .empty-state .icon {
-            font-size: 4rem;
-            opacity: 0.25;
-            margin-bottom: 10px;
+        .adv-toggle {
+            cursor: pointer;
+            font-size: 0.82rem;
+            color: var(--accent-blue);
+            text-decoration: underline;
         }
 
         .brand-footer {
             text-align: center;
-            margin-top: 22px;
+            margin-top: 24px;
             font-size: 0.8rem;
             color: var(--text-muted);
         }
 
         @media (max-width: 768px) {
             body { padding: 10px; }
-            .card-body { padding: 14px; }
-            .prob-text { font-size: 1.25rem; }
+            .card-body { padding: 15px; }
+            .result-card .prob-text { font-size: 1.3rem; }
             .form-control, .form-select { font-size: 16px; }
             .btn-step { width: 34px; height: 38px; }
-            .header-wrap h2 { font-size: 1.4rem; }
+            h2 { font-size: 1.35rem; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header-wrap">
-            <h2>⚽ 1H Predictor <span class="badge-pro">PRO</span></h2>
-            <div class="sub-brand">Live First-Half Analytics Engine • Developed by <span>JackZaa AI</span></div>
+    <div class="container" style="max-width: 1120px;">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold mb-1" style="color: white; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);">
+                ⚽ 1H Predictor <span class="badge bg-info text-dark" style="font-size:0.45em; vertical-align: middle; font-weight:800;">PRO</span>
+            </h2>
+            <small class="text-muted">Live First-Half Analytics Engine • Developed by <span class="text-info fw-semibold">JackZaa AI</span></small>
         </div>
-
-        <div class="main-grid">
-            <!-- Input Panel -->
-            <div class="col-left">
-                <div class="card">
-                    <div class="card-header">
+        
+        <div class="row">
+            <div class="col-lg-5 mb-4">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h5>📋 ข้อมูลการแข่งขัน (0-45 นาที)</h5>
-                        <span class="status-pill">⚡ Auto-Calc</span>
+                        <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50" style="font-size: 0.7rem;">⚡ Auto-Calc</span>
                     </div>
                     <div class="card-body">
-                        <div class="row-2">
-                            <div>
+                        <div class="row mb-3 g-2">
+                            <div class="col-6">
                                 <label class="form-label text-success">🏠 ทีมเหย้า</label>
-                                <input type="text" id="teamH" class="form-control auto-calc" placeholder="ชื่อทีมเหย้า">
+                                <input type="text" id="teamH" class="form-control auto-calc" placeholder="ทีมเหย้า">
                             </div>
-                            <div>
+                            <div class="col-6">
                                 <label class="form-label text-danger">✈️ ทีมเยือน</label>
-                                <input type="text" id="teamA" class="form-control auto-calc" placeholder="ชื่อทีมเยือน">
+                                <input type="text" id="teamA" class="form-control auto-calc" placeholder="ทีมเยือน">
                             </div>
                         </div>
 
-                        <!-- Score -->
-                        <div class="panel-box">
-                            <div class="row-2" style="margin-bottom:0;">
-                                <div>
-                                    <label class="form-label text-center">สกอร์เหย้า</label>
-                                    <div class="stepper-group">
-                                        <button type="button" class="btn-step" onclick="stepVal('scoreH', -1)">−</button>
-                                        <input type="number" id="scoreH" class="stepper-input text-success auto-calc" value="0" min="0">
-                                        <button type="button" class="btn-step" onclick="stepVal('scoreH', 1)">+</button>
-                                    </div>
+                        <div class="row mb-3 g-2 bg-dark bg-opacity-25 p-2 rounded-3 border border-secondary border-opacity-25">
+                            <div class="col-6">
+                                <label class="form-label text-center d-block">สกอร์เหย้า</label>
+                                <div class="stepper-group">
+                                    <button type="button" class="btn-step" onclick="stepVal('scoreH', -1)">−</button>
+                                    <input type="number" id="scoreH" class="form-control stepper-input fs-5 text-success auto-calc" value="0" min="0">
+                                    <button type="button" class="btn-step" onclick="stepVal('scoreH', 1)">+</button>
                                 </div>
-                                <div>
-                                    <label class="form-label text-center">สกอร์เยือน</label>
-                                    <div class="stepper-group">
-                                        <button type="button" class="btn-step" onclick="stepVal('scoreA', -1)">−</button>
-                                        <input type="number" id="scoreA" class="stepper-input text-danger auto-calc" value="0" min="0">
-                                        <button type="button" class="btn-step" onclick="stepVal('scoreA', 1)">+</button>
-                                    </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label text-center d-block">สกอร์เยือน</label>
+                                <div class="stepper-group">
+                                    <button type="button" class="btn-step" onclick="stepVal('scoreA', -1)">−</button>
+                                    <input type="number" id="scoreA" class="form-control stepper-input fs-5 text-danger auto-calc" value="0" min="0">
+                                    <button type="button" class="btn-step" onclick="stepVal('scoreA', 1)">+</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Asian Handicap -->
-                        <div class="panel-box box-warning">
-                            <div class="ah-header">
-                                <label class="form-label text-warning" style="margin:0;">⚖️ ราคาต่อรอง (Asian Handicap)</label>
-                                <span id="ahLabel" class="ah-badge">เสมอ (0.0)</span>
+                        <div class="mb-3 p-2 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-25">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label text-warning fw-bold mb-0">⚖️ ราคาต่อรอง (Asian Handicap เต็มเวลา)</label>
+                                <span id="ahLabel" class="badge bg-warning text-dark" style="font-size: 0.7rem;">เสมอ (0.0)</span>
                             </div>
-                            <select id="ahLine" class="form-select border-warning auto-calc" onchange="updateAhLabel()">
+                            <select id="ahLine" class="form-select border-warning text-warning fw-bold auto-calc" onchange="updateAhLabel()">
                                 <option value="-2.0">เหย้าต่อ 2.0 (-2.0)</option>
                                 <option value="-1.75">เหย้าต่อ 1.5/2 (-1.75)</option>
                                 <option value="-1.5">เหย้าต่อ 1.5 (-1.5)</option>
@@ -628,151 +380,143 @@
                             </select>
                         </div>
 
-                        <!-- Minute & League Avg -->
-                        <div class="row-2">
-                            <div>
+                        <div class="row mb-3 g-2">
+                            <div class="col-6">
                                 <label class="form-label">⏱️ นาทีที่แข่ง (0-45)</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('minute', -1)">−</button>
-                                    <input type="number" id="minute" class="stepper-input auto-calc" value="0" min="0" max="45">
+                                    <input type="number" id="minute" class="form-control stepper-input auto-calc" value="0" min="0" max="45">
                                     <button type="button" class="btn-step" onclick="stepVal('minute', 1)">+</button>
                                 </div>
                             </div>
-                            <div>
+                            <div class="col-6">
                                 <label class="form-label">⚽ เฉลี่ยประตู/เกม (ลีก)</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('leagueGoals', -0.1, 1)">−</button>
-                                    <input type="number" id="leagueGoals" class="stepper-input auto-calc" value="2.70" step="0.1" min="0.5">
+                                    <input type="number" id="leagueGoals" class="form-control stepper-input auto-calc" value="2.70" step="0.1" min="0.5">
                                     <button type="button" class="btn-step" onclick="stepVal('leagueGoals', 0.1, 1)">+</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Shots -->
-                        <div class="row-2">
-                            <div>
+                        <div class="row mb-3 g-2">
+                            <div class="col-6">
                                 <label class="form-label">ยิงเหย้า (Shots)</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('shotsH', -1)">−</button>
-                                    <input type="number" id="shotsH" class="stepper-input auto-calc" value="0" min="0">
+                                    <input type="number" id="shotsH" class="form-control stepper-input auto-calc" value="0" min="0">
                                     <button type="button" class="btn-step" onclick="stepVal('shotsH', 1)">+</button>
                                 </div>
                             </div>
-                            <div>
+                            <div class="col-6">
                                 <label class="form-label">ยิงเยือน (Shots)</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('shotsA', -1)">−</button>
-                                    <input type="number" id="shotsA" class="stepper-input auto-calc" value="0" min="0">
+                                    <input type="number" id="shotsA" class="form-control stepper-input auto-calc" value="0" min="0">
                                     <button type="button" class="btn-step" onclick="stepVal('shotsA', 1)">+</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- SOT -->
-                        <div class="row-2">
-                            <div>
+                        <div class="row mb-3 g-2">
+                            <div class="col-6">
                                 <label class="form-label">เข้ากรอบเหย้า (SOT)</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('sotH', -1)">−</button>
-                                    <input type="number" id="sotH" class="stepper-input auto-calc" value="0" min="0">
+                                    <input type="number" id="sotH" class="form-control stepper-input auto-calc" value="0" min="0">
                                     <button type="button" class="btn-step" onclick="stepVal('sotH', 1)">+</button>
                                 </div>
                             </div>
-                            <div>
+                            <div class="col-6">
                                 <label class="form-label">เข้ากรอบเยือน (SOT)</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('sotA', -1)">−</button>
-                                    <input type="number" id="sotA" class="stepper-input auto-calc" value="0" min="0">
+                                    <input type="number" id="sotA" class="form-control stepper-input auto-calc" value="0" min="0">
                                     <button type="button" class="btn-step" onclick="stepVal('sotA', 1)">+</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Corners -->
-                        <div class="panel-box box-info">
-                            <div class="row-2" style="margin-bottom:0;">
-                                <div>
-                                    <label class="form-label text-info">🚩 เตะมุมเหย้า</label>
-                                    <div class="stepper-group border-info">
-                                        <button type="button" class="btn-step" onclick="stepVal('cornersH', -1)">−</button>
-                                        <input type="number" id="cornersH" class="stepper-input text-info auto-calc" value="0" min="0">
-                                        <button type="button" class="btn-step" onclick="stepVal('cornersH', 1)">+</button>
-                                    </div>
+                        <div class="row mb-3 g-2 bg-info bg-opacity-10 p-2 rounded-3 border border-info border-opacity-25">
+                            <div class="col-6">
+                                <label class="form-label text-info fw-bold">🚩 เตะมุมเหย้า</label>
+                                <div class="stepper-group border-info">
+                                    <button type="button" class="btn-step" onclick="stepVal('cornersH', -1)">−</button>
+                                    <input type="number" id="cornersH" class="form-control stepper-input text-info auto-calc" value="0" min="0">
+                                    <button type="button" class="btn-step" onclick="stepVal('cornersH', 1)">+</button>
                                 </div>
-                                <div>
-                                    <label class="form-label text-info">🚩 เตะมุมเยือน</label>
-                                    <div class="stepper-group border-info">
-                                        <button type="button" class="btn-step" onclick="stepVal('cornersA', -1)">−</button>
-                                        <input type="number" id="cornersA" class="stepper-input text-info auto-calc" value="0" min="0">
-                                        <button type="button" class="btn-step" onclick="stepVal('cornersA', 1)">+</button>
-                                    </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label text-info fw-bold">🚩 เตะมุมเยือน</label>
+                                <div class="stepper-group border-info">
+                                    <button type="button" class="btn-step" onclick="stepVal('cornersA', -1)">−</button>
+                                    <input type="number" id="cornersA" class="form-control stepper-input text-info auto-calc" value="0" min="0">
+                                    <button type="button" class="btn-step" onclick="stepVal('cornersA', 1)">+</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Red Cards -->
-                        <div class="panel-box box-danger">
-                            <div class="row-2" style="margin-bottom:0;">
-                                <div>
-                                    <label class="form-label text-danger">🟥 ใบแดงเหย้า</label>
-                                    <div class="stepper-group border-danger">
-                                        <button type="button" class="btn-step" onclick="stepVal('redH', -1)">−</button>
-                                        <input type="number" id="redH" class="stepper-input text-danger auto-calc" value="0" min="0" max="5">
-                                        <button type="button" class="btn-step" onclick="stepVal('redH', 1)">+</button>
-                                    </div>
+                        <div class="row mb-3 g-2 bg-danger bg-opacity-10 p-2 rounded-3 border border-danger border-opacity-25">
+                            <div class="col-6">
+                                <label class="form-label text-danger fw-bold">🟥 ใบแดงเหย้า</label>
+                                <div class="stepper-group border-danger">
+                                    <button type="button" class="btn-step" onclick="stepVal('redH', -1)">−</button>
+                                    <input type="number" id="redH" class="form-control stepper-input text-danger auto-calc" value="0" min="0" max="5">
+                                    <button type="button" class="btn-step" onclick="stepVal('redH', 1)">+</button>
                                 </div>
-                                <div>
-                                    <label class="form-label text-danger">🟥 ใบแดงเยือน</label>
-                                    <div class="stepper-group border-danger">
-                                        <button type="button" class="btn-step" onclick="stepVal('redA', -1)">−</button>
-                                        <input type="number" id="redA" class="stepper-input text-danger auto-calc" value="0" min="0" max="5">
-                                        <button type="button" class="btn-step" onclick="stepVal('redA', 1)">+</button>
-                                    </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label text-danger fw-bold">🟥 ใบแดงเยือน</label>
+                                <div class="stepper-group border-danger">
+                                    <button type="button" class="btn-step" onclick="stepVal('redA', -1)">−</button>
+                                    <input type="number" id="redA" class="form-control stepper-input text-danger auto-calc" value="0" min="0" max="5">
+                                    <button type="button" class="btn-step" onclick="stepVal('redA', 1)">+</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Advanced Stats Toggle -->
-                        <div class="adv-toggle-wrap">
-                            <button type="button" class="adv-toggle" onclick="toggleAdvanced()">⚙️ เปิด/ปิด สถิติขั้นสูง (xG, Possession, DA)</button>
+                        <div class="text-center mb-2">
+                            <small class="adv-toggle" data-bs-toggle="collapse" data-bs-target="#advancedStats" aria-expanded="false" aria-controls="advancedStats">
+                                ⚙️ เปิด/ปิด สถิติขั้นสูง (xG, Possession, DA)
+                            </small>
                         </div>
 
-                        <div id="advancedStats" class="adv-panel">
-                            <div class="panel-box box-primary">
-                                <div class="row-2">
-                                    <div>
-                                        <label class="form-label text-primary">xG เหย้า</label>
-                                        <input type="number" id="xgH" class="form-control auto-calc" placeholder="เช่น 1.2" step="0.01" min="0">
+                        <div class="collapse" id="advancedStats">
+                            <div class="p-3 mb-3 rounded-3 bg-primary bg-opacity-10 border border-primary border-opacity-25">
+                                <div class="row mb-2 g-2">
+                                    <div class="col-6">
+                                        <label class="form-label text-primary fw-bold">xG เหย้า</label>
+                                        <input type="number" id="xgH" class="form-control border-primary auto-calc" placeholder="เช่น 1.2" step="0.01" min="0">
                                     </div>
-                                    <div>
-                                        <label class="form-label text-primary">xG เยือน</label>
-                                        <input type="number" id="xgA" class="form-control auto-calc" placeholder="เช่น 0.8" step="0.01" min="0">
-                                    </div>
-                                </div>
-                                <div class="row-2">
-                                    <div>
-                                        <label class="form-label text-primary">ครองบอลเหย้า (%)</label>
-                                        <input type="number" id="possH" class="form-control auto-calc" value="50" min="0" max="100" oninput="syncPossession('H')">
-                                    </div>
-                                    <div>
-                                        <label class="form-label text-primary">ครองบอลเยือน (%)</label>
-                                        <input type="number" id="possA" class="form-control auto-calc" value="50" min="0" max="100" oninput="syncPossession('A')">
+                                    <div class="col-6">
+                                        <label class="form-label text-primary fw-bold">xG เยือน</label>
+                                        <input type="number" id="xgA" class="form-control border-primary auto-calc" placeholder="เช่น 0.8" step="0.01" min="0">
                                     </div>
                                 </div>
-                                <div class="row-2" style="margin-bottom:0;">
-                                    <div>
-                                        <label class="form-label text-primary">บุกอันตราย (เหย้า)</label>
+                                <div class="row mb-2 g-2">
+                                    <div class="col-6">
+                                        <label class="form-label text-primary fw-bold">ครองบอลเหย้า (%)</label>
+                                        <input type="number" id="possH" class="form-control border-primary auto-calc" value="50" min="0" max="100" oninput="syncPossession('H')">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label text-primary fw-bold">ครองบอลเยือน (%)</label>
+                                        <input type="number" id="possA" class="form-control border-primary auto-calc" value="50" min="0" max="100" oninput="syncPossession('A')">
+                                    </div>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="form-label text-primary fw-bold">บุกอันตราย (เหย้า)</label>
                                         <div class="stepper-group border-primary">
                                             <button type="button" class="btn-step" onclick="stepVal('daH', -1)">−</button>
-                                            <input type="number" id="daH" class="stepper-input auto-calc" value="0" min="0">
+                                            <input type="number" id="daH" class="form-control stepper-input auto-calc" value="0" min="0">
                                             <button type="button" class="btn-step" onclick="stepVal('daH', 1)">+</button>
                                         </div>
                                     </div>
-                                    <div>
-                                        <label class="form-label text-primary">บุกอันตราย (เยือน)</label>
+                                    <div class="col-6">
+                                        <label class="form-label text-primary fw-bold">บุกอันตราย (เยือน)</label>
                                         <div class="stepper-group border-primary">
                                             <button type="button" class="btn-step" onclick="stepVal('daA', -1)">−</button>
-                                            <input type="number" id="daA" class="stepper-input auto-calc" value="0" min="0">
+                                            <input type="number" id="daA" class="form-control stepper-input auto-calc" value="0" min="0">
                                             <button type="button" class="btn-step" onclick="stepVal('daA', 1)">+</button>
                                         </div>
                                     </div>
@@ -780,106 +524,116 @@
                             </div>
                         </div>
 
-                        <div class="btn-actions">
-                            <button type="button" class="btn-primary" onclick="predict(true)">🚀 ประมวลผล</button>
-                            <button type="button" class="btn-reset" onclick="resetForm()">🔄 ล้างค่า</button>
+                        <div class="row g-2 mt-2">
+                            <div class="col-8">
+                                <button type="button" class="btn btn-primary w-100" onclick="predict(true)">🚀 ประมวลผล</button>
+                            </div>
+                            <div class="col-4">
+                                <button type="button" class="btn btn-reset w-100" onclick="resetForm()">🔄 ล้างค่า</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Results Panel -->
-            <div class="col-right">
-                <div class="card">
-                    <div class="card-header">
+            <div class="col-lg-7">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h5>📊 ผลการคาดการณ์ (ครึ่งแรก)</h5>
-                        <span id="matchHeaderBadge" class="status-pill neutral">พร้อมคำนวณ</span>
+                        <span id="matchHeaderBadge" class="badge bg-secondary" style="font-size: 0.72rem;">พร้อมคำนวณ</span>
                     </div>
                     <div class="card-body">
-                        <div id="results" class="d-none">
-                            <!-- Signal Alert Box -->
+                        <div id="results" class="d-none fade-in">
                             <div id="signalBox" class="signal-box">
-                                <div class="signal-top">
-                                    <span id="signalBadge" class="signal-badge">📡 วิเคราะห์สัญญาณเกม</span>
-                                    <small id="signalTime" class="text-muted" style="font-weight:700;">นาทีที่ 0'</small>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span id="signalBadge" class="signal-badge bg-info text-dark">📡 วิเคราะห์สัญญาณเกม</span>
+                                    <small id="signalTime" class="text-muted fw-bold">นาทีที่ 0'</small>
                                 </div>
-                                <div id="signalTitle" class="signal-title">กำลังประมวลผลแนวโน้ม...</div>
-                                <div id="signalDesc" class="signal-desc">กรอกข้อมูลสถิติหรือราคาต่อรองเพื่อดูสัญญาณเข้าทำ</div>
+                                <div id="signalTitle" class="fw-bold fs-6 text-white mb-1">กำลังประมวลผลแนวโน้ม...</div>
+                                <div id="signalDesc" class="small text-light opacity-75">กรอกข้อมูลสถิติหรือราคาต่อรองเพื่อดูสัญญาณเข้าทำ</div>
                             </div>
 
-                            <!-- 1X2 -->
                             <div class="section-title">ผลการแข่งขัน (1X2)</div>
-                            <div class="row-3">
-                                <div class="result-card">
-                                    <div class="text-muted" style="font-size:0.8rem; font-weight:700;" id="labelHome">เหย้า</div>
-                                    <div class="prob-text text-success" id="resHome">0%</div>
+                            <div class="row text-center mb-4 g-2">
+                                <div class="col-4">
+                                    <div class="result-card">
+                                        <div class="text-muted small fw-bold" id="labelHome">เหย้า</div>
+                                        <div class="prob-text bg-home" id="resHome">0%</div>
+                                    </div>
                                 </div>
-                                <div class="result-card">
-                                    <div class="text-muted" style="font-size:0.8rem; font-weight:700;">เสมอ</div>
-                                    <div class="prob-text text-warning" id="resDraw">0%</div>
+                                <div class="col-4">
+                                    <div class="result-card">
+                                        <div class="text-muted small fw-bold">เสมอ</div>
+                                        <div class="prob-text bg-draw" id="resDraw">0%</div>
+                                    </div>
                                 </div>
-                                <div class="result-card">
-                                    <div class="text-muted" style="font-size:0.8rem; font-weight:700;" id="labelAway">เยือน</div>
-                                    <div class="prob-text text-danger" id="resAway">0%</div>
+                                <div class="col-4">
+                                    <div class="result-card">
+                                        <div class="text-muted small fw-bold" id="labelAway">เยือน</div>
+                                        <div class="prob-text bg-away" id="resAway">0%</div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Over/Under -->
                             <div class="section-title">ประตูรวม (Over/Under)</div>
-                            <div class="bar-item">
-                                <div class="bar-label"><span>สูง 0.5</span> <span id="ou05" class="text-success">0%</span></div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 0.5</span> <span id="ou05" class="text-success">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-success" id="ou05Bar" style="width: 0%"></div></div>
                             </div>
-                            <div class="bar-item">
-                                <div class="bar-label"><span>สูง 1.5</span> <span id="ou15" class="text-warning">0%</span></div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 1.5</span> <span id="ou15" class="text-warning">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-warning" id="ou15Bar" style="width: 0%"></div></div>
                             </div>
-                            <div class="bar-item">
-                                <div class="bar-label"><span>สูง 2.5</span> <span id="ou25" class="text-danger">0%</span></div>
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 2.5</span> <span id="ou25" class="text-danger">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-danger" id="ou25Bar" style="width: 0%"></div></div>
                             </div>
 
-                            <!-- Corners -->
                             <div class="section-title">🚩 วิเคราะห์ลูกเตะมุม</div>
-                            <div class="row-3">
-                                <div class="result-card">
-                                    <small class="text-muted">เหย้า (คาด)</small><br>
-                                    <strong style="font-size:1.25rem;" class="text-success" id="expCornersH">-</strong>
+                            <div class="row text-center mb-3 g-2">
+                                <div class="col-4">
+                                    <div class="result-card bg-dark bg-opacity-25">
+                                        <small class="text-muted">เหย้า (คาด)</small>
+                                        <br><strong class="fs-5 text-success" id="expCornersH">-</strong>
+                                    </div>
                                 </div>
-                                <div class="result-card border-info">
-                                    <small class="text-info">รวม (คาด)</small><br>
-                                    <strong style="font-size:1.25rem;" class="text-info" id="expCornersTotal">-</strong>
+                                <div class="col-4">
+                                    <div class="result-card bg-dark bg-opacity-25 border-info">
+                                        <small class="text-info">รวม (คาด)</small>
+                                        <br><strong class="fs-5 text-info" id="expCornersTotal">-</strong>
+                                    </div>
                                 </div>
-                                <div class="result-card">
-                                    <small class="text-muted">เยือน (คาด)</small><br>
-                                    <strong style="font-size:1.25rem;" class="text-danger" id="expCornersA">-</strong>
+                                <div class="col-4">
+                                    <div class="result-card bg-dark bg-opacity-25">
+                                        <small class="text-muted">เยือน (คาด)</small>
+                                        <br><strong class="fs-5 text-danger" id="expCornersA">-</strong>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="bar-item">
-                                <div class="bar-label"><span>สูง 3.5</span> <span id="co35" class="text-info">0%</span></div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 3.5</span> <span id="co35" class="text-info">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-info" id="co35Bar" style="width: 0%"></div></div>
                             </div>
-                            <div class="bar-item">
-                                <div class="bar-label"><span>สูง 4.5</span> <span id="co45" class="text-primary">0%</span></div>
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 4.5</span> <span id="co45" class="text-primary">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-primary" id="co45Bar" style="width: 0%"></div></div>
                             </div>
-                            <div class="bar-item">
-                                <div class="bar-label"><span>สูง 5.5</span> <span id="co55">0%</span></div>
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 5.5</span> <span id="co55" class="text-light">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-dark" id="co55Bar" style="width: 0%"></div></div>
                             </div>
 
-                            <!-- Top 3 Scores -->
                             <div class="section-title">สกอร์ที่เป็นไปได้สูงสุด (Top 3)</div>
-                            <div class="row-3" id="topScores"></div>
-                            <div class="text-center text-muted" style="font-size:0.78rem; margin-top:8px;">
+                            <div class="row text-center g-2" id="topScores"></div>
+                            <div class="text-center mt-3 text-muted small" id="top3Note">
                                 * ผลรวมของ Top 3 ถูกปรับเป็น 100% เพื่อแสดงสัดส่วน
                             </div>
                         </div>
-
-                        <div id="emptyState" class="empty-state">
-                            <div class="icon">⚽</div>
-                            <h4 style="margin:0 0 6px 0; font-weight:400;">กรอกข้อมูลหรือกดปุ่ม <span class="text-info">"+"</span> ด้านซ้าย</h4>
-                            <p style="margin:0; font-size:0.85rem;">ระบบจะคำนวณความน่าจะเป็นและแจ้งเตือนสัญญาณให้อัตโนมัติ</p>
+                        
+                        <div id="emptyState" class="text-center text-muted py-5">
+                            <h1 style="font-size: 4rem; opacity: 0.2;">⚽</h1>
+                            <h5 class="fw-light">กรอกข้อมูลหรือกดปุ่ม <span class="text-info">"+"</span> ด้านซ้าย</h5>
+                            <p class="small">ระบบจะคำนวณความน่าจะเป็นและแจ้งเตือนสัญญาณให้อัตโนมัติ (โหมดแจ้งเตือนไว)</p>
                         </div>
                     </div>
                 </div>
@@ -887,16 +641,12 @@
         </div>
 
         <div class="brand-footer">
-            Powered by <strong>JackZaa AI</strong> • First-Half Live Football Analytics
+            Powered by <strong>JackZaa AI</strong> • First-Half Live Football Analytics (Early Entry Mode)
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const toggleAdvanced = () => {
-            const panel = document.getElementById('advancedStats');
-            panel.classList.toggle('open');
-        };
-
         const stepVal = (id, delta, decimals = 0) => {
             const el = document.getElementById(id);
             let current = parseFloat(el.value) || 0;
@@ -925,13 +675,13 @@
             const badge = document.getElementById('ahLabel');
             if (ah < 0) {
                 badge.textContent = `เหย้าต่อ ${Math.abs(ah)}`;
-                badge.className = 'ah-badge home-fav';
+                badge.className = 'badge bg-success text-white';
             } else if (ah > 0) {
                 badge.textContent = `เยือนต่อ ${ah}`;
-                badge.className = 'ah-badge away-fav';
+                badge.className = 'badge bg-danger text-white';
             } else {
                 badge.textContent = 'เสมอ (0.0)';
-                badge.className = 'ah-badge';
+                badge.className = 'badge bg-warning text-dark';
             }
         };
 
@@ -961,9 +711,8 @@
 
             document.getElementById('results').classList.add('d-none');
             document.getElementById('emptyState').classList.remove('d-none');
-            const headerBadge = document.getElementById('matchHeaderBadge');
-            headerBadge.textContent = 'พร้อมคำนวณ';
-            headerBadge.className = 'status-pill neutral';
+            document.getElementById('matchHeaderBadge').textContent = 'พร้อมคำนวณ';
+            document.getElementById('matchHeaderBadge').className = 'badge bg-secondary';
         };
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1022,7 +771,6 @@
             const daH = parseFloat(document.getElementById('daH').value) || 0;
             const daA = parseFloat(document.getElementById('daA').value) || 0;
 
-            // 1. Asian Handicap Team Strength Adjustment
             const total1HExpected = leagueGoals * 0.44;
             const ahShift = Math.max(-0.32, Math.min(0.32, (-ahLine) * 0.16));
             const shareH = 0.5 + ahShift;
@@ -1031,7 +779,6 @@
             const base1HHome = total1HExpected * shareH;
             const base1HAway = total1HExpected * shareA;
 
-            // 2. Remaining First-Half Expected Goals
             const remainingMin = Math.max(0, 45 - minute);
 
             let liveXgH = 0, liveXgA = 0;
@@ -1051,7 +798,6 @@
             if (xgRateH <= 0) xgRateH = 0.008;
             if (xgRateA <= 0) xgRateA = 0.008;
 
-            // Domination Factor
             let dominanceH = 0.5;
             if (daH + daA > 0) {
                 dominanceH = (possH / (possH + possA)) * 0.4 + (daH / (daH + daA)) * 0.6;
@@ -1064,7 +810,6 @@
             xgRateH *= domMultiplierH;
             xgRateA *= domMultiplierA;
 
-            // Red Cards Adjustment
             if (redH > redA) {
                 xgRateA *= 1.22;
                 xgRateH *= 0.82;
@@ -1076,7 +821,6 @@
             const xgRemH = xgRateH * remainingMin;
             const xgRemA = xgRateA * remainingMin;
 
-            // 3. Poisson Grid
             const maxGoals = 8;
             let pHome = 0, pDraw = 0, pAway = 0;
             let over05 = 0, over15 = 0, over25 = 0;
@@ -1107,7 +851,6 @@
             const top3 = topScoresList.slice(0, 3);
             const sumTop3 = top3.reduce((sum, item) => sum + item.prob, 0);
 
-            // 4. Corner Calculation
             const totalCurrentCorners = cornersH + cornersA;
             const base1HTotalCorners = 10.4 * 0.45; 
             const cornerShareH = 0.54 + (ahShift * 0.5);
@@ -1151,7 +894,6 @@
             const co45 = poissonOver(expCornersTotal, 4.5);
             const co55 = poissonOver(expCornersTotal, 5.5);
 
-            // 5. Smart Signal Alert
             updateSignalAlert({
                 minute, remainingMin, scoreH, scoreA, ahLine,
                 pHome, pDraw, pAway, over05, over15, over25,
@@ -1159,13 +901,11 @@
                 teamHName, teamAName
             });
 
-            // 6. Update UI
             document.getElementById('results').classList.remove('d-none');
             document.getElementById('emptyState').classList.add('d-none');
 
-            const headerBadge = document.getElementById('matchHeaderBadge');
-            headerBadge.textContent = `${teamHName} ${scoreH}-${scoreA} ${teamAName} (${minute}')`;
-            headerBadge.className = 'status-pill active';
+            document.getElementById('matchHeaderBadge').textContent = `${teamHName} ${scoreH}-${scoreA} ${teamAName} (${minute}')`;
+            document.getElementById('matchHeaderBadge').className = 'badge bg-info text-dark fw-bold';
 
             document.getElementById('labelHome').textContent = teamHName;
             document.getElementById('labelAway').textContent = teamAName;
@@ -1197,15 +937,22 @@
             top3.forEach((item, index) => {
                 const normalizedProb = sumTop3 > 0 ? (item.prob / sumTop3) * 100 : 0;
                 topScoresContainer.innerHTML += `
-                    <div class="score-card ${colors[index]}">
-                        <h4>${item.score}</h4>
-                        <div class="pct">${normalizedProb.toFixed(1)}%</div>
-                        <small>(จริง: ${(item.prob * 100).toFixed(1)}%)</small>
+                    <div class="col-4">
+                        <div class="card border-0 ${colors[index]}">
+                            <div class="card-body p-2">
+                                <h4 class="mb-1 fw-bold">${item.score}</h4>
+                                <div class="fw-bold fs-5">${normalizedProb.toFixed(1)}%</div>
+                                <small style="font-size:0.65rem; opacity:0.85">(จริง: ${(item.prob*100).toFixed(1)}%)</small>
+                            </div>
+                        </div>
                     </div>
                 `;
             });
         };
 
+        // ----------------------------------------------------
+        // Smart Signal Generator (แนวทาง A: แจ้งเตือนไว / Early Entry)
+        // ----------------------------------------------------
         const updateSignalAlert = (data) => {
             const box = document.getElementById('signalBox');
             const badge = document.getElementById('signalBadge');
@@ -1221,61 +968,66 @@
             box.className = 'signal-box';
 
             if (data.minute >= 45) {
-                badge.className = 'signal-badge muted';
+                badge.className = 'signal-badge bg-secondary text-white';
                 badge.textContent = '⏹️ จบครึ่งแรก';
                 titleEl.textContent = `สรุปผลครึ่งแรก: ${data.teamHName} ${data.scoreH} - ${data.scoreA} ${data.teamAName}`;
                 descEl.textContent = 'หมดเวลาการแข่งขันครึ่งแรก กดปุ่ม "ล้างค่า" เพื่อเริ่มวิเคราะห์คู่ถัดไป';
                 return;
             }
 
-            if (totalGoals === 0 && data.over05 >= 0.72) {
+            // แนวทาง A: ประตูแรก Over 0.5 1H >= 65%
+            if (totalGoals === 0 && data.over05 >= 0.65) {
                 box.classList.add('signal-hot');
-                badge.className = 'signal-badge hot';
-                badge.textContent = '🔥 สัญญาณประตูแรกมาแรง (Over 0.5 1H)';
-                titleEl.textContent = `ลุ้นสกอร์แรกครึ่งแรก โอกาสสูงถึง ${(data.over05 * 100).toFixed(1)}%`;
-                descEl.textContent = `รูปเกมมีจังหวะจบสกอร์ต่อเนื่อง (เข้ากรอบรวม ${totalSot} ครั้ง, เตะมุม ${totalCorners} ครั้ง) มีลุ้นประตูเบิกร่องก่อนหมดครึ่งแรก`;
+                badge.className = 'signal-badge bg-success text-white';
+                badge.textContent = '🔥 สัญญาณประตูแรก (Over 0.5 1H • เข้าไว)';
+                titleEl.textContent = `ลุ้นสกอร์แรกครึ่งแรก โอกาส ${(data.over05 * 100).toFixed(1)}%`;
+                descEl.textContent = `รูปเกมเริ่มมีจังหวะเข้าทำ (เข้ากรอบรวม ${totalSot} ครั้ง, เตะมุม ${totalCorners} ครั้ง) เข้าเกณฑ์จังหวะทำเงินช่วงราคาน้ำดี`;
                 return;
             }
 
-            if (totalGoals === 1 && data.over15 >= 0.68) {
+            // แนวทาง A: สกอร์ไหล Over 1.5 1H >= 62%
+            if (totalGoals === 1 && data.over15 >= 0.62) {
                 box.classList.add('signal-hot');
-                badge.className = 'signal-badge hot';
-                badge.textContent = '⚡ สัญญาณสกอร์ไหล (Over 1.5 1H)';
+                badge.className = 'signal-badge bg-success text-white';
+                badge.textContent = '⚡ สัญญาณสกอร์ไหล (Over 1.5 1H • เข้าไว)';
                 titleEl.textContent = `ลุ้นประตูที่ 2 ในครึ่งแรก โอกาส ${(data.over15 * 100).toFixed(1)}%`;
                 descEl.textContent = `ทั้งสองทีมยังเปิดเกมรุกต่อเนื่อง คาดการณ์เตะมุมรวม ${data.expCornersTotal.toFixed(1)} ลูก มีโอกาสบวกสกอร์เพิ่ม`;
                 return;
             }
 
-            if (data.co45 >= 0.70 && data.remainingMin >= 10) {
+            // แนวทาง A: เตะมุมสูง Over 4.5 1H >= 65% และเหลือเวลา >= 8 นาที
+            if (data.co45 >= 0.65 && data.remainingMin >= 8) {
                 box.classList.add('signal-warn');
-                badge.className = 'signal-badge warn';
-                badge.textContent = '🚩 สัญญาณเตะมุมสูง (Corners Alert)';
+                badge.className = 'signal-badge bg-warning text-dark';
+                badge.textContent = '🚩 สัญญาณเตะมุมสูง (Corners Alert • เข้าไว)';
                 titleEl.textContent = `เกมริมเส้นดุดัน คาดเตะมุมรวมครึ่งแรก ${data.expCornersTotal.toFixed(1)} ลูก`;
-                descEl.textContent = `โอกาสเกิดเตะมุมสูงกว่า 4.5 ลูก อยู่ที่ ${(data.co45 * 100).toFixed(1)}% เหมาะสำหรับตามตลาดลูกเตะมุมครึ่งแรก`;
+                descEl.textContent = `โอกาสเกิดเตะมุมสูงกว่า 4.5 ลูก อยู่ที่ ${(data.co45 * 100).toFixed(1)}% เหมาะสำหรับเข้าทำตลาดลูกเตะมุมครึ่งแรก`;
                 return;
             }
 
-            if (data.pHome >= 0.65 || data.pAway >= 0.65) {
+            // แนวทาง A: ทีมต่อเหนือกว่าชัดเจน 1X2 >= 60%
+            if (data.pHome >= 0.60 || data.pAway >= 0.60) {
                 const favTeam = data.pHome > data.pAway ? data.teamHName : data.teamAName;
                 const favProb = Math.max(data.pHome, data.pAway) * 100;
                 box.classList.add('signal-hot');
-                badge.className = 'signal-badge';
-                badge.textContent = '👑 ทีมต่อเหนือกว่าชัดเจน';
-                titleEl.textContent = `${favTeam} คุมเกมเหนือกว่า (โอกาสชนะครึ่งแรก ${favProb.toFixed(1)}%)`;
-                descEl.textContent = `พิจารณาจากราคาต่อรอง (${data.ahLine}) ร่วมกับรูปเกมในสนาม ${favTeam} มีโอกาสปิดจ๊อบใน 45 นาทีแรกสูง`;
+                badge.className = 'signal-badge bg-info text-dark';
+                badge.textContent = '👑 ทีมต่อเหนือกว่าชัดเจน (1X2 1H)';
+                titleEl.textContent = `${favTeam} คุมเกมได้เปรียบ (โอกาสชนะครึ่งแรก ${favProb.toFixed(1)}%)`;
+                descEl.textContent = `พิจารณาจากราคาต่อรอง (${data.ahLine}) ร่วมกับรูปเกมในสนาม ${favTeam} มีแนวโน้มขึ้นนำใน 45 นาทีแรก`;
                 return;
             }
 
-            if (data.minute >= 32 && totalGoals === 0 && data.over05 < 0.45) {
+            // แนวทาง A: เกมรับเหนียวแน่น Under 0.5 (นาที >= 30 และสูง 0.5 < 50%)
+            if (data.minute >= 30 && totalGoals === 0 && data.over05 < 0.50) {
                 box.classList.add('signal-warn');
-                badge.className = 'signal-badge danger';
+                badge.className = 'signal-badge bg-danger text-white';
                 badge.textContent = '🛡️ เกมรับเหนียวแน่น (Under 0.5 Trend)';
                 titleEl.textContent = `แนวโน้มจบครึ่งแรกแบบไร้สกอร์ (${(data.pDraw * 100).toFixed(1)}%)`;
-                descEl.textContent = `เหลือเวลาอีก ${data.remainingMin} นาที จังหวะเข้าทำยังน้อย ควรระมัดระวังการลงทุนฝั่งสกอร์สูง`;
+                descEl.textContent = `เหลือเวลาอีก ${data.remainingMin} นาที โอกาสเกิดประตูยังต่ำกว่า 50% ควรชะลอการลงทุนฝั่งสกอร์สูง`;
                 return;
             }
 
-            badge.className = 'signal-badge';
+            badge.className = 'signal-badge bg-info text-dark';
             badge.textContent = '📡 เกมสูสี / รอจังหวะชัดเจน';
             titleEl.textContent = `โอกาสออกเสมอครึ่งแรก ${(data.pDraw * 100).toFixed(1)}% | สูง 0.5 ${(data.over05 * 100).toFixed(1)}%`;
             descEl.textContent = `อัปเดตสถิติการยิงเข้ากรอบหรือลูกเตะมุมระหว่างเกมเพิ่มเติม เพื่อให้ระบบจับสัญญาณได้แม่นยำขึ้น`;
