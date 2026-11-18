@@ -211,16 +211,45 @@
             border-radius: 10px;
         }
 
-        .bg-success { background: linear-gradient(90deg, #059669, #34d399) !important; }
-        .bg-warning { background: linear-gradient(90deg, #d97706, #fbbf24) !important; }
-        .bg-danger { background: linear-gradient(90deg, #dc2626, #f87171) !important; }
-        .bg-info { background: linear-gradient(90deg, #0284c7, #38bdf8) !important; }
-        .bg-primary { background: linear-gradient(90deg, #2563eb, #60a5fa) !important; }
-        .bg-dark { background: linear-gradient(90deg, #4b5563, #9ca3af) !important; }
+        /* ============================================================
+           FIX: Restrict gradient overrides to progress bars ONLY.
+           Otherwise badges + bg-opacity-* break.
+        ============================================================ */
+        .progress-bar.bg-success { background: linear-gradient(90deg, #059669, #34d399) !important; }
+        .progress-bar.bg-warning { background: linear-gradient(90deg, #d97706, #fbbf24) !important; }
+        .progress-bar.bg-danger { background: linear-gradient(90deg, #dc2626, #f87171) !important; }
+        .progress-bar.bg-info { background: linear-gradient(90deg, #0284c7, #38bdf8) !important; }
+        .progress-bar.bg-primary { background: linear-gradient(90deg, #2563eb, #60a5fa) !important; }
+        .progress-bar.bg-dark { background: linear-gradient(90deg, #4b5563, #9ca3af) !important; }
 
-        .bg-score-1 { background: linear-gradient(135deg, #059669, #10b981); color: white; }
-        .bg-score-2 { background: linear-gradient(135deg, #d97706, #f59e0b); color: white; }
-        .bg-score-3 { background: linear-gradient(135deg, #4b5563, #6b7280); color: white; }
+        /* ============================================================
+           FIX: Badges with text-dark — solid readable colors
+        ============================================================ */
+        .badge.bg-info.text-dark {
+            background: #0369a1 !important;
+            color: #fff !important;
+        }
+        .badge.bg-warning.text-dark {
+            background: #f59e0b !important;
+            color: #0b1120 !important;
+        }
+        .badge.bg-primary.text-dark {
+            background: #1d4ed8 !important;
+            color: #fff !important;
+        }
+
+        /* ============================================================
+           FIX: Muted / secondary text readability on dark backgrounds
+        ============================================================ */
+        .text-muted { color: var(--text-muted) !important; }
+        .text-secondary { color: #cbd5e1 !important; }
+
+        /* ============================================================
+           FIX: Top-3 score cards — darker gradients for white text
+        ============================================================ */
+        .bg-score-1 { background: linear-gradient(135deg, #065f46, #047857) !important; color: #fff !important; }
+        .bg-score-2 { background: linear-gradient(135deg, #92400e, #b45309) !important; color: #fff !important; }
+        .bg-score-3 { background: linear-gradient(135deg, #1f2937, #374151) !important; color: #fff !important; }
 
         .section-title {
             font-size: 0.8rem;
@@ -1107,7 +1136,6 @@
         const max = el.hasAttribute('max') ? parseFloat(el.getAttribute('max')) : Infinity;
         let next = Math.min(max, Math.max(min, current + delta));
 
-        // Auto-bump stoppage only in manual mode
         if (id === 'minute' && delta > 0) {
             const stoppageEl = document.getElementById('stoppage');
             const stoppageTouched = stoppageEl.dataset.userTouched === '1';
@@ -1194,7 +1222,6 @@
         document.getElementById('daH').value = 0;
         document.getElementById('daA').value = 0;
 
-        // Reset stoppage config
         document.getElementById('cfgBase').value       = STOPPAGE_CFG_DEFAULTS.base;
         document.getElementById('cfgGoalsBonus').value = STOPPAGE_CFG_DEFAULTS.goalsBonus;
         document.getElementById('cfgGoalsCap').value   = STOPPAGE_CFG_DEFAULTS.goalsCap;
@@ -1202,7 +1229,6 @@
         document.getElementById('cfgSubsBonus').value  = STOPPAGE_CFG_DEFAULTS.subsBonus;
         document.getElementById('cfgMaxCap').value     = STOPPAGE_CFG_DEFAULTS.maxCap;
 
-        // Reset touched flags & auto-estimate classes
         ['possH','possA','daH','daA','xgH','xgA'].forEach(id => {
             const el = document.getElementById(id);
             if (el) {
@@ -1555,7 +1581,6 @@
         const subsH = Math.min(5, parseInt(document.getElementById('subsH').value) || 0);
         const subsA = Math.min(5, parseInt(document.getElementById('subsA').value) || 0);
 
-        /* ===== STOPPAGE — Auto or Manual ===== */
         const stoppageEl = document.getElementById('stoppage');
         const stoppageTouched = stoppageEl.dataset.userTouched === '1';
         const stoppageCfg = readStoppageCfg();
@@ -1580,7 +1605,6 @@
                 : 'badge bg-secondary';
         }
 
-        /* ===== ADVANCED STATS — Input or Auto-Estimate ===== */
         const xgHEl = document.getElementById('xgH');
         const xgAEl = document.getElementById('xgA');
         const possHEl = document.getElementById('possH');
@@ -1591,7 +1615,6 @@
         const xgHInput = xgHEl.value.trim();
         const xgAInput = xgAEl.value.trim();
 
-        /* xG: empty = estimate from shots */
         let liveXgH, liveXgA;
         const xgHIsInput = xgHInput !== '' && !isNaN(parseFloat(xgHInput));
         const xgAIsInput = xgAInput !== '' && !isNaN(parseFloat(xgAInput));
@@ -1606,7 +1629,6 @@
         if (document.activeElement !== xgHEl) xgHEl.classList.toggle('auto-estimated', !xgHIsInput);
         if (document.activeElement !== xgAEl) xgAEl.classList.toggle('auto-estimated', !xgAIsInput);
 
-        /* Possession: untouched 50/50 = estimate from shots/SOT share */
         const possTouched = possHEl.dataset.userTouched === '1' || possAEl.dataset.userTouched === '1';
         let possH, possA;
 
@@ -1636,7 +1658,6 @@
             possAEl.classList.add('auto-estimated');
         }
 
-        /* DA: untouched 0/0 = estimate from shots + SOT + corners */
         const daHInput = parseFloat(daHEl.value) || 0;
         const daAInput = parseFloat(daAEl.value) || 0;
         const daTouched = daHEl.dataset.userTouched === '1' || daAEl.dataset.userTouched === '1';
@@ -1665,7 +1686,6 @@
             daAEl.classList.add('auto-estimated');
         }
 
-        /* ===== Baseline model ===== */
         const total1HExpected = leagueGoals * 0.44;
         const ahShift = Math.max(-0.32, Math.min(0.32, (-ahLine) * 0.16));
         const shareH = 0.5 + ahShift;
@@ -1674,14 +1694,12 @@
         const base1HAway = total1HExpected * shareA;
         const remainingMin = Math.max(0, 45 + stoppage - minute);
 
-        /* ===== Rate blend (live xG) ===== */
         const liveWeight = Math.min(1, minute / 30);
         let xgRateH = ((base1HHome / 45) * (1 - liveWeight)) + ((liveXgH / Math.max(1, minute)) * liveWeight);
         let xgRateA = ((base1HAway / 45) * (1 - liveWeight)) + ((liveXgA / Math.max(1, minute)) * liveWeight);
         if (xgRateH <= 0) xgRateH = 0.008;
         if (xgRateA <= 0) xgRateA = 0.008;
 
-        /* ===== Dominance ===== */
         let dominanceH = 0.5;
         if (daH + daA > 0) {
             dominanceH = (possH / Math.max(1, possH + possA)) * 0.4 + (daH / (daH + daA)) * 0.6;
@@ -1693,14 +1711,12 @@
         xgRateH *= domMultiplierH;
         xgRateA *= domMultiplierA;
 
-        /* ===== Red cards ===== */
         if (redH > redA) { xgRateA *= 1.22; xgRateH *= 0.82; }
         else if (redA > redH) { xgRateH *= 1.22; xgRateA *= 0.82; }
 
         const xgRemH = xgRateH * remainingMin;
         const xgRemA = xgRateA * remainingMin;
 
-        /* ===== Build joint score matrix ===== */
         const maxGoals = 8;
         const joint = [];
         for (let h = 0; h <= maxGoals; h++) {
@@ -1737,7 +1753,6 @@
         const top3 = topScoresList.slice(0, 3);
         const sumTop3 = top3.reduce((s, item) => s + item.prob, 0);
 
-        /* ===== Next goal ===== */
         const pNoMoreGoal = Math.exp(-(xgRemH + xgRemA));
         const totalNextRate = xgRateH + xgRateA;
         let pNextHome = 0, pNextAway = 0;
@@ -1746,7 +1761,6 @@
             pNextAway = (xgRateA / totalNextRate) * (1 - pNoMoreGoal);
         }
 
-        /* ===== BTTS 1H ===== */
         let btts1H;
         const pHomeScoresRem = 1 - Math.exp(-xgRemH);
         const pAwayScoresRem = 1 - Math.exp(-xgRemA);
@@ -1755,14 +1769,12 @@
         else if (scoreA >= 1) btts1H = pHomeScoresRem;
         else btts1H = pHomeScoresRem * pAwayScoresRem;
 
-        /* ===== Pressure Index ===== */
         const pRawH = sotH * 3 + Math.max(0, shotsH - sotH) * 1 + cornersH * 0.5 + daH * 0.02;
         const pRawA = sotA * 3 + Math.max(0, shotsA - sotA) * 1 + cornersA * 0.5 + daA * 0.02;
         const pressureSum = pRawH + pRawA;
         const pressureH = pressureSum > 0 ? pRawH / pressureSum : 0.5;
         const pressureA = 1 - pressureH;
 
-        /* ===== Corners ===== */
         const totalCurrentCorners = cornersH + cornersA;
         const base1HTotalCorners = 10.4 * 0.45;
         const cornerShareH = 0.54 + (ahShift * 0.5);
@@ -1801,7 +1813,6 @@
         const co45 = poissonOver(expCornersTotal, 4.5);
         const co55 = poissonOver(expCornersTotal, 5.5);
 
-        /* ===== Signals ===== */
         updateSignals({
             minute, stoppage, remainingMin, scoreH, scoreA, ahLine,
             pHome, pDraw, pAway, over05, over15, over25,
@@ -1809,7 +1820,6 @@
             teamHName, teamAName
         });
 
-        /* ===== Render ===== */
         document.getElementById('results').classList.remove('d-none');
         document.getElementById('emptyState').classList.add('d-none');
 
@@ -1866,7 +1876,6 @@
         setBar('co45', co45);
         setBar('co55', co55);
 
-        /* ===== Goal Distribution Chart ===== */
         const finalDist = {};
         for (let h = 0; h <= maxGoals; h++) {
             for (let a = 0; a <= maxGoals; a++) {
@@ -1888,7 +1897,6 @@
         ];
         requestAnimationFrame(() => drawGoalChart(buckets));
 
-        /* ===== 1H AH Table ===== */
         const ahLines = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1];
         const ahResults = ahLines.map(line => {
             let pWin = 0, pHalfWin = 0, pPush = 0, pHalfLoss = 0, pLoss = 0;
@@ -1933,7 +1941,6 @@
         }
         document.getElementById('ah1HTable').querySelector('tbody').innerHTML = ahHtml;
 
-        /* ===== Top 3 scores ===== */
         const topScoresContainer = document.getElementById('topScores');
         topScoresContainer.innerHTML = '';
         const colors = ['bg-score-1', 'bg-score-2', 'bg-score-3'];
@@ -2099,7 +2106,6 @@
             el.addEventListener('change', () => predict(false));
         });
 
-        // DA touched tracking
         ['daH', 'daA'].forEach(id => {
             const el = document.getElementById(id);
             el.addEventListener('input', () => {
@@ -2107,7 +2113,6 @@
             });
         });
 
-        // Possession touched tracking (supplement syncPossession)
         ['possH', 'possA'].forEach(id => {
             const el = document.getElementById(id);
             el.addEventListener('input', () => {
@@ -2115,7 +2120,6 @@
             });
         });
 
-        // Stoppage touched tracking
         const stoppageEl = document.getElementById('stoppage');
         stoppageEl.addEventListener('input', () => {
             stoppageEl.dataset.userTouched = stoppageEl.value.trim() === '' ? '0' : '1';
@@ -2132,7 +2136,7 @@
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
             if (lastChartBuckets) drawGoalChart(lastChartBuckets);
-        }, 150);
+        }, 200);
     });
 
     window.addEventListener('beforeunload', saveState);
