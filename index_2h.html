@@ -13,7 +13,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* ===== SAME STYLES AS 1H PREDICTOR (unchanged for consistency) ===== */
         :root {
             --bg-color: #0b1120; --card-bg: rgba(30, 41, 59, 0.75);
             --card-border: rgba(255, 255, 255, 0.1); --text-main: #f8fafc;
@@ -586,37 +585,38 @@
                                 <div class="progress"><div class="progress-bar bg-danger" id="ou25Bar" style="width: 0%"></div></div>
                             </div>
 
-                            <div class="section-title">🚩 วิเคราะห์ลูกเตะมุม (2H Remaining)</div>
+                            <!-- ✅ FIXED: Corners section = TOTAL (current + remaining) -->
+                            <div class="section-title">🚩 วิเคราะห์ลูกเตะมุม (Total Corners Final)</div>
                             <div class="row text-center mb-3 g-2">
                                 <div class="col-4">
                                     <div class="result-card bg-dark bg-opacity-25">
-                                        <small class="text-muted">เหย้า (คาด)</small>
+                                        <small class="text-muted">เหย้า (รวมคาด)</small>
                                         <br><strong class="fs-5 text-success" id="expCornersH">-</strong>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="result-card bg-dark bg-opacity-25 border-info">
-                                        <small class="text-info">รวมที่เหลือ (คาด)</small>
+                                        <small class="text-info">รวม (คาด)</small>
                                         <br><strong class="fs-5 text-info" id="expCornersTotal">-</strong>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="result-card bg-dark bg-opacity-25">
-                                        <small class="text-muted">เยือน (คาด)</small>
+                                        <small class="text-muted">เยือน (รวมคาด)</small>
                                         <br><strong class="fs-5 text-danger" id="expCornersA">-</strong>
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-2">
-                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 1.5 (ที่เหลือ)</span> <span id="co35" class="text-info">0%</span></div>
+                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 3.5 (รวม)</span> <span id="co35" class="text-info">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-info" id="co35Bar" style="width: 0%"></div></div>
                             </div>
                             <div class="mb-2">
-                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 2.5 (ที่เหลือ)</span> <span id="co45" class="text-primary">0%</span></div>
+                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 4.5 (รวม)</span> <span id="co45" class="text-primary">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-primary" id="co45Bar" style="width: 0%"></div></div>
                             </div>
                             <div class="mb-3">
-                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 3.5 (ที่เหลือ)</span> <span id="co55" class="text-light">0%</span></div>
+                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 5.5 (รวม)</span> <span id="co55" class="text-light">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-dark" id="co55Bar" style="width: 0%"></div></div>
                             </div>
 
@@ -645,9 +645,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     /* =========================================================
-       STATE & STORAGE — 2H Predictor
+       STATE & STORAGE — 2H Predictor v5
     ========================================================= */
-    const STORAGE_KEY = 'jz2h_predictor_v4';
+    const STORAGE_KEY = 'jz2h_predictor_v5';
     const FIELD_IDS = ['teamH','teamA','scoreH','scoreA','ahLine','minute','stoppage','leagueGoals',
                        'shotsH','shotsA','sotH','sotA','cornersH','cornersA','redH','redA',
                        'subsH','subsA',
@@ -742,9 +742,7 @@
         if (id === 'minute' && delta > 0) {
             const stoppageEl = document.getElementById('stoppage');
             const stoppage = parseInt(stoppageEl.value) || 3;
-            if (next > 90 + stoppage) {
-                next = 90 + stoppage;
-            }
+            if (next > 90 + stoppage) next = 90 + stoppage;
         }
         el.value = decimals > 0 ? next.toFixed(decimals) : Math.round(next);
         predict(true);
@@ -943,7 +941,10 @@
         if (lambda <= 0) return k === 0 ? 1 : 0;
         return (Math.exp(-lambda) * Math.pow(lambda, k)) / factorial(k);
     };
+
+    // ✅ FIX #1: poissonOver returns 100% when line is already exceeded (negative)
     const poissonOver = (mean, line) => {
+        if (line < 0) return 1;
         if (mean <= 0) return 0;
         let p = 0;
         const floor = Math.floor(line);
@@ -1108,7 +1109,6 @@
         const scoreA = parseInt(document.getElementById('scoreA').value) || 0;
         const ahLine = parseFloat(document.getElementById('ahLine').value) || 0;
 
-        // 2H: minute 45 = halftime, 46-90 = 2H, 91+ = stoppage
         let minute = parseInt(document.getElementById('minute').value) || 45;
         minute = Math.max(45, Math.min(105, minute));
 
@@ -1206,7 +1206,6 @@
         }
 
         /* ============ 2H MATH ============ */
-        // 2H tends to have ~56% of goals
         const total2HExpected = leagueGoals * 0.56;
         const ahShift = Math.max(-0.32, Math.min(0.32, (-ahLine) * 0.16));
         const shareH = 0.5 + ahShift;
@@ -1214,33 +1213,25 @@
         const base2HHome = total2HExpected * shareH;
         const base2HAway = total2HExpected * shareA;
 
-        // Remaining minutes = (90 + stoppage) - minute
         const remainingMin = Math.max(0, (90 + stoppage) - minute);
-
-        // Full 2H duration (for base rate calculation)
         const full2HDuration = 45 + stoppage;
 
-        // Base rate per minute for 2H
         const baseRateH = base2HHome / full2HDuration;
         const baseRateA = base2HAway / full2HDuration;
 
-        // Observed rate from live stats (whole match so far)
         const elapsedMin = Math.max(1, minute);
         const observedRateH = liveXgH / elapsedMin;
         const observedRateA = liveXgA / elapsedMin;
 
-        // Weight observed rate more as 2H progresses
         const minuteIn2H = Math.max(0, minute - 45);
         const observedWeight = Math.min(0.8, 0.5 + minuteIn2H / 90);
 
         let xgRateH = baseRateH * (1 - observedWeight) + observedRateH * observedWeight;
         let xgRateA = baseRateA * (1 - observedWeight) + observedRateA * observedWeight;
 
-        // Floor
         if (xgRateH <= 0) xgRateH = 0.008;
         if (xgRateA <= 0) xgRateA = 0.008;
 
-        // Dominance
         let dominanceH = 0.5;
         if (daH + daA > 0) dominanceH = (possH / Math.max(1, possH + possA)) * 0.4 + (daH / (daH + daA)) * 0.6;
         else if (possH + possA > 0) dominanceH = possH / (possH + possA);
@@ -1249,11 +1240,9 @@
         xgRateH *= domMultiplierH;
         xgRateA *= domMultiplierA;
 
-        // Red card adjustment
         if (redH > redA) { xgRateA *= 1.22; xgRateH *= 0.82; }
         else if (redA > redH) { xgRateH *= 1.22; xgRateA *= 0.82; }
 
-        // Remaining xG
         const xgRemH = xgRateH * remainingMin;
         const xgRemA = xgRateA * remainingMin;
 
@@ -1267,7 +1256,6 @@
             }
         }
 
-        // Final result (current score + remaining goals)
         let pHome = 0, pDraw = 0, pAway = 0;
         let over05Rem = 0, over15Rem = 0, over25Rem = 0;
         const topScoresList = [];
@@ -1282,7 +1270,6 @@
                 else if (finalA > finalH) pAway += p;
                 else pDraw += p;
 
-                // Remaining goals O/U
                 const remGoals = h + a;
                 if (remGoals >= 1) over05Rem += p;
                 if (remGoals >= 2) over15Rem += p;
@@ -1296,7 +1283,6 @@
         const top3 = topScoresList.slice(0, 3);
         const sumTop3 = top3.reduce((s, item) => s + item.prob, 0);
 
-        // Next goal (in 2H remaining)
         const pNoMoreGoal = Math.exp(-(xgRemH + xgRemA));
         const totalNextRate = xgRateH + xgRateA;
         let pNextHome = 0, pNextAway = 0;
@@ -1305,7 +1291,6 @@
             pNextAway = (xgRateA / totalNextRate) * (1 - pNoMoreGoal);
         }
 
-        // BTTS FULL MATCH
         const pHomeScoresRem = 1 - Math.exp(-xgRemH);
         const pAwayScoresRem = 1 - Math.exp(-xgRemA);
         let bttsFull;
@@ -1314,14 +1299,13 @@
         else if (scoreA >= 1) bttsFull = pHomeScoresRem;
         else bttsFull = pHomeScoresRem * pAwayScoresRem;
 
-        // Pressure
         const pRawH = sotH * 3 + Math.max(0, shotsH - sotH) * 1 + cornersH * 0.5 + daH * 0.02;
         const pRawA = sotA * 3 + Math.max(0, shotsA - sotA) * 1 + cornersA * 0.5 + daA * 0.02;
         const pressureSum = pRawH + pRawA;
         const pressureH = pressureSum > 0 ? pRawH / pressureSum : 0.5;
         const pressureA = 1 - pressureH;
 
-        // CORNERS — remaining 2H
+        /* ============ CORNERS ============ */
         const baseCornerMatch = 10.4;
         const secondHalfCornerShare = 0.54;
         const base2HTotalCorners = baseCornerMatch * secondHalfCornerShare;
@@ -1331,7 +1315,6 @@
         const baseCornerRateH = (base2HTotalCorners / full2HDuration) * cornerShareH;
         const baseCornerRateA = (base2HTotalCorners / full2HDuration) * cornerShareA;
 
-        // Observed rate
         const obsCornerRateH = cornersH / elapsedMin;
         const obsCornerRateA = cornersA / elapsedMin;
 
@@ -1347,9 +1330,18 @@
         const remCornersA = cornerRateA * remainingMin;
         const remCornersTotal = remCornersH + remCornersA;
 
-        const co15Rem = poissonOver(remCornersTotal, 1.5);
+        // ✅ FIX #3: TOTAL-based corners (current + remaining) — if already past line → 100%
+        const totalCurrentCorners = cornersH + cornersA;
+        const expTotalCornersH = cornersH + remCornersH;
+        const expTotalCornersA = cornersA + remCornersA;
+        const expTotalCornersFinal = totalCurrentCorners + remCornersTotal;
+
+        const co35Total = poissonOver(remCornersTotal, 3.5 - totalCurrentCorners);
+        const co45Total = poissonOver(remCornersTotal, 4.5 - totalCurrentCorners);
+        const co55Total = poissonOver(remCornersTotal, 5.5 - totalCurrentCorners);
+
+        // Keep remaining-based for signal engine
         const co25Rem = poissonOver(remCornersTotal, 2.5);
-        const co35Rem = poissonOver(remCornersTotal, 3.5);
 
         /* ============ SIGNALS ============ */
         updateSignals({
@@ -1358,6 +1350,7 @@
             over05Rem, over15Rem, over25Rem,
             remCornersTotal, co25Rem,
             sotH, sotA, cornersH, cornersA,
+            xgTotal: xgRemH + xgRemA,
             teamHName, teamAName
         });
 
@@ -1365,7 +1358,6 @@
         document.getElementById('results').classList.remove('d-none');
         document.getElementById('emptyState').classList.add('d-none');
 
-        // Header
         let minuteStr;
         if (minute === 45) minuteStr = 'พักครึ่ง';
         else if (minute <= 90) minuteStr = minute + "'";
@@ -1410,14 +1402,15 @@
         setBar('ou15', over15Rem);
         setBar('ou25', over25Rem);
 
-        document.getElementById('expCornersH').textContent = remCornersH.toFixed(1);
-        document.getElementById('expCornersTotal').textContent = remCornersTotal.toFixed(1);
-        document.getElementById('expCornersA').textContent = remCornersA.toFixed(1);
-        setBar('co35', co15Rem);
-        setBar('co45', co25Rem);
-        setBar('co55', co35Rem);
+        // ✅ FIX #4: Render TOTAL corners instead of remaining
+        document.getElementById('expCornersH').textContent = expTotalCornersH.toFixed(1);
+        document.getElementById('expCornersTotal').textContent = expTotalCornersFinal.toFixed(1);
+        document.getElementById('expCornersA').textContent = expTotalCornersA.toFixed(1);
+        setBar('co35', co35Total);
+        setBar('co45', co45Total);
+        setBar('co55', co55Total);
 
-        // Goal distribution (final total)
+        // Goal distribution
         const finalDist = {};
         for (let h = 0; h <= maxGoals; h++) {
             for (let a = 0; a <= maxGoals; a++) {
@@ -1481,7 +1474,7 @@
         }
         document.getElementById('ah1HTable').querySelector('tbody').innerHTML = ahHtml;
 
-        // Top 3 final scores
+        // Top 3
         const topScoresContainer = document.getElementById('topScores');
         topScoresContainer.innerHTML = '';
         const colors = ['bg-score-1', 'bg-score-2', 'bg-score-3'];
@@ -1511,7 +1504,6 @@
         const totalCorners = d.cornersH + d.cornersA;
         const signals = [];
 
-        // Full time
         if (d.minute >= 90 + d.stoppage) {
             container.innerHTML = `
                 <div class="signal-card info">
@@ -1523,7 +1515,6 @@
             return;
         }
 
-        // Goal likely in 2H remaining
         if (d.over05Rem >= 0.65 && d.remainingMin >= 5) {
             signals.push({
                 type: 'hot', icon: '🔥', badge: 'ประตูเพิ่มใน 2H (Over 0.5 Remaining)',
@@ -1551,7 +1542,6 @@
             });
         }
 
-        // Team dominance — final result
         if (d.pHome >= 0.60 || d.pAway >= 0.60) {
             const favTeam = d.pHome > d.pAway ? d.teamHName : d.teamAName;
             const favProb = Math.max(d.pHome, d.pAway) * 100;
@@ -1563,7 +1553,6 @@
             });
         }
 
-        // Draw likely
         if (d.pDraw >= 0.30 && d.minute >= 60 && d.over05Rem < 0.55) {
             signals.push({
                 type: 'warn', icon: '🤝', badge: 'เสมอมีโอกาส (Draw Full Time)',
@@ -1606,7 +1595,7 @@
     };
 
     /* =========================================================
-       COPY RESULT
+       COPY RESULT — ✅ FIX #5: corners text updated to TOTAL
     ========================================================= */
     const copyResult = (btn) => {
         const h = document.getElementById('labelHome').textContent;
@@ -1618,7 +1607,7 @@
             `FULL TIME 1X2: ${h} ${document.getElementById('resHome').textContent} | เสมอ ${document.getElementById('resDraw').textContent} | ${a} ${document.getElementById('resAway').textContent}`,
             `2H Remaining O/U: >0.5 ${document.getElementById('ou05').textContent} | >1.5 ${document.getElementById('ou15').textContent} | >2.5 ${document.getElementById('ou25').textContent}`,
             `BTTS Full: ${document.getElementById('btts1h').textContent}`,
-            `2H Corners Remaining: Total ${document.getElementById('expCornersTotal').textContent} (>2.5 = ${document.getElementById('co45').textContent})`,
+            `Corners Total: ${document.getElementById('expCornersTotal').textContent} (>4.5 = ${document.getElementById('co45').textContent})`,
             `Next Goal (2H): H ${document.getElementById('nextHome').textContent} | A ${document.getElementById('nextAway').textContent} | None ${document.getElementById('nextNone').textContent}`,
             `Model xG (2H rem): H ${document.getElementById('xghRem').textContent} | A ${document.getElementById('xgaRem').textContent}`,
             `────────────────`,
