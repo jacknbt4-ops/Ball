@@ -211,10 +211,6 @@
             border-radius: 10px;
         }
 
-        /* ============================================================
-           FIX: Restrict gradient overrides to progress bars ONLY.
-           Otherwise badges + bg-opacity-* break.
-        ============================================================ */
         .progress-bar.bg-success { background: linear-gradient(90deg, #059669, #34d399) !important; }
         .progress-bar.bg-warning { background: linear-gradient(90deg, #d97706, #fbbf24) !important; }
         .progress-bar.bg-danger { background: linear-gradient(90deg, #dc2626, #f87171) !important; }
@@ -222,9 +218,6 @@
         .progress-bar.bg-primary { background: linear-gradient(90deg, #2563eb, #60a5fa) !important; }
         .progress-bar.bg-dark { background: linear-gradient(90deg, #4b5563, #9ca3af) !important; }
 
-        /* ============================================================
-           FIX: Badges with text-dark — solid readable colors
-        ============================================================ */
         .badge.bg-info.text-dark {
             background: #0369a1 !important;
             color: #fff !important;
@@ -238,15 +231,9 @@
             color: #fff !important;
         }
 
-        /* ============================================================
-           FIX: Muted / secondary text readability on dark backgrounds
-        ============================================================ */
         .text-muted { color: var(--text-muted) !important; }
         .text-secondary { color: #cbd5e1 !important; }
 
-        /* ============================================================
-           FIX: Top-3 score cards — darker gradients for white text
-        ============================================================ */
         .bg-score-1 { background: linear-gradient(135deg, #065f46, #047857) !important; color: #fff !important; }
         .bg-score-2 { background: linear-gradient(135deg, #92400e, #b45309) !important; color: #fff !important; }
         .bg-score-3 { background: linear-gradient(135deg, #1f2937, #374151) !important; color: #fff !important; }
@@ -440,7 +427,6 @@
             color: var(--accent-blue);
         }
 
-        /* Auto-Estimated Field Indicator */
         .form-control.auto-estimated {
             border-style: dashed !important;
             background-image: linear-gradient(135deg,
@@ -539,7 +525,6 @@
                             </select>
                         </div>
 
-                        <!-- ⏱️ Minute + Stoppage -->
                         <div class="row mb-3 g-2">
                             <div class="col-7">
                                 <label class="form-label">⏱️ นาทีที่แข่ง <span id="minuteDisplay" style="font-size:0.72rem;"></span></label>
@@ -565,7 +550,6 @@
                             </div>
                         </div>
 
-                        <!-- ⚽ League Goals -->
                         <div class="row mb-3 g-2">
                             <div class="col-6">
                                 <label class="form-label">⚽ เฉลี่ยประตู/เกม (ลีก)</label>
@@ -665,7 +649,6 @@
                             </small>
                         </div>
 
-                        <!-- ========== STATS: Advanced ========== -->
                         <div class="collapse" id="advancedStats">
                             <div class="p-3 mb-3 rounded-3 bg-primary bg-opacity-10 border border-primary border-opacity-25">
                                 <div class="text-center mb-2" style="font-size:0.72rem; color:#94a3b8;">
@@ -726,7 +709,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Substitutions -->
                                 <div class="border-top border-primary border-opacity-25 mt-2 pt-2">
                                     <div class="text-center mb-1" style="font-size:0.72rem;color:#94a3b8;">
                                         🔄 จำนวนการเปลี่ยนตัว (ครึ่งแรก)
@@ -753,7 +735,6 @@
                             </div>
                         </div>
 
-                        <!-- ========== STOPPAGE CONFIG ========== -->
                         <div class="collapse" id="stoppageCfg">
                             <div class="p-3 mb-3 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-25">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -1371,7 +1352,9 @@
         return (Math.exp(-lambda) * Math.pow(lambda, k)) / factorial(k);
     };
 
+    /* ✅ FIX #1: poissonOver returns 100% if line already exceeded */
     const poissonOver = (mean, line) => {
+        if (line < 0) return 1;
         if (mean <= 0) return 0;
         let p = 0;
         const floor = Math.floor(line);
@@ -1809,9 +1792,11 @@
         const expCornersH = cornersH + remCornersH;
         const expCornersA = cornersA + remCornersA;
 
-        const co35 = poissonOver(expCornersTotal, 3.5);
-        const co45 = poissonOver(expCornersTotal, 4.5);
-        const co55 = poissonOver(expCornersTotal, 5.5);
+        /* ✅ FIX #2: Total-based corners — if current corners already exceed line → 100% */
+        const remCornersSum = remCornersH + remCornersA;
+        const co35 = poissonOver(remCornersSum, 3.5 - totalCurrentCorners);
+        const co45 = poissonOver(remCornersSum, 4.5 - totalCurrentCorners);
+        const co55 = poissonOver(remCornersSum, 5.5 - totalCurrentCorners);
 
         updateSignals({
             minute, stoppage, remainingMin, scoreH, scoreA, ahLine,
