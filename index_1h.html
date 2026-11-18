@@ -100,6 +100,7 @@
         .stepper-group.border-info { border-color: #0dcaf0 !important; }
         .stepper-group.border-danger { border-color: #dc3545 !important; }
         .stepper-group.border-primary { border-color: #0d6efd !important; }
+        .stepper-group.border-warning { border-color: #fbbf24 !important; }
 
         .btn-step {
             background: rgba(255, 255, 255, 0.05);
@@ -342,7 +343,6 @@
         .pressure-bar-home { background: linear-gradient(90deg, #059669, #34d399) !important; }
         .pressure-bar-away { background: linear-gradient(90deg, #f87171, #dc2626) !important; }
 
-        /* ==== NEW: PWA Install Button ==== */
         .install-btn {
             background: linear-gradient(135deg,#10b981,#059669);
             color: white;
@@ -358,7 +358,6 @@
         }
         .install-btn:hover { transform: translateY(-1px); }
 
-        /* ==== NEW: Chart Container ==== */
         .chart-wrap {
             position: relative;
             width: 100%;
@@ -375,7 +374,6 @@
             height: 100%;
         }
 
-        /* ==== NEW: AH Table ==== */
         .ah-table {
             width: 100%;
             font-size: 0.76rem;
@@ -413,6 +411,16 @@
             color: var(--accent-blue);
         }
 
+        /* Auto-Estimated Field Indicator */
+        .form-control.auto-estimated {
+            border-style: dashed !important;
+            background-image: linear-gradient(135deg,
+                rgba(56,189,248,0.04) 25%, transparent 25%,
+                transparent 50%, rgba(56,189,248,0.04) 50%,
+                rgba(56,189,248,0.04) 75%, transparent 75%, transparent);
+            background-size: 12px 12px;
+        }
+
         @media (max-width: 768px) {
             body { padding: 10px; }
             .card-body { padding: 14px; }
@@ -442,7 +450,7 @@
             <div class="col-lg-5 mb-4">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5>📋 ข้อมูลการแข่งขัน (0-45 นาที)</h5>
+                        <h5>📋 ข้อมูลการแข่งขัน (0-45+ทดเจ็บ)</h5>
                         <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50" style="font-size: 0.68rem;">⚡ Auto-Calc</span>
                     </div>
                     <div class="card-body">
@@ -502,18 +510,34 @@
                             </select>
                         </div>
 
+                        <!-- ⏱️ Minute + Stoppage -->
                         <div class="row mb-3 g-2">
-                            <div class="col-6">
-                                <label class="form-label">⏱️ นาทีที่แข่ง (0-45)</label>
+                            <div class="col-7">
+                                <label class="form-label">⏱️ นาทีที่แข่ง <span id="minuteDisplay" style="font-size:0.72rem;"></span></label>
                                 <div class="d-flex gap-1">
                                     <div class="stepper-group flex-grow-1">
                                         <button type="button" class="btn-step" onclick="stepVal('minute', -1)">−</button>
-                                        <input type="number" id="minute" class="form-control stepper-input auto-calc" value="0" min="0" max="45">
+                                        <input type="number" id="minute" class="form-control stepper-input auto-calc" value="0" min="0" max="55">
                                         <button type="button" class="btn-step" onclick="stepVal('minute', 1)">+</button>
                                     </div>
                                     <button type="button" class="timer-btn" id="timerBtn" onclick="toggleTimer()" title="เริ่มเดินนาทีอัตโนมัติ">▶</button>
                                 </div>
                             </div>
+                            <div class="col-5">
+                                <label class="form-label d-flex justify-content-between align-items-center">
+                                    <span>⏱️ ทดเจ็บ</span>
+                                    <span id="stoppageMode" class="badge bg-secondary" style="font-size:0.6rem;">AUTO</span>
+                                </label>
+                                <div class="stepper-group">
+                                    <button type="button" class="btn-step" onclick="stepVal('stoppage', -1)">−</button>
+                                    <input type="number" id="stoppage" class="form-control stepper-input auto-calc" value="2" min="0" max="15">
+                                    <button type="button" class="btn-step" onclick="stepVal('stoppage', 1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ⚽ League Goals -->
+                        <div class="row mb-3 g-2">
                             <div class="col-6">
                                 <label class="form-label">⚽ เฉลี่ยประตู/เกม (ลีก)</label>
                                 <div class="stepper-group">
@@ -602,49 +626,170 @@
 
                         <div class="text-center mb-2">
                             <small class="adv-toggle" data-bs-toggle="collapse" data-bs-target="#advancedStats" aria-expanded="false" aria-controls="advancedStats">
-                                ⚙️ เปิด/ปิด สถิติขั้นสูง (xG, Possession, DA)
+                                ⚙️ เปิด/ปิด สถิติขั้นสูง (xG, Possession, DA, Subs)
                             </small>
                         </div>
 
+                        <div class="text-center mb-2">
+                            <small class="adv-toggle text-warning" data-bs-toggle="collapse" data-bs-target="#stoppageCfg" aria-expanded="false" aria-controls="stoppageCfg">
+                                🎛️ ตั้งค่าสูตรทดเจ็บ (Advanced)
+                            </small>
+                        </div>
+
+                        <!-- ========== STATS: Advanced ========== -->
                         <div class="collapse" id="advancedStats">
                             <div class="p-3 mb-3 rounded-3 bg-primary bg-opacity-10 border border-primary border-opacity-25">
+                                <div class="text-center mb-2" style="font-size:0.72rem; color:#94a3b8;">
+                                    💡 ปล่อยว่างหรือค่าเริ่มต้น = ระบบประเมินจากสถิติเกมให้อัตโนมัติ
+                                </div>
                                 <div class="row mb-2 g-2">
                                     <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">xG เหย้า (สะสม)</label>
-                                        <input type="number" id="xgH" class="form-control border-primary auto-calc" placeholder="เช่น 1.2" step="0.01" min="0" max="10">
+                                        <label class="form-label text-primary fw-bold">
+                                            xG เหย้า (สะสม) <small class="text-muted fw-normal">(auto)</small>
+                                        </label>
+                                        <input type="number" id="xgH" class="form-control border-primary auto-calc"
+                                               placeholder="เว้นว่าง = ประเมิน" step="0.01" min="0" max="10">
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">xG เยือน (สะสม)</label>
-                                        <input type="number" id="xgA" class="form-control border-primary auto-calc" placeholder="เช่น 0.8" step="0.01" min="0" max="10">
+                                        <label class="form-label text-primary fw-bold">
+                                            xG เยือน (สะสม) <small class="text-muted fw-normal">(auto)</small>
+                                        </label>
+                                        <input type="number" id="xgA" class="form-control border-primary auto-calc"
+                                               placeholder="เว้นว่าง = ประเมิน" step="0.01" min="0" max="10">
                                     </div>
                                 </div>
                                 <div class="row mb-2 g-2">
                                     <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">ครองบอลเหย้า (%)</label>
-                                        <input type="number" id="possH" class="form-control border-primary auto-calc" value="50" min="0" max="100" oninput="syncPossession('H')">
+                                        <label class="form-label text-primary fw-bold">
+                                            ครองบอลเหย้า (%) <small class="text-muted fw-normal">(auto ถ้า 50/50)</small>
+                                        </label>
+                                        <input type="number" id="possH" class="form-control border-primary auto-calc"
+                                               value="50" min="0" max="100" oninput="syncPossession('H')">
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">ครองบอลเยือน (%)</label>
-                                        <input type="number" id="possA" class="form-control border-primary auto-calc" value="50" min="0" max="100" oninput="syncPossession('A')">
+                                        <label class="form-label text-primary fw-bold">
+                                            ครองบอลเยือน (%) <small class="text-muted fw-normal">(auto ถ้า 50/50)</small>
+                                        </label>
+                                        <input type="number" id="possA" class="form-control border-primary auto-calc"
+                                               value="50" min="0" max="100" oninput="syncPossession('A')">
                                     </div>
                                 </div>
                                 <div class="row g-2">
                                     <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">บุกอันตราย (เหย้า)</label>
+                                        <label class="form-label text-primary fw-bold">
+                                            บุกอันตราย (เหย้า) <small class="text-muted fw-normal">(auto ถ้า 0)</small>
+                                        </label>
                                         <div class="stepper-group border-primary">
                                             <button type="button" class="btn-step" onclick="stepVal('daH', -1)">−</button>
-                                            <input type="number" id="daH" class="form-control stepper-input auto-calc" value="0" min="0" max="200">
+                                            <input type="number" id="daH" class="form-control stepper-input auto-calc" value="0" min="0" max="999">
                                             <button type="button" class="btn-step" onclick="stepVal('daH', 1)">+</button>
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">บุกอันตราย (เยือน)</label>
+                                        <label class="form-label text-primary fw-bold">
+                                            บุกอันตราย (เยือน) <small class="text-muted fw-normal">(auto ถ้า 0)</small>
+                                        </label>
                                         <div class="stepper-group border-primary">
                                             <button type="button" class="btn-step" onclick="stepVal('daA', -1)">−</button>
-                                            <input type="number" id="daA" class="form-control stepper-input auto-calc" value="0" min="0" max="200">
+                                            <input type="number" id="daA" class="form-control stepper-input auto-calc" value="0" min="0" max="999">
                                             <button type="button" class="btn-step" onclick="stepVal('daA', 1)">+</button>
                                         </div>
                                     </div>
+                                </div>
+
+                                <!-- Substitutions -->
+                                <div class="border-top border-primary border-opacity-25 mt-2 pt-2">
+                                    <div class="text-center mb-1" style="font-size:0.72rem;color:#94a3b8;">
+                                        🔄 จำนวนการเปลี่ยนตัว (ครึ่งแรก)
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <label class="form-label text-primary fw-bold">เปลี่ยนตัวเหย้า</label>
+                                            <div class="stepper-group border-primary">
+                                                <button type="button" class="btn-step" onclick="stepVal('subsH', -1)">−</button>
+                                                <input type="number" id="subsH" class="form-control stepper-input auto-calc" value="0" min="0" max="5">
+                                                <button type="button" class="btn-step" onclick="stepVal('subsH', 1)">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label text-primary fw-bold">เปลี่ยนตัวเยือน</label>
+                                            <div class="stepper-group border-primary">
+                                                <button type="button" class="btn-step" onclick="stepVal('subsA', -1)">−</button>
+                                                <input type="number" id="subsA" class="form-control stepper-input auto-calc" value="0" min="0" max="5">
+                                                <button type="button" class="btn-step" onclick="stepVal('subsA', 1)">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ========== STOPPAGE CONFIG ========== -->
+                        <div class="collapse" id="stoppageCfg">
+                            <div class="p-3 mb-3 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-25">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span style="font-size:0.78rem;color:#fbbf24;font-weight:700;">🎛️ Stoppage Formula Weights</span>
+                                    <button type="button" class="icon-btn" onclick="resetStoppageCfg()" title="คืนค่าเริ่มต้น">↺ Reset</button>
+                                </div>
+                                <div class="text-center mb-2" style="font-size:0.68rem;color:#94a3b8;">
+                                    สูตร: base + goals×N (cap) + red×N + subs×N → clamp(1, maxCap)
+                                </div>
+                                <div class="row mb-2 g-2">
+                                    <div class="col-6">
+                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Base (นาที)</label>
+                                        <div class="stepper-group border-warning">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgBase', -0.1, 1)">−</button>
+                                            <input type="number" id="cfgBase" class="form-control stepper-input auto-calc" value="1.5" step="0.1" min="0" max="5">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgBase', 0.1, 1)">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Goals × / ประตู</label>
+                                        <div class="stepper-group border-warning">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgGoalsBonus', -0.1, 1)">−</button>
+                                            <input type="number" id="cfgGoalsBonus" class="form-control stepper-input auto-calc" value="0.6" step="0.1" min="0" max="2">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgGoalsBonus', 0.1, 1)">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2 g-2">
+                                    <div class="col-6">
+                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Goals Cap (นาที)</label>
+                                        <div class="stepper-group border-warning">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgGoalsCap', -0.5, 1)">−</button>
+                                            <input type="number" id="cfgGoalsCap" class="form-control stepper-input auto-calc" value="3" step="0.5" min="0" max="6">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgGoalsCap', 0.5, 1)">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Red × / ใบ</label>
+                                        <div class="stepper-group border-warning">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgRedBonus', -0.1, 1)">−</button>
+                                            <input type="number" id="cfgRedBonus" class="form-control stepper-input auto-calc" value="0.8" step="0.1" min="0" max="2">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgRedBonus', 0.1, 1)">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Subs × / ครั้ง</label>
+                                        <div class="stepper-group border-warning">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgSubsBonus', -0.1, 1)">−</button>
+                                            <input type="number" id="cfgSubsBonus" class="form-control stepper-input auto-calc" value="0.3" step="0.1" min="0" max="1">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgSubsBonus', 0.1, 1)">+</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Max Cap (นาที)</label>
+                                        <div class="stepper-group border-warning">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgMaxCap', -1)">−</button>
+                                            <input type="number" id="cfgMaxCap" class="form-control stepper-input auto-calc" value="10" min="1" max="15">
+                                            <button type="button" class="btn-step" onclick="stepVal('cfgMaxCap', 1)">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-2" style="font-size:0.68rem;color:#94a3b8;">
+                                    💡 ปรับแล้วผลจะอัปเดตทันที • ค่าจะถูกบันทึกใน localStorage
                                 </div>
                             </div>
                         </div>
@@ -668,7 +813,7 @@
                         <h5>📊 ผลการคาดการณ์ (ครึ่งแรก)</h5>
                         <div class="d-flex gap-1 align-items-center">
                             <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="เปิด/ปิดเสียงแจ้งเตือน">🔕</button>
-                            <button class="icon-btn" onclick="copyResult()" title="คัดลอกผล">📋</button>
+                            <button class="icon-btn" onclick="copyResult(this)" title="คัดลอกผล">📋</button>
                             <span id="matchHeaderBadge" class="badge bg-secondary" style="font-size: 0.7rem;">พร้อมคำนวณ</span>
                         </div>
                     </div>
@@ -751,7 +896,6 @@
                                 <span class="text-muted float-end">รวม <span class="text-info fw-bold" id="xgTotalRem">-</span></span>
                             </div>
 
-                            <!-- ========== NEW: Goal Distribution Chart ========== -->
                             <div class="section-title">📊 การกระจายจำนวนประตูรวม (Final)</div>
                             <div class="chart-wrap">
                                 <canvas id="goalChart"></canvas>
@@ -760,7 +904,6 @@
                                 แถบสีฟ้าเข้ม = สกอร์ที่น่าจะเกิดมากที่สุด • ใช้เทียบกับตลาด O/U ได้
                             </div>
 
-                            <!-- ========== NEW: 1H Asian Handicap Table ========== -->
                             <div class="section-title">🎯 Asian Handicap ครึ่งแรก (1H AH)</div>
                             <div class="table-responsive">
                                 <table class="ah-table" id="ah1HTable">
@@ -855,10 +998,19 @@
     /* =========================================================
        STATE & STORAGE
     ========================================================= */
-    const STORAGE_KEY = 'jz1h_predictor_v3';
-    const FIELD_IDS = ['teamH','teamA','scoreH','scoreA','ahLine','minute','leagueGoals',
+    const STORAGE_KEY = 'jz1h_predictor_v4';
+    const FIELD_IDS = ['teamH','teamA','scoreH','scoreA','ahLine','minute','stoppage','leagueGoals',
                        'shotsH','shotsA','sotH','sotA','cornersH','cornersA','redH','redA',
-                       'xgH','xgA','possH','possA','daH','daA'];
+                       'subsH','subsA',
+                       'xgH','xgA','possH','possA','daH','daA',
+                       'cfgBase','cfgGoalsBonus','cfgGoalsCap','cfgRedBonus','cfgSubsBonus','cfgMaxCap'];
+    const TOUCHED_FIELDS = ['stoppage', 'possH', 'possA', 'daH', 'daA'];
+
+    const STOPPAGE_CFG_DEFAULTS = {
+        base: 1.5, goalsBonus: 0.6, goalsCap: 3,
+        redBonus: 0.8, subsBonus: 0.3, maxCap: 10
+    };
+
     let soundEnabled = false;
     let timerRunning = false;
     let timerInterval = null;
@@ -871,7 +1023,6 @@
        PWA: INLINE MANIFEST + ICON
     ========================================================= */
     (function setupPWA() {
-        // SVG icon (self-contained)
         const iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">'
             + '<rect width="512" height="512" rx="96" fill="#0b1120"/>'
             + '<circle cx="256" cy="200" r="110" fill="none" stroke="#38bdf8" stroke-width="20"/>'
@@ -879,13 +1030,11 @@
             + '</svg>';
         const iconDataUri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(iconSvg);
 
-        // Apple touch icon
         const appleLink = document.createElement('link');
         appleLink.rel = 'apple-touch-icon';
         appleLink.href = iconDataUri;
         document.head.appendChild(appleLink);
 
-        // Manifest as data URI
         const manifest = {
             name: '1H Predictor Pro - JackZaa AI',
             short_name: '1H Predictor',
@@ -907,7 +1056,6 @@
             + encodeURIComponent(JSON.stringify(manifest));
         document.getElementById('manifestLink').setAttribute('href', manifestUri);
 
-        // Install prompt
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredInstallPrompt = e;
@@ -920,7 +1068,6 @@
             deferredInstallPrompt = null;
         });
 
-        // iOS: show manual instructions
         const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
         if (isIos && !isStandalone) {
@@ -931,7 +1078,6 @@
             };
         }
 
-        // Register service worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
@@ -955,10 +1101,22 @@
     ========================================================= */
     const stepVal = (id, delta, decimals = 0) => {
         const el = document.getElementById(id);
+        el.dataset.userTouched = '1';
         let current = parseFloat(el.value) || 0;
         const min = el.hasAttribute('min') ? parseFloat(el.getAttribute('min')) : -Infinity;
         const max = el.hasAttribute('max') ? parseFloat(el.getAttribute('max')) : Infinity;
         let next = Math.min(max, Math.max(min, current + delta));
+
+        // Auto-bump stoppage only in manual mode
+        if (id === 'minute' && delta > 0) {
+            const stoppageEl = document.getElementById('stoppage');
+            const stoppageTouched = stoppageEl.dataset.userTouched === '1';
+            const stoppage = parseInt(stoppageEl.value) || 0;
+            if (stoppageTouched && next > 45 + stoppage) {
+                stoppageEl.value = Math.min(15, next - 45 + 1);
+            }
+        }
+
         el.value = decimals > 0 ? next.toFixed(decimals) : Math.round(next);
         predict(true);
     };
@@ -966,6 +1124,17 @@
     const syncPossession = (side) => {
         const elH = document.getElementById('possH');
         const elA = document.getElementById('possA');
+        const activeEl = side === 'H' ? elH : elA;
+
+        if (activeEl.value.trim() === '') {
+            elH.dataset.userTouched = '0';
+            elA.dataset.userTouched = '0';
+            return;
+        }
+
+        elH.dataset.userTouched = '1';
+        elA.dataset.userTouched = '1';
+
         if (side === 'H') {
             let valH = Math.min(100, Math.max(0, parseInt(elH.value) || 0));
             elA.value = 100 - valH;
@@ -998,6 +1167,15 @@
         document.getElementById('ahLine').value = '0';
         updateAhLabel();
         document.getElementById('minute').value = 0;
+        document.getElementById('stoppage').value = 2;
+        document.getElementById('stoppage').dataset.userTouched = '0';
+        document.getElementById('stoppage').classList.remove('auto-estimated');
+        const stoppageModeEl = document.getElementById('stoppageMode');
+        if (stoppageModeEl) {
+            stoppageModeEl.textContent = 'AUTO';
+            stoppageModeEl.className = 'badge bg-secondary';
+        }
+        document.getElementById('minuteDisplay').innerHTML = '';
         document.getElementById('leagueGoals').value = '2.70';
         document.getElementById('shotsH').value = 0;
         document.getElementById('shotsA').value = 0;
@@ -1007,12 +1185,31 @@
         document.getElementById('cornersA').value = 0;
         document.getElementById('redH').value = 0;
         document.getElementById('redA').value = 0;
+        document.getElementById('subsH').value = 0;
+        document.getElementById('subsA').value = 0;
         document.getElementById('xgH').value = '';
         document.getElementById('xgA').value = '';
         document.getElementById('possH').value = 50;
         document.getElementById('possA').value = 50;
         document.getElementById('daH').value = 0;
         document.getElementById('daA').value = 0;
+
+        // Reset stoppage config
+        document.getElementById('cfgBase').value       = STOPPAGE_CFG_DEFAULTS.base;
+        document.getElementById('cfgGoalsBonus').value = STOPPAGE_CFG_DEFAULTS.goalsBonus;
+        document.getElementById('cfgGoalsCap').value   = STOPPAGE_CFG_DEFAULTS.goalsCap;
+        document.getElementById('cfgRedBonus').value   = STOPPAGE_CFG_DEFAULTS.redBonus;
+        document.getElementById('cfgSubsBonus').value  = STOPPAGE_CFG_DEFAULTS.subsBonus;
+        document.getElementById('cfgMaxCap').value     = STOPPAGE_CFG_DEFAULTS.maxCap;
+
+        // Reset touched flags & auto-estimate classes
+        ['possH','possA','daH','daA','xgH','xgA'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.dataset.userTouched = '0';
+                el.classList.remove('auto-estimated');
+            }
+        });
 
         stopTimer();
         try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
@@ -1050,7 +1247,8 @@
         timerInterval = setInterval(() => {
             const el = document.getElementById('minute');
             let val = parseInt(el.value) || 0;
-            if (val >= 45) { stopTimer(); return; }
+            const stoppage = parseInt(document.getElementById('stoppage').value) || 2;
+            if (val >= 45 + stoppage) { stopTimer(); return; }
             el.value = val + 1;
             predict(false);
         }, 60000);
@@ -1102,7 +1300,12 @@
         const data = {};
         FIELD_IDS.forEach(id => {
             const el = document.getElementById(id);
-            if (el) data[id] = el.value;
+            if (el) {
+                data[id] = el.value;
+                if (TOUCHED_FIELDS.includes(id)) {
+                    data[id + '_touched'] = el.dataset.userTouched || '0';
+                }
+            }
         });
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
     };
@@ -1117,6 +1320,9 @@
                 const el = document.getElementById(id);
                 if (el && data[id] !== undefined && data[id] !== '') {
                     el.value = data[id];
+                    if (TOUCHED_FIELDS.includes(id) && data[id + '_touched'] !== undefined) {
+                        el.dataset.userTouched = data[id + '_touched'];
+                    }
                     any = true;
                 }
             });
@@ -1149,11 +1355,54 @@
     };
 
     /* =========================================================
+       STOPPAGE TIME ESTIMATOR (Configurable)
+    ========================================================= */
+    const readStoppageCfg = () => {
+        const read = (id, fb) => {
+            const v = parseFloat(document.getElementById(id).value);
+            return isNaN(v) ? fb : v;
+        };
+        return {
+            base:       read('cfgBase',       STOPPAGE_CFG_DEFAULTS.base),
+            goalsBonus: read('cfgGoalsBonus', STOPPAGE_CFG_DEFAULTS.goalsBonus),
+            goalsCap:   read('cfgGoalsCap',   STOPPAGE_CFG_DEFAULTS.goalsCap),
+            redBonus:   read('cfgRedBonus',   STOPPAGE_CFG_DEFAULTS.redBonus),
+            subsBonus:  read('cfgSubsBonus',  STOPPAGE_CFG_DEFAULTS.subsBonus),
+            maxCap:     read('cfgMaxCap',     STOPPAGE_CFG_DEFAULTS.maxCap)
+        };
+    };
+
+    const estimateStoppage = (scoreH, scoreA, redH, redA, subsH, subsA, minute, cfg) => {
+        const totalGoals = scoreH + scoreA;
+        const totalReds  = redH + redA;
+        const totalSubs  = subsH + subsA;
+
+        const base       = cfg.base;
+        const goalsBonus = Math.min(cfg.goalsCap, totalGoals * cfg.goalsBonus);
+        const redBonus   = totalReds * cfg.redBonus;
+        const subsBonus  = totalSubs * cfg.subsBonus;
+        const baseEstimate = base + goalsBonus + redBonus + subsBonus;
+        const minNeeded  = minute > 45 ? (minute - 45 + 1) : 0;
+
+        return Math.round(
+            Math.min(cfg.maxCap, Math.max(1, Math.max(baseEstimate, minNeeded)))
+        );
+    };
+
+    const resetStoppageCfg = () => {
+        document.getElementById('cfgBase').value       = STOPPAGE_CFG_DEFAULTS.base;
+        document.getElementById('cfgGoalsBonus').value = STOPPAGE_CFG_DEFAULTS.goalsBonus;
+        document.getElementById('cfgGoalsCap').value   = STOPPAGE_CFG_DEFAULTS.goalsCap;
+        document.getElementById('cfgRedBonus').value   = STOPPAGE_CFG_DEFAULTS.redBonus;
+        document.getElementById('cfgSubsBonus').value  = STOPPAGE_CFG_DEFAULTS.subsBonus;
+        document.getElementById('cfgMaxCap').value     = STOPPAGE_CFG_DEFAULTS.maxCap;
+        predict(true);
+    };
+
+    /* =========================================================
        ASIAN HANDICAP SETTLEMENT
     ========================================================= */
     const ahSettleSimple = (line, margin) => {
-        // line: negative = home gives, positive = home gets
-        // margin = homeScore - awayScore
         const diff = margin + line;
         if (Math.abs(diff) < 0.001) return 'push';
         return diff > 0 ? 'win' : 'loss';
@@ -1194,7 +1443,7 @@
         if (rect.width === 0) return;
 
         const dpr = window.devicePixelRatio || 1;
-        const cssW = rect.width - 8;  // padding
+        const cssW = rect.width - 8;
         const cssH = rect.height - 8;
         canvas.width = Math.round(cssW * dpr);
         canvas.height = Math.round(cssH * dpr);
@@ -1214,7 +1463,6 @@
         const yMax = Math.min(1, Math.ceil(maxP * 10) / 10 + 0.05);
         if (yMax <= 0) return;
 
-        // Grid + Y labels
         ctx.strokeStyle = 'rgba(148,163,184,0.12)';
         ctx.lineWidth = 1;
         ctx.font = '10px Inter, sans-serif';
@@ -1232,7 +1480,6 @@
             ctx.fillText((yMax * i / steps * 100).toFixed(0) + '%', pad.left - 4, y);
         }
 
-        // Bars
         const slotW = chartW / buckets.length;
         const barW = slotW * 0.62;
         const gap = slotW * 0.38;
@@ -1260,7 +1507,6 @@
             }
             ctx.fill();
 
-            // Value label on top
             if (b.prob >= 0.004) {
                 ctx.fillStyle = i === maxIdx ? '#38bdf8' : '#cbd5e1';
                 ctx.font = (i === maxIdx ? 'bold ' : '') + '10px Inter, sans-serif';
@@ -1269,7 +1515,6 @@
                 ctx.fillText((b.prob * 100).toFixed(1) + '%', x + barW / 2, y - 3);
             }
 
-            // X label
             ctx.fillStyle = '#94a3b8';
             ctx.font = '10px Inter, sans-serif';
             ctx.textAlign = 'center';
@@ -1277,7 +1522,6 @@
             ctx.fillText(b.label, x + barW / 2, pad.top + chartH + 5);
         });
 
-        // X axis subtitle
         ctx.fillStyle = '#64748b';
         ctx.font = '9px Inter, sans-serif';
         ctx.textAlign = 'center';
@@ -1297,7 +1541,7 @@
         const scoreH = parseInt(document.getElementById('scoreH').value) || 0;
         const scoreA = parseInt(document.getElementById('scoreA').value) || 0;
         const ahLine = parseFloat(document.getElementById('ahLine').value) || 0;
-        const minute = Math.min(45, Math.max(0, parseInt(document.getElementById('minute').value) || 0));
+        const minute = Math.min(55, Math.max(0, parseInt(document.getElementById('minute').value) || 0));
         const leagueGoals = Math.max(0.5, Math.min(6, parseFloat(document.getElementById('leagueGoals').value) || 2.70));
 
         const shotsH = parseInt(document.getElementById('shotsH').value) || 0;
@@ -1306,15 +1550,120 @@
         const sotA = Math.min(shotsA, parseInt(document.getElementById('sotA').value) || 0);
         const cornersH = parseInt(document.getElementById('cornersH').value) || 0;
         const cornersA = parseInt(document.getElementById('cornersA').value) || 0;
-        const redH = parseInt(document.getElementById('redH').value) || 0;
-        const redA = parseInt(document.getElementById('redA').value) || 0;
+        const redH  = parseInt(document.getElementById('redH').value)  || 0;
+        const redA  = parseInt(document.getElementById('redA').value)  || 0;
+        const subsH = Math.min(5, parseInt(document.getElementById('subsH').value) || 0);
+        const subsA = Math.min(5, parseInt(document.getElementById('subsA').value) || 0);
 
-        const xgHInput = document.getElementById('xgH').value;
-        const xgAInput = document.getElementById('xgA').value;
-        const possH = Math.max(0, Math.min(100, parseFloat(document.getElementById('possH').value) || 50));
-        const possA = Math.max(0, Math.min(100, parseFloat(document.getElementById('possA').value) || 50));
-        const daH = Math.max(0, parseFloat(document.getElementById('daH').value) || 0);
-        const daA = Math.max(0, parseFloat(document.getElementById('daA').value) || 0);
+        /* ===== STOPPAGE — Auto or Manual ===== */
+        const stoppageEl = document.getElementById('stoppage');
+        const stoppageTouched = stoppageEl.dataset.userTouched === '1';
+        const stoppageCfg = readStoppageCfg();
+        let stoppage;
+
+        if (stoppageTouched) {
+            stoppage = Math.max(0, Math.min(15, parseInt(stoppageEl.value) || 2));
+            stoppageEl.classList.remove('auto-estimated');
+        } else {
+            stoppage = estimateStoppage(scoreH, scoreA, redH, redA, subsH, subsA, minute, stoppageCfg);
+            if (document.activeElement !== stoppageEl) {
+                stoppageEl.value = stoppage;
+                stoppageEl.classList.add('auto-estimated');
+            }
+        }
+
+        const stoppageModeEl = document.getElementById('stoppageMode');
+        if (stoppageModeEl) {
+            stoppageModeEl.textContent = stoppageTouched ? 'MANUAL' : 'AUTO';
+            stoppageModeEl.className = stoppageTouched
+                ? 'badge bg-info text-dark'
+                : 'badge bg-secondary';
+        }
+
+        /* ===== ADVANCED STATS — Input or Auto-Estimate ===== */
+        const xgHEl = document.getElementById('xgH');
+        const xgAEl = document.getElementById('xgA');
+        const possHEl = document.getElementById('possH');
+        const possAEl = document.getElementById('possA');
+        const daHEl = document.getElementById('daH');
+        const daAEl = document.getElementById('daA');
+
+        const xgHInput = xgHEl.value.trim();
+        const xgAInput = xgAEl.value.trim();
+
+        /* xG: empty = estimate from shots */
+        let liveXgH, liveXgA;
+        const xgHIsInput = xgHInput !== '' && !isNaN(parseFloat(xgHInput));
+        const xgAIsInput = xgAInput !== '' && !isNaN(parseFloat(xgAInput));
+
+        liveXgH = xgHIsInput
+            ? Math.max(0, parseFloat(xgHInput))
+            : (sotH * 0.3) + (Math.max(0, shotsH - sotH) * 0.05);
+        liveXgA = xgAIsInput
+            ? Math.max(0, parseFloat(xgAInput))
+            : (sotA * 0.3) + (Math.max(0, shotsA - sotA) * 0.05);
+
+        if (document.activeElement !== xgHEl) xgHEl.classList.toggle('auto-estimated', !xgHIsInput);
+        if (document.activeElement !== xgAEl) xgAEl.classList.toggle('auto-estimated', !xgAIsInput);
+
+        /* Possession: untouched 50/50 = estimate from shots/SOT share */
+        const possTouched = possHEl.dataset.userTouched === '1' || possAEl.dataset.userTouched === '1';
+        let possH, possA;
+
+        if (possTouched) {
+            possH = Math.max(0, Math.min(100, parseFloat(possHEl.value) || 50));
+            possA = Math.max(0, Math.min(100, parseFloat(possAEl.value) || 50));
+            possHEl.classList.remove('auto-estimated');
+            possAEl.classList.remove('auto-estimated');
+        } else if (shotsH + shotsA > 0) {
+            const shotShare = shotsH / (shotsH + shotsA);
+            const sotShare = (sotH + sotA) > 0 ? sotH / (sotH + sotA) : shotShare;
+            const blended = shotShare * 0.5 + sotShare * 0.5;
+            possH = 50 + (blended - 0.5) * 30;
+            possA = 100 - possH;
+            if (document.activeElement !== possHEl) {
+                possHEl.value = Math.round(possH);
+                possHEl.classList.add('auto-estimated');
+            }
+            if (document.activeElement !== possAEl) {
+                possAEl.value = Math.round(possA);
+                possAEl.classList.add('auto-estimated');
+            }
+        } else {
+            possH = 50;
+            possA = 50;
+            possHEl.classList.add('auto-estimated');
+            possAEl.classList.add('auto-estimated');
+        }
+
+        /* DA: untouched 0/0 = estimate from shots + SOT + corners */
+        const daHInput = parseFloat(daHEl.value) || 0;
+        const daAInput = parseFloat(daAEl.value) || 0;
+        const daTouched = daHEl.dataset.userTouched === '1' || daAEl.dataset.userTouched === '1';
+        let daH, daA;
+
+        if (daTouched || (daHInput + daAInput > 0)) {
+            daH = Math.max(0, daHInput);
+            daA = Math.max(0, daAInput);
+            daHEl.classList.remove('auto-estimated');
+            daAEl.classList.remove('auto-estimated');
+        } else if (shotsH + shotsA > 0 || cornersH + cornersA > 0) {
+            daH = shotsH * 8 + sotH * 4 + cornersH * 5;
+            daA = shotsA * 8 + sotA * 4 + cornersA * 5;
+            if (document.activeElement !== daHEl) {
+                daHEl.value = Math.round(daH);
+                daHEl.classList.add('auto-estimated');
+            }
+            if (document.activeElement !== daAEl) {
+                daAEl.value = Math.round(daA);
+                daAEl.classList.add('auto-estimated');
+            }
+        } else {
+            daH = 0;
+            daA = 0;
+            daHEl.classList.add('auto-estimated');
+            daAEl.classList.add('auto-estimated');
+        }
 
         /* ===== Baseline model ===== */
         const total1HExpected = leagueGoals * 0.44;
@@ -1323,20 +1672,9 @@
         const shareA = 0.5 - ahShift;
         const base1HHome = total1HExpected * shareH;
         const base1HAway = total1HExpected * shareA;
-        const remainingMin = Math.max(0, 45 - minute);
+        const remainingMin = Math.max(0, 45 + stoppage - minute);
 
-        /* ===== Live xG ===== */
-        let liveXgH, liveXgA;
-        if (xgHInput !== "" && !isNaN(parseFloat(xgHInput))) {
-            liveXgH = Math.max(0, parseFloat(xgHInput));
-            liveXgA = (xgAInput !== "" && !isNaN(parseFloat(xgAInput)))
-                ? Math.max(0, parseFloat(xgAInput))
-                : ((sotA * 0.3) + (Math.max(0, shotsA - sotA) * 0.05));
-        } else {
-            liveXgH = (sotH * 0.3) + (Math.max(0, shotsH - sotH) * 0.05);
-            liveXgA = (sotA * 0.3) + (Math.max(0, shotsA - sotA) * 0.05);
-        }
-
+        /* ===== Rate blend (live xG) ===== */
         const liveWeight = Math.min(1, minute / 30);
         let xgRateH = ((base1HHome / 45) * (1 - liveWeight)) + ((liveXgH / Math.max(1, minute)) * liveWeight);
         let xgRateA = ((base1HAway / 45) * (1 - liveWeight)) + ((liveXgA / Math.max(1, minute)) * liveWeight);
@@ -1465,19 +1803,27 @@
 
         /* ===== Signals ===== */
         updateSignals({
-            minute, remainingMin, scoreH, scoreA, ahLine,
+            minute, stoppage, remainingMin, scoreH, scoreA, ahLine,
             pHome, pDraw, pAway, over05, over15, over25,
             expCornersTotal, co45, sotH, sotA, cornersH, cornersA,
             teamHName, teamAName
         });
 
-        /* ===== Render results ===== */
+        /* ===== Render ===== */
         document.getElementById('results').classList.remove('d-none');
         document.getElementById('emptyState').classList.add('d-none');
 
+        const minuteDisplayStr = minute > 45 ? `45+${minute - 45}'` : `${minute}'`;
         const headerBadge = document.getElementById('matchHeaderBadge');
-        headerBadge.textContent = `${teamHName} ${scoreH}-${scoreA} ${teamAName} (${minute}')`;
+        headerBadge.textContent = `${teamHName} ${scoreH}-${scoreA} ${teamAName} (${minuteDisplayStr})`;
         headerBadge.className = 'badge bg-info text-dark fw-bold';
+
+        const mdEl = document.getElementById('minuteDisplay');
+        if (minute > 45) {
+            mdEl.innerHTML = `<span class="badge bg-warning text-dark" style="font-size:0.62rem;">${minute - 45}' ทดเจ็บ</span>`;
+        } else {
+            mdEl.innerHTML = '';
+        }
 
         document.getElementById('labelHome').textContent = teamHName;
         document.getElementById('labelAway').textContent = teamAName;
@@ -1618,12 +1964,12 @@
         const totalCorners = d.cornersH + d.cornersA;
         const signals = [];
 
-        if (d.minute >= 45) {
+        if (d.minute >= 45 + d.stoppage) {
             container.innerHTML = `
                 <div class="signal-card info">
                     <div class="sig-badge bg-secondary text-white">⏹️ จบครึ่งแรก</div>
                     <div class="sig-title">สรุป: ${d.teamHName} ${d.scoreH} - ${d.scoreA} ${d.teamAName}</div>
-                    <div class="sig-desc">หมดเวลาครึ่งแรก กด "ล้างค่า" เพื่อเริ่มวิเคราะห์คู่ถัดไป</div>
+                    <div class="sig-desc">หมดเวลา${d.stoppage > 0 ? ` (ทดเจ็บ ${d.stoppage} นาที)` : ''} • กด "ล้างค่า" เพื่อเริ่มวิเคราะห์คู่ถัดไป</div>
                 </div>`;
             lastSignalSignature = 'FT';
             return;
@@ -1711,7 +2057,7 @@
     /* =========================================================
        COPY RESULT
     ========================================================= */
-    const copyResult = (evt) => {
+    const copyResult = (btn) => {
         const h = document.getElementById('labelHome').textContent;
         const a = document.getElementById('labelAway').textContent;
         const badge = document.getElementById('matchHeaderBadge').textContent;
@@ -1727,12 +2073,18 @@
             `────────────────`,
             `Powered by JackZaa AI`
         ].join('\n');
-        navigator.clipboard?.writeText(txt).then(() => {
-            const btn = (evt && evt.currentTarget) || event.currentTarget;
-            const old = btn.textContent;
-            btn.textContent = '✅';
-            setTimeout(() => btn.textContent = old, 1200);
-        }).catch(() => alert('คัดลอกไม่สำเร็จ'));
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(txt).then(() => {
+                if (btn) {
+                    const old = btn.textContent;
+                    btn.textContent = '✅';
+                    setTimeout(() => btn.textContent = old, 1200);
+                }
+            }).catch(() => alert('คัดลอกไม่สำเร็จ'));
+        } else {
+            alert('เบราว์เซอร์ไม่รองรับการคัดลอกอัตโนมัติ');
+        }
     };
 
     /* =========================================================
@@ -1747,13 +2099,34 @@
             el.addEventListener('change', () => predict(false));
         });
 
+        // DA touched tracking
+        ['daH', 'daA'].forEach(id => {
+            const el = document.getElementById(id);
+            el.addEventListener('input', () => {
+                el.dataset.userTouched = el.value.trim() === '' ? '0' : '1';
+            });
+        });
+
+        // Possession touched tracking (supplement syncPossession)
+        ['possH', 'possA'].forEach(id => {
+            const el = document.getElementById(id);
+            el.addEventListener('input', () => {
+                el.dataset.userTouched = el.value.trim() === '' ? '0' : '1';
+            });
+        });
+
+        // Stoppage touched tracking
+        const stoppageEl = document.getElementById('stoppage');
+        stoppageEl.addEventListener('input', () => {
+            stoppageEl.dataset.userTouched = stoppageEl.value.trim() === '' ? '0' : '1';
+        });
+
         if (loadState()) {
             updateAhLabel();
             predict(false);
         }
     });
 
-    // Debounced chart redraw on resize
     let resizeTimeout;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
