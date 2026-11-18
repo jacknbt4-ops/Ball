@@ -43,7 +43,7 @@
         .card-header {
             background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, rgba(30, 41, 59, 0) 100%);
             border-bottom: 1px solid var(--card-border);
-            padding: 15px 20px;
+            padding: 12px 16px;
         }
 
         .card-header h5 {
@@ -52,16 +52,16 @@
             letter-spacing: 0.5px;
             color: var(--accent-blue);
             text-transform: uppercase;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
-        .card-body { padding: 20px; }
+        .card-body { padding: 16px; }
 
         .form-label {
             color: var(--text-muted);
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .form-control, .form-select {
@@ -69,7 +69,7 @@
             border: 1px solid var(--input-border);
             color: var(--text-main);
             border-radius: 10px;
-            padding: 8px 10px;
+            padding: 7px 10px;
             transition: all 0.2s ease;
         }
 
@@ -100,9 +100,9 @@
             border: none;
             color: var(--text-main);
             font-weight: 800;
-            font-size: 1.1rem;
-            width: 38px;
-            height: 40px;
+            font-size: 1.05rem;
+            width: 36px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -128,17 +128,14 @@
         }
 
         .stepper-input::-webkit-outer-spin-button,
-        .stepper-input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+        .stepper-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
         .btn-primary {
             background: linear-gradient(135deg, #0ea5e9, #3b82f6);
             border: none;
             font-weight: 700;
-            font-size: 1rem;
-            padding: 12px;
+            font-size: 0.95rem;
+            padding: 11px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
             transition: transform 0.2s, box-shadow 0.2s;
@@ -157,8 +154,8 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: var(--text-muted);
             font-weight: 700;
-            font-size: 1rem;
-            padding: 12px;
+            font-size: 0.95rem;
+            padding: 11px;
             border-radius: 10px;
             transition: all 0.2s;
         }
@@ -169,44 +166,10 @@
             color: var(--accent-red);
         }
 
-        .signal-box {
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 18px;
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(30, 41, 59, 0.6));
-            animation: pulseGlow 3s infinite alternate;
-        }
-
-        .signal-box.signal-hot {
-            border-color: rgba(52, 211, 153, 0.5);
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(30, 41, 59, 0.7));
-        }
-
-        .signal-box.signal-warn {
-            border-color: rgba(251, 191, 36, 0.5);
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(30, 41, 59, 0.7));
-        }
-
-        @keyframes pulseGlow {
-            from { box-shadow: 0 0 8px rgba(56, 189, 248, 0.1); }
-            to { box-shadow: 0 0 18px rgba(56, 189, 248, 0.25); }
-        }
-
-        .signal-badge {
-            display: inline-block;
-            font-size: 0.75rem;
-            font-weight: 800;
-            padding: 3px 8px;
-            border-radius: 6px;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-
         .result-card {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 12px;
-            padding: 14px 10px;
+            padding: 12px 8px;
             text-align: center;
             border: 1px solid var(--card-border);
             transition: transform 0.2s;
@@ -218,9 +181,9 @@
         }
 
         .result-card .prob-text {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 800;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         .bg-home { color: var(--accent-green); }
@@ -230,10 +193,10 @@
         .progress {
             background-color: #1e293b;
             border-radius: 10px;
-            height: 8px !important;
+            height: 7px !important;
             overflow: hidden;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
-            margin-top: 5px;
+            margin-top: 4px;
         }
 
         .progress-bar {
@@ -253,13 +216,13 @@
         .bg-score-3 { background: linear-gradient(135deg, #4b5563, #6b7280); color: white; }
 
         .section-title {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--text-muted);
             text-align: center;
-            margin: 18px 0 12px 0;
+            margin: 16px 0 10px 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -275,7 +238,7 @@
 
         .adv-toggle {
             cursor: pointer;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             color: var(--accent-blue);
             text-decoration: underline;
         }
@@ -283,17 +246,104 @@
         .brand-footer {
             text-align: center;
             margin-top: 24px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: var(--text-muted);
         }
 
+        /* ==== NEW: Signal Cards ==== */
+        .signal-card {
+            border-radius: 12px;
+            padding: 11px 13px;
+            margin-bottom: 9px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+            animation: fadeIn 0.3s ease;
+        }
+        .signal-card.hot {
+            border-color: rgba(52,211,153,0.5);
+            background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(30,41,59,0.7));
+            animation: fadeIn 0.3s ease, pulseGlow 3s infinite alternate;
+        }
+        .signal-card.warn {
+            border-color: rgba(251,191,36,0.5);
+            background: linear-gradient(135deg, rgba(245,158,11,0.18), rgba(30,41,59,0.7));
+        }
+        .signal-card.info {
+            border-color: rgba(56,189,248,0.35);
+            background: linear-gradient(135deg, rgba(14,165,233,0.12), rgba(30,41,59,0.6));
+        }
+        .sig-badge {
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .sig-title { font-weight: 700; color: #fff; font-size: 0.88rem; margin-bottom: 2px; }
+        .sig-desc { font-size: 0.76rem; color: var(--text-muted); line-height: 1.4; }
+        .sig-conf {
+            font-size: 0.68rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 5px;
+            float: right;
+            background: rgba(0,0,0,0.35);
+            color: #fff;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 8px rgba(56, 189, 248, 0.1); }
+            to { box-shadow: 0 0 18px rgba(56, 189, 248, 0.25); }
+        }
+
+        .timer-btn {
+            background: rgba(52, 211, 153, 0.12);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            color: #34d399;
+            padding: 0 11px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            height: 38px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .timer-btn:hover { background: rgba(52,211,153,0.25); }
+        .timer-btn.running {
+            background: rgba(248, 113, 113, 0.2);
+            border-color: rgba(248, 113, 113, 0.5);
+            color: #f87171;
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: var(--text-muted);
+            border-radius: 8px;
+            padding: 4px 9px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .icon-btn:hover { background: rgba(56,189,248,0.15); color: var(--accent-blue); border-color: var(--accent-blue); }
+        .icon-btn.active { background: rgba(52,211,153,0.2); color: #34d399; border-color: #34d399; }
+
+        .pressure-bar-home { background: linear-gradient(90deg, #059669, #34d399) !important; }
+        .pressure-bar-away { background: linear-gradient(90deg, #f87171, #dc2626) !important; }
+
         @media (max-width: 768px) {
             body { padding: 10px; }
-            .card-body { padding: 15px; }
-            .result-card .prob-text { font-size: 1.3rem; }
+            .card-body { padding: 14px; }
+            .result-card .prob-text { font-size: 1.2rem; }
             .form-control, .form-select { font-size: 16px; }
-            .btn-step { width: 34px; height: 38px; }
-            h2 { font-size: 1.35rem; }
+            .btn-step { width: 32px; height: 36px; }
+            h2 { font-size: 1.3rem; }
         }
     </style>
 </head>
@@ -307,12 +357,12 @@
         </div>
 
         <div class="row">
-            <!-- ========== LEFT: INPUTS ========== -->
+            <!-- ============ LEFT: INPUT PANEL ============ -->
             <div class="col-lg-5 mb-4">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5>📋 ข้อมูลการแข่งขัน (0-45 นาที)</h5>
-                        <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50" style="font-size: 0.7rem;">⚡ Auto-Calc</span>
+                        <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50" style="font-size: 0.68rem;">⚡ Auto-Calc</span>
                     </div>
                     <div class="card-body">
                         <div class="row mb-3 g-2">
@@ -331,7 +381,7 @@
                                 <label class="form-label text-center d-block">สกอร์เหย้า</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('scoreH', -1)">−</button>
-                                    <input type="number" id="scoreH" class="form-control stepper-input fs-5 text-success auto-calc" value="0" min="0">
+                                    <input type="number" id="scoreH" class="form-control stepper-input fs-5 text-success auto-calc" value="0" min="0" max="15">
                                     <button type="button" class="btn-step" onclick="stepVal('scoreH', 1)">+</button>
                                 </div>
                             </div>
@@ -339,7 +389,7 @@
                                 <label class="form-label text-center d-block">สกอร์เยือน</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('scoreA', -1)">−</button>
-                                    <input type="number" id="scoreA" class="form-control stepper-input fs-5 text-danger auto-calc" value="0" min="0">
+                                    <input type="number" id="scoreA" class="form-control stepper-input fs-5 text-danger auto-calc" value="0" min="0" max="15">
                                     <button type="button" class="btn-step" onclick="stepVal('scoreA', 1)">+</button>
                                 </div>
                             </div>
@@ -348,7 +398,7 @@
                         <div class="mb-3 p-2 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-25">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <label class="form-label text-warning fw-bold mb-0">⚖️ ราคาต่อรอง (AH เต็มเวลา)</label>
-                                <span id="ahLabel" class="badge bg-warning text-dark" style="font-size: 0.7rem;">เสมอ (0.0)</span>
+                                <span id="ahLabel" class="badge bg-warning text-dark" style="font-size: 0.68rem;">เสมอ (0.0)</span>
                             </div>
                             <select id="ahLine" class="form-select border-warning text-warning fw-bold auto-calc" onchange="updateAhLabel()">
                                 <option value="-2.0">เหย้าต่อ 2.0 (-2.0)</option>
@@ -373,22 +423,22 @@
 
                         <div class="row mb-3 g-2">
                             <div class="col-6">
-                                <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <label class="form-label mb-0">⏱️ นาที (0-45)</label>
-                                    <button type="button" class="btn btn-sm btn-outline-info py-0 px-2" id="timerBtn" onclick="toggleTimer()" style="font-size:0.62rem; line-height:1.5;" title="จับเวลาจริง (60 วิ/นาที)">▶️</button>
-                                </div>
-                                <div class="stepper-group">
-                                    <button type="button" class="btn-step" onclick="stepVal('minute', -1)">−</button>
-                                    <input type="number" id="minute" class="form-control stepper-input auto-calc" value="0" min="0" max="45">
-                                    <button type="button" class="btn-step" onclick="stepVal('minute', 1)">+</button>
+                                <label class="form-label">⏱️ นาทีที่แข่ง (0-45)</label>
+                                <div class="d-flex gap-1">
+                                    <div class="stepper-group flex-grow-1">
+                                        <button type="button" class="btn-step" onclick="stepVal('minute', -1)">−</button>
+                                        <input type="number" id="minute" class="form-control stepper-input auto-calc" value="0" min="0" max="45">
+                                        <button type="button" class="btn-step" onclick="stepVal('minute', 1)">+</button>
+                                    </div>
+                                    <button type="button" class="timer-btn" id="timerBtn" onclick="toggleTimer()" title="เริ่มเดินนาทีอัตโนมัติ">▶</button>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <label class="form-label">⚽ เฉลี่ยประตู/เกม</label>
+                                <label class="form-label">⚽ เฉลี่ยประตู/เกม (ลีก)</label>
                                 <div class="stepper-group">
-                                    <button type="button" class="btn-step" onclick="stepVal('leagueGoals', -0.1, 2)">−</button>
-                                    <input type="number" id="leagueGoals" class="form-control stepper-input auto-calc" value="2.70" step="0.1" min="0.5">
-                                    <button type="button" class="btn-step" onclick="stepVal('leagueGoals', 0.1, 2)">+</button>
+                                    <button type="button" class="btn-step" onclick="stepVal('leagueGoals', -0.1, 1)">−</button>
+                                    <input type="number" id="leagueGoals" class="form-control stepper-input auto-calc" value="2.70" step="0.1" min="0.5" max="6">
+                                    <button type="button" class="btn-step" onclick="stepVal('leagueGoals', 0.1, 1)">+</button>
                                 </div>
                             </div>
                         </div>
@@ -398,7 +448,7 @@
                                 <label class="form-label">ยิงเหย้า (Shots)</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('shotsH', -1)">−</button>
-                                    <input type="number" id="shotsH" class="form-control stepper-input auto-calc" value="0" min="0">
+                                    <input type="number" id="shotsH" class="form-control stepper-input auto-calc" value="0" min="0" max="40">
                                     <button type="button" class="btn-step" onclick="stepVal('shotsH', 1)">+</button>
                                 </div>
                             </div>
@@ -406,7 +456,7 @@
                                 <label class="form-label">ยิงเยือน (Shots)</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('shotsA', -1)">−</button>
-                                    <input type="number" id="shotsA" class="form-control stepper-input auto-calc" value="0" min="0">
+                                    <input type="number" id="shotsA" class="form-control stepper-input auto-calc" value="0" min="0" max="40">
                                     <button type="button" class="btn-step" onclick="stepVal('shotsA', 1)">+</button>
                                 </div>
                             </div>
@@ -417,7 +467,7 @@
                                 <label class="form-label">เข้ากรอบเหย้า (SOT)</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('sotH', -1)">−</button>
-                                    <input type="number" id="sotH" class="form-control stepper-input auto-calc" value="0" min="0">
+                                    <input type="number" id="sotH" class="form-control stepper-input auto-calc" value="0" min="0" max="30">
                                     <button type="button" class="btn-step" onclick="stepVal('sotH', 1)">+</button>
                                 </div>
                             </div>
@@ -425,7 +475,7 @@
                                 <label class="form-label">เข้ากรอบเยือน (SOT)</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('sotA', -1)">−</button>
-                                    <input type="number" id="sotA" class="form-control stepper-input auto-calc" value="0" min="0">
+                                    <input type="number" id="sotA" class="form-control stepper-input auto-calc" value="0" min="0" max="30">
                                     <button type="button" class="btn-step" onclick="stepVal('sotA', 1)">+</button>
                                 </div>
                             </div>
@@ -436,7 +486,7 @@
                                 <label class="form-label text-info fw-bold">🚩 เตะมุมเหย้า</label>
                                 <div class="stepper-group border-info">
                                     <button type="button" class="btn-step" onclick="stepVal('cornersH', -1)">−</button>
-                                    <input type="number" id="cornersH" class="form-control stepper-input text-info auto-calc" value="0" min="0">
+                                    <input type="number" id="cornersH" class="form-control stepper-input text-info auto-calc" value="0" min="0" max="20">
                                     <button type="button" class="btn-step" onclick="stepVal('cornersH', 1)">+</button>
                                 </div>
                             </div>
@@ -444,7 +494,7 @@
                                 <label class="form-label text-info fw-bold">🚩 เตะมุมเยือน</label>
                                 <div class="stepper-group border-info">
                                     <button type="button" class="btn-step" onclick="stepVal('cornersA', -1)">−</button>
-                                    <input type="number" id="cornersA" class="form-control stepper-input text-info auto-calc" value="0" min="0">
+                                    <input type="number" id="cornersA" class="form-control stepper-input text-info auto-calc" value="0" min="0" max="20">
                                     <button type="button" class="btn-step" onclick="stepVal('cornersA', 1)">+</button>
                                 </div>
                             </div>
@@ -455,7 +505,7 @@
                                 <label class="form-label text-danger fw-bold">🟥 ใบแดงเหย้า</label>
                                 <div class="stepper-group border-danger">
                                     <button type="button" class="btn-step" onclick="stepVal('redH', -1)">−</button>
-                                    <input type="number" id="redH" class="form-control stepper-input text-danger auto-calc" value="0" min="0" max="5">
+                                    <input type="number" id="redH" class="form-control stepper-input text-danger auto-calc" value="0" min="0" max="3">
                                     <button type="button" class="btn-step" onclick="stepVal('redH', 1)">+</button>
                                 </div>
                             </div>
@@ -463,7 +513,7 @@
                                 <label class="form-label text-danger fw-bold">🟥 ใบแดงเยือน</label>
                                 <div class="stepper-group border-danger">
                                     <button type="button" class="btn-step" onclick="stepVal('redA', -1)">−</button>
-                                    <input type="number" id="redA" class="form-control stepper-input text-danger auto-calc" value="0" min="0" max="5">
+                                    <input type="number" id="redA" class="form-control stepper-input text-danger auto-calc" value="0" min="0" max="3">
                                     <button type="button" class="btn-step" onclick="stepVal('redA', 1)">+</button>
                                 </div>
                             </div>
@@ -479,12 +529,12 @@
                             <div class="p-3 mb-3 rounded-3 bg-primary bg-opacity-10 border border-primary border-opacity-25">
                                 <div class="row mb-2 g-2">
                                     <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">xG เหย้า</label>
-                                        <input type="number" id="xgH" class="form-control border-primary auto-calc" placeholder="เช่น 1.2" step="0.01" min="0">
+                                        <label class="form-label text-primary fw-bold">xG เหย้า (สะสม)</label>
+                                        <input type="number" id="xgH" class="form-control border-primary auto-calc" placeholder="เช่น 1.2" step="0.01" min="0" max="10">
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">xG เยือน</label>
-                                        <input type="number" id="xgA" class="form-control border-primary auto-calc" placeholder="เช่น 0.8" step="0.01" min="0">
+                                        <label class="form-label text-primary fw-bold">xG เยือน (สะสม)</label>
+                                        <input type="number" id="xgA" class="form-control border-primary auto-calc" placeholder="เช่น 0.8" step="0.01" min="0" max="10">
                                     </div>
                                 </div>
                                 <div class="row mb-2 g-2">
@@ -502,7 +552,7 @@
                                         <label class="form-label text-primary fw-bold">บุกอันตราย (เหย้า)</label>
                                         <div class="stepper-group border-primary">
                                             <button type="button" class="btn-step" onclick="stepVal('daH', -1)">−</button>
-                                            <input type="number" id="daH" class="form-control stepper-input auto-calc" value="0" min="0">
+                                            <input type="number" id="daH" class="form-control stepper-input auto-calc" value="0" min="0" max="200">
                                             <button type="button" class="btn-step" onclick="stepVal('daH', 1)">+</button>
                                         </div>
                                     </div>
@@ -510,7 +560,7 @@
                                         <label class="form-label text-primary fw-bold">บุกอันตราย (เยือน)</label>
                                         <div class="stepper-group border-primary">
                                             <button type="button" class="btn-step" onclick="stepVal('daA', -1)">−</button>
-                                            <input type="number" id="daA" class="form-control stepper-input auto-calc" value="0" min="0">
+                                            <input type="number" id="daA" class="form-control stepper-input auto-calc" value="0" min="0" max="200">
                                             <button type="button" class="btn-step" onclick="stepVal('daA', 1)">+</button>
                                         </div>
                                     </div>
@@ -519,10 +569,10 @@
                         </div>
 
                         <div class="row g-2 mt-2">
-                            <div class="col-8">
+                            <div class="col-7">
                                 <button type="button" class="btn btn-primary w-100" onclick="predict(true)">🚀 ประมวลผล</button>
                             </div>
-                            <div class="col-4">
+                            <div class="col-5">
                                 <button type="button" class="btn btn-reset w-100" onclick="resetForm()">🔄 ล้างค่า</button>
                             </div>
                         </div>
@@ -530,39 +580,24 @@
                 </div>
             </div>
 
-            <!-- ========== RIGHT: RESULTS ========== -->
+            <!-- ============ RIGHT: RESULTS PANEL ============ -->
             <div class="col-lg-7">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5>📊 ผลการคาดการณ์ (ครึ่งแรก)</h5>
-                        <div class="d-flex gap-2 align-items-center">
-                            <button type="button" class="btn btn-sm btn-outline-info py-0 px-2" onclick="exportPrediction()" style="font-size:0.68rem;" title="คัดลอกผลเป็นข้อความ">📋</button>
-                            <span id="matchHeaderBadge" class="badge bg-secondary" style="font-size: 0.72rem;">พร้อมคำนวณ</span>
+                        <div class="d-flex gap-1 align-items-center">
+                            <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="เปิด/ปิดเสียงแจ้งเตือน">🔕</button>
+                            <button class="icon-btn" onclick="copyResult()" title="คัดลอกผล">📋</button>
+                            <span id="matchHeaderBadge" class="badge bg-secondary" style="font-size: 0.7rem;">พร้อมคำนวณ</span>
                         </div>
                     </div>
                     <div class="card-body">
-                        <div id="results" class="d-none fade-in">
-                            <div id="signalBox" class="signal-box">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span id="signalBadge" class="signal-badge bg-info text-dark">📡 วิเคราะห์สัญญาณเกม</span>
-                                    <small id="signalTime" class="text-muted fw-bold">นาทีที่ 0'</small>
-                                </div>
-                                <div id="signalTitle" class="fw-bold fs-6 text-white mb-1">กำลังประมวลผลแนวโน้ม...</div>
-                                <div id="signalDesc" class="small text-light opacity-75">กรอกข้อมูลสถิติหรือราคาต่อรองเพื่อดูสัญญาณเข้าทำ</div>
-                                <!-- NEW: Confidence Meter -->
-                                <div class="mt-2 pt-2" style="border-top: 1px solid rgba(255,255,255,0.12);">
-                                    <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <span class="text-muted" style="font-size:0.7rem;">📊 ความมั่นใจของข้อมูล (Confidence)</span>
-                                        <span id="confidenceText" class="fw-bold" style="font-size:0.8rem;">0%</span>
-                                    </div>
-                                    <div class="progress" style="height: 5px !important;">
-                                        <div class="progress-bar" id="confidenceBar" style="width: 0%; background: linear-gradient(90deg, #dc2626, #fbbf24, #34d399);"></div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div id="results" class="d-none">
 
-                            <div class="section-title">ผลการแข่งขัน (1X2)</div>
-                            <div class="row text-center mb-4 g-2">
+                            <div id="signalsContainer"></div>
+
+                            <div class="section-title">ผลการแข่งขัน (1X2 ครึ่งแรก)</div>
+                            <div class="row text-center mb-3 g-2">
                                 <div class="col-4">
                                     <div class="result-card">
                                         <div class="text-muted small fw-bold" id="labelHome">เหย้า</div>
@@ -583,55 +618,71 @@
                                 </div>
                             </div>
 
-                            <div class="section-title">ประตูรวม (Over/Under)</div>
+                            <!-- NEW: Next Goal & BTTS & Pressure -->
+                            <div class="section-title">ประตูถัดไป • BTTS • แรงกดดัน</div>
+                            <div class="row text-center mb-3 g-2">
+                                <div class="col-4">
+                                    <div class="result-card">
+                                        <small class="text-muted">ประตูถัดไป เหย้า</small>
+                                        <div class="prob-text text-success" id="nextHome" style="font-size:1.15rem;">-</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="result-card">
+                                        <small class="text-muted">ประตูถัดไป เยือน</small>
+                                        <div class="prob-text text-danger" id="nextAway" style="font-size:1.15rem;">-</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="result-card">
+                                        <small class="text-muted">ไม่มีประตูเพิ่ม</small>
+                                        <div class="prob-text text-secondary" id="nextNone" style="font-size:1.15rem;">-</div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="mb-3">
+                                <div class="d-flex justify-content-between fw-bold small">
+                                    <span>⚖️ BTTS ครึ่งแรก (ทั้งคู่ยิง)</span>
+                                    <span id="btts1h" class="text-info">0%</span>
+                                </div>
+                                <div class="progress"><div class="progress-bar bg-info" id="btts1hBar" style="width:0%"></div></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between fw-bold small">
+                                    <span>🏋️ Pressure Index</span>
+                                    <span id="pressureLabel" class="text-warning">-</span>
+                                </div>
+                                <div class="progress" style="height:10px !important;">
+                                    <div class="progress-bar pressure-bar-home" id="pressureBarH" style="width:50%"></div>
+                                    <div class="progress-bar pressure-bar-away" id="pressureBarA" style="width:50%"></div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-1" style="font-size:0.7rem;color:var(--text-muted)">
+                                    <span id="pressureHLabel">เหย้า</span>
+                                    <span id="pressureALabel">เยือน</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 px-2 py-1 rounded-3 bg-dark bg-opacity-25 border border-secondary border-opacity-25" style="font-size:0.78rem;">
+                                <span class="text-muted">Model xG (คงเหลือ):</span>
+                                <span class="text-success fw-bold" id="xghRem">-</span> vs
+                                <span class="text-danger fw-bold" id="xgaRem">-</span>
+                                <span class="text-muted float-end">รวม <span class="text-info fw-bold" id="xgTotalRem">-</span></span>
+                            </div>
+
+                            <div class="section-title">ประตูรวม (Over/Under ครึ่งแรก)</div>
+                            <div class="mb-2">
                                 <div class="d-flex justify-content-between fw-bold small"><span>สูง 0.5</span> <span id="ou05" class="text-success">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-success" id="ou05Bar" style="width: 0%"></div></div>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-2">
                                 <div class="d-flex justify-content-between fw-bold small"><span>สูง 1.5</span> <span id="ou15" class="text-warning">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-warning" id="ou15Bar" style="width: 0%"></div></div>
                             </div>
-                            <div class="mb-4">
+                            <div class="mb-3">
                                 <div class="d-flex justify-content-between fw-bold small"><span>สูง 2.5</span> <span id="ou25" class="text-danger">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-danger" id="ou25Bar" style="width: 0%"></div></div>
-                            </div>
-
-                            <!-- NEW: BTTS + Next Goal -->
-                            <div class="section-title">🎯 ตลาดเสริม (BTTS & Next Goal)</div>
-                            <div class="row text-center mb-3 g-2">
-                                <div class="col-6">
-                                    <div class="result-card">
-                                        <div class="text-muted small fw-bold">BTTS ครึ่งแรก</div>
-                                        <div class="prob-text" id="resBTTS" style="color: var(--accent-orange);">0%</div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="result-card">
-                                        <div class="text-muted small fw-bold">ไม่มีประตูเพิ่ม</div>
-                                        <div class="prob-text" id="resNoMore" style="color: var(--text-muted);">0%</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row text-center mb-4 g-2">
-                                <div class="col-4">
-                                    <div class="result-card">
-                                        <div class="text-muted small fw-bold" id="nextGoalLabelH">เหย้า</div>
-                                        <div class="prob-text bg-home" id="resNextH">0%</div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="result-card">
-                                        <div class="text-muted small fw-bold">ไม่มีประตู</div>
-                                        <div class="prob-text" style="color: var(--text-muted);" id="resNoGoal">0%</div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="result-card">
-                                        <div class="text-muted small fw-bold" id="nextGoalLabelA">เยือน</div>
-                                        <div class="prob-text bg-away" id="resNextA">0%</div>
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="section-title">🚩 วิเคราะห์ลูกเตะมุม</div>
@@ -663,7 +714,7 @@
                                 <div class="d-flex justify-content-between fw-bold small"><span>สูง 4.5</span> <span id="co45" class="text-primary">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-primary" id="co45Bar" style="width: 0%"></div></div>
                             </div>
-                            <div class="mb-4">
+                            <div class="mb-3">
                                 <div class="d-flex justify-content-between fw-bold small"><span>สูง 5.5</span> <span id="co55" class="text-light">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-dark" id="co55Bar" style="width: 0%"></div></div>
                             </div>
@@ -692,625 +743,626 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // ============================================================
-        // 1) STEALTH UTILITIES
-        // ============================================================
-        const stepVal = (id, delta, decimals = 0) => {
+    /* =========================================================
+       STATE & STORAGE
+    ========================================================= */
+    const STORAGE_KEY = 'jz1h_predictor_v2';
+    const FIELD_IDS = ['teamH','teamA','scoreH','scoreA','ahLine','minute','leagueGoals',
+                       'shotsH','shotsA','sotH','sotA','cornersH','cornersA','redH','redA',
+                       'xgH','xgA','possH','possA','daH','daA'];
+    let soundEnabled = false;
+    let timerRunning = false;
+    let timerInterval = null;
+    let lastSignalSignature = '';
+    let debounceTimer = null;
+
+    /* =========================================================
+       INPUT HELPERS
+    ========================================================= */
+    const stepVal = (id, delta, decimals = 0) => {
+        const el = document.getElementById(id);
+        let current = parseFloat(el.value) || 0;
+        const min = el.hasAttribute('min') ? parseFloat(el.getAttribute('min')) : -Infinity;
+        const max = el.hasAttribute('max') ? parseFloat(el.getAttribute('max')) : Infinity;
+        let next = Math.min(max, Math.max(min, current + delta));
+        el.value = decimals > 0 ? next.toFixed(decimals) : Math.round(next);
+        predict(true);
+    };
+
+    const syncPossession = (side) => {
+        const elH = document.getElementById('possH');
+        const elA = document.getElementById('possA');
+        if (side === 'H') {
+            let valH = Math.min(100, Math.max(0, parseInt(elH.value) || 0));
+            elA.value = 100 - valH;
+        } else {
+            let valA = Math.min(100, Math.max(0, parseInt(elA.value) || 0));
+            elH.value = 100 - valA;
+        }
+    };
+
+    const updateAhLabel = () => {
+        const ah = parseFloat(document.getElementById('ahLine').value) || 0;
+        const badge = document.getElementById('ahLabel');
+        if (ah < 0) {
+            badge.textContent = `เหย้าต่อ ${Math.abs(ah)}`;
+            badge.className = 'badge bg-success text-white';
+        } else if (ah > 0) {
+            badge.textContent = `เยือนต่อ ${ah}`;
+            badge.className = 'badge bg-danger text-white';
+        } else {
+            badge.textContent = 'เสมอ (0.0)';
+            badge.className = 'badge bg-warning text-dark';
+        }
+    };
+
+    const resetForm = () => {
+        document.getElementById('teamH').value = '';
+        document.getElementById('teamA').value = '';
+        document.getElementById('scoreH').value = 0;
+        document.getElementById('scoreA').value = 0;
+        document.getElementById('ahLine').value = '0';
+        updateAhLabel();
+        document.getElementById('minute').value = 0;
+        document.getElementById('leagueGoals').value = '2.70';
+        document.getElementById('shotsH').value = 0;
+        document.getElementById('shotsA').value = 0;
+        document.getElementById('sotH').value = 0;
+        document.getElementById('sotA').value = 0;
+        document.getElementById('cornersH').value = 0;
+        document.getElementById('cornersA').value = 0;
+        document.getElementById('redH').value = 0;
+        document.getElementById('redA').value = 0;
+        document.getElementById('xgH').value = '';
+        document.getElementById('xgA').value = '';
+        document.getElementById('possH').value = 50;
+        document.getElementById('possA').value = 50;
+        document.getElementById('daH').value = 0;
+        document.getElementById('daA').value = 0;
+
+        stopTimer();
+        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+
+        document.getElementById('results').classList.add('d-none');
+        document.getElementById('emptyState').classList.remove('d-none');
+        const badge = document.getElementById('matchHeaderBadge');
+        badge.textContent = 'พร้อมคำนวณ';
+        badge.className = 'badge bg-secondary';
+        lastSignalSignature = '';
+    };
+
+    /* =========================================================
+       VALIDATION
+    ========================================================= */
+    const validateInputs = () => {
+        const shotsH = parseFloat(document.getElementById('shotsH').value) || 0;
+        const shotsA = parseFloat(document.getElementById('shotsA').value) || 0;
+        const sotHEl = document.getElementById('sotH');
+        const sotAEl = document.getElementById('sotA');
+        if (parseFloat(sotHEl.value) > shotsH) sotHEl.value = shotsH;
+        if (parseFloat(sotAEl.value) > shotsA) sotAEl.value = shotsA;
+    };
+
+    /* =========================================================
+       TIMER
+    ========================================================= */
+    const toggleTimer = () => {
+        const btn = document.getElementById('timerBtn');
+        if (timerRunning) {
+            stopTimer();
+            return;
+        }
+        timerRunning = true;
+        btn.textContent = '⏸';
+        btn.classList.add('running');
+        timerInterval = setInterval(() => {
+            const el = document.getElementById('minute');
+            let val = parseInt(el.value) || 0;
+            if (val >= 45) { stopTimer(); return; }
+            el.value = val + 1;
+            predict(false);
+        }, 60000);
+    };
+
+    const stopTimer = () => {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = null;
+        timerRunning = false;
+        const btn = document.getElementById('timerBtn');
+        if (btn) {
+            btn.textContent = '▶';
+            btn.classList.remove('running');
+        }
+    };
+
+    /* =========================================================
+       SOUND
+    ========================================================= */
+    const toggleSound = () => {
+        soundEnabled = !soundEnabled;
+        const btn = document.getElementById('soundBtn');
+        btn.textContent = soundEnabled ? '🔔' : '🔕';
+        btn.classList.toggle('active', soundEnabled);
+        if (soundEnabled) playBeep();
+    };
+
+    const playBeep = () => {
+        if (!soundEnabled) return;
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 880;
+            gain.gain.setValueAtTime(0.08, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+            osc.connect(gain).connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.25);
+        } catch(e) {}
+        if (navigator.vibrate) navigator.vibrate(120);
+    };
+
+    /* =========================================================
+       STORAGE
+    ========================================================= */
+    const saveState = () => {
+        const data = {};
+        FIELD_IDS.forEach(id => {
             const el = document.getElementById(id);
-            let current = parseFloat(el.value) || 0;
-            const min = el.hasAttribute('min') ? parseFloat(el.getAttribute('min')) : -Infinity;
-            const max = el.hasAttribute('max') ? parseFloat(el.getAttribute('max')) : Infinity;
-            let next = Math.min(max, Math.max(min, current + delta));
-            el.value = decimals > 0 ? next.toFixed(decimals) : Math.round(next);
-            schedulePredict();
-        };
+            if (el) data[id] = el.value;
+        });
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+    };
 
-        const syncPossession = (side) => {
-            const elH = document.getElementById('possH');
-            const elA = document.getElementById('possA');
-            if (side === 'H') {
-                let valH = Math.min(100, Math.max(0, parseInt(elH.value) || 0));
-                elA.value = 100 - valH;
-            } else {
-                let valA = Math.min(100, Math.max(0, parseInt(elA.value) || 0));
-                elH.value = 100 - valA;
-            }
-        };
-
-        const updateAhLabel = () => {
-            const ah = parseFloat(document.getElementById('ahLine').value) || 0;
-            const badge = document.getElementById('ahLabel');
-            if (ah < 0) {
-                badge.textContent = `เหย้าต่อ ${Math.abs(ah)}`;
-                badge.className = 'badge bg-success text-white';
-            } else if (ah > 0) {
-                badge.textContent = `เยือนต่อ ${ah}`;
-                badge.className = 'badge bg-danger text-white';
-            } else {
-                badge.textContent = 'เสมอ (0.0)';
-                badge.className = 'badge bg-warning text-dark';
-            }
-        };
-
-        // ============================================================
-        // 2) STATE PERSISTENCE (localStorage)
-        // ============================================================
-        const STORAGE_KEY = 'jackzaa_1h_predictor_v2';
-        const PERSIST_INPUTS = ['teamH','teamA','scoreH','scoreA','ahLine','minute','leagueGoals',
-            'shotsH','shotsA','sotH','sotA','cornersH','cornersA','redH','redA',
-            'xgH','xgA','possH','possA','daH','daA'];
-
-        const saveState = () => {
-            try {
-                const state = {};
-                PERSIST_INPUTS.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) state[id] = el.value;
-                });
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-            } catch(e) { /* silent */ }
-        };
-
-        const restoreState = () => {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) return false;
-                const state = JSON.parse(raw);
-                PERSIST_INPUTS.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el && state[id] !== undefined && state[id] !== null) el.value = state[id];
-                });
-                updateAhLabel();
-                return true;
-            } catch(e) { return false; }
-        };
-
-        // ============================================================
-        // 3) DEBOUNCED PREDICT
-        // ============================================================
-        let predictDebounceTimer = null;
-        const schedulePredict = () => {
-            clearTimeout(predictDebounceTimer);
-            predictDebounceTimer = setTimeout(() => predict(false), 120);
-        };
-
-        // ============================================================
-        // 4) LIVE TIMER (60s = 1 นาที)
-        // ============================================================
-        let timerHandle = null;
-        const toggleTimer = () => {
-            const btn = document.getElementById('timerBtn');
-            if (timerHandle) {
-                clearInterval(timerHandle);
-                timerHandle = null;
-                btn.textContent = '▶️';
-                btn.style.background = '';
-                btn.classList.remove('btn-danger');
-                btn.classList.add('btn-outline-info');
-            } else {
-                btn.textContent = '⏸️';
-                btn.classList.remove('btn-outline-info');
-                btn.classList.add('btn-danger');
-                timerHandle = setInterval(() => {
-                    const el = document.getElementById('minute');
-                    let m = parseInt(el.value) || 0;
-                    if (m >= 45) { toggleTimer(); return; }
-                    el.value = m + 1;
-                    schedulePredict();
-                }, 60000);
-            }
-        };
-
-        // ============================================================
-        // 5) RESET
-        // ============================================================
-        const resetForm = () => {
-            if (timerHandle) toggleTimer();
-            document.getElementById('teamH').value = '';
-            document.getElementById('teamA').value = '';
-            document.getElementById('scoreH').value = 0;
-            document.getElementById('scoreA').value = 0;
-            document.getElementById('ahLine').value = '0';
-            updateAhLabel();
-            document.getElementById('minute').value = 0;
-            document.getElementById('leagueGoals').value = '2.70';
-            document.getElementById('shotsH').value = 0;
-            document.getElementById('shotsA').value = 0;
-            document.getElementById('sotH').value = 0;
-            document.getElementById('sotA').value = 0;
-            document.getElementById('cornersH').value = 0;
-            document.getElementById('cornersA').value = 0;
-            document.getElementById('redH').value = 0;
-            document.getElementById('redA').value = 0;
-            document.getElementById('xgH').value = '';
-            document.getElementById('xgA').value = '';
-            document.getElementById('possH').value = 50;
-            document.getElementById('possA').value = 50;
-            document.getElementById('daH').value = 0;
-            document.getElementById('daA').value = 0;
-
-            document.getElementById('results').classList.add('d-none');
-            document.getElementById('emptyState').classList.remove('d-none');
-            document.getElementById('matchHeaderBadge').textContent = 'พร้อมคำนวณ';
-            document.getElementById('matchHeaderBadge').className = 'badge bg-secondary';
-            try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
-        };
-
-        // ============================================================
-        // 6) POISSON MATH
-        // ============================================================
-        const factorial = (n) => {
-            if (n === 0 || n === 1) return 1;
-            let res = 1;
-            for (let i = 2; i <= n; i++) res *= i;
-            return res;
-        };
-
-        const poisson = (lambda, k) => {
-            if (lambda <= 0) return k === 0 ? 1 : 0;
-            return (Math.exp(-lambda) * Math.pow(lambda, k)) / factorial(k);
-        };
-
-        const poissonOver = (mean, line) => {
-            if (mean <= 0) return 0;
-            let p = 0;
-            const floor = Math.floor(line);
-            const maxK = Math.ceil(mean + 5 * Math.sqrt(mean)) + 5;
-            for (let k = floor + 1; k <= maxK; k++) p += poisson(mean, k);
-            return Math.min(1, p);
-        };
-
-        // ============================================================
-        // 7) MAIN PREDICTION ENGINE
-        // ============================================================
-        const predict = (forceShow = false) => {
-            const teamHName = document.getElementById('teamH').value.trim() || 'เหย้า';
-            const teamAName = document.getElementById('teamA').value.trim() || 'เยือน';
-
-            const scoreH = parseInt(document.getElementById('scoreH').value) || 0;
-            const scoreA = parseInt(document.getElementById('scoreA').value) || 0;
-            const ahLine = parseFloat(document.getElementById('ahLine').value) || 0;
-            const minute = Math.min(45, Math.max(0, parseInt(document.getElementById('minute').value) || 0));
-            const leagueGoals = parseFloat(document.getElementById('leagueGoals').value) || 2.70;
-
-            const shotsH = parseInt(document.getElementById('shotsH').value) || 0;
-            const shotsA = parseInt(document.getElementById('shotsA').value) || 0;
-            const sotH = parseInt(document.getElementById('sotH').value) || 0;
-            const sotA = parseInt(document.getElementById('sotA').value) || 0;
-            const cornersH = parseInt(document.getElementById('cornersH').value) || 0;
-            const cornersA = parseInt(document.getElementById('cornersA').value) || 0;
-            const redH = parseInt(document.getElementById('redH').value) || 0;
-            const redA = parseInt(document.getElementById('redA').value) || 0;
-
-            const xgHInput = document.getElementById('xgH').value;
-            const xgAInput = document.getElementById('xgA').value;
-            const possH = parseFloat(document.getElementById('possH').value) || 50;
-            const possA = parseFloat(document.getElementById('possA').value) || 50;
-            const daH = parseFloat(document.getElementById('daH').value) || 0;
-            const daA = parseFloat(document.getElementById('daA').value) || 0;
-
-            // --- Base rates from AH ---
-            const total1HExpected = leagueGoals * 0.44;
-            const ahShift = Math.max(-0.32, Math.min(0.32, (-ahLine) * 0.16));
-            const shareH = 0.5 + ahShift;
-            const shareA = 0.5 - ahShift;
-
-            const base1HHome = total1HExpected * shareH;
-            const base1HAway = total1HExpected * shareA;
-
-            const remainingMin = Math.max(0, 45 - minute);
-
-            // --- Live xG blending ---
-            let liveXgH = 0, liveXgA = 0;
-            if (xgHInput !== "" && !isNaN(parseFloat(xgHInput))) {
-                liveXgH = parseFloat(xgHInput);
-                liveXgA = (xgAInput !== "" && !isNaN(parseFloat(xgAInput))) ? parseFloat(xgAInput) : ((sotA * 0.3) + (Math.max(0, shotsA - sotA) * 0.05));
-            } else {
-                liveXgH = (sotH * 0.3) + (Math.max(0, shotsH - sotH) * 0.05);
-                liveXgA = (sotA * 0.3) + (Math.max(0, shotsA - sotA) * 0.05);
-            }
-
-            const liveWeight = Math.min(1, minute / 30);
-
-            let xgRateH = ((base1HHome / 45) * (1 - liveWeight)) + ((liveXgH / Math.max(1, minute)) * liveWeight);
-            let xgRateA = ((base1HAway / 45) * (1 - liveWeight)) + ((liveXgA / Math.max(1, minute)) * liveWeight);
-
-            if (xgRateH <= 0) xgRateH = 0.008;
-            if (xgRateA <= 0) xgRateA = 0.008;
-
-            // --- Dominance multiplier ---
-            let dominanceH = 0.5;
-            if (daH + daA > 0) {
-                dominanceH = (possH / (possH + possA)) * 0.4 + (daH / (daH + daA)) * 0.6;
-            } else if (possH + possA > 0) {
-                dominanceH = possH / (possH + possA);
-            }
-            const domMultiplierH = 1 + (dominanceH - 0.5) * 0.5;
-            const domMultiplierA = 1 + ((1 - dominanceH) - 0.5) * 0.5;
-
-            xgRateH *= domMultiplierH;
-            xgRateA *= domMultiplierA;
-
-            // --- Red card impact ---
-            if (redH > redA) {
-                xgRateA *= 1.22; xgRateH *= 0.82;
-            } else if (redA > redH) {
-                xgRateH *= 1.22; xgRateA *= 0.82;
-            }
-
-            const xgRemH = xgRateH * remainingMin;
-            const xgRemA = xgRateA * remainingMin;
-
-            // --- Full grid (1X2, OU, top scores) ---
-            const maxGoals = 8;
-            let pHome = 0, pDraw = 0, pAway = 0;
-            let over05 = 0, over15 = 0, over25 = 0;
-            let topScoresList = [];
-
-            for (let h = 0; h <= maxGoals; h++) {
-                for (let a = 0; a <= maxGoals; a++) {
-                    const p = poisson(xgRemH, h) * poisson(xgRemA, a);
-                    const totalH = scoreH + h;
-                    const totalA = scoreA + a;
-
-                    if (totalH > totalA) pHome += p;
-                    else if (totalA > totalH) pAway += p;
-                    else pDraw += p;
-
-                    const totalGoals = totalH + totalA;
-                    if (totalGoals > 0.5) over05 += p;
-                    if (totalGoals > 1.5) over15 += p;
-                    if (totalGoals > 2.5) over25 += p;
-
-                    if (p > 0.001) topScoresList.push({ score: `${totalH}-${totalA}`, prob: p });
+    const loadState = () => {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return false;
+            const data = JSON.parse(raw);
+            let any = false;
+            FIELD_IDS.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && data[id] !== undefined && data[id] !== '') {
+                    el.value = data[id];
+                    any = true;
                 }
-            }
-
-            topScoresList.sort((a, b) => b.prob - a.prob);
-            const top3 = topScoresList.slice(0, 3);
-            const sumTop3 = top3.reduce((sum, item) => sum + item.prob, 0);
-
-            // --- NEW: BTTS 1H ---
-            const pHomeScores1H = scoreH >= 1 ? 1 : (1 - Math.exp(-xgRemH));
-            const pAwayScores1H = scoreA >= 1 ? 1 : (1 - Math.exp(-xgRemA));
-            const btts1H = pHomeScores1H * pAwayScores1H;
-
-            // --- NEW: Next Goal (Poisson race) ---
-            const totalRate = xgRateH + xgRateA;
-            let pHomeNext = 0, pAwayNext = 0, pNoMoreGoals = 0;
-            if (totalRate > 0 && remainingMin > 0) {
-                const pAtLeastOne = 1 - Math.exp(-totalRate * remainingMin);
-                pHomeNext = (xgRateH / totalRate) * pAtLeastOne;
-                pAwayNext = (xgRateA / totalRate) * pAtLeastOne;
-                pNoMoreGoals = Math.exp(-totalRate * remainingMin);
-            } else {
-                pNoMoreGoals = 1;
-            }
-
-            // --- Corners ---
-            const totalCurrentCorners = cornersH + cornersA;
-            const base1HTotalCorners = 10.4 * 0.45;
-            const cornerShareH = 0.54 + (ahShift * 0.5);
-            const cornerShareA = 1 - cornerShareH;
-
-            let baseRateH = (base1HTotalCorners / 45) * cornerShareH;
-            let baseRateA = (base1HTotalCorners / 45) * cornerShareA;
-
-            if (minute >= 10) {
-                const w = Math.min(0.8, minute / 45);
-                if (totalCurrentCorners > 0) {
-                    const obsRateH = cornersH / minute;
-                    const obsRateA = cornersA / minute;
-                    baseRateH = (baseRateH * (1 - w)) + (obsRateH * w);
-                    baseRateA = (baseRateA * (1 - w)) + (obsRateA * w);
-                } else {
-                    baseRateH *= (1 - w);
-                    baseRateA *= (1 - w);
-                }
-            }
-
-            baseRateH *= domMultiplierH;
-            baseRateA *= domMultiplierA;
-
-            if (redH > redA) { baseRateA *= 1.25; baseRateH *= 0.85; }
-            else if (redA > redH) { baseRateH *= 1.25; baseRateA *= 0.85; }
-
-            const remCornersH = baseRateH * remainingMin;
-            const remCornersA = baseRateA * remainingMin;
-
-            const expCornersTotal = totalCurrentCorners + remCornersH + remCornersA;
-            const expCornersH = cornersH + remCornersH;
-            const expCornersA = cornersA + remCornersA;
-
-            const co35 = poissonOver(expCornersTotal, 3.5);
-            const co45 = poissonOver(expCornersTotal, 4.5);
-            const co55 = poissonOver(expCornersTotal, 5.5);
-
-            // --- NEW: Confidence Score (0-10) ---
-            let confScore = 0;
-            if (minute > 0) confScore += 2;
-            if (shotsH + shotsA > 0) confScore += 1;
-            if (sotH + sotA > 0) confScore += 1;
-            if (cornersH + cornersA > 0) confScore += 1;
-            if (xgHInput !== '' && xgAInput !== '') confScore += 2;
-            else if (xgHInput !== '' || xgAInput !== '') confScore += 1;
-            if (Math.abs(possH - 50) > 2) confScore += 1;
-            if (daH + daA > 0) confScore += 1;
-            if (ahLine !== 0) confScore += 1;
-            const confidencePct = Math.round(confScore / 10 * 100);
-
-            // --- Update UI ---
-            updateSignalAlert({
-                minute, remainingMin, scoreH, scoreA, ahLine,
-                pHome, pDraw, pAway, over05, over15, over25,
-                expCornersTotal, co45, sotH, sotA, cornersH, cornersA,
-                teamHName, teamAName
             });
+            return any;
+        } catch(e) { return false; }
+    };
 
-            document.getElementById('results').classList.remove('d-none');
-            document.getElementById('emptyState').classList.add('d-none');
+    /* =========================================================
+       MATH
+    ========================================================= */
+    const factorial = (n) => {
+        if (n === 0 || n === 1) return 1;
+        let res = 1;
+        for (let i = 2; i <= n; i++) res *= i;
+        return res;
+    };
 
-            document.getElementById('matchHeaderBadge').textContent = `${teamHName} ${scoreH}-${scoreA} ${teamAName} (${minute}')`;
-            document.getElementById('matchHeaderBadge').className = 'badge bg-info text-dark fw-bold';
+    const poisson = (lambda, k) => {
+        if (lambda <= 0) return k === 0 ? 1 : 0;
+        return (Math.exp(-lambda) * Math.pow(lambda, k)) / factorial(k);
+    };
 
-            document.getElementById('labelHome').textContent = teamHName;
-            document.getElementById('labelAway').textContent = teamAName;
-            document.getElementById('nextGoalLabelH').textContent = teamHName;
-            document.getElementById('nextGoalLabelA').textContent = teamAName;
+    const poissonOver = (mean, line) => {
+        if (mean <= 0) return 0;
+        let p = 0;
+        const floor = Math.floor(line);
+        const maxK = Math.ceil(mean + 5 * Math.sqrt(mean)) + 5;
+        for (let k = floor + 1; k <= maxK; k++) p += poisson(mean, k);
+        return Math.min(1, p);
+    };
 
-            document.getElementById('resHome').textContent = (pHome * 100).toFixed(1) + '%';
-            document.getElementById('resDraw').textContent = (pDraw * 100).toFixed(1) + '%';
-            document.getElementById('resAway').textContent = (pAway * 100).toFixed(1) + '%';
+    /* =========================================================
+       MAIN PREDICT
+    ========================================================= */
+    const predict = (forceShow = false) => {
+        validateInputs();
 
-            const setBar = (id, val) => {
-                document.getElementById(id).textContent = (val * 100).toFixed(1) + '%';
-                document.getElementById(id + 'Bar').style.width = (val * 100) + '%';
-            };
-            setBar('ou05', over05);
-            setBar('ou15', over15);
-            setBar('ou25', over25);
+        const teamHName = document.getElementById('teamH').value.trim() || 'เหย้า';
+        const teamAName = document.getElementById('teamA').value.trim() || 'เยือน';
 
-            // New markets
-            document.getElementById('resBTTS').textContent = (btts1H * 100).toFixed(1) + '%';
-            document.getElementById('resNoMore').textContent = (pNoMoreGoals * 100).toFixed(1) + '%';
-            document.getElementById('resNextH').textContent = (pHomeNext * 100).toFixed(1) + '%';
-            document.getElementById('resNoGoal').textContent = (pNoMoreGoals * 100).toFixed(1) + '%';
-            document.getElementById('resNextA').textContent = (pAwayNext * 100).toFixed(1) + '%';
+        const scoreH = parseInt(document.getElementById('scoreH').value) || 0;
+        const scoreA = parseInt(document.getElementById('scoreA').value) || 0;
+        const ahLine = parseFloat(document.getElementById('ahLine').value) || 0;
+        const minute = Math.min(45, Math.max(0, parseInt(document.getElementById('minute').value) || 0));
+        const leagueGoals = Math.max(0.5, Math.min(6, parseFloat(document.getElementById('leagueGoals').value) || 2.70));
 
-            // Corners
-            document.getElementById('expCornersH').textContent = expCornersH.toFixed(1);
-            document.getElementById('expCornersTotal').textContent = expCornersTotal.toFixed(1);
-            document.getElementById('expCornersA').textContent = expCornersA.toFixed(1);
-            setBar('co35', co35);
-            setBar('co45', co45);
-            setBar('co55', co55);
+        const shotsH = parseInt(document.getElementById('shotsH').value) || 0;
+        const shotsA = parseInt(document.getElementById('shotsA').value) || 0;
+        const sotH = Math.min(shotsH, parseInt(document.getElementById('sotH').value) || 0);
+        const sotA = Math.min(shotsA, parseInt(document.getElementById('sotA').value) || 0);
+        const cornersH = parseInt(document.getElementById('cornersH').value) || 0;
+        const cornersA = parseInt(document.getElementById('cornersA').value) || 0;
+        const redH = parseInt(document.getElementById('redH').value) || 0;
+        const redA = parseInt(document.getElementById('redA').value) || 0;
 
-            // Confidence
-            const confText = document.getElementById('confidenceText');
-            const confBar = document.getElementById('confidenceBar');
-            confText.textContent = confidencePct + '%';
-            confText.style.color = confidencePct >= 70 ? 'var(--accent-green)'
-                                  : confidencePct >= 40 ? 'var(--accent-orange)'
-                                  : 'var(--accent-red)';
-            confBar.style.width = confidencePct + '%';
+        const xgHInput = document.getElementById('xgH').value;
+        const xgAInput = document.getElementById('xgA').value;
+        const possH = Math.max(0, Math.min(100, parseFloat(document.getElementById('possH').value) || 50));
+        const possA = Math.max(0, Math.min(100, parseFloat(document.getElementById('possA').value) || 50));
+        const daH = Math.max(0, parseFloat(document.getElementById('daH').value) || 0);
+        const daA = Math.max(0, parseFloat(document.getElementById('daA').value) || 0);
 
-            // Top 3
-            const topScoresContainer = document.getElementById('topScores');
-            topScoresContainer.innerHTML = '';
-            const colors = ['bg-score-1', 'bg-score-2', 'bg-score-3'];
-            top3.forEach((item, index) => {
-                const normalizedProb = sumTop3 > 0 ? (item.prob / sumTop3) * 100 : 0;
-                topScoresContainer.innerHTML += `
-                    <div class="col-4">
-                        <div class="card border-0 ${colors[index]}">
-                            <div class="card-body p-2">
-                                <h4 class="mb-1 fw-bold">${item.score}</h4>
-                                <div class="fw-bold fs-5">${normalizedProb.toFixed(1)}%</div>
-                                <small style="font-size:0.65rem; opacity:0.85">(จริง: ${(item.prob*100).toFixed(1)}%)</small>
-                            </div>
+        /* ===== Baseline model ===== */
+        const total1HExpected = leagueGoals * 0.44;
+        const ahShift = Math.max(-0.32, Math.min(0.32, (-ahLine) * 0.16));
+        const shareH = 0.5 + ahShift;
+        const shareA = 0.5 - ahShift;
+        const base1HHome = total1HExpected * shareH;
+        const base1HAway = total1HExpected * shareA;
+        const remainingMin = Math.max(0, 45 - minute);
+
+        /* ===== Live xG ===== */
+        let liveXgH, liveXgA;
+        if (xgHInput !== "" && !isNaN(parseFloat(xgHInput))) {
+            liveXgH = Math.max(0, parseFloat(xgHInput));
+            liveXgA = (xgAInput !== "" && !isNaN(parseFloat(xgAInput)))
+                ? Math.max(0, parseFloat(xgAInput))
+                : ((sotA * 0.3) + (Math.max(0, shotsA - sotA) * 0.05));
+        } else {
+            liveXgH = (sotH * 0.3) + (Math.max(0, shotsH - sotH) * 0.05);
+            liveXgA = (sotA * 0.3) + (Math.max(0, shotsA - sotA) * 0.05);
+        }
+
+        const liveWeight = Math.min(1, minute / 30);
+        let xgRateH = ((base1HHome / 45) * (1 - liveWeight)) + ((liveXgH / Math.max(1, minute)) * liveWeight);
+        let xgRateA = ((base1HAway / 45) * (1 - liveWeight)) + ((liveXgA / Math.max(1, minute)) * liveWeight);
+        if (xgRateH <= 0) xgRateH = 0.008;
+        if (xgRateA <= 0) xgRateA = 0.008;
+
+        /* ===== Dominance ===== */
+        let dominanceH = 0.5;
+        if (daH + daA > 0) {
+            dominanceH = (possH / Math.max(1, possH + possA)) * 0.4 + (daH / (daH + daA)) * 0.6;
+        } else if (possH + possA > 0) {
+            dominanceH = possH / (possH + possA);
+        }
+        const domMultiplierH = 1 + (dominanceH - 0.5) * 0.5;
+        const domMultiplierA = 1 + ((1 - dominanceH) - 0.5) * 0.5;
+        xgRateH *= domMultiplierH;
+        xgRateA *= domMultiplierA;
+
+        /* ===== Red cards ===== */
+        if (redH > redA) { xgRateA *= 1.22; xgRateH *= 0.82; }
+        else if (redA > redH) { xgRateH *= 1.22; xgRateA *= 0.82; }
+
+        const xgRemH = xgRateH * remainingMin;
+        const xgRemA = xgRateA * remainingMin;
+
+        /* ===== Score matrix ===== */
+        const maxGoals = 8;
+        let pHome = 0, pDraw = 0, pAway = 0;
+        let over05 = 0, over15 = 0, over25 = 0;
+        const topScoresList = [];
+
+        for (let h = 0; h <= maxGoals; h++) {
+            for (let a = 0; a <= maxGoals; a++) {
+                const p = poisson(xgRemH, h) * poisson(xgRemA, a);
+                const totalH = scoreH + h;
+                const totalA = scoreA + a;
+
+                if (totalH > totalA) pHome += p;
+                else if (totalA > totalH) pAway += p;
+                else pDraw += p;
+
+                const totalGoals = totalH + totalA;
+                if (totalGoals > 0.5) over05 += p;
+                if (totalGoals > 1.5) over15 += p;
+                if (totalGoals > 2.5) over25 += p;
+
+                if (p > 0.0005) topScoresList.push({ score: `${totalH}-${totalA}`, prob: p });
+            }
+        }
+
+        topScoresList.sort((a, b) => b.prob - a.prob);
+        const top3 = topScoresList.slice(0, 3);
+        const sumTop3 = top3.reduce((s, item) => s + item.prob, 0);
+
+        /* ===== NEW: Next goal ===== */
+        const pNoMoreGoal = Math.exp(-(xgRemH + xgRemA));
+        const totalNextRate = xgRateH + xgRateA;
+        let pNextHome = 0, pNextAway = 0;
+        if (totalNextRate > 0) {
+            pNextHome = (xgRateH / totalNextRate) * (1 - pNoMoreGoal);
+            pNextAway = (xgRateA / totalNextRate) * (1 - pNoMoreGoal);
+        }
+
+        /* ===== NEW: BTTS 1H ===== */
+        const alreadyHomeScored = scoreH >= 1;
+        const alreadyAwayScored = scoreA >= 1;
+        let btts1H = 0;
+        const pHomeScoresRem = 1 - Math.exp(-xgRemH);
+        const pAwayScoresRem = 1 - Math.exp(-xgRemA);
+        if (alreadyHomeScored && alreadyAwayScored) btts1H = 1;
+        else if (alreadyHomeScored) btts1H = pAwayScoresRem;
+        else if (alreadyAwayScored) btts1H = pHomeScoresRem;
+        else btts1H = pHomeScoresRem * pAwayScoresRem;
+
+        /* ===== NEW: Pressure Index ===== */
+        const pRawH = sotH * 3 + Math.max(0, shotsH - sotH) * 1 + cornersH * 0.5 + daH * 0.02;
+        const pRawA = sotA * 3 + Math.max(0, shotsA - sotA) * 1 + cornersA * 0.5 + daA * 0.02;
+        const pressureSum = pRawH + pRawA;
+        const pressureH = pressureSum > 0 ? pRawH / pressureSum : 0.5;
+        const pressureA = 1 - pressureH;
+
+        /* ===== Corners ===== */
+        const totalCurrentCorners = cornersH + cornersA;
+        const base1HTotalCorners = 10.4 * 0.45;
+        const cornerShareH = 0.54 + (ahShift * 0.5);
+        const cornerShareA = 1 - cornerShareH;
+
+        let baseRateH = (base1HTotalCorners / 45) * cornerShareH;
+        let baseRateA = (base1HTotalCorners / 45) * cornerShareA;
+
+        if (minute >= 10) {
+            const w = Math.min(0.8, minute / 45);
+            if (totalCurrentCorners > 0) {
+                const obsRateH = cornersH / minute;
+                const obsRateA = cornersA / minute;
+                baseRateH = (baseRateH * (1 - w)) + (obsRateH * w);
+                baseRateA = (baseRateA * (1 - w)) + (obsRateA * w);
+            } else {
+                baseRateH *= (1 - w);
+                baseRateA *= (1 - w);
+            }
+        }
+
+        baseRateH *= domMultiplierH;
+        baseRateA *= domMultiplierA;
+
+        if (redH > redA) { baseRateA *= 1.25; baseRateH *= 0.85; }
+        else if (redA > redH) { baseRateH *= 1.25; baseRateA *= 0.85; }
+
+        const remCornersH = baseRateH * remainingMin;
+        const remCornersA = baseRateA * remainingMin;
+
+        const expCornersTotal = totalCurrentCorners + remCornersH + remCornersA;
+        const expCornersH = cornersH + remCornersH;
+        const expCornersA = cornersA + remCornersA;
+
+        const co35 = poissonOver(expCornersTotal, 3.5);
+        const co45 = poissonOver(expCornersTotal, 4.5);
+        const co55 = poissonOver(expCornersTotal, 5.5);
+
+        /* ===== Render signals ===== */
+        updateSignals({
+            minute, remainingMin, scoreH, scoreA, ahLine,
+            pHome, pDraw, pAway, over05, over15, over25,
+            expCornersTotal, co45, sotH, sotA, cornersH, cornersA,
+            teamHName, teamAName
+        });
+
+        /* ===== Render results ===== */
+        document.getElementById('results').classList.remove('d-none');
+        document.getElementById('emptyState').classList.add('d-none');
+
+        const headerBadge = document.getElementById('matchHeaderBadge');
+        headerBadge.textContent = `${teamHName} ${scoreH}-${scoreA} ${teamAName} (${minute}')`;
+        headerBadge.className = 'badge bg-info text-dark fw-bold';
+
+        document.getElementById('labelHome').textContent = teamHName;
+        document.getElementById('labelAway').textContent = teamAName;
+
+        document.getElementById('resHome').textContent = (pHome * 100).toFixed(1) + '%';
+        document.getElementById('resDraw').textContent = (pDraw * 100).toFixed(1) + '%';
+        document.getElementById('resAway').textContent = (pAway * 100).toFixed(1) + '%';
+
+        /* NEW panels */
+        document.getElementById('nextHome').textContent = (pNextHome * 100).toFixed(1) + '%';
+        document.getElementById('nextAway').textContent = (pNextAway * 100).toFixed(1) + '%';
+        document.getElementById('nextNone').textContent = (pNoMoreGoal * 100).toFixed(1) + '%';
+
+        document.getElementById('btts1h').textContent = (btts1H * 100).toFixed(1) + '%';
+        document.getElementById('btts1hBar').style.width = (btts1H * 100) + '%';
+
+        document.getElementById('pressureBarH').style.width = (pressureH * 100) + '%';
+        document.getElementById('pressureBarA').style.width = (pressureA * 100) + '%';
+        document.getElementById('pressureLabel').textContent =
+            `${(pressureH * 100).toFixed(0)}% / ${(pressureA * 100).toFixed(0)}%`;
+        document.getElementById('pressureHLabel').textContent = `${teamHName} ${(pressureH * 100).toFixed(0)}%`;
+        document.getElementById('pressureALabel').textContent = `${teamAName} ${(pressureA * 100).toFixed(0)}%`;
+
+        document.getElementById('xghRem').textContent = xgRemH.toFixed(2);
+        document.getElementById('xgaRem').textContent = xgRemA.toFixed(2);
+        document.getElementById('xgTotalRem').textContent = (xgRemH + xgRemA).toFixed(2);
+
+        const setBar = (id, val) => {
+            document.getElementById(id).textContent = (val * 100).toFixed(1) + '%';
+            document.getElementById(id + 'Bar').style.width = (val * 100) + '%';
+        };
+        setBar('ou05', over05);
+        setBar('ou15', over15);
+        setBar('ou25', over25);
+
+        document.getElementById('expCornersH').textContent = expCornersH.toFixed(1);
+        document.getElementById('expCornersTotal').textContent = expCornersTotal.toFixed(1);
+        document.getElementById('expCornersA').textContent = expCornersA.toFixed(1);
+
+        setBar('co35', co35);
+        setBar('co45', co45);
+        setBar('co55', co55);
+
+        const topScoresContainer = document.getElementById('topScores');
+        topScoresContainer.innerHTML = '';
+        const colors = ['bg-score-1', 'bg-score-2', 'bg-score-3'];
+        top3.forEach((item, index) => {
+            const normProb = sumTop3 > 0 ? (item.prob / sumTop3) * 100 : 0;
+            topScoresContainer.innerHTML += `
+                <div class="col-4">
+                    <div class="card border-0 ${colors[index]}">
+                        <div class="card-body p-2">
+                            <h4 class="mb-1 fw-bold">${item.score}</h4>
+                            <div class="fw-bold fs-5">${normProb.toFixed(1)}%</div>
+                            <small style="font-size:0.62rem; opacity:0.85">(จริง: ${(item.prob*100).toFixed(1)}%)</small>
                         </div>
                     </div>
-                `;
-            });
-
-            saveState();
-        };
-
-        // ============================================================
-        // 8) SIGNAL GENERATOR
-        // ============================================================
-        const updateSignalAlert = (data) => {
-            const box = document.getElementById('signalBox');
-            const badge = document.getElementById('signalBadge');
-            const timeEl = document.getElementById('signalTime');
-            const titleEl = document.getElementById('signalTitle');
-            const descEl = document.getElementById('signalDesc');
-
-            const totalGoals = data.scoreH + data.scoreA;
-            const totalSot = data.sotH + data.sotA;
-            const totalCorners = data.cornersH + data.cornersA;
-
-            timeEl.textContent = `นาทีที่ ${data.minute}' (เหลือ ${data.remainingMin}')`;
-            box.className = 'signal-box';
-
-            if (data.minute >= 45) {
-                badge.className = 'signal-badge bg-secondary text-white';
-                badge.textContent = '⏹️ จบครึ่งแรก';
-                titleEl.textContent = `สรุปผลครึ่งแรก: ${data.teamHName} ${data.scoreH} - ${data.scoreA} ${data.teamAName}`;
-                descEl.textContent = 'หมดเวลาการแข่งขันครึ่งแรก กดปุ่ม "ล้างค่า" เพื่อเริ่มวิเคราะห์คู่ถัดไป';
-                return;
-            }
-
-            if (totalGoals === 0 && data.over05 >= 0.65) {
-                box.classList.add('signal-hot');
-                badge.className = 'signal-badge bg-success text-white';
-                badge.textContent = '🔥 สัญญาณประตูแรก (Over 0.5 1H • เข้าไว)';
-                titleEl.textContent = `ลุ้นสกอร์แรกครึ่งแรก โอกาส ${(data.over05 * 100).toFixed(1)}%`;
-                descEl.textContent = `รูปเกมเริ่มมีจังหวะเข้าทำ (เข้ากรอบรวม ${totalSot} ครั้ง, เตะมุม ${totalCorners} ครั้ง)`;
-                return;
-            }
-
-            if (totalGoals === 1 && data.over15 >= 0.62) {
-                box.classList.add('signal-hot');
-                badge.className = 'signal-badge bg-success text-white';
-                badge.textContent = '⚡ สัญญาณสกอร์ไหล (Over 1.5 1H • เข้าไว)';
-                titleEl.textContent = `ลุ้นประตูที่ 2 ในครึ่งแรก โอกาส ${(data.over15 * 100).toFixed(1)}%`;
-                descEl.textContent = `คาดการณ์เตะมุมรวม ${data.expCornersTotal.toFixed(1)} ลูก มีโอกาสบวกสกอร์เพิ่ม`;
-                return;
-            }
-
-            if (data.co45 >= 0.65 && data.remainingMin >= 8) {
-                box.classList.add('signal-warn');
-                badge.className = 'signal-badge bg-warning text-dark';
-                badge.textContent = '🚩 สัญญาณเตะมุมสูง (Corners Alert • เข้าไว)';
-                titleEl.textContent = `เกมริมเส้นดุดัน คาดเตะมุมรวมครึ่งแรก ${data.expCornersTotal.toFixed(1)} ลูก`;
-                descEl.textContent = `โอกาสเกิดเตะมุมสูงกว่า 4.5 ลูก อยู่ที่ ${(data.co45 * 100).toFixed(1)}%`;
-                return;
-            }
-
-            if (data.pHome >= 0.60 || data.pAway >= 0.60) {
-                const favTeam = data.pHome > data.pAway ? data.teamHName : data.teamAName;
-                const favProb = Math.max(data.pHome, data.pAway) * 100;
-                box.classList.add('signal-hot');
-                badge.className = 'signal-badge bg-info text-dark';
-                badge.textContent = '👑 ทีมต่อเหนือกว่าชัดเจน (1X2 1H)';
-                titleEl.textContent = `${favTeam} คุมเกมได้เปรียบ (โอกาสชนะครึ่งแรก ${favProb.toFixed(1)}%)`;
-                descEl.textContent = `พิจารณาจากราคาต่อรอง (${data.ahLine}) ร่วมกับรูปเกมในสนาม`;
-                return;
-            }
-
-            if (data.minute >= 30 && totalGoals === 0 && data.over05 < 0.50) {
-                box.classList.add('signal-warn');
-                badge.className = 'signal-badge bg-danger text-white';
-                badge.textContent = '🛡️ เกมรับเหนียวแน่น (Under 0.5 Trend)';
-                titleEl.textContent = `แนวโน้มจบครึ่งแรกแบบไร้สกอร์ (${(data.pDraw * 100).toFixed(1)}%)`;
-                descEl.textContent = `เหลือเวลาอีก ${data.remainingMin} นาที โอกาสเกิดประตูยังต่ำกว่า 50%`;
-                return;
-            }
-
-            badge.className = 'signal-badge bg-info text-dark';
-            badge.textContent = '📡 เกมสูสี / รอจังหวะชัดเจน';
-            titleEl.textContent = `โอกาสออกเสมอครึ่งแรก ${(data.pDraw * 100).toFixed(1)}% | สูง 0.5 ${(data.over05 * 100).toFixed(1)}%`;
-            descEl.textContent = `อัปเดตสถิติการยิงเข้ากรอบหรือลูกเตะมุมระหว่างเกมเพิ่มเติม`;
-        };
-
-        // ============================================================
-        // 9) EXPORT (copy to clipboard)
-        // ============================================================
-        const showToast = (msg) => {
-            const t = document.createElement('div');
-            t.textContent = msg;
-            t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);' +
-                'background:rgba(16,185,129,0.95);color:white;padding:10px 20px;border-radius:10px;' +
-                'font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.4);font-size:0.9rem;';
-            document.body.appendChild(t);
-            setTimeout(() => {
-                t.style.transition = 'opacity 0.3s';
-                t.style.opacity = '0';
-                setTimeout(() => t.remove(), 300);
-            }, 1800);
-        };
-
-        const copyText = (text) => {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text).then(() => showToast('📋 คัดลอกผลแล้ว!')).catch(() => fallbackCopy(text));
-            } else {
-                fallbackCopy(text);
-            }
-        };
-
-        const fallbackCopy = (text) => {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.cssText = 'position:fixed;opacity:0;';
-            document.body.appendChild(ta);
-            ta.select();
-            try { document.execCommand('copy'); showToast('📋 คัดลอกผลแล้ว!'); } catch(e) { showToast('❌ คัดลอกไม่สำเร็จ'); }
-            document.body.removeChild(ta);
-        };
-
-        const exportPrediction = () => {
-            const resultsEl = document.getElementById('results');
-            if (resultsEl.classList.contains('d-none')) {
-                showToast('⚠️ กรุณาประมวลผลก่อน'); return;
-            }
-            const get = (id) => document.getElementById(id)?.textContent || '-';
-            const teamH = document.getElementById('teamH').value.trim() || 'เหย้า';
-            const teamA = document.getElementById('teamA').value.trim() || 'เยือน';
-            const scoreH = document.getElementById('scoreH').value || '0';
-            const scoreA = document.getElementById('scoreA').value || '0';
-            const minute = document.getElementById('minute').value || '0';
-
-            const topScoreEls = document.querySelectorAll('#topScores .card-body h4');
-            const topScores = Array.from(topScoreEls).map((el, i) => {
-                const pct = el.parentElement.querySelector('.fs-5')?.textContent || '';
-                return `  ${i+1}. ${el.textContent} (${pct})`;
-            }).join('\n');
-
-            const text = `⚽ 1H PREDICTOR PRO - JackZaa AI
-━━━━━━━━━━━━━━━━━━━━━━━
-🏟️ ${teamH} ${scoreH}-${scoreA} ${teamA} (${minute}')
-━━━━━━━━━━━━━━━━━━━━━━━
-📊 ผลการแข่งขัน (1X2 ครึ่งแรก)
-  🏠 ${teamH}: ${get('resHome')}
-  ⚖️ เสมอ: ${get('resDraw')}
-  ✈️ ${teamA}: ${get('resAway')}
-━━━━━━━━━━━━━━━━━━━━━━━
-⚽ ประตูรวม (Over)
-  สูง 0.5: ${get('ou05')}
-  สูง 1.5: ${get('ou15')}
-  สูง 2.5: ${get('ou25')}
-━━━━━━━━━━━━━━━━━━━━━━━
-🎯 ตลาดเสริม
-  BTTS ครึ่งแรก: ${get('resBTTS')}
-  ประตูถัดไป - ${teamH}: ${get('resNextH')}
-  ประตูถัดไป - ไม่มี: ${get('resNoGoal')}
-  ประตูถัดไป - ${teamA}: ${get('resNextA')}
-━━━━━━━━━━━━━━━━━━━━━━━
-🚩 ลูกเตะมุม
-  คาดรวม: ${get('expCornersTotal')} ลูก
-  สูง 3.5: ${get('co35')}
-  สูง 4.5: ${get('co45')}
-  สูง 5.5: ${get('co55')}
-━━━━━━━━━━━━━━━━━━━━━━━
-🏆 สกอร์ที่เป็นไปได้สูงสุด
-${topScores}
-━━━━━━━━━━━━━━━━━━━━━━━
-📡 สัญญาณ: ${get('signalTitle')}
-━━━━━━━━━━━━━━━━━━━━━━━
-Generated by JackZaa AI • ${new Date().toLocaleString('th-TH')}`;
-
-            copyText(text);
-        };
-
-        // ============================================================
-        // 10) KEYBOARD SHORTCUTS
-        // ============================================================
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && e.target.matches('input[type="text"], input[type="number"]')) {
-                e.preventDefault();
-                predict(true);
-            }
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                exportPrediction();
-            }
+                </div>`;
         });
 
-        // ============================================================
-        // 11) INIT
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.auto-calc').forEach(el => {
-                el.addEventListener('input', () => schedulePredict());
-                el.addEventListener('change', () => schedulePredict());
+        saveState();
+    };
+
+    /* =========================================================
+       SIGNAL ENGINE (Multi-signal, priority-based)
+    ========================================================= */
+    const updateSignals = (d) => {
+        const container = document.getElementById('signalsContainer');
+        const totalGoals = d.scoreH + d.scoreA;
+        const totalSot = d.sotH + d.sotA;
+        const totalCorners = d.cornersH + d.cornersA;
+        const signals = [];
+
+        /* Full-time */
+        if (d.minute >= 45) {
+            container.innerHTML = `
+                <div class="signal-card info">
+                    <div class="sig-badge bg-secondary text-white">⏹️ จบครึ่งแรก</div>
+                    <div class="sig-title">สรุป: ${d.teamHName} ${d.scoreH} - ${d.scoreA} ${d.teamAName}</div>
+                    <div class="sig-desc">หมดเวลาครึ่งแรก กด "ล้างค่า" เพื่อเริ่มวิเคราะห์คู่ถัดไป</div>
+                </div>`;
+            lastSignalSignature = 'FT';
+            return;
+        }
+
+        /* A: Over 0.5 (ประตูแรก) */
+        if (totalGoals === 0 && d.over05 >= 0.65) {
+            signals.push({
+                type: 'hot', icon: '🔥', badge: 'ประตูแรก (Over 0.5 • เข้าไว)',
+                title: `ลุ้นสกอร์แรกครึ่งแรก โอกาส ${(d.over05 * 100).toFixed(1)}%`,
+                desc: `เข้ากรอบรวม ${totalSot} ครั้ง • เตะมุม ${totalCorners} ครั้ง • จังหวะเข้าทำเริ่มชัด`,
+                conf: Math.round(Math.min(95, d.over05 * 100 + 5))
             });
-            // Restore saved state
-            if (restoreState()) {
-                // ถ้ามีข้อมูลบันทึกไว้ ให้คำนวณทันที
-                predict(false);
-            }
+        }
+
+        /* B: Over 1.5 (สกอร์ไหล) */
+        if (totalGoals === 1 && d.over15 >= 0.62) {
+            signals.push({
+                type: 'hot', icon: '⚡', badge: 'สกอร์ไหล (Over 1.5 • เข้าไว)',
+                title: `ลุ้นประตูที่ 2 ครึ่งแรก โอกาส ${(d.over15 * 100).toFixed(1)}%`,
+                desc: `คาดการณ์เตะมุมรวม ${d.expCornersTotal.toFixed(1)} ลูก • เกมยังเปิดแลกกัน`,
+                conf: Math.round(Math.min(95, d.over15 * 100 + 5))
+            });
+        }
+
+        /* C: Corners Over 4.5 */
+        if (d.co45 >= 0.65 && d.remainingMin >= 8) {
+            signals.push({
+                type: 'warn', icon: '🚩', badge: 'เตะมุมสูง (Corners • เข้าไว)',
+                title: `คาดเตะมุมรวม ${d.expCornersTotal.toFixed(1)} ลูก (โอกาส >4.5 = ${(d.co45 * 100).toFixed(1)}%)`,
+                desc: `เหมาะเข้าตลาดลูกเตะมุมครึ่งแรก เหลือเวลา ${d.remainingMin} นาที`,
+                conf: Math.round(Math.min(90, d.co45 * 100))
+            });
+        }
+
+        /* D: Strong favorite */
+        if (d.pHome >= 0.60 || d.pAway >= 0.60) {
+            const favTeam = d.pHome > d.pAway ? d.teamHName : d.teamAName;
+            const favProb = Math.max(d.pHome, d.pAway) * 100;
+            signals.push({
+                type: 'hot', icon: '👑', badge: 'ทีมต่อเหนือชัดเจน (1X2)',
+                title: `${favTeam} คุมเกม (โอกาสชนะครึ่งแรก ${favProb.toFixed(1)}%)`,
+                desc: `ราคาต่อรอง (${d.ahLine}) + รูปเกมชี้ ${favTeam} มีแนวโน้มขึ้นนำ`,
+                conf: Math.round(Math.min(92, favProb))
+            });
+        }
+
+        /* E: Under trend */
+        if (d.minute >= 30 && totalGoals === 0 && d.over05 < 0.50) {
+            signals.push({
+                type: 'warn', icon: '🛡️', badge: 'เกมรับเหนียว (Under 0.5)',
+                title: `แนวโน้มเสมอครึ่งแรก ${(d.pDraw * 100).toFixed(1)}%`,
+                desc: `เหลือ ${d.remainingMin} นาที ประตูยังต่ำกว่า 50% • ชะลอการลงทุนสกอร์สูง`,
+                conf: Math.round(Math.min(85, (1 - d.over05) * 100))
+            });
+        }
+
+        /* Fallback: neutral info */
+        if (signals.length === 0) {
+            signals.push({
+                type: 'info', icon: '📡', badge: 'เกมสูสี / รอจังหวะ',
+                title: `เสมอ ${(d.pDraw * 100).toFixed(1)}% | สูง 0.5 = ${(d.over05 * 100).toFixed(1)}%`,
+                desc: `อัปเดตสถิติเพิ่ม (ยิง/เข้ากรอบ/เตะมุม) เพื่อเพิ่มความแม่นยำ`,
+                conf: 0
+            });
+        }
+
+        const signature = signals.map(s => s.badge).join('|');
+        if (signature !== lastSignalSignature && signals.some(s => s.type === 'hot' || s.type === 'warn')) {
+            playBeep();
+        }
+        lastSignalSignature = signature;
+
+        container.innerHTML = signals.map(s => {
+            const badgeClass = s.type === 'hot' ? 'bg-success text-white'
+                             : s.type === 'warn' ? 'bg-warning text-dark'
+                             : 'bg-info text-dark';
+            const confHtml = s.conf > 0
+                ? `<span class="sig-conf">CONF ${s.conf}%</span>` : '';
+            return `
+                <div class="signal-card ${s.type}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="sig-badge ${badgeClass}">${s.icon || '📌'} ${s.badge}</div>
+                        ${confHtml}
+                    </div>
+                    <div class="sig-title">${s.title}</div>
+                    <div class="sig-desc">${s.desc}</div>
+                </div>`;
+        }).join('');
+    };
+
+    /* =========================================================
+       COPY RESULT
+    ========================================================= */
+    const copyResult = () => {
+        const h = document.getElementById('labelHome').textContent;
+        const a = document.getElementById('labelAway').textContent;
+        const badge = document.getElementById('matchHeaderBadge').textContent;
+        const txt = [
+            `⚽ 1H Predictor Pro — ${badge}`,
+            `───────────────`,
+            `1X2:   ${h} ${document.getElementById('resHome').textContent}  |  เสมอ ${document.getElementById('resDraw').textContent}  |  ${a} ${document.getElementById('resAway').textContent}`,
+            `O/U:   >0.5 ${document.getElementById('ou05').textContent}  |  >1.5 ${document.getElementById('ou15').textContent}  |  >2.5 ${document.getElementById('ou25').textContent}`,
+            `BTTS 1H: ${document.getElementById('btts1h').textContent}`,
+            `Corners: Total ${document.getElementById('expCornersTotal').textContent} (>4.5 = ${document.getElementById('co45').textContent})`,
+            `Next Goal: H ${document.getElementById('nextHome').textContent} | A ${document.getElementById('nextAway').textContent} | None ${document.getElementById('nextNone').textContent}`,
+            `Model xG (rem): H ${document.getElementById('xghRem').textContent} | A ${document.getElementById('xgaRem').textContent}`,
+            `────────────────`,
+            `Powered by JackZaa AI`
+        ].join('\n');
+        navigator.clipboard?.writeText(txt).then(() => {
+            const btn = event.currentTarget;
+            const old = btn.textContent;
+            btn.textContent = '✅';
+            setTimeout(() => btn.textContent = old, 1200);
+        }).catch(() => alert('คัดลอกไม่สำเร็จ'));
+    };
+
+    /* =========================================================
+       EVENT WIRING
+    ========================================================= */
+    document.addEventListener('DOMContentLoaded', () => {
+        // Debounced auto-calc (100ms)
+        document.querySelectorAll('.auto-calc').forEach(el => {
+            el.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => predict(false), 100);
+            });
+            el.addEventListener('change', () => predict(false));
         });
+
+        // Restore state
+        if (loadState()) {
+            updateAhLabel();
+            predict(false);
+        }
+    });
+
+    // Save on unload as safety
+    window.addEventListener('beforeunload', saveState);
     </script>
 </body>
 </html>
