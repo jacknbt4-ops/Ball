@@ -55,9 +55,7 @@
             font-size: 1rem;
         }
 
-        .card-body {
-            padding: 20px;
-        }
+        .card-body { padding: 20px; }
 
         .form-label {
             color: var(--text-muted);
@@ -82,9 +80,7 @@
             color: white;
         }
 
-        .form-control::placeholder {
-            color: #64748b;
-        }
+        .form-control::placeholder { color: #64748b; }
 
         .stepper-group {
             display: flex;
@@ -116,14 +112,8 @@
             padding: 0;
         }
 
-        .btn-step:hover {
-            background: rgba(56, 189, 248, 0.2);
-            color: var(--accent-blue);
-        }
-
-        .btn-step:active {
-            background: rgba(56, 189, 248, 0.4);
-        }
+        .btn-step:hover { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); }
+        .btn-step:active { background: rgba(56, 189, 248, 0.4); }
 
         .stepper-input {
             border: none !important;
@@ -275,7 +265,7 @@
             justify-content: center;
             gap: 10px;
         }
-        
+
         .section-title::before, .section-title::after {
             content: "";
             flex: 1;
@@ -315,8 +305,9 @@
             </h2>
             <small class="text-muted">Live First-Half Analytics Engine • Developed by <span class="text-info fw-semibold">JackZaa AI</span></small>
         </div>
-        
+
         <div class="row">
+            <!-- ========== LEFT: INPUTS ========== -->
             <div class="col-lg-5 mb-4">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
@@ -356,7 +347,7 @@
 
                         <div class="mb-3 p-2 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-25">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <label class="form-label text-warning fw-bold mb-0">⚖️ ราคาต่อรอง (Asian Handicap เต็มเวลา)</label>
+                                <label class="form-label text-warning fw-bold mb-0">⚖️ ราคาต่อรอง (AH เต็มเวลา)</label>
                                 <span id="ahLabel" class="badge bg-warning text-dark" style="font-size: 0.7rem;">เสมอ (0.0)</span>
                             </div>
                             <select id="ahLine" class="form-select border-warning text-warning fw-bold auto-calc" onchange="updateAhLabel()">
@@ -382,7 +373,10 @@
 
                         <div class="row mb-3 g-2">
                             <div class="col-6">
-                                <label class="form-label">⏱️ นาทีที่แข่ง (0-45)</label>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <label class="form-label mb-0">⏱️ นาที (0-45)</label>
+                                    <button type="button" class="btn btn-sm btn-outline-info py-0 px-2" id="timerBtn" onclick="toggleTimer()" style="font-size:0.62rem; line-height:1.5;" title="จับเวลาจริง (60 วิ/นาที)">▶️</button>
+                                </div>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('minute', -1)">−</button>
                                     <input type="number" id="minute" class="form-control stepper-input auto-calc" value="0" min="0" max="45">
@@ -390,11 +384,11 @@
                                 </div>
                             </div>
                             <div class="col-6">
-                                <label class="form-label">⚽ เฉลี่ยประตู/เกม (ลีก)</label>
+                                <label class="form-label">⚽ เฉลี่ยประตู/เกม</label>
                                 <div class="stepper-group">
-                                    <button type="button" class="btn-step" onclick="stepVal('leagueGoals', -0.1, 1)">−</button>
+                                    <button type="button" class="btn-step" onclick="stepVal('leagueGoals', -0.1, 2)">−</button>
                                     <input type="number" id="leagueGoals" class="form-control stepper-input auto-calc" value="2.70" step="0.1" min="0.5">
-                                    <button type="button" class="btn-step" onclick="stepVal('leagueGoals', 0.1, 1)">+</button>
+                                    <button type="button" class="btn-step" onclick="stepVal('leagueGoals', 0.1, 2)">+</button>
                                 </div>
                             </div>
                         </div>
@@ -536,11 +530,15 @@
                 </div>
             </div>
 
+            <!-- ========== RIGHT: RESULTS ========== -->
             <div class="col-lg-7">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5>📊 ผลการคาดการณ์ (ครึ่งแรก)</h5>
-                        <span id="matchHeaderBadge" class="badge bg-secondary" style="font-size: 0.72rem;">พร้อมคำนวณ</span>
+                        <div class="d-flex gap-2 align-items-center">
+                            <button type="button" class="btn btn-sm btn-outline-info py-0 px-2" onclick="exportPrediction()" style="font-size:0.68rem;" title="คัดลอกผลเป็นข้อความ">📋</button>
+                            <span id="matchHeaderBadge" class="badge bg-secondary" style="font-size: 0.72rem;">พร้อมคำนวณ</span>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div id="results" class="d-none fade-in">
@@ -551,6 +549,16 @@
                                 </div>
                                 <div id="signalTitle" class="fw-bold fs-6 text-white mb-1">กำลังประมวลผลแนวโน้ม...</div>
                                 <div id="signalDesc" class="small text-light opacity-75">กรอกข้อมูลสถิติหรือราคาต่อรองเพื่อดูสัญญาณเข้าทำ</div>
+                                <!-- NEW: Confidence Meter -->
+                                <div class="mt-2 pt-2" style="border-top: 1px solid rgba(255,255,255,0.12);">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="text-muted" style="font-size:0.7rem;">📊 ความมั่นใจของข้อมูล (Confidence)</span>
+                                        <span id="confidenceText" class="fw-bold" style="font-size:0.8rem;">0%</span>
+                                    </div>
+                                    <div class="progress" style="height: 5px !important;">
+                                        <div class="progress-bar" id="confidenceBar" style="width: 0%; background: linear-gradient(90deg, #dc2626, #fbbf24, #34d399);"></div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="section-title">ผลการแข่งขัน (1X2)</div>
@@ -587,6 +595,43 @@
                             <div class="mb-4">
                                 <div class="d-flex justify-content-between fw-bold small"><span>สูง 2.5</span> <span id="ou25" class="text-danger">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-danger" id="ou25Bar" style="width: 0%"></div></div>
+                            </div>
+
+                            <!-- NEW: BTTS + Next Goal -->
+                            <div class="section-title">🎯 ตลาดเสริม (BTTS & Next Goal)</div>
+                            <div class="row text-center mb-3 g-2">
+                                <div class="col-6">
+                                    <div class="result-card">
+                                        <div class="text-muted small fw-bold">BTTS ครึ่งแรก</div>
+                                        <div class="prob-text" id="resBTTS" style="color: var(--accent-orange);">0%</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="result-card">
+                                        <div class="text-muted small fw-bold">ไม่มีประตูเพิ่ม</div>
+                                        <div class="prob-text" id="resNoMore" style="color: var(--text-muted);">0%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row text-center mb-4 g-2">
+                                <div class="col-4">
+                                    <div class="result-card">
+                                        <div class="text-muted small fw-bold" id="nextGoalLabelH">เหย้า</div>
+                                        <div class="prob-text bg-home" id="resNextH">0%</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="result-card">
+                                        <div class="text-muted small fw-bold">ไม่มีประตู</div>
+                                        <div class="prob-text" style="color: var(--text-muted);" id="resNoGoal">0%</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="result-card">
+                                        <div class="text-muted small fw-bold" id="nextGoalLabelA">เยือน</div>
+                                        <div class="prob-text bg-away" id="resNextA">0%</div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="section-title">🚩 วิเคราะห์ลูกเตะมุม</div>
@@ -629,7 +674,7 @@
                                 * ผลรวมของ Top 3 ถูกปรับเป็น 100% เพื่อแสดงสัดส่วน
                             </div>
                         </div>
-                        
+
                         <div id="emptyState" class="text-center text-muted py-5">
                             <h1 style="font-size: 4rem; opacity: 0.2;">⚽</h1>
                             <h5 class="fw-light">กรอกข้อมูลหรือกดปุ่ม <span class="text-info">"+"</span> ด้านซ้าย</h5>
@@ -647,15 +692,17 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ============================================================
+        // 1) STEALTH UTILITIES
+        // ============================================================
         const stepVal = (id, delta, decimals = 0) => {
             const el = document.getElementById(id);
             let current = parseFloat(el.value) || 0;
             const min = el.hasAttribute('min') ? parseFloat(el.getAttribute('min')) : -Infinity;
             const max = el.hasAttribute('max') ? parseFloat(el.getAttribute('max')) : Infinity;
-            
             let next = Math.min(max, Math.max(min, current + delta));
             el.value = decimals > 0 ? next.toFixed(decimals) : Math.round(next);
-            predict(true);
+            schedulePredict();
         };
 
         const syncPossession = (side) => {
@@ -685,7 +732,80 @@
             }
         };
 
+        // ============================================================
+        // 2) STATE PERSISTENCE (localStorage)
+        // ============================================================
+        const STORAGE_KEY = 'jackzaa_1h_predictor_v2';
+        const PERSIST_INPUTS = ['teamH','teamA','scoreH','scoreA','ahLine','minute','leagueGoals',
+            'shotsH','shotsA','sotH','sotA','cornersH','cornersA','redH','redA',
+            'xgH','xgA','possH','possA','daH','daA'];
+
+        const saveState = () => {
+            try {
+                const state = {};
+                PERSIST_INPUTS.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) state[id] = el.value;
+                });
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch(e) { /* silent */ }
+        };
+
+        const restoreState = () => {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return false;
+                const state = JSON.parse(raw);
+                PERSIST_INPUTS.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && state[id] !== undefined && state[id] !== null) el.value = state[id];
+                });
+                updateAhLabel();
+                return true;
+            } catch(e) { return false; }
+        };
+
+        // ============================================================
+        // 3) DEBOUNCED PREDICT
+        // ============================================================
+        let predictDebounceTimer = null;
+        const schedulePredict = () => {
+            clearTimeout(predictDebounceTimer);
+            predictDebounceTimer = setTimeout(() => predict(false), 120);
+        };
+
+        // ============================================================
+        // 4) LIVE TIMER (60s = 1 นาที)
+        // ============================================================
+        let timerHandle = null;
+        const toggleTimer = () => {
+            const btn = document.getElementById('timerBtn');
+            if (timerHandle) {
+                clearInterval(timerHandle);
+                timerHandle = null;
+                btn.textContent = '▶️';
+                btn.style.background = '';
+                btn.classList.remove('btn-danger');
+                btn.classList.add('btn-outline-info');
+            } else {
+                btn.textContent = '⏸️';
+                btn.classList.remove('btn-outline-info');
+                btn.classList.add('btn-danger');
+                timerHandle = setInterval(() => {
+                    const el = document.getElementById('minute');
+                    let m = parseInt(el.value) || 0;
+                    if (m >= 45) { toggleTimer(); return; }
+                    el.value = m + 1;
+                    schedulePredict();
+                }, 60000);
+            }
+        };
+
+        // ============================================================
+        // 5) RESET
+        // ============================================================
         const resetForm = () => {
+            if (timerHandle) toggleTimer();
             document.getElementById('teamH').value = '';
             document.getElementById('teamA').value = '';
             document.getElementById('scoreH').value = 0;
@@ -713,15 +833,12 @@
             document.getElementById('emptyState').classList.remove('d-none');
             document.getElementById('matchHeaderBadge').textContent = 'พร้อมคำนวณ';
             document.getElementById('matchHeaderBadge').className = 'badge bg-secondary';
+            try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
         };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.auto-calc').forEach(el => {
-                el.addEventListener('input', () => predict(false));
-                el.addEventListener('change', () => predict(false));
-            });
-        });
-
+        // ============================================================
+        // 6) POISSON MATH
+        // ============================================================
         const factorial = (n) => {
             if (n === 0 || n === 1) return 1;
             let res = 1;
@@ -739,12 +856,13 @@
             let p = 0;
             const floor = Math.floor(line);
             const maxK = Math.ceil(mean + 5 * Math.sqrt(mean)) + 5;
-            for (let k = floor + 1; k <= maxK; k++) {
-                p += poisson(mean, k);
-            }
+            for (let k = floor + 1; k <= maxK; k++) p += poisson(mean, k);
             return Math.min(1, p);
         };
 
+        // ============================================================
+        // 7) MAIN PREDICTION ENGINE
+        // ============================================================
         const predict = (forceShow = false) => {
             const teamHName = document.getElementById('teamH').value.trim() || 'เหย้า';
             const teamAName = document.getElementById('teamA').value.trim() || 'เยือน';
@@ -754,7 +872,7 @@
             const ahLine = parseFloat(document.getElementById('ahLine').value) || 0;
             const minute = Math.min(45, Math.max(0, parseInt(document.getElementById('minute').value) || 0));
             const leagueGoals = parseFloat(document.getElementById('leagueGoals').value) || 2.70;
-            
+
             const shotsH = parseInt(document.getElementById('shotsH').value) || 0;
             const shotsA = parseInt(document.getElementById('shotsA').value) || 0;
             const sotH = parseInt(document.getElementById('sotH').value) || 0;
@@ -771,6 +889,7 @@
             const daH = parseFloat(document.getElementById('daH').value) || 0;
             const daA = parseFloat(document.getElementById('daA').value) || 0;
 
+            // --- Base rates from AH ---
             const total1HExpected = leagueGoals * 0.44;
             const ahShift = Math.max(-0.32, Math.min(0.32, (-ahLine) * 0.16));
             const shareH = 0.5 + ahShift;
@@ -781,6 +900,7 @@
 
             const remainingMin = Math.max(0, 45 - minute);
 
+            // --- Live xG blending ---
             let liveXgH = 0, liveXgA = 0;
             if (xgHInput !== "" && !isNaN(parseFloat(xgHInput))) {
                 liveXgH = parseFloat(xgHInput);
@@ -790,14 +910,15 @@
                 liveXgA = (sotA * 0.3) + (Math.max(0, shotsA - sotA) * 0.05);
             }
 
-            const liveWeight = Math.min(1, minute / 30); 
-            
+            const liveWeight = Math.min(1, minute / 30);
+
             let xgRateH = ((base1HHome / 45) * (1 - liveWeight)) + ((liveXgH / Math.max(1, minute)) * liveWeight);
             let xgRateA = ((base1HAway / 45) * (1 - liveWeight)) + ((liveXgA / Math.max(1, minute)) * liveWeight);
-            
+
             if (xgRateH <= 0) xgRateH = 0.008;
             if (xgRateA <= 0) xgRateA = 0.008;
 
+            // --- Dominance multiplier ---
             let dominanceH = 0.5;
             if (daH + daA > 0) {
                 dominanceH = (possH / (possH + possA)) * 0.4 + (daH / (daH + daA)) * 0.6;
@@ -806,21 +927,21 @@
             }
             const domMultiplierH = 1 + (dominanceH - 0.5) * 0.5;
             const domMultiplierA = 1 + ((1 - dominanceH) - 0.5) * 0.5;
-            
+
             xgRateH *= domMultiplierH;
             xgRateA *= domMultiplierA;
 
+            // --- Red card impact ---
             if (redH > redA) {
-                xgRateA *= 1.22;
-                xgRateH *= 0.82;
+                xgRateA *= 1.22; xgRateH *= 0.82;
             } else if (redA > redH) {
-                xgRateH *= 1.22;
-                xgRateA *= 0.82;
+                xgRateH *= 1.22; xgRateA *= 0.82;
             }
 
             const xgRemH = xgRateH * remainingMin;
             const xgRemA = xgRateA * remainingMin;
 
+            // --- Full grid (1X2, OU, top scores) ---
             const maxGoals = 8;
             let pHome = 0, pDraw = 0, pAway = 0;
             let over05 = 0, over15 = 0, over25 = 0;
@@ -841,9 +962,7 @@
                     if (totalGoals > 1.5) over15 += p;
                     if (totalGoals > 2.5) over25 += p;
 
-                    if (p > 0.001) {
-                        topScoresList.push({ score: `${totalH}-${totalA}`, prob: p });
-                    }
+                    if (p > 0.001) topScoresList.push({ score: `${totalH}-${totalA}`, prob: p });
                 }
             }
 
@@ -851,12 +970,30 @@
             const top3 = topScoresList.slice(0, 3);
             const sumTop3 = top3.reduce((sum, item) => sum + item.prob, 0);
 
+            // --- NEW: BTTS 1H ---
+            const pHomeScores1H = scoreH >= 1 ? 1 : (1 - Math.exp(-xgRemH));
+            const pAwayScores1H = scoreA >= 1 ? 1 : (1 - Math.exp(-xgRemA));
+            const btts1H = pHomeScores1H * pAwayScores1H;
+
+            // --- NEW: Next Goal (Poisson race) ---
+            const totalRate = xgRateH + xgRateA;
+            let pHomeNext = 0, pAwayNext = 0, pNoMoreGoals = 0;
+            if (totalRate > 0 && remainingMin > 0) {
+                const pAtLeastOne = 1 - Math.exp(-totalRate * remainingMin);
+                pHomeNext = (xgRateH / totalRate) * pAtLeastOne;
+                pAwayNext = (xgRateA / totalRate) * pAtLeastOne;
+                pNoMoreGoals = Math.exp(-totalRate * remainingMin);
+            } else {
+                pNoMoreGoals = 1;
+            }
+
+            // --- Corners ---
             const totalCurrentCorners = cornersH + cornersA;
-            const base1HTotalCorners = 10.4 * 0.45; 
+            const base1HTotalCorners = 10.4 * 0.45;
             const cornerShareH = 0.54 + (ahShift * 0.5);
             const cornerShareA = 1 - cornerShareH;
 
-            let baseRateH = (base1HTotalCorners / 45) * cornerShareH; 
+            let baseRateH = (base1HTotalCorners / 45) * cornerShareH;
             let baseRateA = (base1HTotalCorners / 45) * cornerShareA;
 
             if (minute >= 10) {
@@ -875,13 +1012,8 @@
             baseRateH *= domMultiplierH;
             baseRateA *= domMultiplierA;
 
-            if (redH > redA) {
-                baseRateA *= 1.25;
-                baseRateH *= 0.85;
-            } else if (redA > redH) {
-                baseRateH *= 1.25;
-                baseRateA *= 0.85;
-            }
+            if (redH > redA) { baseRateA *= 1.25; baseRateH *= 0.85; }
+            else if (redA > redH) { baseRateH *= 1.25; baseRateA *= 0.85; }
 
             const remCornersH = baseRateH * remainingMin;
             const remCornersA = baseRateA * remainingMin;
@@ -894,6 +1026,20 @@
             const co45 = poissonOver(expCornersTotal, 4.5);
             const co55 = poissonOver(expCornersTotal, 5.5);
 
+            // --- NEW: Confidence Score (0-10) ---
+            let confScore = 0;
+            if (minute > 0) confScore += 2;
+            if (shotsH + shotsA > 0) confScore += 1;
+            if (sotH + sotA > 0) confScore += 1;
+            if (cornersH + cornersA > 0) confScore += 1;
+            if (xgHInput !== '' && xgAInput !== '') confScore += 2;
+            else if (xgHInput !== '' || xgAInput !== '') confScore += 1;
+            if (Math.abs(possH - 50) > 2) confScore += 1;
+            if (daH + daA > 0) confScore += 1;
+            if (ahLine !== 0) confScore += 1;
+            const confidencePct = Math.round(confScore / 10 * 100);
+
+            // --- Update UI ---
             updateSignalAlert({
                 minute, remainingMin, scoreH, scoreA, ahLine,
                 pHome, pDraw, pAway, over05, over15, over25,
@@ -909,6 +1055,8 @@
 
             document.getElementById('labelHome').textContent = teamHName;
             document.getElementById('labelAway').textContent = teamAName;
+            document.getElementById('nextGoalLabelH').textContent = teamHName;
+            document.getElementById('nextGoalLabelA').textContent = teamAName;
 
             document.getElementById('resHome').textContent = (pHome * 100).toFixed(1) + '%';
             document.getElementById('resDraw').textContent = (pDraw * 100).toFixed(1) + '%';
@@ -922,18 +1070,34 @@
             setBar('ou15', over15);
             setBar('ou25', over25);
 
+            // New markets
+            document.getElementById('resBTTS').textContent = (btts1H * 100).toFixed(1) + '%';
+            document.getElementById('resNoMore').textContent = (pNoMoreGoals * 100).toFixed(1) + '%';
+            document.getElementById('resNextH').textContent = (pHomeNext * 100).toFixed(1) + '%';
+            document.getElementById('resNoGoal').textContent = (pNoMoreGoals * 100).toFixed(1) + '%';
+            document.getElementById('resNextA').textContent = (pAwayNext * 100).toFixed(1) + '%';
+
+            // Corners
             document.getElementById('expCornersH').textContent = expCornersH.toFixed(1);
             document.getElementById('expCornersTotal').textContent = expCornersTotal.toFixed(1);
             document.getElementById('expCornersA').textContent = expCornersA.toFixed(1);
-
             setBar('co35', co35);
             setBar('co45', co45);
             setBar('co55', co55);
 
+            // Confidence
+            const confText = document.getElementById('confidenceText');
+            const confBar = document.getElementById('confidenceBar');
+            confText.textContent = confidencePct + '%';
+            confText.style.color = confidencePct >= 70 ? 'var(--accent-green)'
+                                  : confidencePct >= 40 ? 'var(--accent-orange)'
+                                  : 'var(--accent-red)';
+            confBar.style.width = confidencePct + '%';
+
+            // Top 3
             const topScoresContainer = document.getElementById('topScores');
             topScoresContainer.innerHTML = '';
             const colors = ['bg-score-1', 'bg-score-2', 'bg-score-3'];
-            
             top3.forEach((item, index) => {
                 const normalizedProb = sumTop3 > 0 ? (item.prob / sumTop3) * 100 : 0;
                 topScoresContainer.innerHTML += `
@@ -948,11 +1112,13 @@
                     </div>
                 `;
             });
+
+            saveState();
         };
 
-        // ----------------------------------------------------
-        // Smart Signal Generator (แนวทาง A: แจ้งเตือนไว / Early Entry)
-        // ----------------------------------------------------
+        // ============================================================
+        // 8) SIGNAL GENERATOR
+        // ============================================================
         const updateSignalAlert = (data) => {
             const box = document.getElementById('signalBox');
             const badge = document.getElementById('signalBadge');
@@ -975,37 +1141,33 @@
                 return;
             }
 
-            // แนวทาง A: ประตูแรก Over 0.5 1H >= 65%
             if (totalGoals === 0 && data.over05 >= 0.65) {
                 box.classList.add('signal-hot');
                 badge.className = 'signal-badge bg-success text-white';
                 badge.textContent = '🔥 สัญญาณประตูแรก (Over 0.5 1H • เข้าไว)';
                 titleEl.textContent = `ลุ้นสกอร์แรกครึ่งแรก โอกาส ${(data.over05 * 100).toFixed(1)}%`;
-                descEl.textContent = `รูปเกมเริ่มมีจังหวะเข้าทำ (เข้ากรอบรวม ${totalSot} ครั้ง, เตะมุม ${totalCorners} ครั้ง) เข้าเกณฑ์จังหวะทำเงินช่วงราคาน้ำดี`;
+                descEl.textContent = `รูปเกมเริ่มมีจังหวะเข้าทำ (เข้ากรอบรวม ${totalSot} ครั้ง, เตะมุม ${totalCorners} ครั้ง)`;
                 return;
             }
 
-            // แนวทาง A: สกอร์ไหล Over 1.5 1H >= 62%
             if (totalGoals === 1 && data.over15 >= 0.62) {
                 box.classList.add('signal-hot');
                 badge.className = 'signal-badge bg-success text-white';
                 badge.textContent = '⚡ สัญญาณสกอร์ไหล (Over 1.5 1H • เข้าไว)';
                 titleEl.textContent = `ลุ้นประตูที่ 2 ในครึ่งแรก โอกาส ${(data.over15 * 100).toFixed(1)}%`;
-                descEl.textContent = `ทั้งสองทีมยังเปิดเกมรุกต่อเนื่อง คาดการณ์เตะมุมรวม ${data.expCornersTotal.toFixed(1)} ลูก มีโอกาสบวกสกอร์เพิ่ม`;
+                descEl.textContent = `คาดการณ์เตะมุมรวม ${data.expCornersTotal.toFixed(1)} ลูก มีโอกาสบวกสกอร์เพิ่ม`;
                 return;
             }
 
-            // แนวทาง A: เตะมุมสูง Over 4.5 1H >= 65% และเหลือเวลา >= 8 นาที
             if (data.co45 >= 0.65 && data.remainingMin >= 8) {
                 box.classList.add('signal-warn');
                 badge.className = 'signal-badge bg-warning text-dark';
                 badge.textContent = '🚩 สัญญาณเตะมุมสูง (Corners Alert • เข้าไว)';
                 titleEl.textContent = `เกมริมเส้นดุดัน คาดเตะมุมรวมครึ่งแรก ${data.expCornersTotal.toFixed(1)} ลูก`;
-                descEl.textContent = `โอกาสเกิดเตะมุมสูงกว่า 4.5 ลูก อยู่ที่ ${(data.co45 * 100).toFixed(1)}% เหมาะสำหรับเข้าทำตลาดลูกเตะมุมครึ่งแรก`;
+                descEl.textContent = `โอกาสเกิดเตะมุมสูงกว่า 4.5 ลูก อยู่ที่ ${(data.co45 * 100).toFixed(1)}%`;
                 return;
             }
 
-            // แนวทาง A: ทีมต่อเหนือกว่าชัดเจน 1X2 >= 60%
             if (data.pHome >= 0.60 || data.pAway >= 0.60) {
                 const favTeam = data.pHome > data.pAway ? data.teamHName : data.teamAName;
                 const favProb = Math.max(data.pHome, data.pAway) * 100;
@@ -1013,25 +1175,142 @@
                 badge.className = 'signal-badge bg-info text-dark';
                 badge.textContent = '👑 ทีมต่อเหนือกว่าชัดเจน (1X2 1H)';
                 titleEl.textContent = `${favTeam} คุมเกมได้เปรียบ (โอกาสชนะครึ่งแรก ${favProb.toFixed(1)}%)`;
-                descEl.textContent = `พิจารณาจากราคาต่อรอง (${data.ahLine}) ร่วมกับรูปเกมในสนาม ${favTeam} มีแนวโน้มขึ้นนำใน 45 นาทีแรก`;
+                descEl.textContent = `พิจารณาจากราคาต่อรอง (${data.ahLine}) ร่วมกับรูปเกมในสนาม`;
                 return;
             }
 
-            // แนวทาง A: เกมรับเหนียวแน่น Under 0.5 (นาที >= 30 และสูง 0.5 < 50%)
             if (data.minute >= 30 && totalGoals === 0 && data.over05 < 0.50) {
                 box.classList.add('signal-warn');
                 badge.className = 'signal-badge bg-danger text-white';
                 badge.textContent = '🛡️ เกมรับเหนียวแน่น (Under 0.5 Trend)';
                 titleEl.textContent = `แนวโน้มจบครึ่งแรกแบบไร้สกอร์ (${(data.pDraw * 100).toFixed(1)}%)`;
-                descEl.textContent = `เหลือเวลาอีก ${data.remainingMin} นาที โอกาสเกิดประตูยังต่ำกว่า 50% ควรชะลอการลงทุนฝั่งสกอร์สูง`;
+                descEl.textContent = `เหลือเวลาอีก ${data.remainingMin} นาที โอกาสเกิดประตูยังต่ำกว่า 50%`;
                 return;
             }
 
             badge.className = 'signal-badge bg-info text-dark';
             badge.textContent = '📡 เกมสูสี / รอจังหวะชัดเจน';
             titleEl.textContent = `โอกาสออกเสมอครึ่งแรก ${(data.pDraw * 100).toFixed(1)}% | สูง 0.5 ${(data.over05 * 100).toFixed(1)}%`;
-            descEl.textContent = `อัปเดตสถิติการยิงเข้ากรอบหรือลูกเตะมุมระหว่างเกมเพิ่มเติม เพื่อให้ระบบจับสัญญาณได้แม่นยำขึ้น`;
+            descEl.textContent = `อัปเดตสถิติการยิงเข้ากรอบหรือลูกเตะมุมระหว่างเกมเพิ่มเติม`;
         };
+
+        // ============================================================
+        // 9) EXPORT (copy to clipboard)
+        // ============================================================
+        const showToast = (msg) => {
+            const t = document.createElement('div');
+            t.textContent = msg;
+            t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);' +
+                'background:rgba(16,185,129,0.95);color:white;padding:10px 20px;border-radius:10px;' +
+                'font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.4);font-size:0.9rem;';
+            document.body.appendChild(t);
+            setTimeout(() => {
+                t.style.transition = 'opacity 0.3s';
+                t.style.opacity = '0';
+                setTimeout(() => t.remove(), 300);
+            }, 1800);
+        };
+
+        const copyText = (text) => {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => showToast('📋 คัดลอกผลแล้ว!')).catch(() => fallbackCopy(text));
+            } else {
+                fallbackCopy(text);
+            }
+        };
+
+        const fallbackCopy = (text) => {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.cssText = 'position:fixed;opacity:0;';
+            document.body.appendChild(ta);
+            ta.select();
+            try { document.execCommand('copy'); showToast('📋 คัดลอกผลแล้ว!'); } catch(e) { showToast('❌ คัดลอกไม่สำเร็จ'); }
+            document.body.removeChild(ta);
+        };
+
+        const exportPrediction = () => {
+            const resultsEl = document.getElementById('results');
+            if (resultsEl.classList.contains('d-none')) {
+                showToast('⚠️ กรุณาประมวลผลก่อน'); return;
+            }
+            const get = (id) => document.getElementById(id)?.textContent || '-';
+            const teamH = document.getElementById('teamH').value.trim() || 'เหย้า';
+            const teamA = document.getElementById('teamA').value.trim() || 'เยือน';
+            const scoreH = document.getElementById('scoreH').value || '0';
+            const scoreA = document.getElementById('scoreA').value || '0';
+            const minute = document.getElementById('minute').value || '0';
+
+            const topScoreEls = document.querySelectorAll('#topScores .card-body h4');
+            const topScores = Array.from(topScoreEls).map((el, i) => {
+                const pct = el.parentElement.querySelector('.fs-5')?.textContent || '';
+                return `  ${i+1}. ${el.textContent} (${pct})`;
+            }).join('\n');
+
+            const text = `⚽ 1H PREDICTOR PRO - JackZaa AI
+━━━━━━━━━━━━━━━━━━━━━━━
+🏟️ ${teamH} ${scoreH}-${scoreA} ${teamA} (${minute}')
+━━━━━━━━━━━━━━━━━━━━━━━
+📊 ผลการแข่งขัน (1X2 ครึ่งแรก)
+  🏠 ${teamH}: ${get('resHome')}
+  ⚖️ เสมอ: ${get('resDraw')}
+  ✈️ ${teamA}: ${get('resAway')}
+━━━━━━━━━━━━━━━━━━━━━━━
+⚽ ประตูรวม (Over)
+  สูง 0.5: ${get('ou05')}
+  สูง 1.5: ${get('ou15')}
+  สูง 2.5: ${get('ou25')}
+━━━━━━━━━━━━━━━━━━━━━━━
+🎯 ตลาดเสริม
+  BTTS ครึ่งแรก: ${get('resBTTS')}
+  ประตูถัดไป - ${teamH}: ${get('resNextH')}
+  ประตูถัดไป - ไม่มี: ${get('resNoGoal')}
+  ประตูถัดไป - ${teamA}: ${get('resNextA')}
+━━━━━━━━━━━━━━━━━━━━━━━
+🚩 ลูกเตะมุม
+  คาดรวม: ${get('expCornersTotal')} ลูก
+  สูง 3.5: ${get('co35')}
+  สูง 4.5: ${get('co45')}
+  สูง 5.5: ${get('co55')}
+━━━━━━━━━━━━━━━━━━━━━━━
+🏆 สกอร์ที่เป็นไปได้สูงสุด
+${topScores}
+━━━━━━━━━━━━━━━━━━━━━━━
+📡 สัญญาณ: ${get('signalTitle')}
+━━━━━━━━━━━━━━━━━━━━━━━
+Generated by JackZaa AI • ${new Date().toLocaleString('th-TH')}`;
+
+            copyText(text);
+        };
+
+        // ============================================================
+        // 10) KEYBOARD SHORTCUTS
+        // ============================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.matches('input[type="text"], input[type="number"]')) {
+                e.preventDefault();
+                predict(true);
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                exportPrediction();
+            }
+        });
+
+        // ============================================================
+        // 11) INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.auto-calc').forEach(el => {
+                el.addEventListener('input', () => schedulePredict());
+                el.addEventListener('change', () => schedulePredict());
+            });
+            // Restore saved state
+            if (restoreState()) {
+                // ถ้ามีข้อมูลบันทึกไว้ ให้คำนวณทันที
+                predict(false);
+            }
+        });
     </script>
 </body>
 </html>
