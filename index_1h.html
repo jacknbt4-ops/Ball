@@ -7,482 +7,129 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="1H Predictor">
-    <meta name="description" content="Live First-Half Football Analytics Engine">
+    <meta name="description" content="Live First-Half Football Analytics Engine — Half-Time Result Predictor">
     <link rel="manifest" id="manifestLink">
     <title>⚽ 1H Predictor Pro - JackZaa AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #0b1120;
-            --card-bg: rgba(30, 41, 59, 0.75);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent-blue: #38bdf8;
-            --accent-green: #34d399;
-            --accent-orange: #fbbf24;
-            --accent-red: #f87171;
-            --input-bg: #1e293b;
-            --input-border: #334155;
-        }
-
-        body {
-            background: radial-gradient(circle at top left, #1e293b 0%, #0b1120 60%);
-            color: var(--text-main);
-            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
-            padding: 15px;
-            min-height: 100vh;
-        }
-
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            color: var(--text-main);
-            overflow: hidden;
-        }
-
-        .card-header {
-            background: linear-gradient(90deg, rgba(56, 189, 248, 0.15) 0%, rgba(30, 41, 59, 0) 100%);
-            border-bottom: 1px solid var(--card-border);
-            padding: 12px 16px;
-        }
-
-        .card-header h5 {
-            font-weight: 700;
-            margin: 0;
-            letter-spacing: 0.5px;
-            color: var(--accent-blue);
-            text-transform: uppercase;
-            font-size: 0.95rem;
-        }
-
+        :root { --bg-color:#0b1120; --card-bg:rgba(30,41,59,0.75); --card-border:rgba(255,255,255,0.1); --text-main:#f8fafc; --text-muted:#94a3b8; --accent-blue:#38bdf8; --accent-green:#34d399; --accent-orange:#fbbf24; --accent-red:#f87171; --input-bg:#1e293b; --input-border:#334155; }
+        body { background: radial-gradient(circle at top left, #1e293b 0%, #0b1120 60%); color: var(--text-main); font-family: 'Inter','Segoe UI',Tahoma,sans-serif; padding: 15px; min-height: 100vh; }
+        .card { background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--card-border); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); color: var(--text-main); overflow: hidden; }
+        .card-header { background: linear-gradient(90deg, rgba(56,189,248,0.15) 0%, rgba(30,41,59,0) 100%); border-bottom: 1px solid var(--card-border); padding: 12px 16px; }
+        .card-header h5 { font-weight: 700; margin: 0; letter-spacing: 0.5px; color: var(--accent-blue); text-transform: uppercase; font-size: 0.95rem; }
         .card-body { padding: 16px; }
-
-        .form-label {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .form-control, .form-select {
-            background-color: var(--input-bg);
-            border: 1px solid var(--input-border);
-            color: var(--text-main);
-            border-radius: 10px;
-            padding: 7px 10px;
-            transition: all 0.2s ease;
-        }
-
-        .form-control:focus, .form-select:focus {
-            background-color: #263346;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
-            color: white;
-        }
-
+        .form-label { color: var(--text-muted); font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; }
+        .form-control, .form-select { background-color: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 10px; padding: 7px 10px; transition: all 0.2s ease; }
+        .form-control:focus, .form-select:focus { background-color: #263346; border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(56,189,248,0.2); color: white; }
+        .form-select option, .form-select optgroup { background-color: #1e293b; color: #f8fafc; }
+        .form-select optgroup { font-weight: 700; color: #38bdf8; }
         .form-control::placeholder { color: #64748b; }
-
-        .stepper-group {
-            display: flex;
-            align-items: center;
-            background-color: var(--input-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
+        .stepper-group { display: flex; align-items: center; background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; overflow: hidden; }
         .stepper-group.border-info { border-color: #0dcaf0 !important; }
         .stepper-group.border-danger { border-color: #dc3545 !important; }
         .stepper-group.border-primary { border-color: #0d6efd !important; }
         .stepper-group.border-warning { border-color: #fbbf24 !important; }
-
-        .btn-step {
-            background: rgba(255, 255, 255, 0.05);
-            border: none;
-            color: var(--text-main);
-            font-weight: 800;
-            font-size: 1.05rem;
-            width: 36px;
-            height: 38px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            user-select: none;
-            transition: background 0.15s;
-            padding: 0;
-        }
-
-        .btn-step:hover { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); }
-        .btn-step:active { background: rgba(56, 189, 248, 0.4); }
-
-        .stepper-input {
-            border: none !important;
-            background: transparent !important;
-            text-align: center;
-            font-weight: 700;
-            padding: 6px 2px !important;
-            box-shadow: none !important;
-            width: 100%;
-            min-width: 0;
-            -moz-appearance: textfield;
-        }
-
-        .stepper-input::-webkit-outer-spin-button,
-        .stepper-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
-            border: none;
-            font-weight: 700;
-            font-size: 0.95rem;
-            padding: 11px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #38bdf8, #60a5fa);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.6);
-        }
-
-        .btn-reset {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: var(--text-muted);
-            font-weight: 700;
-            font-size: 0.95rem;
-            padding: 11px;
-            border-radius: 10px;
-            transition: all 0.2s;
-        }
-
-        .btn-reset:hover {
-            background: rgba(248, 113, 113, 0.2);
-            border-color: var(--accent-red);
-            color: var(--accent-red);
-        }
-
-        .result-card {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 12px 8px;
-            text-align: center;
-            border: 1px solid var(--card-border);
-            transition: transform 0.2s;
-        }
-
-        .result-card:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .result-card .prob-text {
-            font-size: 1.35rem;
-            font-weight: 800;
-            margin-top: 2px;
-        }
-
-        .bg-home { color: var(--accent-green); }
-        .bg-draw { color: var(--accent-orange); }
-        .bg-away { color: var(--accent-red); }
-
-        .progress {
-            background-color: #1e293b;
-            border-radius: 10px;
-            height: 7px !important;
-            overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
-            margin-top: 4px;
-        }
-
-        .progress-bar {
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 10px;
-        }
-
-        .progress-bar.bg-success { background: linear-gradient(90deg, #059669, #34d399) !important; }
-        .progress-bar.bg-warning { background: linear-gradient(90deg, #d97706, #fbbf24) !important; }
-        .progress-bar.bg-danger { background: linear-gradient(90deg, #dc2626, #f87171) !important; }
-        .progress-bar.bg-info { background: linear-gradient(90deg, #0284c7, #38bdf8) !important; }
-        .progress-bar.bg-primary { background: linear-gradient(90deg, #2563eb, #60a5fa) !important; }
-        .progress-bar.bg-dark { background: linear-gradient(90deg, #4b5563, #9ca3af) !important; }
-
-        .badge.bg-info.text-dark {
-            background: #0369a1 !important;
-            color: #fff !important;
-        }
-        .badge.bg-warning.text-dark {
-            background: #f59e0b !important;
-            color: #0b1120 !important;
-        }
-        .badge.bg-primary.text-dark {
-            background: #1d4ed8 !important;
-            color: #fff !important;
-        }
-
+        .btn-step { background: rgba(255,255,255,0.05); border: none; color: var(--text-main); font-weight: 800; font-size: 1.05rem; width: 36px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none; transition: background 0.15s; padding: 0; }
+        .btn-step:hover { background: rgba(56,189,248,0.2); color: var(--accent-blue); }
+        .btn-step:active { background: rgba(56,189,248,0.4); }
+        .stepper-input { border: none !important; background: transparent !important; text-align: center; font-weight: 700; padding: 6px 2px !important; box-shadow: none !important; width: 100%; min-width: 0; -moz-appearance: textfield; }
+        .stepper-input::-webkit-outer-spin-button, .stepper-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .btn-primary { background: linear-gradient(135deg, #0ea5e9, #3b82f6); border: none; font-weight: 700; font-size: 0.95rem; padding: 11px; border-radius: 10px; box-shadow: 0 4px 15px rgba(14,165,233,0.4); transition: transform 0.2s, box-shadow 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-primary:hover { background: linear-gradient(135deg, #38bdf8, #60a5fa); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(14,165,233,0.6); }
+        .btn-reset { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: var(--text-muted); font-weight: 700; font-size: 0.95rem; padding: 11px; border-radius: 10px; transition: all 0.2s; }
+        .btn-reset:hover { background: rgba(248,113,113,0.2); border-color: var(--accent-red); color: var(--accent-red); }
+        .result-card { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 8px; text-align: center; border: 1px solid var(--card-border); transition: transform 0.2s; }
+        .result-card:hover { transform: translateY(-2px); background: rgba(255,255,255,0.06); }
+        .result-card .prob-text { font-size: 1.35rem; font-weight: 800; margin-top: 2px; }
+        .bg-home { color: var(--accent-green); } .bg-draw { color: var(--accent-orange); } .bg-away { color: var(--accent-red); }
+        .progress { background-color: #1e293b; border-radius: 10px; height: 7px !important; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); margin-top: 4px; }
+        .progress-bar { transition: width 0.5s cubic-bezier(0.4,0,0.2,1); border-radius: 10px; }
+        .progress-bar.bg-success { background: linear-gradient(90deg,#059669,#34d399) !important; }
+        .progress-bar.bg-warning { background: linear-gradient(90deg,#d97706,#fbbf24) !important; }
+        .progress-bar.bg-danger { background: linear-gradient(90deg,#dc2626,#f87171) !important; }
+        .progress-bar.bg-info { background: linear-gradient(90deg,#0284c7,#38bdf8) !important; }
+        .progress-bar.bg-primary { background: linear-gradient(90deg,#2563eb,#60a5fa) !important; }
+        .progress-bar.bg-dark { background: linear-gradient(90deg,#4b5563,#9ca3af) !important; }
+        .badge.bg-info.text-dark { background: #0369a1 !important; color: #fff !important; }
+        .badge.bg-warning.text-dark { background: #f59e0b !important; color: #0b1120 !important; }
+        .badge.bg-primary.text-dark { background: #1d4ed8 !important; color: #fff !important; }
         .text-muted { color: var(--text-muted) !important; }
         .text-secondary { color: #cbd5e1 !important; }
-
-        .bg-score-1 { background: linear-gradient(135deg, #065f46, #047857) !important; color: #fff !important; }
-        .bg-score-2 { background: linear-gradient(135deg, #92400e, #b45309) !important; color: #fff !important; }
-        .bg-score-3 { background: linear-gradient(135deg, #1f2937, #374151) !important; color: #fff !important; }
-
-        .section-title {
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            text-align: center;
-            margin: 16px 0 10px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .section-title::before, .section-title::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: var(--card-border);
-        }
-
-        .adv-toggle {
-            cursor: pointer;
-            font-size: 0.8rem;
-            color: var(--accent-blue);
-            text-decoration: underline;
-        }
-
-        .brand-footer {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        .signal-card {
-            border-radius: 12px;
-            padding: 11px 13px;
-            margin-bottom: 9px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.03);
-            animation: fadeIn 0.3s ease;
-        }
-        .signal-card.hot {
-            border-color: rgba(52,211,153,0.5);
-            background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(30,41,59,0.7));
-            animation: fadeIn 0.3s ease, pulseGlow 3s infinite alternate;
-        }
-        .signal-card.warn {
-            border-color: rgba(251,191,36,0.5);
-            background: linear-gradient(135deg, rgba(245,158,11,0.18), rgba(30,41,59,0.7));
-        }
-        .signal-card.info {
-            border-color: rgba(56,189,248,0.35);
-            background: linear-gradient(135deg, rgba(14,165,233,0.12), rgba(30,41,59,0.6));
-        }
-        .sig-badge {
-            font-size: 0.68rem;
-            font-weight: 800;
-            padding: 2px 7px;
-            border-radius: 5px;
-            margin-bottom: 5px;
-            display: inline-block;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
+        .bg-score-1 { background: linear-gradient(135deg,#065f46,#047857) !important; color:#fff !important; }
+        .bg-score-2 { background: linear-gradient(135deg,#92400e,#b45309) !important; color:#fff !important; }
+        .bg-score-3 { background: linear-gradient(135deg,#1f2937,#374151) !important; color:#fff !important; }
+        .section-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); text-align: center; margin: 16px 0 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .section-title::before, .section-title::after { content: ""; flex: 1; height: 1px; background: var(--card-border); }
+        .adv-toggle { cursor: pointer; font-size: 0.8rem; color: var(--accent-blue); text-decoration: underline; }
+        .brand-footer { text-align: center; margin-top: 24px; font-size: 0.78rem; color: var(--text-muted); }
+        .signal-card { border-radius: 12px; padding: 11px 13px; margin-bottom: 9px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); animation: fadeIn 0.3s ease; }
+        .signal-card.hot { border-color: rgba(52,211,153,0.5); background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(30,41,59,0.7)); animation: fadeIn 0.3s ease, pulseGlow 3s infinite alternate; }
+        .signal-card.warn { border-color: rgba(251,191,36,0.5); background: linear-gradient(135deg, rgba(245,158,11,0.18), rgba(30,41,59,0.7)); }
+        .signal-card.info { border-color: rgba(56,189,248,0.35); background: linear-gradient(135deg, rgba(14,165,233,0.12), rgba(30,41,59,0.6)); }
+        .sig-badge { font-size: 0.68rem; font-weight: 800; padding: 2px 7px; border-radius: 5px; margin-bottom: 5px; display: inline-block; text-transform: uppercase; letter-spacing: 0.3px; }
         .sig-title { font-weight: 700; color: #fff; font-size: 0.88rem; margin-bottom: 2px; }
         .sig-desc { font-size: 0.76rem; color: var(--text-muted); line-height: 1.4; }
-        .sig-conf {
-            font-size: 0.68rem;
-            font-weight: 800;
-            padding: 2px 7px;
-            border-radius: 5px;
-            float: right;
-            background: rgba(0,0,0,0.35);
-            color: #fff;
-        }
-
+        .sig-conf { font-size: 0.68rem; font-weight: 800; padding: 2px 7px; border-radius: 5px; float: right; background: rgba(0,0,0,0.35); color: #fff; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
-        @keyframes pulseGlow {
-            from { box-shadow: 0 0 8px rgba(56, 189, 248, 0.1); }
-            to { box-shadow: 0 0 18px rgba(56, 189, 248, 0.25); }
-        }
-
-        .timer-btn {
-            background: rgba(52, 211, 153, 0.12);
-            border: 1px solid rgba(52, 211, 153, 0.3);
-            color: #34d399;
-            padding: 0 11px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-weight: 800;
-            height: 38px;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
+        @keyframes pulseGlow { from { box-shadow: 0 0 8px rgba(56,189,248,0.1); } to { box-shadow: 0 0 18px rgba(56,189,248,0.25); } }
+        .timer-btn { background: rgba(52,211,153,0.12); border: 1px solid rgba(52,211,153,0.3); color: #34d399; padding: 0 11px; border-radius: 10px; font-size: 0.85rem; font-weight: 800; height: 38px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .timer-btn:hover { background: rgba(52,211,153,0.25); }
-        .timer-btn.running {
-            background: rgba(248, 113, 113, 0.2);
-            border-color: rgba(248, 113, 113, 0.5);
-            color: #f87171;
-            animation: pulseGlow 1.5s infinite alternate;
-        }
-
-        .icon-btn {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.12);
-            color: var(--text-muted);
-            border-radius: 8px;
-            padding: 4px 9px;
-            font-size: 0.82rem;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
+        .timer-btn.running { background: rgba(248,113,113,0.2); border-color: rgba(248,113,113,0.5); color: #f87171; animation: pulseGlow 1.5s infinite alternate; }
+        .icon-btn { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: var(--text-muted); border-radius: 8px; padding: 4px 9px; font-size: 0.82rem; cursor: pointer; transition: all 0.15s; }
         .icon-btn:hover { background: rgba(56,189,248,0.15); color: var(--accent-blue); border-color: var(--accent-blue); }
         .icon-btn.active { background: rgba(52,211,153,0.2); color: #34d399; border-color: #34d399; }
-
-        .pressure-bar-home { background: linear-gradient(90deg, #059669, #34d399) !important; }
-        .pressure-bar-away { background: linear-gradient(90deg, #f87171, #dc2626) !important; }
-
-        .install-btn {
-            background: linear-gradient(135deg,#10b981,#059669);
-            color: white;
-            font-weight: 700;
-            font-size: 0.75rem;
-            border: none;
-            border-radius: 8px;
-            padding: 5px 12px;
-            margin-top: 6px;
-            cursor: pointer;
-            transition: transform 0.15s;
-            box-shadow: 0 4px 12px rgba(16,185,129,0.3);
-        }
+        .pressure-bar-home { background: linear-gradient(90deg,#059669,#34d399) !important; }
+        .pressure-bar-away { background: linear-gradient(90deg,#f87171,#dc2626) !important; }
+        .install-btn { background: linear-gradient(135deg,#10b981,#059669); color: white; font-weight: 700; font-size: 0.75rem; border: none; border-radius: 8px; padding: 5px 12px; margin-top: 6px; cursor: pointer; transition: transform 0.15s; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
         .install-btn:hover { transform: translateY(-1px); }
-
-        .chart-wrap {
-            position: relative;
-            width: 100%;
-            height: 195px;
-            margin: 8px 0 4px 0;
-            padding: 4px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 10px;
-            border: 1px solid var(--card-border);
-        }
-        .chart-wrap canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
-        .ah-table {
-            width: 100%;
-            font-size: 0.76rem;
-            border-collapse: separate;
-            border-spacing: 0 2px;
-            margin-top: 4px;
-        }
-        .ah-table th {
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            text-align: center;
-            padding: 4px 3px;
-            letter-spacing: 0.3px;
-        }
-        .ah-table td {
-            text-align: center;
-            padding: 5px 3px;
-            background: rgba(255,255,255,0.02);
-        }
-        .ah-table td:first-child {
-            border-radius: 6px 0 0 6px;
-            font-weight: 700;
-            text-align: left;
-            padding-left: 8px;
-        }
-        .ah-table td:last-child {
-            border-radius: 0 6px 6px 0;
-        }
-        .ah-table tr.fair td {
-            background: rgba(56,189,248,0.14);
-        }
-        .ah-table tr.fair td:first-child {
-            color: var(--accent-blue);
-        }
-
-        .form-control.auto-estimated {
-            border-style: dashed !important;
-            background-image: linear-gradient(135deg,
-                rgba(56,189,248,0.04) 25%, transparent 25%,
-                transparent 50%, rgba(56,189,248,0.04) 50%,
-                rgba(56,189,248,0.04) 75%, transparent 75%, transparent);
-            background-size: 12px 12px;
-        }
-
+        .chart-wrap { position: relative; width: 100%; height: 195px; margin: 8px 0 4px 0; padding: 4px; background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid var(--card-border); }
+        .chart-wrap canvas { display: block; width: 100%; height: 100%; }
+        .ah-table { width: 100%; font-size: 0.76rem; border-collapse: separate; border-spacing: 0 2px; margin-top: 4px; }
+        .ah-table th { color: var(--text-muted); font-weight: 600; font-size: 0.65rem; text-transform: uppercase; text-align: center; padding: 4px 3px; letter-spacing: 0.3px; }
+        .ah-table td { text-align: center; padding: 5px 3px; background: rgba(255,255,255,0.02); }
+        .ah-table td:first-child { border-radius: 6px 0 0 6px; font-weight: 700; text-align: left; padding-left: 8px; }
+        .ah-table td:last-child { border-radius: 0 6px 6px 0; }
+        .ah-table tr.fair td { background: rgba(56,189,248,0.14); }
+        .ah-table tr.fair td:first-child { color: var(--accent-blue); }
+        .form-control.auto-estimated { border-style: dashed !important; background-image: linear-gradient(135deg, rgba(56,189,248,0.04) 25%, transparent 25%, transparent 50%, rgba(56,189,248,0.04) 50%, rgba(56,189,248,0.04) 75%, transparent 75%, transparent); background-size: 12px 12px; }
         @media (max-width: 768px) {
-            body { padding: 10px; }
-            .card-body { padding: 14px; }
+            body { padding: 10px; } .card-body { padding: 14px; }
             .result-card .prob-text { font-size: 1.2rem; }
             .form-control, .form-select { font-size: 16px; }
-            .btn-step { width: 32px; height: 36px; }
-            h2 { font-size: 1.3rem; }
-            .chart-wrap { height: 175px; }
-            .ah-table { font-size: 0.7rem; }
-            .ah-table th { font-size: 0.6rem; }
+            .btn-step { width: 32px; height: 36px; } h2 { font-size: 1.3rem; }
+            .chart-wrap { height: 175px; } .ah-table { font-size: 0.7rem; } .ah-table th { font-size: 0.6rem; }
         }
     </style>
 </head>
 <body>
     <div class="container" style="max-width: 1120px;">
         <div class="text-center mb-4">
-            <h2 class="fw-bold mb-1" style="color: white; text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);">
+            <h2 class="fw-bold mb-1" style="color: white; text-shadow: 0 0 20px rgba(56,189,248,0.3);">
                 ⚽ 1H Predictor <span class="badge bg-info text-dark" style="font-size:0.45em; vertical-align: middle; font-weight:800;">PRO</span>
             </h2>
-            <small class="text-muted">Live First-Half Analytics Engine • Developed by <span class="text-info fw-semibold">JackZaa AI</span></small>
+            <small class="text-muted">Live First-Half Analytics Engine • ทำนายผล HALF TIME 45 นาที • by <span class="text-info fw-semibold">JackZaa AI</span></small>
             <br>
             <button id="installBtn" class="install-btn" style="display:none;" onclick="installPWA()">📲 ติดตั้งเป็นแอป</button>
         </div>
 
         <div class="row">
-            <!-- ============ LEFT: INPUT PANEL ============ -->
             <div class="col-lg-5 mb-4">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5>📋 ข้อมูลการแข่งขัน (0-45+ทดเจ็บ)</h5>
+                        <h5>📋 ข้อมูลการแข่งขัน (1H: 0–45+ทดเจ็บ)</h5>
                         <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50" style="font-size: 0.68rem;">⚡ Auto-Calc</span>
                     </div>
                     <div class="card-body">
                         <div class="row mb-3 g-2">
-                            <div class="col-6">
-                                <label class="form-label text-success">🏠 ทีมเหย้า</label>
-                                <input type="text" id="teamH" class="form-control auto-calc" placeholder="ทีมเหย้า">
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label text-danger">✈️ ทีมเยือน</label>
-                                <input type="text" id="teamA" class="form-control auto-calc" placeholder="ทีมเยือน">
-                            </div>
+                            <div class="col-6"><label class="form-label text-success">🏠 ทีมเหย้า</label><input type="text" id="teamH" class="form-control auto-calc" placeholder="ทีมเหย้า"></div>
+                            <div class="col-6"><label class="form-label text-danger">✈️ ทีมเยือน</label><input type="text" id="teamA" class="form-control auto-calc" placeholder="ทีมเยือน"></div>
                         </div>
 
                         <div class="row mb-3 g-2 bg-dark bg-opacity-25 p-2 rounded-3 border border-secondary border-opacity-25">
+                            <div class="text-center mb-1" style="font-size:0.7rem;color:#94a3b8;">⚽ สกอร์ปัจจุบัน (ก่อนเริ่ม 1H หรือระหว่าง 1H)</div>
                             <div class="col-6">
-                                <label class="form-label text-center d-block">สกอร์เหย้า</label>
+                                <label class="form-label text-center d-block text-success">สกอร์เหย้า</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('scoreH', -1)">−</button>
                                     <input type="number" id="scoreH" class="form-control stepper-input fs-5 text-success auto-calc" value="0" min="0" max="15">
@@ -490,7 +137,7 @@
                                 </div>
                             </div>
                             <div class="col-6">
-                                <label class="form-label text-center d-block">สกอร์เยือน</label>
+                                <label class="form-label text-center d-block text-danger">สกอร์เยือน</label>
                                 <div class="stepper-group">
                                     <button type="button" class="btn-step" onclick="stepVal('scoreA', -1)">−</button>
                                     <input type="number" id="scoreA" class="form-control stepper-input fs-5 text-danger auto-calc" value="0" min="0" max="15">
@@ -501,7 +148,7 @@
 
                         <div class="mb-3 p-2 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-25">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <label class="form-label text-warning fw-bold mb-0">⚖️ ราคาต่อรอง (AH เต็มเวลา)</label>
+                                <label class="form-label text-warning fw-bold mb-0">⚖️ ราคาต่อรอง (AH ครึ่งแรก)</label>
                                 <span id="ahLabel" class="badge bg-warning text-dark" style="font-size: 0.68rem;">เสมอ (0.0)</span>
                             </div>
                             <select id="ahLine" class="form-select border-warning text-warning fw-bold auto-calc" onchange="updateAhLabel()">
@@ -531,15 +178,16 @@
                                 <div class="d-flex gap-1">
                                     <div class="stepper-group flex-grow-1">
                                         <button type="button" class="btn-step" onclick="stepVal('minute', -1)">−</button>
-                                        <input type="number" id="minute" class="form-control stepper-input auto-calc" value="0" min="0" max="55">
+                                        <input type="number" id="minute" class="form-control stepper-input auto-calc" value="0" min="0" max="60">
                                         <button type="button" class="btn-step" onclick="stepVal('minute', 1)">+</button>
                                     </div>
                                     <button type="button" class="timer-btn" id="timerBtn" onclick="toggleTimer()" title="เริ่มเดินนาทีอัตโนมัติ">▶</button>
                                 </div>
+                                <small class="text-muted" style="font-size:0.65rem;">0 = เริ่มเตะ • 1–45 = ครึ่งแรก • 45+ = ทดเจ็บ</small>
                             </div>
                             <div class="col-5">
                                 <label class="form-label d-flex justify-content-between align-items-center">
-                                    <span>⏱️ ทดเจ็บ</span>
+                                    <span>⏱️ ทดเจ็บ (1H)</span>
                                     <span id="stoppageMode" class="badge bg-secondary" style="font-size:0.6rem;">AUTO</span>
                                 </label>
                                 <div class="stepper-group">
@@ -550,186 +198,222 @@
                             </div>
                         </div>
 
+                        <!-- ✅ NEW: League Dropdown ทั่วโลก -->
                         <div class="row mb-3 g-2">
-                            <div class="col-6">
-                                <label class="form-label">⚽ เฉลี่ยประตู/เกม (ลีก)</label>
-                                <div class="stepper-group">
-                                    <button type="button" class="btn-step" onclick="stepVal('leagueGoals', -0.1, 1)">−</button>
-                                    <input type="number" id="leagueGoals" class="form-control stepper-input auto-calc" value="2.70" step="0.1" min="0.5" max="6">
-                                    <button type="button" class="btn-step" onclick="stepVal('leagueGoals', 0.1, 1)">+</button>
+                            <div class="col-12">
+                                <label class="form-label">⚽ เฉลี่ยประตู/เกม (ลีก) <small class="text-muted">— เลือกลีกหรือกำหนดเอง</small></label>
+                                <select id="leagueGoals" class="form-select fw-bold auto-calc" onchange="onLeagueChange()">
+                                    <optgroup label="⚡ ค่าที่ใช้บ่อย">
+                                        <option value="2.70" selected>ทั่วไป / ไม่แน่ใจ — 2.70</option>
+                                    </optgroup>
+                                    <optgroup label="🌍 ยุโรป - Top 5 ลีก">
+                                        <option value="2.85">Premier League (England) — 2.85</option>
+                                        <option value="2.55">La Liga (Spain) — 2.55</option>
+                                        <option value="2.65">Serie A (Italy) — 2.65</option>
+                                        <option value="3.15">Bundesliga (Germany) — 3.15</option>
+                                        <option value="2.70">Ligue 1 (France) — 2.70</option>
+                                    </optgroup>
+                                    <optgroup label="🌍 ยุโรป - ลีกอื่นๆ">
+                                        <option value="3.30">Eredivisie (Netherlands) — 3.30</option>
+                                        <option value="2.55">Primeira Liga (Portugal) — 2.55</option>
+                                        <option value="2.95">Belgian Pro League — 2.95</option>
+                                        <option value="2.90">Scottish Premiership — 2.90</option>
+                                        <option value="2.75">Süper Lig (Turkey) — 2.75</option>
+                                        <option value="2.60">Russian Premier League — 2.60</option>
+                                        <option value="2.45">Ukrainian Premier League — 2.45</option>
+                                        <option value="3.00">Austrian Bundesliga — 3.00</option>
+                                        <option value="3.10">Swiss Super League — 3.10</option>
+                                        <option value="2.90">Danish Superliga — 2.90</option>
+                                        <option value="2.80">Allsvenskan (Sweden) — 2.80</option>
+                                        <option value="2.95">Eliteserien (Norway) — 2.95</option>
+                                        <option value="2.70">Veikkausliiga (Finland) — 2.70</option>
+                                        <option value="2.65">Ekstraklasa (Poland) — 2.65</option>
+                                        <option value="2.70">Czech First League — 2.70</option>
+                                        <option value="2.40">Super League Greece — 2.40</option>
+                                        <option value="2.65">HNL (Croatia) — 2.65</option>
+                                        <option value="2.55">SuperLiga (Serbia) — 2.55</option>
+                                        <option value="2.45">Liga I (Romania) — 2.45</option>
+                                        <option value="2.40">First League (Bulgaria) — 2.40</option>
+                                        <option value="2.70">NB I (Hungary) — 2.70</option>
+                                        <option value="2.50">Israeli Premier League — 2.50</option>
+                                        <option value="2.45">Cypriot First Division — 2.45</option>
+                                        <option value="2.55">Championship (England) — 2.55</option>
+                                        <option value="2.65">League One (England) — 2.65</option>
+                                        <option value="2.70">League Two (England) — 2.70</option>
+                                        <option value="2.60">La Liga 2 (Spain) — 2.60</option>
+                                        <option value="2.50">Serie B (Italy) — 2.50</option>
+                                        <option value="2.90">2. Bundesliga (Germany) — 2.90</option>
+                                        <option value="2.55">Ligue 2 (France) — 2.55</option>
+                                    </optgroup>
+                                    <optgroup label="🌎 อเมริกาใต้">
+                                        <option value="2.40">Brasileirão Série A — 2.40</option>
+                                        <option value="2.25">Primera División (Argentina) — 2.25</option>
+                                        <option value="2.55">Primera División (Chile) — 2.55</option>
+                                        <option value="2.35">Primera A (Colombia) — 2.35</option>
+                                        <option value="2.55">Primera División (Peru) — 2.55</option>
+                                        <option value="2.50">Serie A (Ecuador) — 2.50</option>
+                                        <option value="2.50">Primera División (Uruguay) — 2.50</option>
+                                        <option value="2.50">Primera División (Paraguay) — 2.50</option>
+                                        <option value="2.80">Primera División (Bolivia) — 2.80</option>
+                                        <option value="2.45">Primera División (Venezuela) — 2.45</option>
+                                    </optgroup>
+                                    <optgroup label="🌎 อเมริกาเหนือ/กลาง">
+                                        <option value="3.05">MLS (USA) — 3.05</option>
+                                        <option value="2.75">Liga MX (Mexico) — 2.75</option>
+                                        <option value="2.50">Primera División (Costa Rica) — 2.50</option>
+                                        <option value="2.40">Liga Nacional (Guatemala) — 2.40</option>
+                                        <option value="2.45">Liga Nacional (Honduras) — 2.45</option>
+                                        <option value="2.35">LPF (Panama) — 2.35</option>
+                                        <option value="2.55">USL Championship — 2.55</option>
+                                        <option value="2.65">Canadian Premier League — 2.65</option>
+                                    </optgroup>
+                                    <optgroup label="🌏 เอเชีย">
+                                        <option value="2.75">J1 League (Japan) — 2.75</option>
+                                        <option value="2.55">J2 League (Japan) — 2.55</option>
+                                        <option value="2.55">K League 1 (Korea) — 2.55</option>
+                                        <option value="2.45">K League 2 (Korea) — 2.45</option>
+                                        <option value="2.85">Chinese Super League — 2.85</option>
+                                        <option value="2.90">Thai League 1 — 2.90</option>
+                                        <option value="2.70">Thai League 2 — 2.70</option>
+                                        <option value="2.55">V.League 1 (Vietnam) — 2.55</option>
+                                        <option value="2.75">Liga 1 (Indonesia) — 2.75</option>
+                                        <option value="2.85">Super League (Malaysia) — 2.85</option>
+                                        <option value="3.10">Premier League (Singapore) — 3.10</option>
+                                        <option value="2.70">Indian Super League — 2.70</option>
+                                        <option value="2.55">I-League (India) — 2.55</option>
+                                        <option value="2.95">Saudi Pro League — 2.95</option>
+                                        <option value="2.95">UAE Pro League — 2.95</option>
+                                        <option value="2.85">Qatar Stars League — 2.85</option>
+                                        <option value="2.20">Persian Gulf Pro League (Iran) — 2.20</option>
+                                        <option value="2.30">Iraq Stars League — 2.30</option>
+                                        <option value="2.55">Uzbekistan Super League — 2.55</option>
+                                        <option value="2.90">Hong Kong Premier League — 2.90</option>
+                                        <option value="2.70">Philippines Football League — 2.70</option>
+                                        <option value="3.00">A-League (Australia) — 3.00</option>
+                                    </optgroup>
+                                    <optgroup label="🌍 แอฟริกา">
+                                        <option value="2.15">Egyptian Premier League — 2.15</option>
+                                        <option value="2.25">Premier Soccer League (South Africa) — 2.25</option>
+                                        <option value="2.10">Botola Pro (Morocco) — 2.10</option>
+                                        <option value="2.05">Ligue 1 (Tunisia) — 2.05</option>
+                                        <option value="2.10">Ligue 1 (Algeria) — 2.10</option>
+                                        <option value="2.20">NPFL (Nigeria) — 2.20</option>
+                                        <option value="2.15">Premier League (Kenya) — 2.15</option>
+                                        <option value="2.10">Premier League (Ghana) — 2.10</option>
+                                    </optgroup>
+                                    <optgroup label="🌏 โอเชียเนีย">
+                                        <option value="3.10">National League (New Zealand) — 3.10</option>
+                                        <option value="3.30">Premier League (Fiji) — 3.30</option>
+                                    </optgroup>
+                                    <optgroup label="👩 บอลหญิง">
+                                        <option value="2.90">WSL (England Women) — 2.90</option>
+                                        <option value="2.75">NWSL (USA Women) — 2.75</option>
+                                        <option value="3.20">Frauen-Bundesliga (Germany Women) — 3.20</option>
+                                        <option value="3.00">Division 1 Féminine (France Women) — 3.00</option>
+                                        <option value="2.85">Liga F (Spain Women) — 2.85</option>
+                                        <option value="3.00">Serie A Femminile (Italy Women) — 3.00</option>
+                                        <option value="3.10">Damallsvenskan (Sweden Women) — 3.10</option>
+                                        <option value="3.20">Toppserien (Norway Women) — 3.20</option>
+                                        <option value="3.30">UEFA Women's Champions League — 3.30</option>
+                                        <option value="3.00">Women's World Cup — 3.00</option>
+                                    </optgroup>
+                                    <optgroup label="🧒 บอลเยาวชน">
+                                        <option value="3.20">U21 Leagues (ทั่วไป) — 3.20</option>
+                                        <option value="3.30">U19 Leagues (ทั่วไป) — 3.30</option>
+                                        <option value="3.40">U17 Leagues (ทั่วไป) — 3.40</option>
+                                        <option value="3.30">UEFA Youth League — 3.30</option>
+                                        <option value="3.25">Premier League 2 (England U21) — 3.25</option>
+                                        <option value="3.15">U20 World Cup — 3.15</option>
+                                        <option value="3.10">U17 World Cup — 3.10</option>
+                                    </optgroup>
+                                    <optgroup label="🤝 กระชับมิตร">
+                                        <option value="2.50">International Friendlies — 2.50</option>
+                                        <option value="3.20">Club Friendlies (พรีซีซั่น) — 3.20</option>
+                                    </optgroup>
+                                    <optgroup label="🏆 บอลถ้วย / ทัวร์นาเมนต์">
+                                        <option value="3.00">UEFA Champions League — 3.00</option>
+                                        <option value="2.95">UEFA Europa League — 2.95</option>
+                                        <option value="2.95">UEFA Conference League — 2.95</option>
+                                        <option value="2.90">FA Cup — 2.90</option>
+                                        <option value="2.95">EFL Cup (Carabao) — 2.95</option>
+                                        <option value="2.80">Copa del Rey — 2.80</option>
+                                        <option value="2.75">Coppa Italia — 2.75</option>
+                                        <option value="3.10">DFB Pokal — 3.10</option>
+                                        <option value="2.90">Coupe de France — 2.90</option>
+                                        <option value="2.45">Copa Libertadores — 2.45</option>
+                                        <option value="2.40">Copa Sudamericana — 2.40</option>
+                                        <option value="2.85">AFC Champions League — 2.85</option>
+                                        <option value="2.10">CAF Champions League — 2.10</option>
+                                        <option value="2.50">FIFA World Cup — 2.50</option>
+                                        <option value="2.50">UEFA Euro — 2.50</option>
+                                        <option value="2.30">Copa América — 2.30</option>
+                                        <option value="2.55">AFC Asian Cup — 2.55</option>
+                                        <option value="2.10">Africa Cup of Nations — 2.10</option>
+                                        <option value="2.55">CONCACAF Gold Cup — 2.55</option>
+                                        <option value="2.60">UEFA Nations League — 2.60</option>
+                                    </optgroup>
+                                    <optgroup label="⚙️ กำหนดเอง">
+                                        <option value="custom">กำหนดเอง (Custom)...</option>
+                                    </optgroup>
+                                </select>
+                                <div id="leagueGoalsCustomWrap" class="mt-2" style="display:none;">
+                                    <label class="form-label text-info" style="font-size:0.75rem;">⚙️ ใส่ค่าที่ต้องการ (0.5 – 6.0)</label>
+                                    <div class="stepper-group border-info">
+                                        <button type="button" class="btn-step" onclick="stepVal('leagueGoalsCustom', -0.1, 1)">−</button>
+                                        <input type="number" id="leagueGoalsCustom" class="form-control stepper-input auto-calc" value="2.70" step="0.1" min="0.5" max="6">
+                                        <button type="button" class="btn-step" onclick="stepVal('leagueGoalsCustom', 0.1, 1)">+</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row mb-3 g-2">
-                            <div class="col-6">
-                                <label class="form-label">ยิงเหย้า (Shots)</label>
-                                <div class="stepper-group">
-                                    <button type="button" class="btn-step" onclick="stepVal('shotsH', -1)">−</button>
-                                    <input type="number" id="shotsH" class="form-control stepper-input auto-calc" value="0" min="0" max="40">
-                                    <button type="button" class="btn-step" onclick="stepVal('shotsH', 1)">+</button>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label">ยิงเยือน (Shots)</label>
-                                <div class="stepper-group">
-                                    <button type="button" class="btn-step" onclick="stepVal('shotsA', -1)">−</button>
-                                    <input type="number" id="shotsA" class="form-control stepper-input auto-calc" value="0" min="0" max="40">
-                                    <button type="button" class="btn-step" onclick="stepVal('shotsA', 1)">+</button>
-                                </div>
-                            </div>
+                            <div class="col-6"><label class="form-label">ยิงเหย้า (Shots)</label><div class="stepper-group"><button type="button" class="btn-step" onclick="stepVal('shotsH', -1)">−</button><input type="number" id="shotsH" class="form-control stepper-input auto-calc" value="0" min="0" max="40"><button type="button" class="btn-step" onclick="stepVal('shotsH', 1)">+</button></div></div>
+                            <div class="col-6"><label class="form-label">ยิงเยือน (Shots)</label><div class="stepper-group"><button type="button" class="btn-step" onclick="stepVal('shotsA', -1)">−</button><input type="number" id="shotsA" class="form-control stepper-input auto-calc" value="0" min="0" max="40"><button type="button" class="btn-step" onclick="stepVal('shotsA', 1)">+</button></div></div>
                         </div>
 
                         <div class="row mb-3 g-2">
-                            <div class="col-6">
-                                <label class="form-label">เข้ากรอบเหย้า (SOT)</label>
-                                <div class="stepper-group">
-                                    <button type="button" class="btn-step" onclick="stepVal('sotH', -1)">−</button>
-                                    <input type="number" id="sotH" class="form-control stepper-input auto-calc" value="0" min="0" max="30">
-                                    <button type="button" class="btn-step" onclick="stepVal('sotH', 1)">+</button>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label">เข้ากรอบเยือน (SOT)</label>
-                                <div class="stepper-group">
-                                    <button type="button" class="btn-step" onclick="stepVal('sotA', -1)">−</button>
-                                    <input type="number" id="sotA" class="form-control stepper-input auto-calc" value="0" min="0" max="30">
-                                    <button type="button" class="btn-step" onclick="stepVal('sotA', 1)">+</button>
-                                </div>
-                            </div>
+                            <div class="col-6"><label class="form-label">เข้ากรอบเหย้า (SOT)</label><div class="stepper-group"><button type="button" class="btn-step" onclick="stepVal('sotH', -1)">−</button><input type="number" id="sotH" class="form-control stepper-input auto-calc" value="0" min="0" max="30"><button type="button" class="btn-step" onclick="stepVal('sotH', 1)">+</button></div></div>
+                            <div class="col-6"><label class="form-label">เข้ากรอบเยือน (SOT)</label><div class="stepper-group"><button type="button" class="btn-step" onclick="stepVal('sotA', -1)">−</button><input type="number" id="sotA" class="form-control stepper-input auto-calc" value="0" min="0" max="30"><button type="button" class="btn-step" onclick="stepVal('sotA', 1)">+</button></div></div>
                         </div>
 
                         <div class="row mb-3 g-2 bg-info bg-opacity-10 p-2 rounded-3 border border-info border-opacity-25">
-                            <div class="col-6">
-                                <label class="form-label text-info fw-bold">🚩 เตะมุมเหย้า</label>
-                                <div class="stepper-group border-info">
-                                    <button type="button" class="btn-step" onclick="stepVal('cornersH', -1)">−</button>
-                                    <input type="number" id="cornersH" class="form-control stepper-input text-info auto-calc" value="0" min="0" max="20">
-                                    <button type="button" class="btn-step" onclick="stepVal('cornersH', 1)">+</button>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label text-info fw-bold">🚩 เตะมุมเยือน</label>
-                                <div class="stepper-group border-info">
-                                    <button type="button" class="btn-step" onclick="stepVal('cornersA', -1)">−</button>
-                                    <input type="number" id="cornersA" class="form-control stepper-input text-info auto-calc" value="0" min="0" max="20">
-                                    <button type="button" class="btn-step" onclick="stepVal('cornersA', 1)">+</button>
-                                </div>
-                            </div>
+                            <div class="col-6"><label class="form-label text-info fw-bold">🚩 เตะมุมเหย้า</label><div class="stepper-group border-info"><button type="button" class="btn-step" onclick="stepVal('cornersH', -1)">−</button><input type="number" id="cornersH" class="form-control stepper-input text-info auto-calc" value="0" min="0" max="20"><button type="button" class="btn-step" onclick="stepVal('cornersH', 1)">+</button></div></div>
+                            <div class="col-6"><label class="form-label text-info fw-bold">🚩 เตะมุมเยือน</label><div class="stepper-group border-info"><button type="button" class="btn-step" onclick="stepVal('cornersA', -1)">−</button><input type="number" id="cornersA" class="form-control stepper-input text-info auto-calc" value="0" min="0" max="20"><button type="button" class="btn-step" onclick="stepVal('cornersA', 1)">+</button></div></div>
                         </div>
 
                         <div class="row mb-3 g-2 bg-danger bg-opacity-10 p-2 rounded-3 border border-danger border-opacity-25">
-                            <div class="col-6">
-                                <label class="form-label text-danger fw-bold">🟥 ใบแดงเหย้า</label>
-                                <div class="stepper-group border-danger">
-                                    <button type="button" class="btn-step" onclick="stepVal('redH', -1)">−</button>
-                                    <input type="number" id="redH" class="form-control stepper-input text-danger auto-calc" value="0" min="0" max="3">
-                                    <button type="button" class="btn-step" onclick="stepVal('redH', 1)">+</button>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label text-danger fw-bold">🟥 ใบแดงเยือน</label>
-                                <div class="stepper-group border-danger">
-                                    <button type="button" class="btn-step" onclick="stepVal('redA', -1)">−</button>
-                                    <input type="number" id="redA" class="form-control stepper-input text-danger auto-calc" value="0" min="0" max="3">
-                                    <button type="button" class="btn-step" onclick="stepVal('redA', 1)">+</button>
-                                </div>
-                            </div>
+                            <div class="col-6"><label class="form-label text-danger fw-bold">🟥 ใบแดงเหย้า</label><div class="stepper-group border-danger"><button type="button" class="btn-step" onclick="stepVal('redH', -1)">−</button><input type="number" id="redH" class="form-control stepper-input text-danger auto-calc" value="0" min="0" max="3"><button type="button" class="btn-step" onclick="stepVal('redH', 1)">+</button></div></div>
+                            <div class="col-6"><label class="form-label text-danger fw-bold">🟥 ใบแดงเยือน</label><div class="stepper-group border-danger"><button type="button" class="btn-step" onclick="stepVal('redA', -1)">−</button><input type="number" id="redA" class="form-control stepper-input text-danger auto-calc" value="0" min="0" max="3"><button type="button" class="btn-step" onclick="stepVal('redA', 1)">+</button></div></div>
                         </div>
 
                         <div class="text-center mb-2">
-                            <small class="adv-toggle" data-bs-toggle="collapse" data-bs-target="#advancedStats" aria-expanded="false" aria-controls="advancedStats">
-                                ⚙️ เปิด/ปิด สถิติขั้นสูง (xG, Possession, DA, Subs)
-                            </small>
+                            <small class="adv-toggle" data-bs-toggle="collapse" data-bs-target="#advancedStats" aria-expanded="false">⚙️ เปิด/ปิด สถิติขั้นสูง (xG, Possession, DA, Subs)</small>
                         </div>
-
                         <div class="text-center mb-2">
-                            <small class="adv-toggle text-warning" data-bs-toggle="collapse" data-bs-target="#stoppageCfg" aria-expanded="false" aria-controls="stoppageCfg">
-                                🎛️ ตั้งค่าสูตรทดเจ็บ (Advanced)
-                            </small>
+                            <small class="adv-toggle text-warning" data-bs-toggle="collapse" data-bs-target="#stoppageCfg" aria-expanded="false">🎛️ ตั้งค่าสูตรทดเจ็บ (Advanced)</small>
                         </div>
 
                         <div class="collapse" id="advancedStats">
                             <div class="p-3 mb-3 rounded-3 bg-primary bg-opacity-10 border border-primary border-opacity-25">
-                                <div class="text-center mb-2" style="font-size:0.72rem; color:#94a3b8;">
-                                    💡 ปล่อยว่างหรือค่าเริ่มต้น = ระบบประเมินจากสถิติเกมให้อัตโนมัติ
+                                <div class="text-center mb-2" style="font-size:0.72rem;color:#94a3b8;">💡 ปล่อยว่าง = ระบบประเมินอัตโนมัติ</div>
+                                <div class="row mb-2 g-2">
+                                    <div class="col-6"><label class="form-label text-primary fw-bold">xG เหย้า (สะสม) <small class="text-muted fw-normal">(auto)</small></label><input type="number" id="xgH" class="form-control border-primary auto-calc" placeholder="เว้นว่าง = ประเมิน" step="0.01" min="0" max="10"></div>
+                                    <div class="col-6"><label class="form-label text-primary fw-bold">xG เยือน (สะสม) <small class="text-muted fw-normal">(auto)</small></label><input type="number" id="xgA" class="form-control border-primary auto-calc" placeholder="เว้นว่าง = ประเมิน" step="0.01" min="0" max="10"></div>
                                 </div>
                                 <div class="row mb-2 g-2">
-                                    <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">
-                                            xG เหย้า (สะสม) <small class="text-muted fw-normal">(auto)</small>
-                                        </label>
-                                        <input type="number" id="xgH" class="form-control border-primary auto-calc"
-                                               placeholder="เว้นว่าง = ประเมิน" step="0.01" min="0" max="10">
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">
-                                            xG เยือน (สะสม) <small class="text-muted fw-normal">(auto)</small>
-                                        </label>
-                                        <input type="number" id="xgA" class="form-control border-primary auto-calc"
-                                               placeholder="เว้นว่าง = ประเมิน" step="0.01" min="0" max="10">
-                                    </div>
-                                </div>
-                                <div class="row mb-2 g-2">
-                                    <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">
-                                            ครองบอลเหย้า (%) <small class="text-muted fw-normal">(auto ถ้า 50/50)</small>
-                                        </label>
-                                        <input type="number" id="possH" class="form-control border-primary auto-calc"
-                                               value="50" min="0" max="100" oninput="syncPossession('H')">
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">
-                                            ครองบอลเยือน (%) <small class="text-muted fw-normal">(auto ถ้า 50/50)</small>
-                                        </label>
-                                        <input type="number" id="possA" class="form-control border-primary auto-calc"
-                                               value="50" min="0" max="100" oninput="syncPossession('A')">
-                                    </div>
+                                    <div class="col-6"><label class="form-label text-primary fw-bold">ครองบอลเหย้า (%)</label><input type="number" id="possH" class="form-control border-primary auto-calc" value="50" min="0" max="100" oninput="syncPossession('H')"></div>
+                                    <div class="col-6"><label class="form-label text-primary fw-bold">ครองบอลเยือน (%)</label><input type="number" id="possA" class="form-control border-primary auto-calc" value="50" min="0" max="100" oninput="syncPossession('A')"></div>
                                 </div>
                                 <div class="row g-2">
-                                    <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">
-                                            บุกอันตราย (เหย้า) <small class="text-muted fw-normal">(auto ถ้า 0)</small>
-                                        </label>
-                                        <div class="stepper-group border-primary">
-                                            <button type="button" class="btn-step" onclick="stepVal('daH', -1)">−</button>
-                                            <input type="number" id="daH" class="form-control stepper-input auto-calc" value="0" min="0" max="999">
-                                            <button type="button" class="btn-step" onclick="stepVal('daH', 1)">+</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label text-primary fw-bold">
-                                            บุกอันตราย (เยือน) <small class="text-muted fw-normal">(auto ถ้า 0)</small>
-                                        </label>
-                                        <div class="stepper-group border-primary">
-                                            <button type="button" class="btn-step" onclick="stepVal('daA', -1)">−</button>
-                                            <input type="number" id="daA" class="form-control stepper-input auto-calc" value="0" min="0" max="999">
-                                            <button type="button" class="btn-step" onclick="stepVal('daA', 1)">+</button>
-                                        </div>
-                                    </div>
+                                    <div class="col-6"><label class="form-label text-primary fw-bold">บุกอันตราย (เหย้า)</label><div class="stepper-group border-primary"><button type="button" class="btn-step" onclick="stepVal('daH', -1)">−</button><input type="number" id="daH" class="form-control stepper-input auto-calc" value="0" min="0" max="999"><button type="button" class="btn-step" onclick="stepVal('daH', 1)">+</button></div></div>
+                                    <div class="col-6"><label class="form-label text-primary fw-bold">บุกอันตราย (เยือน)</label><div class="stepper-group border-primary"><button type="button" class="btn-step" onclick="stepVal('daA', -1)">−</button><input type="number" id="daA" class="form-control stepper-input auto-calc" value="0" min="0" max="999"><button type="button" class="btn-step" onclick="stepVal('daA', 1)">+</button></div></div>
                                 </div>
-
                                 <div class="border-top border-primary border-opacity-25 mt-2 pt-2">
-                                    <div class="text-center mb-1" style="font-size:0.72rem;color:#94a3b8;">
-                                        🔄 จำนวนการเปลี่ยนตัว (ครึ่งแรก)
-                                    </div>
+                                    <div class="text-center mb-1" style="font-size:0.72rem;color:#94a3b8;">🔄 เปลี่ยนตัว (ครึ่งแรก)</div>
                                     <div class="row g-2">
-                                        <div class="col-6">
-                                            <label class="form-label text-primary fw-bold">เปลี่ยนตัวเหย้า</label>
-                                            <div class="stepper-group border-primary">
-                                                <button type="button" class="btn-step" onclick="stepVal('subsH', -1)">−</button>
-                                                <input type="number" id="subsH" class="form-control stepper-input auto-calc" value="0" min="0" max="5">
-                                                <button type="button" class="btn-step" onclick="stepVal('subsH', 1)">+</button>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="form-label text-primary fw-bold">เปลี่ยนตัวเยือน</label>
-                                            <div class="stepper-group border-primary">
-                                                <button type="button" class="btn-step" onclick="stepVal('subsA', -1)">−</button>
-                                                <input type="number" id="subsA" class="form-control stepper-input auto-calc" value="0" min="0" max="5">
-                                                <button type="button" class="btn-step" onclick="stepVal('subsA', 1)">+</button>
-                                            </div>
-                                        </div>
+                                        <div class="col-6"><label class="form-label text-primary fw-bold">เหย้า</label><div class="stepper-group border-primary"><button type="button" class="btn-step" onclick="stepVal('subsH', -1)">−</button><input type="number" id="subsH" class="form-control stepper-input auto-calc" value="0" min="0" max="5"><button type="button" class="btn-step" onclick="stepVal('subsH', 1)">+</button></div></div>
+                                        <div class="col-6"><label class="form-label text-primary fw-bold">เยือน</label><div class="stepper-group border-primary"><button type="button" class="btn-step" onclick="stepVal('subsA', -1)">−</button><input type="number" id="subsA" class="form-control stepper-input auto-calc" value="0" min="0" max="5"><button type="button" class="btn-step" onclick="stepVal('subsA', 1)">+</button></div></div>
                                     </div>
                                 </div>
                             </div>
@@ -738,377 +422,148 @@
                         <div class="collapse" id="stoppageCfg">
                             <div class="p-3 mb-3 rounded-3 bg-warning bg-opacity-10 border border-warning border-opacity-25">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span style="font-size:0.78rem;color:#fbbf24;font-weight:700;">🎛️ Stoppage Formula Weights</span>
-                                    <button type="button" class="icon-btn" onclick="resetStoppageCfg()" title="คืนค่าเริ่มต้น">↺ Reset</button>
-                                </div>
-                                <div class="text-center mb-2" style="font-size:0.68rem;color:#94a3b8;">
-                                    สูตร: base + goals×N (cap) + red×N + subs×N → clamp(1, maxCap)
+                                    <span style="font-size:0.78rem;color:#fbbf24;font-weight:700;">🎛️ Stoppage Formula Weights (1H)</span>
+                                    <button type="button" class="icon-btn" onclick="resetStoppageCfg()">↺ Reset</button>
                                 </div>
                                 <div class="row mb-2 g-2">
-                                    <div class="col-6">
-                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Base (นาที)</label>
-                                        <div class="stepper-group border-warning">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgBase', -0.1, 1)">−</button>
-                                            <input type="number" id="cfgBase" class="form-control stepper-input auto-calc" value="1.5" step="0.1" min="0" max="5">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgBase', 0.1, 1)">+</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Goals × / ประตู</label>
-                                        <div class="stepper-group border-warning">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgGoalsBonus', -0.1, 1)">−</button>
-                                            <input type="number" id="cfgGoalsBonus" class="form-control stepper-input auto-calc" value="0.6" step="0.1" min="0" max="2">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgGoalsBonus', 0.1, 1)">+</button>
-                                        </div>
-                                    </div>
+                                    <div class="col-6"><label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Base (นาที)</label><div class="stepper-group border-warning"><button type="button" class="btn-step" onclick="stepVal('cfgBase', -0.1, 1)">−</button><input type="number" id="cfgBase" class="form-control stepper-input auto-calc" value="1.0" step="0.1" min="0" max="5"><button type="button" class="btn-step" onclick="stepVal('cfgBase', 0.1, 1)">+</button></div></div>
+                                    <div class="col-6"><label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Goals × / ประตู</label><div class="stepper-group border-warning"><button type="button" class="btn-step" onclick="stepVal('cfgGoalsBonus', -0.1, 1)">−</button><input type="number" id="cfgGoalsBonus" class="form-control stepper-input auto-calc" value="0.4" step="0.1" min="0" max="2"><button type="button" class="btn-step" onclick="stepVal('cfgGoalsBonus', 0.1, 1)">+</button></div></div>
                                 </div>
                                 <div class="row mb-2 g-2">
-                                    <div class="col-6">
-                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Goals Cap (นาที)</label>
-                                        <div class="stepper-group border-warning">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgGoalsCap', -0.5, 1)">−</button>
-                                            <input type="number" id="cfgGoalsCap" class="form-control stepper-input auto-calc" value="3" step="0.5" min="0" max="6">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgGoalsCap', 0.5, 1)">+</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Red × / ใบ</label>
-                                        <div class="stepper-group border-warning">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgRedBonus', -0.1, 1)">−</button>
-                                            <input type="number" id="cfgRedBonus" class="form-control stepper-input auto-calc" value="0.8" step="0.1" min="0" max="2">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgRedBonus', 0.1, 1)">+</button>
-                                        </div>
-                                    </div>
+                                    <div class="col-6"><label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Goals Cap (นาที)</label><div class="stepper-group border-warning"><button type="button" class="btn-step" onclick="stepVal('cfgGoalsCap', -0.5, 1)">−</button><input type="number" id="cfgGoalsCap" class="form-control stepper-input auto-calc" value="2" step="0.5" min="0" max="6"><button type="button" class="btn-step" onclick="stepVal('cfgGoalsCap', 0.5, 1)">+</button></div></div>
+                                    <div class="col-6"><label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Red × / ใบ</label><div class="stepper-group border-warning"><button type="button" class="btn-step" onclick="stepVal('cfgRedBonus', -0.1, 1)">−</button><input type="number" id="cfgRedBonus" class="form-control stepper-input auto-calc" value="0.7" step="0.1" min="0" max="2"><button type="button" class="btn-step" onclick="stepVal('cfgRedBonus', 0.1, 1)">+</button></div></div>
                                 </div>
                                 <div class="row g-2">
-                                    <div class="col-6">
-                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Subs × / ครั้ง</label>
-                                        <div class="stepper-group border-warning">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgSubsBonus', -0.1, 1)">−</button>
-                                            <input type="number" id="cfgSubsBonus" class="form-control stepper-input auto-calc" value="0.3" step="0.1" min="0" max="1">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgSubsBonus', 0.1, 1)">+</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Max Cap (นาที)</label>
-                                        <div class="stepper-group border-warning">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgMaxCap', -1)">−</button>
-                                            <input type="number" id="cfgMaxCap" class="form-control stepper-input auto-calc" value="10" min="1" max="15">
-                                            <button type="button" class="btn-step" onclick="stepVal('cfgMaxCap', 1)">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-center mt-2" style="font-size:0.68rem;color:#94a3b8;">
-                                    💡 ปรับแล้วผลจะอัปเดตทันที • ค่าจะถูกบันทึกใน localStorage
+                                    <div class="col-6"><label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Subs × / ครั้ง</label><div class="stepper-group border-warning"><button type="button" class="btn-step" onclick="stepVal('cfgSubsBonus', -0.1, 1)">−</button><input type="number" id="cfgSubsBonus" class="form-control stepper-input auto-calc" value="0.2" step="0.1" min="0" max="1"><button type="button" class="btn-step" onclick="stepVal('cfgSubsBonus', 0.1, 1)">+</button></div></div>
+                                    <div class="col-6"><label class="form-label text-warning fw-bold" style="font-size:0.72rem;">Max Cap (นาที)</label><div class="stepper-group border-warning"><button type="button" class="btn-step" onclick="stepVal('cfgMaxCap', -1)">−</button><input type="number" id="cfgMaxCap" class="form-control stepper-input auto-calc" value="8" min="1" max="15"><button type="button" class="btn-step" onclick="stepVal('cfgMaxCap', 1)">+</button></div></div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row g-2 mt-2">
-                            <div class="col-7">
-                                <button type="button" class="btn btn-primary w-100" onclick="predict(true)">🚀 ประมวลผล</button>
-                            </div>
-                            <div class="col-5">
-                                <button type="button" class="btn btn-reset w-100" onclick="resetForm()">🔄 ล้างค่า</button>
-                            </div>
+                            <div class="col-7"><button type="button" class="btn btn-primary w-100" onclick="predict(true)">🚀 ประมวลผล</button></div>
+                            <div class="col-5"><button type="button" class="btn btn-reset w-100" onclick="resetForm()">🔄 ล้างค่า</button></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ============ RIGHT: RESULTS PANEL ============ -->
             <div class="col-lg-7">
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5>📊 ผลการคาดการณ์ (ครึ่งแรก)</h5>
+                        <h5>📊 ผลการคาดการณ์ (HALF TIME 45 นาที)</h5>
                         <div class="d-flex gap-1 align-items-center">
-                            <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="เปิด/ปิดเสียงแจ้งเตือน">🔕</button>
+                            <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="เปิด/ปิดเสียง">🔕</button>
                             <button class="icon-btn" onclick="copyResult(this)" title="คัดลอกผล">📋</button>
-                            <span id="matchHeaderBadge" class="badge bg-secondary" style="font-size: 0.7rem;">พร้อมคำนวณ</span>
+                            <span id="matchHeaderBadge" class="badge bg-secondary" style="font-size:0.7rem;">พร้อมคำนวณ</span>
                         </div>
                     </div>
                     <div class="card-body">
                         <div id="results" class="d-none">
-
                             <div id="signalsContainer"></div>
-
-                            <div class="section-title">ผลการแข่งขัน (1X2 ครึ่งแรก)</div>
+                            <div class="section-title">🏆 ผลการแข่งขัน HALF TIME (1X2)</div>
                             <div class="row text-center mb-3 g-2">
-                                <div class="col-4">
-                                    <div class="result-card">
-                                        <div class="text-muted small fw-bold" id="labelHome">เหย้า</div>
-                                        <div class="prob-text bg-home" id="resHome">0%</div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="result-card">
-                                        <div class="text-muted small fw-bold">เสมอ</div>
-                                        <div class="prob-text bg-draw" id="resDraw">0%</div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="result-card">
-                                        <div class="text-muted small fw-bold" id="labelAway">เยือน</div>
-                                        <div class="prob-text bg-away" id="resAway">0%</div>
-                                    </div>
-                                </div>
+                                <div class="col-4"><div class="result-card"><div class="text-muted small fw-bold" id="labelHome">เหย้า</div><div class="prob-text bg-home" id="resHome">0%</div></div></div>
+                                <div class="col-4"><div class="result-card"><div class="text-muted small fw-bold">เสมอ</div><div class="prob-text bg-draw" id="resDraw">0%</div></div></div>
+                                <div class="col-4"><div class="result-card"><div class="text-muted small fw-bold" id="labelAway">เยือน</div><div class="prob-text bg-away" id="resAway">0%</div></div></div>
                             </div>
-
-                            <div class="section-title">ประตูถัดไป • BTTS • แรงกดดัน</div>
+                            <div class="section-title">ประตูถัดไป (1H) • BTTS • แรงกดดัน</div>
                             <div class="row text-center mb-3 g-2">
-                                <div class="col-4">
-                                    <div class="result-card">
-                                        <small class="text-muted">ประตูถัดไป เหย้า</small>
-                                        <div class="prob-text text-success" id="nextHome" style="font-size:1.15rem;">-</div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="result-card">
-                                        <small class="text-muted">ประตูถัดไป เยือน</small>
-                                        <div class="prob-text text-danger" id="nextAway" style="font-size:1.15rem;">-</div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="result-card">
-                                        <small class="text-muted">ไม่มีประตูเพิ่ม</small>
-                                        <div class="prob-text text-secondary" id="nextNone" style="font-size:1.15rem;">-</div>
-                                    </div>
-                                </div>
+                                <div class="col-4"><div class="result-card"><small class="text-muted">ประตูถัดไป เหย้า</small><div class="prob-text text-success" id="nextHome" style="font-size:1.15rem;">-</div></div></div>
+                                <div class="col-4"><div class="result-card"><small class="text-muted">ประตูถัดไป เยือน</small><div class="prob-text text-danger" id="nextAway" style="font-size:1.15rem;">-</div></div></div>
+                                <div class="col-4"><div class="result-card"><small class="text-muted">ไม่มีประตูเพิ่ม</small><div class="prob-text text-secondary" id="nextNone" style="font-size:1.15rem;">-</div></div></div>
                             </div>
-
                             <div class="mb-3">
-                                <div class="d-flex justify-content-between fw-bold small">
-                                    <span>⚖️ BTTS ครึ่งแรก (ทั้งคู่ยิง)</span>
-                                    <span id="btts1h" class="text-info">0%</span>
-                                </div>
+                                <div class="d-flex justify-content-between fw-bold small"><span>⚖️ BTTS 1H</span><span id="btts1h" class="text-info">0%</span></div>
                                 <div class="progress"><div class="progress-bar bg-info" id="btts1hBar" style="width:0%"></div></div>
                             </div>
-
                             <div class="mb-3">
-                                <div class="d-flex justify-content-between fw-bold small">
-                                    <span>🏋️ Pressure Index</span>
-                                    <span id="pressureLabel" class="text-warning">-</span>
-                                </div>
-                                <div class="progress" style="height:10px !important;">
-                                    <div class="progress-bar pressure-bar-home" id="pressureBarH" style="width:50%"></div>
-                                    <div class="progress-bar pressure-bar-away" id="pressureBarA" style="width:50%"></div>
-                                </div>
-                                <div class="d-flex justify-content-between mt-1" style="font-size:0.7rem;color:var(--text-muted)">
-                                    <span id="pressureHLabel">เหย้า</span>
-                                    <span id="pressureALabel">เยือน</span>
-                                </div>
+                                <div class="d-flex justify-content-between fw-bold small"><span>🏋️ Pressure Index (1H)</span><span id="pressureLabel" class="text-warning">-</span></div>
+                                <div class="progress" style="height:10px !important;"><div class="progress-bar pressure-bar-home" id="pressureBarH" style="width:50%"></div><div class="progress-bar pressure-bar-away" id="pressureBarA" style="width:50%"></div></div>
+                                <div class="d-flex justify-content-between mt-1" style="font-size:0.7rem;color:var(--text-muted)"><span id="pressureHLabel">เหย้า</span><span id="pressureALabel">เยือน</span></div>
                             </div>
-
                             <div class="mb-3 px-2 py-1 rounded-3 bg-dark bg-opacity-25 border border-secondary border-opacity-25" style="font-size:0.78rem;">
-                                <span class="text-muted">Model xG (คงเหลือ):</span>
+                                <span class="text-muted">Model xG (1H คงเหลือ):</span>
                                 <span class="text-success fw-bold" id="xghRem">-</span> vs
                                 <span class="text-danger fw-bold" id="xgaRem">-</span>
                                 <span class="text-muted float-end">รวม <span class="text-info fw-bold" id="xgTotalRem">-</span></span>
                             </div>
-
-                            <div class="section-title">📊 การกระจายจำนวนประตูรวม (Final)</div>
-                            <div class="chart-wrap">
-                                <canvas id="goalChart"></canvas>
-                            </div>
-                            <div class="text-center text-muted" style="font-size:0.7rem;margin-bottom:6px;">
-                                แถบสีฟ้าเข้ม = สกอร์ที่น่าจะเกิดมากที่สุด • ใช้เทียบกับตลาด O/U ได้
-                            </div>
-
-                            <div class="section-title">🎯 Asian Handicap ครึ่งแรก (1H AH)</div>
+                            <div class="section-title">📊 การกระจายจำนวนประตูรวม (HT)</div>
+                            <div class="chart-wrap"><canvas id="goalChart"></canvas></div>
+                            <div class="text-center text-muted" style="font-size:0.7rem;margin-bottom:6px;">แถบสีฟ้าเข้ม = สกอร์ที่น่าจะเกิดมากที่สุด</div>
+                            <div class="section-title">🎯 Asian Handicap HALF TIME</div>
                             <div class="table-responsive">
                                 <table class="ah-table" id="ah1HTable">
-                                    <thead>
-                                        <tr>
-                                            <th style="text-align:left;">Line</th>
-                                            <th>Home</th>
-                                            <th>Push</th>
-                                            <th>Away</th>
-                                            <th>Fair (H / A)</th>
-                                        </tr>
-                                    </thead>
+                                    <thead><tr><th style="text-align:left;">Line</th><th>Home</th><th>Push</th><th>Away</th><th>Fair (H / A)</th></tr></thead>
                                     <tbody></tbody>
                                 </table>
                             </div>
-                            <div class="text-center text-muted mt-2" style="font-size:0.7rem;">
-                                💡 บรรทัดที่ไฮไลท์คือ Fair Line (Home Cover ใกล้ 50%) • Fair Odds = ราคายุติธรรมก่อนหักมาร์จิ้นบุ๊ค
-                            </div>
-
-                            <div class="section-title">ประตูรวม (Over/Under ครึ่งแรก)</div>
-                            <div class="mb-2">
-                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 0.5</span> <span id="ou05" class="text-success">0%</span></div>
-                                <div class="progress"><div class="progress-bar bg-success" id="ou05Bar" style="width: 0%"></div></div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 1.5</span> <span id="ou15" class="text-warning">0%</span></div>
-                                <div class="progress"><div class="progress-bar bg-warning" id="ou15Bar" style="width: 0%"></div></div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 2.5</span> <span id="ou25" class="text-danger">0%</span></div>
-                                <div class="progress"><div class="progress-bar bg-danger" id="ou25Bar" style="width: 0%"></div></div>
-                            </div>
-
-                            <div class="section-title">🚩 วิเคราะห์ลูกเตะมุม</div>
+                            <div class="text-center text-muted mt-2" style="font-size:0.7rem;">💡 บรรทัดที่ไฮไลท์คือ Fair Line</div>
+                            <div class="section-title">ประตูที่เหลือ 1H (Over/Under Remaining)</div>
+                            <div class="mb-2"><div class="d-flex justify-content-between fw-bold small"><span>สูง 0.5</span><span id="ou05" class="text-success">0%</span></div><div class="progress"><div class="progress-bar bg-success" id="ou05Bar" style="width: 0%"></div></div></div>
+                            <div class="mb-2"><div class="d-flex justify-content-between fw-bold small"><span>สูง 1.5</span><span id="ou15" class="text-warning">0%</span></div><div class="progress"><div class="progress-bar bg-warning" id="ou15Bar" style="width: 0%"></div></div></div>
+                            <div class="mb-3"><div class="d-flex justify-content-between fw-bold small"><span>สูง 2.5</span><span id="ou25" class="text-danger">0%</span></div><div class="progress"><div class="progress-bar bg-danger" id="ou25Bar" style="width: 0%"></div></div></div>
+                            <div class="section-title">🚩 วิเคราะห์ลูกเตะมุม (Total Corners HT)</div>
                             <div class="row text-center mb-3 g-2">
-                                <div class="col-4">
-                                    <div class="result-card bg-dark bg-opacity-25">
-                                        <small class="text-muted">เหย้า (คาด)</small>
-                                        <br><strong class="fs-5 text-success" id="expCornersH">-</strong>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="result-card bg-dark bg-opacity-25 border-info">
-                                        <small class="text-info">รวม (คาด)</small>
-                                        <br><strong class="fs-5 text-info" id="expCornersTotal">-</strong>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="result-card bg-dark bg-opacity-25">
-                                        <small class="text-muted">เยือน (คาด)</small>
-                                        <br><strong class="fs-5 text-danger" id="expCornersA">-</strong>
-                                    </div>
-                                </div>
+                                <div class="col-4"><div class="result-card bg-dark bg-opacity-25"><small class="text-muted">เหย้า (รวมคาด)</small><br><strong class="fs-5 text-success" id="expCornersH">-</strong></div></div>
+                                <div class="col-4"><div class="result-card bg-dark bg-opacity-25 border-info"><small class="text-info">รวม (คาด)</small><br><strong class="fs-5 text-info" id="expCornersTotal">-</strong></div></div>
+                                <div class="col-4"><div class="result-card bg-dark bg-opacity-25"><small class="text-muted">เยือน (รวมคาด)</small><br><strong class="fs-5 text-danger" id="expCornersA">-</strong></div></div>
                             </div>
-                            <div class="mb-2">
-                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 3.5</span> <span id="co35" class="text-info">0%</span></div>
-                                <div class="progress"><div class="progress-bar bg-info" id="co35Bar" style="width: 0%"></div></div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 4.5</span> <span id="co45" class="text-primary">0%</span></div>
-                                <div class="progress"><div class="progress-bar bg-primary" id="co45Bar" style="width: 0%"></div></div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between fw-bold small"><span>สูง 5.5</span> <span id="co55" class="text-light">0%</span></div>
-                                <div class="progress"><div class="progress-bar bg-dark" id="co55Bar" style="width: 0%"></div></div>
-                            </div>
-
-                            <div class="section-title">สกอร์ที่เป็นไปได้สูงสุด (Top 3)</div>
+                            <div class="mb-2"><div class="d-flex justify-content-between fw-bold small"><span>สูง 3.5 (รวม)</span><span id="co35" class="text-info">0%</span></div><div class="progress"><div class="progress-bar bg-info" id="co35Bar" style="width: 0%"></div></div></div>
+                            <div class="mb-2"><div class="d-flex justify-content-between fw-bold small"><span>สูง 4.5 (รวม)</span><span id="co45" class="text-primary">0%</span></div><div class="progress"><div class="progress-bar bg-primary" id="co45Bar" style="width: 0%"></div></div></div>
+                            <div class="mb-3"><div class="d-flex justify-content-between fw-bold small"><span>สูง 5.5 (รวม)</span><span id="co55" class="text-light">0%</span></div><div class="progress"><div class="progress-bar bg-dark" id="co55Bar" style="width: 0%"></div></div></div>
+                            <div class="section-title">สกอร์ HT ที่เป็นไปได้สูงสุด (Top 3 HT)</div>
                             <div class="row text-center g-2" id="topScores"></div>
-                            <div class="text-center mt-3 text-muted small" id="top3Note">
-                                * ผลรวมของ Top 3 ถูกปรับเป็น 100% เพื่อแสดงสัดส่วน
-                            </div>
                         </div>
-
                         <div id="emptyState" class="text-center text-muted py-5">
                             <h1 style="font-size: 4rem; opacity: 0.2;">⚽</h1>
                             <h5 class="fw-light">กรอกข้อมูลหรือกดปุ่ม <span class="text-info">"+"</span> ด้านซ้าย</h5>
-                            <p class="small">ระบบจะคำนวณความน่าจะเป็นและแจ้งเตือนสัญญาณให้อัตโนมัติ (โหมดแจ้งเตือนไว)</p>
+                            <p class="small">ระบบจะคำนวณความน่าจะเป็นของผล HALF TIME 45 นาที</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="brand-footer">
-            Powered by <strong>JackZaa AI</strong> • First-Half Live Football Analytics (Early Entry Mode)
-        </div>
+        <div class="brand-footer">Powered by <strong>JackZaa AI</strong> • First-Half Live Football Analytics</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    /* =========================================================
-       STATE & STORAGE
-    ========================================================= */
-    const STORAGE_KEY = 'jz1h_predictor_v4';
-    const FIELD_IDS = ['teamH','teamA','scoreH','scoreA','ahLine','minute','stoppage','leagueGoals',
-                       'shotsH','shotsA','sotH','sotA','cornersH','cornersA','redH','redA',
-                       'subsH','subsA',
-                       'xgH','xgA','possH','possA','daH','daA',
-                       'cfgBase','cfgGoalsBonus','cfgGoalsCap','cfgRedBonus','cfgSubsBonus','cfgMaxCap'];
+    const STORAGE_KEY = 'jz1h_predictor_v6';
+    const FIELD_IDS = ['teamH','teamA','scoreH','scoreA','ahLine','minute','stoppage','leagueGoals','leagueGoalsCustom',
+                       'shotsH','shotsA','sotH','sotA','cornersH','cornersA','redH','redA','subsH','subsA',
+                       'xgH','xgA','possH','possA','daH','daA','cfgBase','cfgGoalsBonus','cfgGoalsCap','cfgRedBonus','cfgSubsBonus','cfgMaxCap'];
     const TOUCHED_FIELDS = ['stoppage', 'possH', 'possA', 'daH', 'daA'];
+    const STOPPAGE_CFG_DEFAULTS = { base: 1.0, goalsBonus: 0.4, goalsCap: 2, redBonus: 0.7, subsBonus: 0.2, maxCap: 8 };
 
-    const STOPPAGE_CFG_DEFAULTS = {
-        base: 1.5, goalsBonus: 0.6, goalsCap: 3,
-        redBonus: 0.8, subsBonus: 0.3, maxCap: 10
-    };
+    let soundEnabled = false, timerRunning = false, timerInterval = null;
+    let lastSignalSignature = '', debounceTimer = null, lastChartBuckets = null, deferredInstallPrompt = null;
 
-    let soundEnabled = false;
-    let timerRunning = false;
-    let timerInterval = null;
-    let lastSignalSignature = '';
-    let debounceTimer = null;
-    let lastChartBuckets = null;
-    let deferredInstallPrompt = null;
-
-    /* =========================================================
-       PWA: INLINE MANIFEST + ICON
-    ========================================================= */
     (function setupPWA() {
-        const iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">'
-            + '<rect width="512" height="512" rx="96" fill="#0b1120"/>'
-            + '<circle cx="256" cy="200" r="110" fill="none" stroke="#38bdf8" stroke-width="20"/>'
-            + '<text x="256" y="400" font-family="Arial,Helvetica,sans-serif" font-size="170" font-weight="bold" text-anchor="middle" fill="#38bdf8">1H</text>'
-            + '</svg>';
+        const iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#0b1120"/><circle cx="256" cy="200" r="110" fill="none" stroke="#38bdf8" stroke-width="20"/><text x="256" y="400" font-family="Arial,Helvetica,sans-serif" font-size="170" font-weight="bold" text-anchor="middle" fill="#38bdf8">1H</text></svg>';
         const iconDataUri = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(iconSvg);
-
         const appleLink = document.createElement('link');
-        appleLink.rel = 'apple-touch-icon';
-        appleLink.href = iconDataUri;
-        document.head.appendChild(appleLink);
-
-        const manifest = {
-            name: '1H Predictor Pro - JackZaa AI',
-            short_name: '1H Predictor',
-            description: 'First-Half Football Analytics Engine',
-            start_url: '.',
-            scope: '.',
-            display: 'standalone',
-            orientation: 'portrait',
-            background_color: '#0b1120',
-            theme_color: '#0b1120',
-            icons: [{
-                src: iconDataUri,
-                sizes: '512x512',
-                type: 'image/svg+xml',
-                purpose: 'any maskable'
-            }]
-        };
-        const manifestUri = 'data:application/manifest+json;charset=utf-8,'
-            + encodeURIComponent(JSON.stringify(manifest));
-        document.getElementById('manifestLink').setAttribute('href', manifestUri);
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredInstallPrompt = e;
-            const btn = document.getElementById('installBtn');
-            btn.style.display = 'inline-block';
-        });
-
-        window.addEventListener('appinstalled', () => {
-            document.getElementById('installBtn').style.display = 'none';
-            deferredInstallPrompt = null;
-        });
-
+        appleLink.rel = 'apple-touch-icon'; appleLink.href = iconDataUri; document.head.appendChild(appleLink);
+        const manifest = { name: '1H Predictor Pro - JackZaa AI', short_name: '1H Predictor', description: 'First-Half Football Analytics Engine', start_url: '.', scope: '.', display: 'standalone', orientation: 'portrait', background_color: '#0b1120', theme_color: '#0b1120', icons: [{ src: iconDataUri, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }] };
+        document.getElementById('manifestLink').setAttribute('href', 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest)));
+        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstallPrompt = e; document.getElementById('installBtn').style.display = 'inline-block'; });
+        window.addEventListener('appinstalled', () => { document.getElementById('installBtn').style.display = 'none'; deferredInstallPrompt = null; });
         const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-        if (isIos && !isStandalone) {
-            const btn = document.getElementById('installBtn');
-            btn.style.display = 'inline-block';
-            btn.onclick = () => {
-                alert('วิธีติดตั้งบน iPhone/iPad:\n\n1. แตะไอคอน Share (แชร์) ที่ด้านล่าง\n2. เลือก "เพิ่มไปที่หน้าจอโฮม"\n3. แตะ "เพิ่ม"');
-            };
-        }
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('SW registered:', reg.scope))
-                    .catch(err => console.log('SW not available (ok if running from file://):', err.message));
-            });
-        }
+        if (isIos && !isStandalone) { const btn = document.getElementById('installBtn'); btn.style.display = 'inline-block'; btn.onclick = () => alert('วิธีติดตั้งบน iPhone/iPad:\n\n1. แตะ Share (แชร์)\n2. เลือก "เพิ่มไปที่หน้าจอโฮม"\n3. แตะ "เพิ่ม"'); }
+        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').then(reg => console.log('SW registered')).catch(err => console.log('SW not available:', err.message)); }); }
     })();
 
-    const installPWA = async () => {
-        if (!deferredInstallPrompt) return;
-        deferredInstallPrompt.prompt();
-        const choice = await deferredInstallPrompt.userChoice;
-        console.log('Install choice:', choice.outcome);
-        deferredInstallPrompt = null;
-        document.getElementById('installBtn').style.display = 'none';
+    const installPWA = async () => { if (!deferredInstallPrompt) return; deferredInstallPrompt.prompt(); await deferredInstallPrompt.userChoice; deferredInstallPrompt = null; document.getElementById('installBtn').style.display = 'none'; };
+
+    const onLeagueChange = () => {
+        const select = document.getElementById('leagueGoals');
+        const customWrap = document.getElementById('leagueGoalsCustomWrap');
+        customWrap.style.display = select.value === 'custom' ? 'block' : 'none';
+        predict(true);
     };
 
-    /* =========================================================
-       INPUT HELPERS
-    ========================================================= */
     const stepVal = (id, delta, decimals = 0) => {
         const el = document.getElementById(id);
         el.dataset.userTouched = '1';
@@ -1116,165 +571,85 @@
         const min = el.hasAttribute('min') ? parseFloat(el.getAttribute('min')) : -Infinity;
         const max = el.hasAttribute('max') ? parseFloat(el.getAttribute('max')) : Infinity;
         let next = Math.min(max, Math.max(min, current + delta));
-
-        if (id === 'minute' && delta > 0) {
-            const stoppageEl = document.getElementById('stoppage');
-            const stoppageTouched = stoppageEl.dataset.userTouched === '1';
-            const stoppage = parseInt(stoppageEl.value) || 0;
-            if (stoppageTouched && next > 45 + stoppage) {
-                stoppageEl.value = Math.min(15, next - 45 + 1);
-            }
-        }
-
+        if (id === 'minute' && delta > 0) { const s = parseInt(document.getElementById('stoppage').value) || 2; if (next > 45 + s) next = 45 + s; }
         el.value = decimals > 0 ? next.toFixed(decimals) : Math.round(next);
         predict(true);
     };
 
     const syncPossession = (side) => {
-        const elH = document.getElementById('possH');
-        const elA = document.getElementById('possA');
+        const elH = document.getElementById('possH'), elA = document.getElementById('possA');
         const activeEl = side === 'H' ? elH : elA;
-
-        if (activeEl.value.trim() === '') {
-            elH.dataset.userTouched = '0';
-            elA.dataset.userTouched = '0';
-            return;
-        }
-
-        elH.dataset.userTouched = '1';
-        elA.dataset.userTouched = '1';
-
-        if (side === 'H') {
-            let valH = Math.min(100, Math.max(0, parseInt(elH.value) || 0));
-            elA.value = 100 - valH;
-        } else {
-            let valA = Math.min(100, Math.max(0, parseInt(elA.value) || 0));
-            elH.value = 100 - valA;
-        }
+        if (activeEl.value.trim() === '') { elH.dataset.userTouched = '0'; elA.dataset.userTouched = '0'; return; }
+        elH.dataset.userTouched = '1'; elA.dataset.userTouched = '1';
+        if (side === 'H') { elA.value = 100 - Math.min(100, Math.max(0, parseInt(elH.value) || 0)); }
+        else { elH.value = 100 - Math.min(100, Math.max(0, parseInt(elA.value) || 0)); }
     };
 
     const updateAhLabel = () => {
         const ah = parseFloat(document.getElementById('ahLine').value) || 0;
         const badge = document.getElementById('ahLabel');
-        if (ah < 0) {
-            badge.textContent = `เหย้าต่อ ${Math.abs(ah)}`;
-            badge.className = 'badge bg-success text-white';
-        } else if (ah > 0) {
-            badge.textContent = `เยือนต่อ ${ah}`;
-            badge.className = 'badge bg-danger text-white';
-        } else {
-            badge.textContent = 'เสมอ (0.0)';
-            badge.className = 'badge bg-warning text-dark';
-        }
+        if (ah < 0) { badge.textContent = `เหย้าต่อ ${Math.abs(ah)}`; badge.className = 'badge bg-success text-white'; }
+        else if (ah > 0) { badge.textContent = `เยือนต่อ ${ah}`; badge.className = 'badge bg-danger text-white'; }
+        else { badge.textContent = 'เสมอ (0.0)'; badge.className = 'badge bg-warning text-dark'; }
     };
 
     const resetForm = () => {
-        document.getElementById('teamH').value = '';
-        document.getElementById('teamA').value = '';
+        ['teamH','teamA'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('scoreH').value = 0;
         document.getElementById('scoreA').value = 0;
-        document.getElementById('ahLine').value = '0';
-        updateAhLabel();
+        document.getElementById('ahLine').value = '0'; updateAhLabel();
         document.getElementById('minute').value = 0;
         document.getElementById('stoppage').value = 2;
         document.getElementById('stoppage').dataset.userTouched = '0';
         document.getElementById('stoppage').classList.remove('auto-estimated');
-        const stoppageModeEl = document.getElementById('stoppageMode');
-        if (stoppageModeEl) {
-            stoppageModeEl.textContent = 'AUTO';
-            stoppageModeEl.className = 'badge bg-secondary';
-        }
+        document.getElementById('stoppageMode').textContent = 'AUTO';
+        document.getElementById('stoppageMode').className = 'badge bg-secondary';
         document.getElementById('minuteDisplay').innerHTML = '';
         document.getElementById('leagueGoals').value = '2.70';
-        document.getElementById('shotsH').value = 0;
-        document.getElementById('shotsA').value = 0;
-        document.getElementById('sotH').value = 0;
-        document.getElementById('sotA').value = 0;
-        document.getElementById('cornersH').value = 0;
-        document.getElementById('cornersA').value = 0;
-        document.getElementById('redH').value = 0;
-        document.getElementById('redA').value = 0;
-        document.getElementById('subsH').value = 0;
-        document.getElementById('subsA').value = 0;
-        document.getElementById('xgH').value = '';
-        document.getElementById('xgA').value = '';
+        document.getElementById('leagueGoalsCustom').value = '2.70';
+        document.getElementById('leagueGoalsCustomWrap').style.display = 'none';
+        ['shotsH','shotsA','sotH','sotA','cornersH','cornersA','redH','redA','subsH','subsA','daH','daA'].forEach(id => document.getElementById(id).value = 0);
+        ['xgH','xgA'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('possH').value = 50;
         document.getElementById('possA').value = 50;
-        document.getElementById('daH').value = 0;
-        document.getElementById('daA').value = 0;
-
-        document.getElementById('cfgBase').value       = STOPPAGE_CFG_DEFAULTS.base;
+        document.getElementById('cfgBase').value = STOPPAGE_CFG_DEFAULTS.base;
         document.getElementById('cfgGoalsBonus').value = STOPPAGE_CFG_DEFAULTS.goalsBonus;
-        document.getElementById('cfgGoalsCap').value   = STOPPAGE_CFG_DEFAULTS.goalsCap;
-        document.getElementById('cfgRedBonus').value   = STOPPAGE_CFG_DEFAULTS.redBonus;
-        document.getElementById('cfgSubsBonus').value  = STOPPAGE_CFG_DEFAULTS.subsBonus;
-        document.getElementById('cfgMaxCap').value     = STOPPAGE_CFG_DEFAULTS.maxCap;
-
-        ['possH','possA','daH','daA','xgH','xgA'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.dataset.userTouched = '0';
-                el.classList.remove('auto-estimated');
-            }
-        });
-
+        document.getElementById('cfgGoalsCap').value = STOPPAGE_CFG_DEFAULTS.goalsCap;
+        document.getElementById('cfgRedBonus').value = STOPPAGE_CFG_DEFAULTS.redBonus;
+        document.getElementById('cfgSubsBonus').value = STOPPAGE_CFG_DEFAULTS.subsBonus;
+        document.getElementById('cfgMaxCap').value = STOPPAGE_CFG_DEFAULTS.maxCap;
+        ['possH','possA','daH','daA','xgH','xgA'].forEach(id => { const el = document.getElementById(id); el.dataset.userTouched = '0'; el.classList.remove('auto-estimated'); });
         stopTimer();
         try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
-
         document.getElementById('results').classList.add('d-none');
         document.getElementById('emptyState').classList.remove('d-none');
         const badge = document.getElementById('matchHeaderBadge');
-        badge.textContent = 'พร้อมคำนวณ';
-        badge.className = 'badge bg-secondary';
-        lastSignalSignature = '';
-        lastChartBuckets = null;
+        badge.textContent = 'พร้อมคำนวณ'; badge.className = 'badge bg-secondary';
+        lastSignalSignature = ''; lastChartBuckets = null;
     };
 
-    /* =========================================================
-       VALIDATION
-    ========================================================= */
     const validateInputs = () => {
         const shotsH = parseFloat(document.getElementById('shotsH').value) || 0;
         const shotsA = parseFloat(document.getElementById('shotsA').value) || 0;
-        const sotHEl = document.getElementById('sotH');
-        const sotAEl = document.getElementById('sotA');
-        if (parseFloat(sotHEl.value) > shotsH) sotHEl.value = shotsH;
-        if (parseFloat(sotAEl.value) > shotsA) sotAEl.value = shotsA;
+        if (parseFloat(document.getElementById('sotH').value) > shotsH) document.getElementById('sotH').value = shotsH;
+        if (parseFloat(document.getElementById('sotA').value) > shotsA) document.getElementById('sotA').value = shotsA;
     };
 
-    /* =========================================================
-       TIMER
-    ========================================================= */
     const toggleTimer = () => {
         const btn = document.getElementById('timerBtn');
         if (timerRunning) { stopTimer(); return; }
-        timerRunning = true;
-        btn.textContent = '⏸';
-        btn.classList.add('running');
+        timerRunning = true; btn.textContent = '⏸'; btn.classList.add('running');
         timerInterval = setInterval(() => {
             const el = document.getElementById('minute');
             let val = parseInt(el.value) || 0;
             const stoppage = parseInt(document.getElementById('stoppage').value) || 2;
+            if (val < 0) val = 0;
             if (val >= 45 + stoppage) { stopTimer(); return; }
-            el.value = val + 1;
-            predict(false);
+            el.value = val + 1; predict(false);
         }, 60000);
     };
+    const stopTimer = () => { if (timerInterval) clearInterval(timerInterval); timerInterval = null; timerRunning = false; const btn = document.getElementById('timerBtn'); if (btn) { btn.textContent = '▶'; btn.classList.remove('running'); } };
 
-    const stopTimer = () => {
-        if (timerInterval) clearInterval(timerInterval);
-        timerInterval = null;
-        timerRunning = false;
-        const btn = document.getElementById('timerBtn');
-        if (btn) {
-            btn.textContent = '▶';
-            btn.classList.remove('running');
-        }
-    };
-
-    /* =========================================================
-       SOUND
-    ========================================================= */
     const toggleSound = () => {
         soundEnabled = !soundEnabled;
         const btn = document.getElementById('soundBtn');
@@ -1282,155 +657,50 @@
         btn.classList.toggle('active', soundEnabled);
         if (soundEnabled) playBeep();
     };
-
     const playBeep = () => {
         if (!soundEnabled) return;
-        try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = 880;
-            gain.gain.setValueAtTime(0.08, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
-            osc.connect(gain).connect(ctx.destination);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.25);
-        } catch(e) {}
+        try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.type = 'sine'; osc.frequency.value = 880; gain.gain.setValueAtTime(0.08, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25); osc.connect(gain).connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.25); } catch(e) {}
         if (navigator.vibrate) navigator.vibrate(120);
     };
 
-    /* =========================================================
-       STORAGE
-    ========================================================= */
     const saveState = () => {
         const data = {};
-        FIELD_IDS.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                data[id] = el.value;
-                if (TOUCHED_FIELDS.includes(id)) {
-                    data[id + '_touched'] = el.dataset.userTouched || '0';
-                }
-            }
-        });
+        FIELD_IDS.forEach(id => { const el = document.getElementById(id); if (el) { data[id] = el.value; if (TOUCHED_FIELDS.includes(id)) data[id + '_touched'] = el.dataset.userTouched || '0'; } });
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
     };
-
     const loadState = () => {
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
             if (!raw) return false;
             const data = JSON.parse(raw);
             let any = false;
-            FIELD_IDS.forEach(id => {
-                const el = document.getElementById(id);
-                if (el && data[id] !== undefined && data[id] !== '') {
-                    el.value = data[id];
-                    if (TOUCHED_FIELDS.includes(id) && data[id + '_touched'] !== undefined) {
-                        el.dataset.userTouched = data[id + '_touched'];
-                    }
-                    any = true;
-                }
-            });
+            FIELD_IDS.forEach(id => { const el = document.getElementById(id); if (el && data[id] !== undefined && data[id] !== '') { el.value = data[id]; if (TOUCHED_FIELDS.includes(id) && data[id + '_touched'] !== undefined) el.dataset.userTouched = data[id + '_touched']; any = true; } });
+            const ls = document.getElementById('leagueGoals');
+            if (ls && ls.value === 'custom') document.getElementById('leagueGoalsCustomWrap').style.display = 'block';
             return any;
         } catch(e) { return false; }
     };
 
-    /* =========================================================
-       MATH
-    ========================================================= */
-    const factorial = (n) => {
-        if (n === 0 || n === 1) return 1;
-        let res = 1;
-        for (let i = 2; i <= n; i++) res *= i;
-        return res;
-    };
+    const factorial = (n) => { if (n === 0 || n === 1) return 1; let res = 1; for (let i = 2; i <= n; i++) res *= i; return res; };
+    const poisson = (lambda, k) => { if (lambda <= 0) return k === 0 ? 1 : 0; return (Math.exp(-lambda) * Math.pow(lambda, k)) / factorial(k); };
+    const poissonOver = (mean, line) => { if (line < 0) return 1; if (mean <= 0) return 0; let p = 0; const floor = Math.floor(line); const maxK = Math.ceil(mean + 5 * Math.sqrt(mean)) + 5; for (let k = floor + 1; k <= maxK; k++) p += poisson(mean, k); return Math.min(1, p); };
 
-    const poisson = (lambda, k) => {
-        if (lambda <= 0) return k === 0 ? 1 : 0;
-        return (Math.exp(-lambda) * Math.pow(lambda, k)) / factorial(k);
-    };
-
-    /* ✅ FIX #1: poissonOver returns 100% if line already exceeded */
-    const poissonOver = (mean, line) => {
-        if (line < 0) return 1;
-        if (mean <= 0) return 0;
-        let p = 0;
-        const floor = Math.floor(line);
-        const maxK = Math.ceil(mean + 5 * Math.sqrt(mean)) + 5;
-        for (let k = floor + 1; k <= maxK; k++) p += poisson(mean, k);
-        return Math.min(1, p);
-    };
-
-    /* =========================================================
-       STOPPAGE TIME ESTIMATOR (Configurable)
-    ========================================================= */
-    const readStoppageCfg = () => {
-        const read = (id, fb) => {
-            const v = parseFloat(document.getElementById(id).value);
-            return isNaN(v) ? fb : v;
-        };
-        return {
-            base:       read('cfgBase',       STOPPAGE_CFG_DEFAULTS.base),
-            goalsBonus: read('cfgGoalsBonus', STOPPAGE_CFG_DEFAULTS.goalsBonus),
-            goalsCap:   read('cfgGoalsCap',   STOPPAGE_CFG_DEFAULTS.goalsCap),
-            redBonus:   read('cfgRedBonus',   STOPPAGE_CFG_DEFAULTS.redBonus),
-            subsBonus:  read('cfgSubsBonus',  STOPPAGE_CFG_DEFAULTS.subsBonus),
-            maxCap:     read('cfgMaxCap',     STOPPAGE_CFG_DEFAULTS.maxCap)
-        };
-    };
-
+    const readStoppageCfg = () => { const read = (id, fb) => { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? fb : v; }; return { base: read('cfgBase', STOPPAGE_CFG_DEFAULTS.base), goalsBonus: read('cfgGoalsBonus', STOPPAGE_CFG_DEFAULTS.goalsBonus), goalsCap: read('cfgGoalsCap', STOPPAGE_CFG_DEFAULTS.goalsCap), redBonus: read('cfgRedBonus', STOPPAGE_CFG_DEFAULTS.redBonus), subsBonus: read('cfgSubsBonus', STOPPAGE_CFG_DEFAULTS.subsBonus), maxCap: read('cfgMaxCap', STOPPAGE_CFG_DEFAULTS.maxCap) }; };
     const estimateStoppage = (scoreH, scoreA, redH, redA, subsH, subsA, minute, cfg) => {
-        const totalGoals = scoreH + scoreA;
-        const totalReds  = redH + redA;
-        const totalSubs  = subsH + subsA;
-
-        const base       = cfg.base;
-        const goalsBonus = Math.min(cfg.goalsCap, totalGoals * cfg.goalsBonus);
-        const redBonus   = totalReds * cfg.redBonus;
-        const subsBonus  = totalSubs * cfg.subsBonus;
-        const baseEstimate = base + goalsBonus + redBonus + subsBonus;
-        const minNeeded  = minute > 45 ? (minute - 45 + 1) : 0;
-
-        return Math.round(
-            Math.min(cfg.maxCap, Math.max(1, Math.max(baseEstimate, minNeeded)))
-        );
+        const totalGoals = scoreH + scoreA, totalReds = redH + redA, totalSubs = subsH + subsA;
+        const base = cfg.base, goalsBonus = Math.min(cfg.goalsCap, totalGoals * cfg.goalsBonus), redBonus = totalReds * cfg.redBonus, subsBonus = totalSubs * cfg.subsBonus;
+        return Math.round(Math.min(cfg.maxCap, Math.max(1, base + goalsBonus + redBonus + subsBonus)));
     };
+    const resetStoppageCfg = () => { document.getElementById('cfgBase').value = STOPPAGE_CFG_DEFAULTS.base; document.getElementById('cfgGoalsBonus').value = STOPPAGE_CFG_DEFAULTS.goalsBonus; document.getElementById('cfgGoalsCap').value = STOPPAGE_CFG_DEFAULTS.goalsCap; document.getElementById('cfgRedBonus').value = STOPPAGE_CFG_DEFAULTS.redBonus; document.getElementById('cfgSubsBonus').value = STOPPAGE_CFG_DEFAULTS.subsBonus; document.getElementById('cfgMaxCap').value = STOPPAGE_CFG_DEFAULTS.maxCap; predict(true); };
 
-    const resetStoppageCfg = () => {
-        document.getElementById('cfgBase').value       = STOPPAGE_CFG_DEFAULTS.base;
-        document.getElementById('cfgGoalsBonus').value = STOPPAGE_CFG_DEFAULTS.goalsBonus;
-        document.getElementById('cfgGoalsCap').value   = STOPPAGE_CFG_DEFAULTS.goalsCap;
-        document.getElementById('cfgRedBonus').value   = STOPPAGE_CFG_DEFAULTS.redBonus;
-        document.getElementById('cfgSubsBonus').value  = STOPPAGE_CFG_DEFAULTS.subsBonus;
-        document.getElementById('cfgMaxCap').value     = STOPPAGE_CFG_DEFAULTS.maxCap;
-        predict(true);
-    };
-
-    /* =========================================================
-       ASIAN HANDICAP SETTLEMENT
-    ========================================================= */
-    const ahSettleSimple = (line, margin) => {
-        const diff = margin + line;
-        if (Math.abs(diff) < 0.001) return 'push';
-        return diff > 0 ? 'win' : 'loss';
-    };
-
-    const splitQuarter = (line) => {
-        const lower = Math.floor(line * 2) / 2;
-        const upper = Math.ceil(line * 2) / 2;
-        return [lower, upper];
-    };
-
+    const ahSettleSimple = (line, margin) => { const diff = margin + line; if (Math.abs(diff) < 0.001) return 'push'; return diff > 0 ? 'win' : 'loss'; };
+    const splitQuarter = (line) => [Math.floor(line * 2) / 2, Math.ceil(line * 2) / 2];
     const ahSettle = (line, margin) => {
-        const absLine = Math.abs(line);
-        const frac = absLine % 1;
+        const absLine = Math.abs(line), frac = absLine % 1;
         const isQuarter = Math.abs(frac - 0.25) < 0.01 || Math.abs(frac - 0.75) < 0.01;
         if (isQuarter) {
             const [l, u] = splitQuarter(line);
-            const o1 = ahSettleSimple(l, margin);
-            const o2 = ahSettleSimple(u, margin);
+            const o1 = ahSettleSimple(l, margin), o2 = ahSettleSimple(u, margin);
             if (o1 === o2) return o1;
             if ((o1 === 'win' && o2 === 'push') || (o1 === 'push' && o2 === 'win')) return 'halfWin';
             if ((o1 === 'loss' && o2 === 'push') || (o1 === 'push' && o2 === 'loss')) return 'halfLoss';
@@ -1439,119 +709,66 @@
         return ahSettleSimple(line, margin);
     };
 
-    /* =========================================================
-       GOAL DISTRIBUTION CHART (Canvas)
-    ========================================================= */
     const drawGoalChart = (buckets) => {
         lastChartBuckets = buckets;
         const canvas = document.getElementById('goalChart');
         if (!canvas) return;
-
         const container = canvas.parentElement;
         const rect = container.getBoundingClientRect();
         if (rect.width === 0) return;
-
         const dpr = window.devicePixelRatio || 1;
-        const cssW = rect.width - 8;
-        const cssH = rect.height - 8;
-        canvas.width = Math.round(cssW * dpr);
-        canvas.height = Math.round(cssH * dpr);
-        canvas.style.width = cssW + 'px';
-        canvas.style.height = cssH + 'px';
-
+        const cssW = rect.width - 8, cssH = rect.height - 8;
+        canvas.width = Math.round(cssW * dpr); canvas.height = Math.round(cssH * dpr);
+        canvas.style.width = cssW + 'px'; canvas.style.height = cssH + 'px';
         const ctx = canvas.getContext('2d');
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.clearRect(0, 0, cssW, cssH);
-
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, cssW, cssH);
         const pad = { top: 22, right: 10, bottom: 28, left: 34 };
-        const chartW = cssW - pad.left - pad.right;
-        const chartH = cssH - pad.top - pad.bottom;
+        const chartW = cssW - pad.left - pad.right, chartH = cssH - pad.top - pad.bottom;
         if (chartW <= 0 || chartH <= 0) return;
-
         const maxP = Math.max(...buckets.map(b => b.prob), 0.01);
         const yMax = Math.min(1, Math.ceil(maxP * 10) / 10 + 0.05);
         if (yMax <= 0) return;
-
-        ctx.strokeStyle = 'rgba(148,163,184,0.12)';
-        ctx.lineWidth = 1;
-        ctx.font = '10px Inter, sans-serif';
-        ctx.textAlign = 'right';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = '#94a3b8';
-
+        ctx.strokeStyle = 'rgba(148,163,184,0.12)'; ctx.lineWidth = 1;
+        ctx.font = '10px Inter, sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#94a3b8';
         const steps = 4;
-        for (let i = 0; i <= steps; i++) {
-            const y = pad.top + chartH * (1 - i / steps);
-            ctx.beginPath();
-            ctx.moveTo(pad.left, y);
-            ctx.lineTo(cssW - pad.right, y);
-            ctx.stroke();
-            ctx.fillText((yMax * i / steps * 100).toFixed(0) + '%', pad.left - 4, y);
-        }
-
-        const slotW = chartW / buckets.length;
-        const barW = slotW * 0.62;
-        const gap = slotW * 0.38;
+        for (let i = 0; i <= steps; i++) { const y = pad.top + chartH * (1 - i / steps); ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(cssW - pad.right, y); ctx.stroke(); ctx.fillText((yMax * i / steps * 100).toFixed(0) + '%', pad.left - 4, y); }
+        const slotW = chartW / buckets.length, barW = slotW * 0.62, gap = slotW * 0.38;
         const maxIdx = buckets.reduce((mi, b, i) => b.prob > buckets[mi].prob ? i : mi, 0);
-
         buckets.forEach((b, i) => {
             const x = pad.left + slotW * i + gap / 2;
             const barH = Math.max(0, (b.prob / yMax) * chartH);
             const y = pad.top + chartH - barH;
-
             const grad = ctx.createLinearGradient(0, y, 0, pad.top + chartH);
-            if (i === maxIdx) {
-                grad.addColorStop(0, '#38bdf8');
-                grad.addColorStop(1, '#0369a1');
-            } else {
-                grad.addColorStop(0, 'rgba(56,189,248,0.7)');
-                grad.addColorStop(1, 'rgba(56,189,248,0.15)');
-            }
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            if (ctx.roundRect) {
-                ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]);
-            } else {
-                ctx.rect(x, y, barW, barH);
-            }
+            if (i === maxIdx) { grad.addColorStop(0, '#38bdf8'); grad.addColorStop(1, '#0369a1'); }
+            else { grad.addColorStop(0, 'rgba(56,189,248,0.7)'); grad.addColorStop(1, 'rgba(56,189,248,0.15)'); }
+            ctx.fillStyle = grad; ctx.beginPath();
+            if (ctx.roundRect) ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]); else ctx.rect(x, y, barW, barH);
             ctx.fill();
-
-            if (b.prob >= 0.004) {
-                ctx.fillStyle = i === maxIdx ? '#38bdf8' : '#cbd5e1';
-                ctx.font = (i === maxIdx ? 'bold ' : '') + '10px Inter, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'bottom';
-                ctx.fillText((b.prob * 100).toFixed(1) + '%', x + barW / 2, y - 3);
-            }
-
-            ctx.fillStyle = '#94a3b8';
-            ctx.font = '10px Inter, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'top';
-            ctx.fillText(b.label, x + barW / 2, pad.top + chartH + 5);
+            if (b.prob >= 0.004) { ctx.fillStyle = i === maxIdx ? '#38bdf8' : '#cbd5e1'; ctx.font = (i === maxIdx ? 'bold ' : '') + '10px Inter, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText((b.prob * 100).toFixed(1) + '%', x + barW / 2, y - 3); }
+            ctx.fillStyle = '#94a3b8'; ctx.font = '10px Inter, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(b.label, x + barW / 2, pad.top + chartH + 5);
         });
-
-        ctx.fillStyle = '#64748b';
-        ctx.font = '9px Inter, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'bottom';
-        ctx.fillText('จำนวนประตูรวม', cssW / 2, cssH - 1);
+        ctx.fillStyle = '#64748b'; ctx.font = '9px Inter, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('จำนวนประตูรวม (HT)', cssW / 2, cssH - 1);
     };
 
-    /* =========================================================
-       MAIN PREDICT
-    ========================================================= */
     const predict = (forceShow = false) => {
         validateInputs();
-
         const teamHName = document.getElementById('teamH').value.trim() || 'เหย้า';
         const teamAName = document.getElementById('teamA').value.trim() || 'เยือน';
-
         const scoreH = parseInt(document.getElementById('scoreH').value) || 0;
         const scoreA = parseInt(document.getElementById('scoreA').value) || 0;
         const ahLine = parseFloat(document.getElementById('ahLine').value) || 0;
-        const minute = Math.min(55, Math.max(0, parseInt(document.getElementById('minute').value) || 0));
-        const leagueGoals = Math.max(0.5, Math.min(6, parseFloat(document.getElementById('leagueGoals').value) || 2.70));
+        let minute = parseInt(document.getElementById('minute').value) || 0;
+        minute = Math.max(0, Math.min(60, minute));
+
+        // ✅ League Goals: Resolve custom vs preset
+        const leagueSelectVal = document.getElementById('leagueGoals').value;
+        let leagueGoals;
+        if (leagueSelectVal === 'custom') {
+            leagueGoals = parseFloat(document.getElementById('leagueGoalsCustom').value) || 2.70;
+        } else {
+            leagueGoals = parseFloat(leagueSelectVal) || 2.70;
+        }
+        leagueGoals = Math.max(0.5, Math.min(6, leagueGoals));
 
         const shotsH = parseInt(document.getElementById('shotsH').value) || 0;
         const shotsA = parseInt(document.getElementById('shotsA').value) || 0;
@@ -1559,8 +776,8 @@
         const sotA = Math.min(shotsA, parseInt(document.getElementById('sotA').value) || 0);
         const cornersH = parseInt(document.getElementById('cornersH').value) || 0;
         const cornersA = parseInt(document.getElementById('cornersA').value) || 0;
-        const redH  = parseInt(document.getElementById('redH').value)  || 0;
-        const redA  = parseInt(document.getElementById('redA').value)  || 0;
+        const redH = parseInt(document.getElementById('redH').value) || 0;
+        const redA = parseInt(document.getElementById('redA').value) || 0;
         const subsH = Math.min(5, parseInt(document.getElementById('subsH').value) || 0);
         const subsA = Math.min(5, parseInt(document.getElementById('subsA').value) || 0);
 
@@ -1568,170 +785,102 @@
         const stoppageTouched = stoppageEl.dataset.userTouched === '1';
         const stoppageCfg = readStoppageCfg();
         let stoppage;
-
         if (stoppageTouched) {
             stoppage = Math.max(0, Math.min(15, parseInt(stoppageEl.value) || 2));
             stoppageEl.classList.remove('auto-estimated');
         } else {
             stoppage = estimateStoppage(scoreH, scoreA, redH, redA, subsH, subsA, minute, stoppageCfg);
-            if (document.activeElement !== stoppageEl) {
-                stoppageEl.value = stoppage;
-                stoppageEl.classList.add('auto-estimated');
-            }
+            if (document.activeElement !== stoppageEl) { stoppageEl.value = stoppage; stoppageEl.classList.add('auto-estimated'); }
         }
-
         const stoppageModeEl = document.getElementById('stoppageMode');
-        if (stoppageModeEl) {
-            stoppageModeEl.textContent = stoppageTouched ? 'MANUAL' : 'AUTO';
-            stoppageModeEl.className = stoppageTouched
-                ? 'badge bg-info text-dark'
-                : 'badge bg-secondary';
-        }
+        if (stoppageModeEl) { stoppageModeEl.textContent = stoppageTouched ? 'MANUAL' : 'AUTO'; stoppageModeEl.className = stoppageTouched ? 'badge bg-info text-dark' : 'badge bg-secondary'; }
 
-        const xgHEl = document.getElementById('xgH');
-        const xgAEl = document.getElementById('xgA');
-        const possHEl = document.getElementById('possH');
-        const possAEl = document.getElementById('possA');
-        const daHEl = document.getElementById('daH');
-        const daAEl = document.getElementById('daA');
+        // Cap minute at 45 + stoppage
+        minute = Math.min(minute, 45 + stoppage);
 
-        const xgHInput = xgHEl.value.trim();
-        const xgAInput = xgAEl.value.trim();
-
-        let liveXgH, liveXgA;
-        const xgHIsInput = xgHInput !== '' && !isNaN(parseFloat(xgHInput));
-        const xgAIsInput = xgAInput !== '' && !isNaN(parseFloat(xgAInput));
-
-        liveXgH = xgHIsInput
-            ? Math.max(0, parseFloat(xgHInput))
-            : (sotH * 0.3) + (Math.max(0, shotsH - sotH) * 0.05);
-        liveXgA = xgAIsInput
-            ? Math.max(0, parseFloat(xgAInput))
-            : (sotA * 0.3) + (Math.max(0, shotsA - sotA) * 0.05);
-
+        const xgHEl = document.getElementById('xgH'), xgAEl = document.getElementById('xgA');
+        const xgHIsInput = xgHEl.value.trim() !== '' && !isNaN(parseFloat(xgHEl.value));
+        const xgAIsInput = xgAEl.value.trim() !== '' && !isNaN(parseFloat(xgAEl.value));
+        let liveXgH = xgHIsInput ? Math.max(0, parseFloat(xgHEl.value)) : (sotH * 0.3) + (Math.max(0, shotsH - sotH) * 0.05);
+        let liveXgA = xgAIsInput ? Math.max(0, parseFloat(xgAEl.value)) : (sotA * 0.3) + (Math.max(0, shotsA - sotA) * 0.05);
         if (document.activeElement !== xgHEl) xgHEl.classList.toggle('auto-estimated', !xgHIsInput);
         if (document.activeElement !== xgAEl) xgAEl.classList.toggle('auto-estimated', !xgAIsInput);
 
+        const possHEl = document.getElementById('possH'), possAEl = document.getElementById('possA');
         const possTouched = possHEl.dataset.userTouched === '1' || possAEl.dataset.userTouched === '1';
         let possH, possA;
-
         if (possTouched) {
             possH = Math.max(0, Math.min(100, parseFloat(possHEl.value) || 50));
             possA = Math.max(0, Math.min(100, parseFloat(possAEl.value) || 50));
-            possHEl.classList.remove('auto-estimated');
-            possAEl.classList.remove('auto-estimated');
+            possHEl.classList.remove('auto-estimated'); possAEl.classList.remove('auto-estimated');
         } else if (shotsH + shotsA > 0) {
             const shotShare = shotsH / (shotsH + shotsA);
             const sotShare = (sotH + sotA) > 0 ? sotH / (sotH + sotA) : shotShare;
-            const blended = shotShare * 0.5 + sotShare * 0.5;
-            possH = 50 + (blended - 0.5) * 30;
+            possH = 50 + ((shotShare * 0.5 + sotShare * 0.5) - 0.5) * 30;
             possA = 100 - possH;
-            if (document.activeElement !== possHEl) {
-                possHEl.value = Math.round(possH);
-                possHEl.classList.add('auto-estimated');
-            }
-            if (document.activeElement !== possAEl) {
-                possAEl.value = Math.round(possA);
-                possAEl.classList.add('auto-estimated');
-            }
-        } else {
-            possH = 50;
-            possA = 50;
-            possHEl.classList.add('auto-estimated');
-            possAEl.classList.add('auto-estimated');
-        }
+            if (document.activeElement !== possHEl) { possHEl.value = Math.round(possH); possHEl.classList.add('auto-estimated'); }
+            if (document.activeElement !== possAEl) { possAEl.value = Math.round(possA); possAEl.classList.add('auto-estimated'); }
+        } else { possH = 50; possA = 50; possHEl.classList.add('auto-estimated'); possAEl.classList.add('auto-estimated'); }
 
-        const daHInput = parseFloat(daHEl.value) || 0;
-        const daAInput = parseFloat(daAEl.value) || 0;
+        const daHEl = document.getElementById('daH'), daAEl = document.getElementById('daA');
+        const daHInput = parseFloat(daHEl.value) || 0, daAInput = parseFloat(daAEl.value) || 0;
         const daTouched = daHEl.dataset.userTouched === '1' || daAEl.dataset.userTouched === '1';
         let daH, daA;
-
         if (daTouched || (daHInput + daAInput > 0)) {
-            daH = Math.max(0, daHInput);
-            daA = Math.max(0, daAInput);
-            daHEl.classList.remove('auto-estimated');
-            daAEl.classList.remove('auto-estimated');
+            daH = Math.max(0, daHInput); daA = Math.max(0, daAInput);
+            daHEl.classList.remove('auto-estimated'); daAEl.classList.remove('auto-estimated');
         } else if (shotsH + shotsA > 0 || cornersH + cornersA > 0) {
             daH = shotsH * 8 + sotH * 4 + cornersH * 5;
             daA = shotsA * 8 + sotA * 4 + cornersA * 5;
-            if (document.activeElement !== daHEl) {
-                daHEl.value = Math.round(daH);
-                daHEl.classList.add('auto-estimated');
-            }
-            if (document.activeElement !== daAEl) {
-                daAEl.value = Math.round(daA);
-                daAEl.classList.add('auto-estimated');
-            }
-        } else {
-            daH = 0;
-            daA = 0;
-            daHEl.classList.add('auto-estimated');
-            daAEl.classList.add('auto-estimated');
-        }
+            if (document.activeElement !== daHEl) { daHEl.value = Math.round(daH); daHEl.classList.add('auto-estimated'); }
+            if (document.activeElement !== daAEl) { daAEl.value = Math.round(daA); daAEl.classList.add('auto-estimated'); }
+        } else { daH = 0; daA = 0; daHEl.classList.add('auto-estimated'); daAEl.classList.add('auto-estimated'); }
 
+        // ✅ 1H share of full match goals (44%)
         const total1HExpected = leagueGoals * 0.44;
         const ahShift = Math.max(-0.32, Math.min(0.32, (-ahLine) * 0.16));
-        const shareH = 0.5 + ahShift;
-        const shareA = 0.5 - ahShift;
-        const base1HHome = total1HExpected * shareH;
-        const base1HAway = total1HExpected * shareA;
-        const remainingMin = Math.max(0, 45 + stoppage - minute);
+        const shareH = 0.5 + ahShift, shareA = 0.5 - ahShift;
+        const base1HHome = total1HExpected * shareH, base1HAway = total1HExpected * shareA;
+        const remainingMin = Math.max(0, (45 + stoppage) - minute);
+        const full1HDuration = 45 + stoppage;
+        const baseRateH = base1HHome / full1HDuration, baseRateA = base1HAway / full1HDuration;
+        const elapsedMin = Math.max(1, minute);
+        const observedRateH = liveXgH / elapsedMin, observedRateA = liveXgA / elapsedMin;
+        // 1H weight: 0 at kickoff, ramps to 0.85 by minute 51
+        const observedWeight = Math.min(0.85, Math.max(0, minute) / 60);
 
-        const liveWeight = Math.min(1, minute / 30);
-        let xgRateH = ((base1HHome / 45) * (1 - liveWeight)) + ((liveXgH / Math.max(1, minute)) * liveWeight);
-        let xgRateA = ((base1HAway / 45) * (1 - liveWeight)) + ((liveXgA / Math.max(1, minute)) * liveWeight);
+        let xgRateH = baseRateH * (1 - observedWeight) + observedRateH * observedWeight;
+        let xgRateA = baseRateA * (1 - observedWeight) + observedRateA * observedWeight;
         if (xgRateH <= 0) xgRateH = 0.008;
         if (xgRateA <= 0) xgRateA = 0.008;
 
         let dominanceH = 0.5;
-        if (daH + daA > 0) {
-            dominanceH = (possH / Math.max(1, possH + possA)) * 0.4 + (daH / (daH + daA)) * 0.6;
-        } else if (possH + possA > 0) {
-            dominanceH = possH / (possH + possA);
-        }
+        if (daH + daA > 0) dominanceH = (possH / Math.max(1, possH + possA)) * 0.4 + (daH / (daH + daA)) * 0.6;
+        else if (possH + possA > 0) dominanceH = possH / (possH + possA);
         const domMultiplierH = 1 + (dominanceH - 0.5) * 0.5;
         const domMultiplierA = 1 + ((1 - dominanceH) - 0.5) * 0.5;
-        xgRateH *= domMultiplierH;
-        xgRateA *= domMultiplierA;
-
+        xgRateH *= domMultiplierH; xgRateA *= domMultiplierA;
         if (redH > redA) { xgRateA *= 1.22; xgRateH *= 0.82; }
         else if (redA > redH) { xgRateH *= 1.22; xgRateA *= 0.82; }
 
-        const xgRemH = xgRateH * remainingMin;
-        const xgRemA = xgRateA * remainingMin;
-
+        const xgRemH = xgRateH * remainingMin, xgRemA = xgRateA * remainingMin;
         const maxGoals = 8;
         const joint = [];
-        for (let h = 0; h <= maxGoals; h++) {
-            joint[h] = [];
-            for (let a = 0; a <= maxGoals; a++) {
-                joint[h][a] = poisson(xgRemH, h) * poisson(xgRemA, a);
-            }
-        }
+        for (let h = 0; h <= maxGoals; h++) { joint[h] = []; for (let a = 0; a <= maxGoals; a++) joint[h][a] = poisson(xgRemH, h) * poisson(xgRemA, a); }
 
-        let pHome = 0, pDraw = 0, pAway = 0;
-        let over05 = 0, over15 = 0, over25 = 0;
+        let pHome = 0, pDraw = 0, pAway = 0, over05Rem = 0, over15Rem = 0, over25Rem = 0;
         const topScoresList = [];
-
         for (let h = 0; h <= maxGoals; h++) {
             for (let a = 0; a <= maxGoals; a++) {
-                const p = joint[h][a];
-                const totalH = scoreH + h;
-                const totalA = scoreA + a;
-
-                if (totalH > totalA) pHome += p;
-                else if (totalA > totalH) pAway += p;
-                else pDraw += p;
-
-                const totalGoals = totalH + totalA;
-                if (totalGoals > 0.5) over05 += p;
-                if (totalGoals > 1.5) over15 += p;
-                if (totalGoals > 2.5) over25 += p;
-
-                if (p > 0.0005) topScoresList.push({ score: `${totalH}-${totalA}`, prob: p });
+                const p = joint[h][a], finalH = scoreH + h, finalA = scoreA + a;
+                if (finalH > finalA) pHome += p; else if (finalA > finalH) pAway += p; else pDraw += p;
+                const remGoals = h + a;
+                if (remGoals >= 1) over05Rem += p;
+                if (remGoals >= 2) over15Rem += p;
+                if (remGoals >= 3) over25Rem += p;
+                if (p > 0.0005) topScoresList.push({ score: `${finalH}-${finalA}`, prob: p });
             }
         }
-
         topScoresList.sort((a, b) => b.prob - a.prob);
         const top3 = topScoresList.slice(0, 3);
         const sumTop3 = top3.reduce((s, item) => s + item.prob, 0);
@@ -1739,18 +888,14 @@
         const pNoMoreGoal = Math.exp(-(xgRemH + xgRemA));
         const totalNextRate = xgRateH + xgRateA;
         let pNextHome = 0, pNextAway = 0;
-        if (totalNextRate > 0) {
-            pNextHome = (xgRateH / totalNextRate) * (1 - pNoMoreGoal);
-            pNextAway = (xgRateA / totalNextRate) * (1 - pNoMoreGoal);
-        }
+        if (totalNextRate > 0) { pNextHome = (xgRateH / totalNextRate) * (1 - pNoMoreGoal); pNextAway = (xgRateA / totalNextRate) * (1 - pNoMoreGoal); }
 
-        let btts1H;
-        const pHomeScoresRem = 1 - Math.exp(-xgRemH);
-        const pAwayScoresRem = 1 - Math.exp(-xgRemA);
-        if (scoreH >= 1 && scoreA >= 1) btts1H = 1;
-        else if (scoreH >= 1) btts1H = pAwayScoresRem;
-        else if (scoreA >= 1) btts1H = pHomeScoresRem;
-        else btts1H = pHomeScoresRem * pAwayScoresRem;
+        const pHomeScoresRem = 1 - Math.exp(-xgRemH), pAwayScoresRem = 1 - Math.exp(-xgRemA);
+        let bttsHT;
+        if (scoreH >= 1 && scoreA >= 1) bttsHT = 1;
+        else if (scoreH >= 1) bttsHT = pAwayScoresRem;
+        else if (scoreA >= 1) bttsHT = pHomeScoresRem;
+        else bttsHT = pHomeScoresRem * pAwayScoresRem;
 
         const pRawH = sotH * 3 + Math.max(0, shotsH - sotH) * 1 + cornersH * 0.5 + daH * 0.02;
         const pRawA = sotA * 3 + Math.max(0, shotsA - sotA) * 1 + cornersA * 0.5 + daA * 0.02;
@@ -1758,171 +903,103 @@
         const pressureH = pressureSum > 0 ? pRawH / pressureSum : 0.5;
         const pressureA = 1 - pressureH;
 
+        // ✅ 1H corners: 46% share of full match corners
+        const baseCornerMatch = 10.4, firstHalfCornerShare = 0.46;
+        const base1HTotalCorners = baseCornerMatch * firstHalfCornerShare;
+        const cornerShareH = 0.54 + (ahShift * 0.5), cornerShareA = 1 - cornerShareH;
+        const baseCornerRateH = (base1HTotalCorners / full1HDuration) * cornerShareH;
+        const baseCornerRateA = (base1HTotalCorners / full1HDuration) * cornerShareA;
+        const obsCornerRateH = cornersH / elapsedMin, obsCornerRateA = cornersA / elapsedMin;
+        let cornerRateH = baseCornerRateH * (1 - observedWeight) + obsCornerRateH * observedWeight;
+        let cornerRateA = baseCornerRateA * (1 - observedWeight) + obsCornerRateA * observedWeight;
+        cornerRateH *= domMultiplierH; cornerRateA *= domMultiplierA;
+        if (redH > redA) { cornerRateA *= 1.25; cornerRateH *= 0.85; }
+        else if (redA > redH) { cornerRateH *= 1.25; cornerRateA *= 0.85; }
+
+        const remCornersH = cornerRateH * remainingMin, remCornersA = cornerRateA * remainingMin;
+        const remCornersTotal = remCornersH + remCornersA;
         const totalCurrentCorners = cornersH + cornersA;
-        const base1HTotalCorners = 10.4 * 0.45;
-        const cornerShareH = 0.54 + (ahShift * 0.5);
-        const cornerShareA = 1 - cornerShareH;
+        const expTotalCornersH = cornersH + remCornersH;
+        const expTotalCornersA = cornersA + remCornersA;
+        const expTotalCornersFinal = totalCurrentCorners + remCornersTotal;
+        const co35Total = poissonOver(remCornersTotal, 3.5 - totalCurrentCorners);
+        const co45Total = poissonOver(remCornersTotal, 4.5 - totalCurrentCorners);
+        const co55Total = poissonOver(remCornersTotal, 5.5 - totalCurrentCorners);
+        const co25Rem = poissonOver(remCornersTotal, 2.5);
 
-        let baseRateH = (base1HTotalCorners / 45) * cornerShareH;
-        let baseRateA = (base1HTotalCorners / 45) * cornerShareA;
-
-        if (minute >= 10) {
-            const w = Math.min(0.8, minute / 45);
-            if (totalCurrentCorners > 0) {
-                const obsRateH = cornersH / minute;
-                const obsRateA = cornersA / minute;
-                baseRateH = (baseRateH * (1 - w)) + (obsRateH * w);
-                baseRateA = (baseRateA * (1 - w)) + (obsRateA * w);
-            } else {
-                baseRateH *= (1 - w);
-                baseRateA *= (1 - w);
-            }
-        }
-
-        baseRateH *= domMultiplierH;
-        baseRateA *= domMultiplierA;
-
-        if (redH > redA) { baseRateA *= 1.25; baseRateH *= 0.85; }
-        else if (redA > redH) { baseRateH *= 1.25; baseRateA *= 0.85; }
-
-        const remCornersH = baseRateH * remainingMin;
-        const remCornersA = baseRateA * remainingMin;
-
-        const expCornersTotal = totalCurrentCorners + remCornersH + remCornersA;
-        const expCornersH = cornersH + remCornersH;
-        const expCornersA = cornersA + remCornersA;
-
-        /* ✅ FIX #2: Total-based corners — if current corners already exceed line → 100% */
-        const remCornersSum = remCornersH + remCornersA;
-        const co35 = poissonOver(remCornersSum, 3.5 - totalCurrentCorners);
-        const co45 = poissonOver(remCornersSum, 4.5 - totalCurrentCorners);
-        const co55 = poissonOver(remCornersSum, 5.5 - totalCurrentCorners);
-
-        updateSignals({
-            minute, stoppage, remainingMin, scoreH, scoreA, ahLine,
-            pHome, pDraw, pAway, over05, over15, over25,
-            expCornersTotal, co45, sotH, sotA, cornersH, cornersA,
-            teamHName, teamAName
-        });
+        updateSignals({ minute, stoppage, remainingMin, scoreH, scoreA, ahLine, pHome, pDraw, pAway, over05Rem, over15Rem, over25Rem, remCornersTotal, co25Rem, sotH, sotA, cornersH, cornersA, xgTotal: xgRemH + xgRemA, teamHName, teamAName });
 
         document.getElementById('results').classList.remove('d-none');
         document.getElementById('emptyState').classList.add('d-none');
 
-        const minuteDisplayStr = minute > 45 ? `45+${minute - 45}'` : `${minute}'`;
+        let minuteStr;
+        if (minute === 0) minuteStr = 'เริ่ม 1H';
+        else if (minute <= 45) minuteStr = minute + "'";
+        else minuteStr = `45+${minute - 45}'`;
         const headerBadge = document.getElementById('matchHeaderBadge');
-        headerBadge.textContent = `${teamHName} ${scoreH}-${scoreA} ${teamAName} (${minuteDisplayStr})`;
+        headerBadge.textContent = `${teamHName} ${scoreH}-${scoreA} ${teamAName} (${minuteStr})`;
         headerBadge.className = 'badge bg-info text-dark fw-bold';
 
         const mdEl = document.getElementById('minuteDisplay');
-        if (minute > 45) {
-            mdEl.innerHTML = `<span class="badge bg-warning text-dark" style="font-size:0.62rem;">${minute - 45}' ทดเจ็บ</span>`;
-        } else {
-            mdEl.innerHTML = '';
-        }
+        if (minute === 0) mdEl.innerHTML = `<span class="badge bg-info text-dark" style="font-size:0.62rem;">เริ่ม 1H</span>`;
+        else if (minute > 45) mdEl.innerHTML = `<span class="badge bg-warning text-dark" style="font-size:0.62rem;">45+${minute - 45}'</span>`;
+        else mdEl.innerHTML = '';
 
         document.getElementById('labelHome').textContent = teamHName;
         document.getElementById('labelAway').textContent = teamAName;
-
         document.getElementById('resHome').textContent = (pHome * 100).toFixed(1) + '%';
         document.getElementById('resDraw').textContent = (pDraw * 100).toFixed(1) + '%';
         document.getElementById('resAway').textContent = (pAway * 100).toFixed(1) + '%';
-
         document.getElementById('nextHome').textContent = (pNextHome * 100).toFixed(1) + '%';
         document.getElementById('nextAway').textContent = (pNextAway * 100).toFixed(1) + '%';
         document.getElementById('nextNone').textContent = (pNoMoreGoal * 100).toFixed(1) + '%';
-
-        document.getElementById('btts1h').textContent = (btts1H * 100).toFixed(1) + '%';
-        document.getElementById('btts1hBar').style.width = (btts1H * 100) + '%';
-
+        document.getElementById('btts1h').textContent = (bttsHT * 100).toFixed(1) + '%';
+        document.getElementById('btts1hBar').style.width = (bttsHT * 100) + '%';
         document.getElementById('pressureBarH').style.width = (pressureH * 100) + '%';
         document.getElementById('pressureBarA').style.width = (pressureA * 100) + '%';
-        document.getElementById('pressureLabel').textContent =
-            `${(pressureH * 100).toFixed(0)}% / ${(pressureA * 100).toFixed(0)}%`;
+        document.getElementById('pressureLabel').textContent = `${(pressureH * 100).toFixed(0)}% / ${(pressureA * 100).toFixed(0)}%`;
         document.getElementById('pressureHLabel').textContent = `${teamHName} ${(pressureH * 100).toFixed(0)}%`;
         document.getElementById('pressureALabel').textContent = `${teamAName} ${(pressureA * 100).toFixed(0)}%`;
-
         document.getElementById('xghRem').textContent = xgRemH.toFixed(2);
         document.getElementById('xgaRem').textContent = xgRemA.toFixed(2);
         document.getElementById('xgTotalRem').textContent = (xgRemH + xgRemA).toFixed(2);
 
-        const setBar = (id, val) => {
-            document.getElementById(id).textContent = (val * 100).toFixed(1) + '%';
-            document.getElementById(id + 'Bar').style.width = (val * 100) + '%';
-        };
-        setBar('ou05', over05);
-        setBar('ou15', over15);
-        setBar('ou25', over25);
-
-        document.getElementById('expCornersH').textContent = expCornersH.toFixed(1);
-        document.getElementById('expCornersTotal').textContent = expCornersTotal.toFixed(1);
-        document.getElementById('expCornersA').textContent = expCornersA.toFixed(1);
-
-        setBar('co35', co35);
-        setBar('co45', co45);
-        setBar('co55', co55);
+        const setBar = (id, val) => { document.getElementById(id).textContent = (val * 100).toFixed(1) + '%'; document.getElementById(id + 'Bar').style.width = (val * 100) + '%'; };
+        setBar('ou05', over05Rem); setBar('ou15', over15Rem); setBar('ou25', over25Rem);
+        document.getElementById('expCornersH').textContent = expTotalCornersH.toFixed(1);
+        document.getElementById('expCornersTotal').textContent = expTotalCornersFinal.toFixed(1);
+        document.getElementById('expCornersA').textContent = expTotalCornersA.toFixed(1);
+        setBar('co35', co35Total); setBar('co45', co45Total); setBar('co55', co55Total);
 
         const finalDist = {};
-        for (let h = 0; h <= maxGoals; h++) {
-            for (let a = 0; a <= maxGoals; a++) {
-                const finalTotal = scoreH + scoreA + h + a;
-                finalDist[finalTotal] = (finalDist[finalTotal] || 0) + joint[h][a];
-            }
-        }
+        for (let h = 0; h <= maxGoals; h++) for (let a = 0; a <= maxGoals; a++) { const k = scoreH + scoreA + h + a; finalDist[k] = (finalDist[k] || 0) + joint[h][a]; }
         let prob6plus = 0;
         for (let k = 6; k <= 2 * maxGoals; k++) prob6plus += finalDist[k] || 0;
-
-        const buckets = [
-            { label: '0', prob: finalDist[0] || 0 },
-            { label: '1', prob: finalDist[1] || 0 },
-            { label: '2', prob: finalDist[2] || 0 },
-            { label: '3', prob: finalDist[3] || 0 },
-            { label: '4', prob: finalDist[4] || 0 },
-            { label: '5', prob: finalDist[5] || 0 },
-            { label: '6+', prob: prob6plus }
-        ];
+        const buckets = [{ label: '0', prob: finalDist[0] || 0 }, { label: '1', prob: finalDist[1] || 0 }, { label: '2', prob: finalDist[2] || 0 }, { label: '3', prob: finalDist[3] || 0 }, { label: '4', prob: finalDist[4] || 0 }, { label: '5', prob: finalDist[5] || 0 }, { label: '6+', prob: prob6plus }];
         requestAnimationFrame(() => drawGoalChart(buckets));
 
-        const ahLines = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1];
+        const ahLines = [-1.5, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.5];
         const ahResults = ahLines.map(line => {
             let pWin = 0, pHalfWin = 0, pPush = 0, pHalfLoss = 0, pLoss = 0;
-            for (let h = 0; h <= maxGoals; h++) {
-                for (let a = 0; a <= maxGoals; a++) {
-                    const margin = (scoreH + h) - (scoreA + a);
-                    const out = ahSettle(line, margin);
-                    const p = joint[h][a];
-                    if (out === 'win') pWin += p;
-                    else if (out === 'halfWin') pHalfWin += p;
-                    else if (out === 'push') pPush += p;
-                    else if (out === 'halfLoss') pHalfLoss += p;
-                    else if (out === 'loss') pLoss += p;
-                }
+            for (let h = 0; h <= maxGoals; h++) for (let a = 0; a <= maxGoals; a++) {
+                const margin = (scoreH + h) - (scoreA + a);
+                const out = ahSettle(line, margin), p = joint[h][a];
+                if (out === 'win') pWin += p; else if (out === 'halfWin') pHalfWin += p; else if (out === 'push') pPush += p; else if (out === 'halfLoss') pHalfLoss += p; else if (out === 'loss') pLoss += p;
             }
-            const homeCover = pWin + 0.5 * pHalfWin;
-            const awayCover = pLoss + 0.5 * pHalfLoss;
+            const homeCover = pWin + 0.5 * pHalfWin, awayCover = pLoss + 0.5 * pHalfLoss;
             const fairHome = homeCover > 0.01 ? (1 - pPush) / homeCover : 0;
             const fairAway = awayCover > 0.01 ? (1 - pPush) / awayCover : 0;
             return { line, homeCover, pPush, awayCover, fairHome, fairAway };
         });
-
         let fairLine = ahResults[0];
-        for (const r of ahResults) {
-            if (Math.abs(r.homeCover - 0.5) < Math.abs(fairLine.homeCover - 0.5)) fairLine = r;
-        }
-
+        for (const r of ahResults) if (Math.abs(r.homeCover - 0.5) < Math.abs(fairLine.homeCover - 0.5)) fairLine = r;
         let ahHtml = '';
         for (const r of ahResults) {
             const isFair = r === fairLine;
             const lineLabel = r.line === 0 ? '0' : (r.line > 0 ? '+' + r.line.toFixed(2).replace(/\.?0+$/, '') : r.line.toFixed(2).replace(/\.?0+$/, ''));
             const fairHomeStr = r.fairHome > 0 && r.fairHome < 20 ? r.fairHome.toFixed(2) : '-';
             const fairAwayStr = r.fairAway > 0 && r.fairAway < 20 ? r.fairAway.toFixed(2) : '-';
-            ahHtml += `
-                <tr class="${isFair ? 'fair' : ''}">
-                    <td>${lineLabel}${isFair ? ' 🎯' : ''}</td>
-                    <td class="text-success fw-bold">${(r.homeCover * 100).toFixed(1)}%</td>
-                    <td class="text-warning">${(r.pPush * 100).toFixed(1)}%</td>
-                    <td class="text-danger fw-bold">${(r.awayCover * 100).toFixed(1)}%</td>
-                    <td class="text-info">${fairHomeStr} / ${fairAwayStr}</td>
-                </tr>`;
+            ahHtml += `<tr class="${isFair ? 'fair' : ''}"><td>${lineLabel}${isFair ? ' 🎯' : ''}</td><td class="text-success fw-bold">${(r.homeCover * 100).toFixed(1)}%</td><td class="text-warning">${(r.pPush * 100).toFixed(1)}%</td><td class="text-danger fw-bold">${(r.awayCover * 100).toFixed(1)}%</td><td class="text-info">${fairHomeStr} / ${fairAwayStr}</td></tr>`;
         }
         document.getElementById('ah1HTable').querySelector('tbody').innerHTML = ahHtml;
 
@@ -1931,199 +1008,62 @@
         const colors = ['bg-score-1', 'bg-score-2', 'bg-score-3'];
         top3.forEach((item, index) => {
             const normProb = sumTop3 > 0 ? (item.prob / sumTop3) * 100 : 0;
-            topScoresContainer.innerHTML += `
-                <div class="col-4">
-                    <div class="card border-0 ${colors[index]}">
-                        <div class="card-body p-2">
-                            <h4 class="mb-1 fw-bold">${item.score}</h4>
-                            <div class="fw-bold fs-5">${normProb.toFixed(1)}%</div>
-                            <small style="font-size:0.62rem; opacity:0.85">(จริง: ${(item.prob*100).toFixed(1)}%)</small>
-                        </div>
-                    </div>
-                </div>`;
+            topScoresContainer.innerHTML += `<div class="col-4"><div class="card border-0 ${colors[index]}"><div class="card-body p-2"><h4 class="mb-1 fw-bold">${item.score}</h4><div class="fw-bold fs-5">${normProb.toFixed(1)}%</div><small style="font-size:0.62rem; opacity:0.85">(จริง: ${(item.prob*100).toFixed(1)}%)</small></div></div></div>`;
         });
 
         saveState();
     };
 
-    /* =========================================================
-       SIGNAL ENGINE
-    ========================================================= */
     const updateSignals = (d) => {
         const container = document.getElementById('signalsContainer');
-        const totalGoals = d.scoreH + d.scoreA;
-        const totalSot = d.sotH + d.sotA;
-        const totalCorners = d.cornersH + d.cornersA;
+        const totalSot = d.sotH + d.sotA, totalCorners = d.cornersH + d.cornersA;
         const signals = [];
 
         if (d.minute >= 45 + d.stoppage) {
-            container.innerHTML = `
-                <div class="signal-card info">
-                    <div class="sig-badge bg-secondary text-white">⏹️ จบครึ่งแรก</div>
-                    <div class="sig-title">สรุป: ${d.teamHName} ${d.scoreH} - ${d.scoreA} ${d.teamAName}</div>
-                    <div class="sig-desc">หมดเวลา${d.stoppage > 0 ? ` (ทดเจ็บ ${d.stoppage} นาที)` : ''} • กด "ล้างค่า" เพื่อเริ่มวิเคราะห์คู่ถัดไป</div>
-                </div>`;
-            lastSignalSignature = 'FT';
-            return;
+            container.innerHTML = `<div class="signal-card info"><div class="sig-badge bg-secondary text-white">⏹️ จบครึ่งแรก 45 นาที</div><div class="sig-title">สรุป HT: ${d.teamHName} ${d.scoreH} - ${d.scoreA} ${d.teamAName}</div><div class="sig-desc">หมดครึ่งแรก${d.stoppage > 0 ? ` (ทดเจ็บ 1H ${d.stoppage} นาที)` : ''} • กด "ล้างค่า" เพื่อเริ่มคู่ถัดไป</div></div>`;
+            lastSignalSignature = 'HT'; return;
         }
-
-        if (totalGoals === 0 && d.over05 >= 0.65) {
-            signals.push({
-                type: 'hot', icon: '🔥', badge: 'ประตูแรก (Over 0.5 • เข้าไว)',
-                title: `ลุ้นสกอร์แรกครึ่งแรก โอกาส ${(d.over05 * 100).toFixed(1)}%`,
-                desc: `เข้ากรอบรวม ${totalSot} ครั้ง • เตะมุม ${totalCorners} ครั้ง • จังหวะเข้าทำเริ่มชัด`,
-                conf: Math.round(Math.min(95, d.over05 * 100 + 5))
-            });
-        }
-
-        if (totalGoals === 1 && d.over15 >= 0.62) {
-            signals.push({
-                type: 'hot', icon: '⚡', badge: 'สกอร์ไหล (Over 1.5 • เข้าไว)',
-                title: `ลุ้นประตูที่ 2 ครึ่งแรก โอกาส ${(d.over15 * 100).toFixed(1)}%`,
-                desc: `คาดการณ์เตะมุมรวม ${d.expCornersTotal.toFixed(1)} ลูก • เกมยังเปิดแลกกัน`,
-                conf: Math.round(Math.min(95, d.over15 * 100 + 5))
-            });
-        }
-
-        if (d.co45 >= 0.65 && d.remainingMin >= 8) {
-            signals.push({
-                type: 'warn', icon: '🚩', badge: 'เตะมุมสูง (Corners • เข้าไว)',
-                title: `คาดเตะมุมรวม ${d.expCornersTotal.toFixed(1)} ลูก (โอกาส >4.5 = ${(d.co45 * 100).toFixed(1)}%)`,
-                desc: `เหมาะเข้าตลาดลูกเตะมุมครึ่งแรก เหลือเวลา ${d.remainingMin} นาที`,
-                conf: Math.round(Math.min(90, d.co45 * 100))
-            });
-        }
-
-        if (d.pHome >= 0.60 || d.pAway >= 0.60) {
-            const favTeam = d.pHome > d.pAway ? d.teamHName : d.teamAName;
-            const favProb = Math.max(d.pHome, d.pAway) * 100;
-            signals.push({
-                type: 'hot', icon: '👑', badge: 'ทีมต่อเหนือชัดเจน (1X2)',
-                title: `${favTeam} คุมเกม (โอกาสชนะครึ่งแรก ${favProb.toFixed(1)}%)`,
-                desc: `ราคาต่อรอง (${d.ahLine}) + รูปเกมชี้ ${favTeam} มีแนวโน้มขึ้นนำ`,
-                conf: Math.round(Math.min(92, favProb))
-            });
-        }
-
-        if (d.minute >= 30 && totalGoals === 0 && d.over05 < 0.50) {
-            signals.push({
-                type: 'warn', icon: '🛡️', badge: 'เกมรับเหนียว (Under 0.5)',
-                title: `แนวโน้มเสมอครึ่งแรก ${(d.pDraw * 100).toFixed(1)}%`,
-                desc: `เหลือ ${d.remainingMin} นาที ประตูยังต่ำกว่า 50% • ชะลอการลงทุนสกอร์สูง`,
-                conf: Math.round(Math.min(85, (1 - d.over05) * 100))
-            });
-        }
-
-        if (signals.length === 0) {
-            signals.push({
-                type: 'info', icon: '📡', badge: 'เกมสูสี / รอจังหวะ',
-                title: `เสมอ ${(d.pDraw * 100).toFixed(1)}% | สูง 0.5 = ${(d.over05 * 100).toFixed(1)}%`,
-                desc: `อัปเดตสถิติเพิ่ม (ยิง/เข้ากรอบ/เตะมุม) เพื่อเพิ่มความแม่นยำ`,
-                conf: 0
-            });
-        }
+        if (d.over05Rem >= 0.60 && d.remainingMin >= 5) signals.push({ type: 'hot', icon: '🔥', badge: 'ประตูเพิ่มใน 1H (Over 0.5 Remaining)', title: `ลุ้นประตูเพิ่มใน 1H โอกาส ${(d.over05Rem * 100).toFixed(1)}%`, desc: `เข้ากรอบรวม ${totalSot} ครั้ง • เตะมุม ${totalCorners} ครั้ง • เหลือเวลา ${d.remainingMin} นาที`, conf: Math.round(Math.min(95, d.over05Rem * 100 + 5)) });
+        if (d.over15Rem >= 0.50 && d.remainingMin >= 8) signals.push({ type: 'hot', icon: '⚡', badge: 'เกมเปิดแลก (Over 1.5 Remaining)', title: `ลุ้น 2 ประตูขึ้นไปใน 1H โอกาส ${(d.over15Rem * 100).toFixed(1)}%`, desc: `คาดการณ์ประตูรวมใน 1H อีก ${(d.xgTotal || 0).toFixed(2)} ลูก`, conf: Math.round(Math.min(90, d.over15Rem * 100)) });
+        if (d.co25Rem >= 0.60 && d.remainingMin >= 8) signals.push({ type: 'warn', icon: '🚩', badge: 'เตะมุม 1H สูง (Corners Remaining)', title: `คาดเตะมุมที่เหลือ ${d.remCornersTotal.toFixed(1)} ลูก (โอกาส >2.5 = ${(d.co25Rem * 100).toFixed(1)}%)`, desc: `เหมาะเข้าตลาดลูกเตะมุม 1H เหลือเวลา ${d.remainingMin} นาที`, conf: Math.round(Math.min(90, d.co25Rem * 100)) });
+        if (d.pHome >= 0.60 || d.pAway >= 0.60) { const favTeam = d.pHome > d.pAway ? d.teamHName : d.teamAName; const favProb = Math.max(d.pHome, d.pAway) * 100; signals.push({ type: 'hot', icon: '👑', badge: 'ทีมเต็งนำ HT', title: `${favTeam} คุมเกม (โอกาสนำครึ่งแรก ${favProb.toFixed(1)}%)`, desc: `ราคาต่อรอง (${d.ahLine}) + รูปเกมชี้ ${favTeam} มีแนวโน้มเบียดนำ`, conf: Math.round(Math.min(92, favProb)) }); }
+        if (d.pDraw >= 0.30 && d.minute >= 30 && d.over05Rem < 0.55) signals.push({ type: 'warn', icon: '🤝', badge: 'เสมอ HT มีโอกาส', title: `แนวโน้มเสมอครึ่งแรก ${(d.pDraw * 100).toFixed(1)}%`, desc: `เหลือ ${d.remainingMin} นาที • เกมรับเหนียว`, conf: Math.round(Math.min(85, d.pDraw * 100)) });
+        if (signals.length === 0) signals.push({ type: 'info', icon: '📡', badge: 'เกมสูสี / รอจังหวะ', title: `เสมอ ${(d.pDraw * 100).toFixed(1)}% | ประตูเพิ่มใน 1H = ${(d.over05Rem * 100).toFixed(1)}%`, desc: `อัปเดตสถิติเพิ่มเพื่อเพิ่มความแม่นยำ`, conf: 0 });
 
         const signature = signals.map(s => s.badge).join('|');
-        if (signature !== lastSignalSignature && signals.some(s => s.type === 'hot' || s.type === 'warn')) {
-            playBeep();
-        }
+        if (signature !== lastSignalSignature && signals.some(s => s.type === 'hot' || s.type === 'warn')) playBeep();
         lastSignalSignature = signature;
 
         container.innerHTML = signals.map(s => {
-            const badgeClass = s.type === 'hot' ? 'bg-success text-white'
-                             : s.type === 'warn' ? 'bg-warning text-dark'
-                             : 'bg-info text-dark';
+            const badgeClass = s.type === 'hot' ? 'bg-success text-white' : s.type === 'warn' ? 'bg-warning text-dark' : 'bg-info text-dark';
             const confHtml = s.conf > 0 ? `<span class="sig-conf">CONF ${s.conf}%</span>` : '';
-            return `
-                <div class="signal-card ${s.type}">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div class="sig-badge ${badgeClass}">${s.icon || '📌'} ${s.badge}</div>
-                        ${confHtml}
-                    </div>
-                    <div class="sig-title">${s.title}</div>
-                    <div class="sig-desc">${s.desc}</div>
-                </div>`;
+            return `<div class="signal-card ${s.type}"><div class="d-flex justify-content-between align-items-start"><div class="sig-badge ${badgeClass}">${s.icon || '📌'} ${s.badge}</div>${confHtml}</div><div class="sig-title">${s.title}</div><div class="sig-desc">${s.desc}</div></div>`;
         }).join('');
     };
 
-    /* =========================================================
-       COPY RESULT
-    ========================================================= */
     const copyResult = (btn) => {
-        const h = document.getElementById('labelHome').textContent;
-        const a = document.getElementById('labelAway').textContent;
+        const h = document.getElementById('labelHome').textContent, a = document.getElementById('labelAway').textContent;
         const badge = document.getElementById('matchHeaderBadge').textContent;
-        const txt = [
-            `⚽ 1H Predictor Pro — ${badge}`,
-            `───────────────`,
-            `1X2:   ${h} ${document.getElementById('resHome').textContent}  |  เสมอ ${document.getElementById('resDraw').textContent}  |  ${a} ${document.getElementById('resAway').textContent}`,
-            `O/U:   >0.5 ${document.getElementById('ou05').textContent}  |  >1.5 ${document.getElementById('ou15').textContent}  |  >2.5 ${document.getElementById('ou25').textContent}`,
-            `BTTS 1H: ${document.getElementById('btts1h').textContent}`,
-            `Corners: Total ${document.getElementById('expCornersTotal').textContent} (>4.5 = ${document.getElementById('co45').textContent})`,
-            `Next Goal: H ${document.getElementById('nextHome').textContent} | A ${document.getElementById('nextAway').textContent} | None ${document.getElementById('nextNone').textContent}`,
-            `Model xG (rem): H ${document.getElementById('xghRem').textContent} | A ${document.getElementById('xgaRem').textContent}`,
-            `────────────────`,
-            `Powered by JackZaa AI`
-        ].join('\n');
-
+        const lg = document.getElementById('leagueGoals').value === 'custom' ? document.getElementById('leagueGoalsCustom').value : document.getElementById('leagueGoals').value;
+        const txt = [`⚽ 1H Predictor Pro — ${badge}`, `───────────────`, `League avg (full): ${lg}`, `HALF TIME 1X2: ${h} ${document.getElementById('resHome').textContent} | เสมอ ${document.getElementById('resDraw').textContent} | ${a} ${document.getElementById('resAway').textContent}`, `1H Remaining O/U: >0.5 ${document.getElementById('ou05').textContent} | >1.5 ${document.getElementById('ou15').textContent} | >2.5 ${document.getElementById('ou25').textContent}`, `BTTS HT: ${document.getElementById('btts1h').textContent}`, `Corners Total (HT): ${document.getElementById('expCornersTotal').textContent} (>4.5 = ${document.getElementById('co45').textContent})`, `Next Goal (1H): H ${document.getElementById('nextHome').textContent} | A ${document.getElementById('nextAway').textContent}`, `────────────────`, `Powered by JackZaa AI`].join('\n');
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(txt).then(() => {
-                if (btn) {
-                    const old = btn.textContent;
-                    btn.textContent = '✅';
-                    setTimeout(() => btn.textContent = old, 1200);
-                }
-            }).catch(() => alert('คัดลอกไม่สำเร็จ'));
-        } else {
-            alert('เบราว์เซอร์ไม่รองรับการคัดลอกอัตโนมัติ');
-        }
+            navigator.clipboard.writeText(txt).then(() => { if (btn) { const old = btn.textContent; btn.textContent = '✅'; setTimeout(() => btn.textContent = old, 1200); } }).catch(() => alert('คัดลอกไม่สำเร็จ'));
+        } else alert('เบราว์เซอร์ไม่รองรับการคัดลอกอัตโนมัติ');
     };
 
-    /* =========================================================
-       EVENT WIRING
-    ========================================================= */
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.auto-calc').forEach(el => {
-            el.addEventListener('input', () => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => predict(false), 100);
-            });
+            el.addEventListener('input', () => { clearTimeout(debounceTimer); debounceTimer = setTimeout(() => predict(false), 100); });
             el.addEventListener('change', () => predict(false));
         });
-
-        ['daH', 'daA'].forEach(id => {
-            const el = document.getElementById(id);
-            el.addEventListener('input', () => {
-                el.dataset.userTouched = el.value.trim() === '' ? '0' : '1';
-            });
-        });
-
-        ['possH', 'possA'].forEach(id => {
-            const el = document.getElementById(id);
-            el.addEventListener('input', () => {
-                el.dataset.userTouched = el.value.trim() === '' ? '0' : '1';
-            });
-        });
-
+        ['daH', 'daA', 'possH', 'possA'].forEach(id => { const el = document.getElementById(id); el.addEventListener('input', () => { el.dataset.userTouched = el.value.trim() === '' ? '0' : '1'; }); });
         const stoppageEl = document.getElementById('stoppage');
-        stoppageEl.addEventListener('input', () => {
-            stoppageEl.dataset.userTouched = stoppageEl.value.trim() === '' ? '0' : '1';
-        });
-
-        if (loadState()) {
-            updateAhLabel();
-            predict(false);
-        }
+        stoppageEl.addEventListener('input', () => { stoppageEl.dataset.userTouched = stoppageEl.value.trim() === '' ? '0' : '1'; });
+        if (loadState()) { updateAhLabel(); predict(false); }
     });
 
     let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            if (lastChartBuckets) drawGoalChart(lastChartBuckets);
-        }, 200);
-    });
-
+    window.addEventListener('resize', () => { clearTimeout(resizeTimeout); resizeTimeout = setTimeout(() => { if (lastChartBuckets) drawGoalChart(lastChartBuckets); }, 200); });
     window.addEventListener('beforeunload', saveState);
     </script>
 </body>
