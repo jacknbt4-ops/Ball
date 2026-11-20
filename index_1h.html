@@ -499,17 +499,6 @@
                                 <span class="text-danger fw-bold" id="xgaRem">-</span>
                                 <span class="text-muted float-end">รวม <span class="text-info fw-bold" id="xgTotalRem">-</span></span>
                             </div>
-                            <div class="section-title">📊 การกระจายจำนวนประตูรวม (HT)</div>
-                            <div class="chart-wrap"><canvas id="goalChart"></canvas></div>
-                            <div class="text-center text-muted" style="font-size:0.7rem;margin-bottom:6px;">แถบสีฟ้าเข้ม = สกอร์ที่น่าจะเกิดมากที่สุด</div>
-                            <div class="section-title">🎯 Asian Handicap HALF TIME</div>
-                            <div class="table-responsive">
-                                <table class="ah-table" id="ah1HTable">
-                                    <thead><tr><th style="text-align:left;">Line</th><th>Home</th><th>Push</th><th>Away</th><th>Fair (H / A)</th></tr></thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                            <div class="text-center text-muted mt-2" style="font-size:0.7rem;">💡 บรรทัดที่ไฮไลท์คือ Fair Line</div>
                             <div class="section-title">ประตูที่เหลือ 1H (Over/Under Remaining)</div>
                             <div class="mb-2"><div class="d-flex justify-content-between fw-bold small"><span>สูง 0.5</span><span id="ou05" class="text-success">0%</span></div><div class="progress"><div class="progress-bar bg-success" id="ou05Bar" style="width: 0%"></div></div></div>
                             <div class="mb-2"><div class="d-flex justify-content-between fw-bold small"><span>สูง 1.5</span><span id="ou15" class="text-warning">0%</span></div><div class="progress"><div class="progress-bar bg-warning" id="ou15Bar" style="width: 0%"></div></div></div>
@@ -703,22 +692,6 @@
         return Math.round(Math.min(cfg.maxCap, Math.max(1, base + goalsBonus + redBonus + subsBonus)));
     };
     const resetStoppageCfg = () => { document.getElementById('cfgBase').value = STOPPAGE_CFG_DEFAULTS.base; document.getElementById('cfgGoalsBonus').value = STOPPAGE_CFG_DEFAULTS.goalsBonus; document.getElementById('cfgGoalsCap').value = STOPPAGE_CFG_DEFAULTS.goalsCap; document.getElementById('cfgRedBonus').value = STOPPAGE_CFG_DEFAULTS.redBonus; document.getElementById('cfgSubsBonus').value = STOPPAGE_CFG_DEFAULTS.subsBonus; document.getElementById('cfgMaxCap').value = STOPPAGE_CFG_DEFAULTS.maxCap; predict(true); };
-
-    const ahSettleSimple = (line, margin) => { const diff = margin + line; if (Math.abs(diff) < 0.001) return 'push'; return diff > 0 ? 'win' : 'loss'; };
-    const splitQuarter = (line) => [Math.floor(line * 2) / 2, Math.ceil(line * 2) / 2];
-    const ahSettle = (line, margin) => {
-        const absLine = Math.abs(line), frac = absLine % 1;
-        const isQuarter = Math.abs(frac - 0.25) < 0.01 || Math.abs(frac - 0.75) < 0.01;
-        if (isQuarter) {
-            const [l, u] = splitQuarter(line);
-            const o1 = ahSettleSimple(l, margin), o2 = ahSettleSimple(u, margin);
-            if (o1 === o2) return o1;
-            if ((o1 === 'win' && o2 === 'push') || (o1 === 'push' && o2 === 'win')) return 'halfWin';
-            if ((o1 === 'loss' && o2 === 'push') || (o1 === 'push' && o2 === 'loss')) return 'halfLoss';
-            return 'push';
-        }
-        return ahSettleSimple(line, margin);
-    };
 
     const drawGoalChart = (buckets) => {
         lastChartBuckets = buckets;
@@ -988,31 +961,6 @@
         for (let k = 6; k <= 2 * maxGoals; k++) prob6plus += finalDist[k] || 0;
         const buckets = [{ label: '0', prob: finalDist[0] || 0 }, { label: '1', prob: finalDist[1] || 0 }, { label: '2', prob: finalDist[2] || 0 }, { label: '3', prob: finalDist[3] || 0 }, { label: '4', prob: finalDist[4] || 0 }, { label: '5', prob: finalDist[5] || 0 }, { label: '6+', prob: prob6plus }];
         requestAnimationFrame(() => drawGoalChart(buckets));
-
-        const ahLines = [-1.5, -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1, 1.5];
-        const ahResults = ahLines.map(line => {
-            let pWin = 0, pHalfWin = 0, pPush = 0, pHalfLoss = 0, pLoss = 0;
-            for (let h = 0; h <= maxGoals; h++) for (let a = 0; a <= maxGoals; a++) {
-                const margin = (scoreH + h) - (scoreA + a);
-                const out = ahSettle(line, margin), p = joint[h][a];
-                if (out === 'win') pWin += p; else if (out === 'halfWin') pHalfWin += p; else if (out === 'push') pPush += p; else if (out === 'halfLoss') pHalfLoss += p; else if (out === 'loss') pLoss += p;
-            }
-            const homeCover = pWin + 0.5 * pHalfWin, awayCover = pLoss + 0.5 * pHalfLoss;
-            const fairHome = homeCover > 0.01 ? (1 - pPush) / homeCover : 0;
-            const fairAway = awayCover > 0.01 ? (1 - pPush) / awayCover : 0;
-            return { line, homeCover, pPush, awayCover, fairHome, fairAway };
-        });
-        let fairLine = ahResults[0];
-        for (const r of ahResults) if (Math.abs(r.homeCover - 0.5) < Math.abs(fairLine.homeCover - 0.5)) fairLine = r;
-        let ahHtml = '';
-        for (const r of ahResults) {
-            const isFair = r === fairLine;
-            const lineLabel = r.line === 0 ? '0' : (r.line > 0 ? '+' + r.line.toFixed(2).replace(/\.?0+$/, '') : r.line.toFixed(2).replace(/\.?0+$/, ''));
-            const fairHomeStr = r.fairHome > 0 && r.fairHome < 20 ? r.fairHome.toFixed(2) : '-';
-            const fairAwayStr = r.fairAway > 0 && r.fairAway < 20 ? r.fairAway.toFixed(2) : '-';
-            ahHtml += `<tr class="${isFair ? 'fair' : ''}"><td>${lineLabel}${isFair ? ' 🎯' : ''}</td><td class="text-success fw-bold">${(r.homeCover * 100).toFixed(1)}%</td><td class="text-warning">${(r.pPush * 100).toFixed(1)}%</td><td class="text-danger fw-bold">${(r.awayCover * 100).toFixed(1)}%</td><td class="text-info">${fairHomeStr} / ${fairAwayStr}</td></tr>`;
-        }
-        document.getElementById('ah1HTable').querySelector('tbody').innerHTML = ahHtml;
 
         const topScoresContainer = document.getElementById('topScores');
         topScoresContainer.innerHTML = '';
